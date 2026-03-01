@@ -1,0 +1,256 @@
+/*import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AdminService } from '../../../core/services/admin.service';
+
+@Component({
+  selector: 'app-admin',
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  templateUrl: './admin.component.html',
+  styleUrls: ['./admin.component.css']
+})
+export class AdminComponent implements OnInit {
+  candidats: any[] = [];
+  selectedCandidats: number[] = [];
+  showModal = false;
+  showViewModal = false;
+  isEditMode = false;
+  selectedCandidat: any = null;
+
+  candidatForm: FormGroup;
+  loading = false;
+  successMessage = '';
+  errorMessage = '';
+
+  constructor(
+    private adminService: AdminService,
+    private fb: FormBuilder
+  ) {
+    this.candidatForm = this.fb.group({
+      nom: ['', Validators.required],
+      prenom: ['', Validators.required],
+      username: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      nomEtablissement: [{ value: '', disabled: true }]
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadCandidats();
+  }
+
+  loadCandidats(): void {
+    this.loading = true;
+    this.errorMessage = '';
+
+    this.adminService.getCandidats().subscribe({
+      next: (data) => {
+        console.log('Candidats:', data);
+        this.candidats = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Erreur:', err);
+        this.errorMessage = 'Erreur lors du chargement';
+        this.loading = false;
+      }
+    });
+  }*/
+
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AdminService } from '../../../core/services/admin.service';
+
+@Component({
+  selector: 'app-admin',
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],  // Important!
+  templateUrl: './admin.component.html',
+  styleUrls: ['./admin.component.css']
+})
+export class AdminComponent implements OnInit {
+  candidats: any[] = [];
+  selectedCandidats: number[] = [];
+  showModal = false;
+  showViewModal = false;
+  isEditMode = false;
+  selectedCandidat: any = null;
+
+  candidatForm: FormGroup;
+  loading = false;
+  successMessage = '';
+  errorMessage = '';
+
+  constructor(
+    private adminService: AdminService,
+    private fb: FormBuilder
+  ) {
+    this.candidatForm = this.fb.group({
+      nom: ['', Validators.required],
+      prenom: ['', Validators.required],
+      username: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      nomEtablissement: ['']
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadCandidats();
+  }
+
+  loadCandidats(): void {
+    this.loading = true;
+    this.adminService.getCandidats().subscribe({
+      next: (data) => {
+        this.candidats = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.errorMessage = 'Erreur lors du chargement';
+        this.loading = false;
+      }
+    });
+  }
+
+
+
+  openAddModal(): void {
+    this.isEditMode = false;
+    this.candidatForm.reset();
+    this.showModal = true;
+  }
+
+  openEditModal(candidat: any): void {
+    this.isEditMode = true;
+    this.selectedCandidat = candidat;
+    this.candidatForm.patchValue({
+      nom: candidat.nom,
+      prenom: candidat.prenom,
+      username: candidat.username,
+      nomEtablissement: candidat.nomEtablissement
+    });
+    this.showModal = true;
+  }
+
+  viewCandidat(candidat: any): void {
+    this.selectedCandidat = candidat;
+    this.showViewModal = true;
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+    this.selectedCandidat = null;
+  }
+
+  closeViewModal(): void {
+    this.showViewModal = false;
+    this.selectedCandidat = null;
+  }
+
+  onSubmit(): void {
+    if (this.candidatForm.valid) {
+      this.loading = true;
+      const formData = this.candidatForm.value;
+
+      if (this.isEditMode) {
+        this.adminService.updateCandidat(this.selectedCandidat.id, formData).subscribe({
+          next: () => {
+            this.successMessage = 'Candidat modifié';
+            this.loadCandidats();
+            this.closeModal();
+            this.loading = false;
+            setTimeout(() => this.successMessage = '', 3000);
+          },
+          error: () => {
+            this.errorMessage = 'Erreur modification';
+            this.loading = false;
+          }
+        });
+      } else {
+        this.adminService.createCandidat(formData).subscribe({
+          next: () => {
+            this.successMessage = 'Candidat ajouté';
+            this.loadCandidats();
+            this.closeModal();
+            this.loading = false;
+            setTimeout(() => this.successMessage = '', 3000);
+          },
+          error: () => {
+            this.errorMessage = 'Erreur ajout';
+            this.loading = false;
+          }
+        });
+      }
+    }
+  }
+
+  toggleStatus(candidat: any): void {
+    this.adminService.toggleCandidatStatus(candidat.id).subscribe({
+      next: (updated) => {
+        candidat.enabled = updated.enabled;
+        this.successMessage = updated.enabled ? 'Activé' : 'Désactivé';
+        setTimeout(() => this.successMessage = '', 3000);
+      }
+    });
+  }
+
+  deleteCandidat(id: number): void {
+    if (confirm('Supprimer ce candidat?')) {
+      this.adminService.deleteCandidat(id).subscribe({
+        next: () => {
+          this.successMessage = 'Candidat supprimé';
+          this.loadCandidats();
+          setTimeout(() => this.successMessage = '', 3000);
+        }
+      });
+    }
+  }
+
+  onCheckboxChange(id: number, event: any): void {
+    if (event.target.checked) {
+      this.selectedCandidats.push(id);
+    } else {
+      this.selectedCandidats = this.selectedCandidats.filter(i => i !== id);
+    }
+  }
+
+  selectAll(event: any): void {
+    if (event.target.checked) {
+      this.selectedCandidats = this.candidats.map(c => c.id);
+    } else {
+      this.selectedCandidats = [];
+    }
+  }
+
+  activateSelected(): void {
+    if (this.selectedCandidats.length > 0) {
+      this.adminService.activateMultiple(this.selectedCandidats).subscribe({
+        next: () => {
+          this.successMessage = 'Candidats activés';
+          this.loadCandidats();
+          this.selectedCandidats = [];
+          setTimeout(() => this.successMessage = '', 3000);
+        }
+      });
+    }
+  }
+
+  deactivateSelected(): void {
+    if (this.selectedCandidats.length > 0) {
+      this.adminService.deactivateMultiple(this.selectedCandidats).subscribe({
+        next: () => {
+          this.successMessage = 'Candidats désactivés';
+          this.loadCandidats();
+          this.selectedCandidats = [];
+          setTimeout(() => this.successMessage = '', 3000);
+        }
+      });
+    }
+  }
+
+  isAllSelected(): boolean {
+    return this.candidats.length > 0 && this.selectedCandidats.length === this.candidats.length;
+  }
+}

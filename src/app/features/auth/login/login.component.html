@@ -1,0 +1,41 @@
+<!--<h2>Login</h2>
+
+<input [(ngModel)]="username" placeholder="Username">
+<input [(ngModel)]="password" type="password" placeholder="Password">
+
+<button (click)="login()">Login</button>-->
+
+<div class="auth-wrapper">
+  <!-- Image de fond (Études / Certification) -->
+  <div class="auth-bg"></div>
+
+  <div class="auth-card">
+    <div class="brand">
+      <h2>Connexion</h2>
+      <p>Plateforme de Certification</p>
+    </div>
+
+    <form (ngSubmit)="login()">
+      <div class="input-group">
+        <label>Nom d'utilisateur</label>
+        <input [(ngModel)]="username" name="username" type="text" placeholder="Email ou identifiant" required>
+      </div>
+
+      <div class="input-group">
+        <label>Mot de passe</label>
+        <input [(ngModel)]="password" name="password" type="password" placeholder="••••••••" required>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-msg">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="btn-primary">Se connecter</button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Pas encore de compte ?</p>
+      <a routerLink="/signup" class="btn-secondary">Créer un compte</a>
+    </div>
+  </div>
+</div>
