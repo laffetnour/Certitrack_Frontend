@@ -13,6 +13,7 @@ export class AdminService {
   // Méthode pour ajouter le JWT dans les headers
   private getAuthHeaders(): { headers: HttpHeaders } {
     const token = localStorage.getItem('token') || '';
+    console.log("TOKEN ENVOYÉ:", token);
     return {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + token,

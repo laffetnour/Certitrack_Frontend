@@ -62,6 +62,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminService } from '../../../core/services/admin.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-admin',
@@ -85,7 +86,8 @@ export class AdminComponent implements OnInit {
 
   constructor(
     private adminService: AdminService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) {
     this.candidatForm = this.fb.group({
       nom: ['', Validators.required],
@@ -97,6 +99,7 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("AdminComponent chargé");
     this.loadCandidats();
   }
 
@@ -104,12 +107,16 @@ export class AdminComponent implements OnInit {
     this.loading = true;
     this.adminService.getCandidats().subscribe({
       next: (data) => {
-        this.candidats = data;
+        console.log('Données reçues:', data);
+        this.candidats = data ;
         this.loading = false;
+        this.cdr.detectChanges();
+
       },
       error: (err) => {
         this.errorMessage = 'Erreur lors du chargement';
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
