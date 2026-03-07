@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -17,7 +18,7 @@ export class LoginComponent {
   password = '';
   errorMessage = '';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router, private cdr: ChangeDetectorRef) {}
 
 
   login() {
@@ -47,6 +48,7 @@ export class LoginComponent {
           this.errorMessage = error.error?.message || "Une erreur est survenue";
         }
 
+        this.cdr.detectChanges();
       }
     });
   }

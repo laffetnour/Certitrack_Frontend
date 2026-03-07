@@ -94,7 +94,7 @@ export class AdminComponent implements OnInit {
       prenom: ['', Validators.required],
       username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      nomEtablissement: ['']
+      //nomEtablissement: ['']
     });
   }
 
@@ -136,7 +136,7 @@ export class AdminComponent implements OnInit {
       nom: candidat.nom,
       prenom: candidat.prenom,
       username: candidat.username,
-      nomEtablissement: candidat.nomEtablissement
+      //nomEtablissement: candidat.nomEtablissement
     });
     this.showModal = true;
   }
@@ -193,12 +193,18 @@ export class AdminComponent implements OnInit {
     }
   }
 
+
+
   toggleStatus(candidat: any): void {
     this.adminService.toggleCandidatStatus(candidat.id).subscribe({
       next: (updated) => {
-        candidat.enabled = updated.enabled;
+        candidat.enabled = updated.enabled; // ← met à jour le DOM
         this.successMessage = updated.enabled ? 'Activé' : 'Désactivé';
         setTimeout(() => this.successMessage = '', 3000);
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMessage = 'Erreur lors du changement de statut';
       }
     });
   }

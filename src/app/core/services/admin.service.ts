@@ -38,8 +38,12 @@ export class AdminService {
   }
 
   // PUT activer/désactiver un candidat
-  toggleCandidatStatus(id: number): Observable<any> {
+  /*toggleCandidatStatus(id: number): Observable<any> {
     return this.http.put(`${this.baseUrl}/candidats/${id}/status`, {}, this.getAuthHeaders());
+  }*/
+
+  toggleCandidatStatus(id: number): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/candidats/${id}/status`, {}, this.getAuthHeaders());
   }
 
   // PUT activer plusieurs candidats
