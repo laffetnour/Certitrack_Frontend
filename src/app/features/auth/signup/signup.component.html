@@ -56,9 +56,28 @@
         </div>
 
         <div class="form-group">
-          <label for="nomEtablissement">Nom de l'établissement</label>
-          <input id="nomEtablissement" formControlName="nomEtablissement" type="text" class="modern-input" placeholder="Université de Paris">
-          <span class="error-text" *ngIf="signupForm.get('nomEtablissement')?.touched && signupForm.get('nomEtablissement')?.invalid">Établissement requis</span>
+          <label>Téléphone</label>
+          <input type="text" formControlName="numTel" class="modern-input">
+        </div>
+
+        <div class="form-group">
+          <label>Email personnel</label>
+          <input type="email" formControlName="emailPersonnel" class="modern-input">
+        </div>
+
+        <div class="form-group">
+          <label>Établissement</label>
+
+          <select formControlName="etablissementId" class="modern-input">
+
+            <option value="">Choisir un établissement</option>
+
+            <option *ngFor="let e of etablissements" [value]="e.idEtablissement">
+              {{e.nom}}
+            </option>
+
+          </select>
+
         </div>
 
         <div *ngIf="errorMsg" class="error-msg">

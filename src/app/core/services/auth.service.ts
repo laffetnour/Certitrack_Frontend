@@ -12,9 +12,7 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  /*signup(user: any) {
-    return this.http.post(`${this.api}/signup`, user);
-  }*/
+
 
   register(data: any): Observable<any> {
     return this.http.post(`${this.api}/signup`, data, {
@@ -22,9 +20,13 @@ export class AuthService {
     });
   }
 
-  /*login(username: string, password: string) {
-    return this.http.post<any>(`${this.api}/login`, { username, password });
+  /*register(data:any):Observable<any>{
+
+    return this.http.post(`${this.api}/signup`,data);
+
   }*/
+
+
   login(username: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.api}/login`, { username, password });
   }
