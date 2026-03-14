@@ -15,9 +15,7 @@ export class AuthService {
 
 
   register(data: any): Observable<any> {
-    return this.http.post(`${this.api}/signup`, data, {
-      headers: { 'Content-Type': 'application/json' } // <-- pas de parenthèse ici
-    });
+    return this.http.post(`${this.api}/signup`, data, {responseType: 'text'});
   }
 
   /*register(data:any):Observable<any>{

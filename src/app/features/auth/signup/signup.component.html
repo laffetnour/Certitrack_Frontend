@@ -42,6 +42,16 @@
             <span class="error-text" *ngIf="signupForm.get('prenom')?.touched && signupForm.get('prenom')?.invalid">Prénom requis</span>
           </div>
         </div>
+        <div class="form-group">
+          <label for="dateNais">Date de naissance</label>
+          <input id="dateNais"
+                 formControlName="dateNais"
+                 type="date"
+                 class="modern-input">
+          <span class="error-text" *ngIf="signupForm.get('dateNais')?.touched && signupForm.get('dateNais')?.invalid">
+    Date de naissance requise
+  </span>
+        </div>
 
         <div class="form-group">
           <label for="username">Email</label>
@@ -69,13 +79,10 @@
           <label>Établissement</label>
 
           <select formControlName="etablissementId" class="modern-input">
-
             <option value="">Choisir un établissement</option>
-
-            <option *ngFor="let e of etablissements" [value]="e.idEtablissement">
+            <option *ngFor="let e of etablissements" [value]="e.idEtab">
               {{e.nom}}
             </option>
-
           </select>
 
         </div>

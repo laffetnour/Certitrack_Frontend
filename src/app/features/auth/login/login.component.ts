@@ -33,11 +33,11 @@ export class LoginComponent {
         console.log("Token enregistré :", res.token);
         const role = res.role;
 
-        if (role === 'DIRECTEUR') this.router.navigate(['/directeur']);
-        if (role === 'CANDIDAT') this.router.navigate(['/candidat']);
+        if (role === 'directeurEtab') this.router.navigate(['/directeur']);
+        if (role === 'Candidat') this.router.navigate(['/candidat']);
         if (role === 'adminEtab') this.router.navigate(['/admin']);
-        if (role === 'SUPER_ADMIN') this.router.navigate(['/super-admin']);
-        if (role === 'TENANT') this.router.navigate(['/tenant']);
+        if (role === 'sperAdmin') this.router.navigate(['/super-admin']);
+        if (role === 'adminTenant') this.router.navigate(['/tenant']);
       },
       error: (error: HttpErrorResponse) => {
         if (error.status === 403) {

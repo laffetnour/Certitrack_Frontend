@@ -62,12 +62,13 @@ export class SignupComponent implements OnInit {
       nom: ['', Validators.required],
       prenom: ['', Validators.required],
       username: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      password: ['', Validators.required, Validators.minLength(6)],
 
       numTel:['',Validators.required],
       emailPersonnel:['',[Validators.required,Validators.email]],
 
-      etablissementId:['',Validators.required]
+      etablissementId:['',Validators.required],
+      dateNais: ['', Validators.required]
     });
 
     this.loadEtablissements();
@@ -102,6 +103,7 @@ export class SignupComponent implements OnInit {
       return;
     }
     formValue.etablissementId = Number(formValue.etablissementId);
+    console.log("Payload envoyé :", formValue);
 
     this.isLoading = true;
     this.authService.register(formValue).subscribe({
