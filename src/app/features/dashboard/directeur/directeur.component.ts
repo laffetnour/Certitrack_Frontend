@@ -36,7 +36,8 @@ export class DirecteurComponent implements OnInit {
       nom: ['', Validators.required],
       prenom: ['', Validators.required],
       username: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.minLength(6)]]
+      password: ['', [Validators.minLength(6)]],
+      dateNais: ['', Validators.required]
     });
   }
 
@@ -95,7 +96,7 @@ export class DirecteurComponent implements OnInit {
         // Recharge toute la liste pour éviter les bugs
         this.loadAdmins();
 
-        this.successMessage = admin.enabled
+        this.successMessage = admin.statut
           ? "Administrateur désactivé avec succès"
           : "Administrateur activé avec succès";
 
@@ -257,12 +258,18 @@ export class DirecteurComponent implements OnInit {
     this.selectedAdmin = { ...admin }; // ← Copie
     this.showModal = true;
     this.isEditMode = true;
+    const formattedDate = admin.dateNais
+      ? admin.dateNais.toString().substring(0,10)
+      : '';
+
     this.adminForm.patchValue({
       nom: admin.nom,
       prenom: admin.prenom,
       username: admin.username,
+      dateNais: formattedDate,
       password: ''
     });
+    this.adminForm.markAsPristine();
   }
 
   viewAdmin(admin: any): void {

@@ -292,10 +292,15 @@
 
         <div class="modal-footer">
           <button type="button" class="btn-cancel" (click)="closeModal()">Annuler</button>
-          <button
+          <!--<button
             type="submit"
             class="btn-submit"
             [disabled]="candidatForm.invalid || loading"
+          >-->
+          <button
+            type="submit"
+            class="btn-submit"
+            [disabled]="candidatForm.invalid || loading || (isEditMode && candidatForm.pristine)"
           >
             <span *ngIf="!loading">{{ isEditMode ? 'Modifier' : 'Ajouter' }}</span>
             <span *ngIf="loading">Chargement...</span>

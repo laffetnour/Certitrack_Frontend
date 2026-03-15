@@ -106,6 +106,8 @@ export class AdminComponent implements OnInit {
       specialiteId: candidat.specialite?.idSpecialite
     });
 
+    this.candidatForm.markAsPristine(); // ⭐ important
+
     this.showModal = true;
     this.cdr.detectChanges();
   }
@@ -125,6 +127,14 @@ export class AdminComponent implements OnInit {
   }
 
   onSubmit(): void {
+
+    //ajouter---
+    /*if (this.isEditMode && this.candidatForm.pristine) {
+      this.errorMessage = "Aucune modification détectée";
+      setTimeout(() => this.errorMessage = '', 3000);
+      return;
+    }*/
+
     if (this.candidatForm.valid) {
       this.loading = true;
       const formData = this.candidatForm.value;
