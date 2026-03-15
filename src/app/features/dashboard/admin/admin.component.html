@@ -18,86 +18,6 @@
     <button class="btn-deactivate" (click)="deactivateSelected()">Désactiver</button>
   </div>
 
-  <!-- Tableau -->
-  <!--<div class="table-container">
-    <table class="modern-table" *ngIf="!loading && candidats.length > 0">
-      <thead>
-      <tr>
-        <th>
-          <input
-            type="checkbox"
-            [checked]="isAllSelected()"
-            (change)="selectAll($event)"
-          >
-        </th>
-        <th>Nom</th>
-        <th>Prénom</th>
-        <th>Email</th>
-        <th>Établissement</th>
-        <th>Date Naissance</th>
-        <th>Statut</th>
-        <th>Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let candidat of candidats">
-        <td>
-          <input
-            type="checkbox"
-            [checked]="selectedCandidats.includes(candidat.id)"
-            (change)="onCheckboxChange(candidat.id, $event)"
-          >
-        </td>
-        <td>{{ candidat.nom }}</td>
-        <td>{{ candidat.prenom }}</td>
-        <td>{{ candidat.username }}</td>
-        <td>{{ candidat.nomEtablissement }}</td>
-
-        <td>{{ candidat.dateNais | date: 'yyyy-MM-dd'  }}</td>
-
-        <td>
-            <span
-              class="status-badge"
-              [class.active]="candidat.statut"
-              [class.inactive]="!candidat.statut"
-            >
-              {{ candidat.statut ? 'Actif' : 'Inactif' }}
-            </span>
-        </td>
-        <td class="actions">
-          <button class="btn-view" (click)="viewCandidat(candidat)" title="Voir">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-          </button>
-          <button class="btn-edit" (click)="openEditModal(candidat)" title="Modifier">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-          </button>
-          <button
-            class="btn-toggle"
-            (click)="toggleStatus(candidat)"
-            [title]="candidat.statut ? 'Actif' : 'Inactif'"
-            [class.btn-activate-icon]="!candidat.statut"
-          >
-            <svg *ngIf="candidat.statut" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
-            <svg *ngIf="!candidat.statut" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-          </button>
-          <button class="btn-delete" (click)="deleteCandidat(candidat.id)" title="Supprimer">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-          </button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-
-    <div *ngIf="loading" class="loading">
-      <div class="spinner"></div>
-      <p>Chargement...</p>
-    </div>
-
-    <div *ngIf="!loading && candidats.length === 0" class="empty-state">
-      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-      <p>Aucun candidat trouvé</p>
-    </div>
-  </div>-->
 
 
 
@@ -312,7 +232,7 @@
   </span>
         </div>
 
-        <div class="form-group">
+        <!--<div class="form-group">
           <label for="specialite">Spécialité</label>
           <select
             id="specialite"
@@ -326,8 +246,33 @@
           <span class="error-text" *ngIf="candidatForm.get('specialiteId')?.touched && candidatForm.get('specialiteId')?.invalid">
     Spécialité requise
   </span>
-        </div>
+        </div>-->
 
+        <div class="form-group">
+          <label for="specialite">Spécialité</label>
+          <select
+            id="specialite"
+            formControlName="specialiteId"
+            class="form-control"
+            [class.error]="candidatForm.get('specialiteId')?.invalid && candidatForm.get('specialiteId')?.touched"
+          >
+            <option *ngIf="!isEditMode" value="" disabled selected>
+              -- Sélectionnez une spécialité --
+            </option>
+
+            <option *ngIf="isEditMode" [value]="selectedCandidat?.specialite?.idSpecialite" disabled selected>
+              {{ selectedCandidat?.specialite?.nom }}
+            </option>
+
+            <ng-container *ngFor="let sp of specialites">
+              <option
+                *ngIf="sp.idSpecialite !== selectedCandidat?.specialite?.idSpecialite"
+                [value]="sp.idSpecialite">
+                {{ sp.nom }}
+              </option>
+            </ng-container>
+          </select>
+        </div>
         <div class="form-group" *ngIf="!isEditMode">
           <label for="password">Mot de passe</label>
           <input
@@ -390,12 +335,29 @@
         </div>
 
         <div class="info-row">
+  <span class="label">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+    Date de naissance
+  </span>
+          <span class="value">{{ selectedCandidat.dateNais | date:'dd/MM/yyyy' }}</span>
+        </div>
+
+        <div class="info-row">
           <span class="label">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
             Établissement
           </span>
           <span class="value">{{ selectedCandidat.nomEtablissement }}</span>
         </div>
+
+        <div class="info-row">
+  <span class="label">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+    Spécialité
+  </span>
+          <span class="value">{{ selectedCandidat.specialite?.nom || 'Non définie' }}</span>
+        </div>
+
 
         <div class="info-row">
           <span class="label">
