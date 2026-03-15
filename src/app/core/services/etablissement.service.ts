@@ -16,5 +16,8 @@ export class EtablissementService{
     return this.http.get(this.api);
 
   }
+  getSpecialites(etabId:number):Observable<any>{
+    return this.http.get(`${this.api}/${etabId}/specialites`);
+  }
 
 }

@@ -87,6 +87,20 @@
 
         </div>
 
+
+        <div class="form-group" *ngIf="specialites.length > 0">
+          <label>Spécialité</label>
+
+          <select formControlName="specialiteId" class="modern-input">
+            <option value="">Choisir une spécialité</option>
+
+            <option *ngFor="let s of specialites" [value]="s.idSpecialite">
+              {{s.nom}}
+            </option>
+          </select>
+
+        </div>
+
         <div *ngIf="errorMsg" class="error-msg">
           {{ errorMsg }}
         </div>

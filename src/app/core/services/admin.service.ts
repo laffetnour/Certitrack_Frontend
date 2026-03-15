@@ -27,6 +27,11 @@ export class AdminService {
     return this.http.get(`${this.baseUrl}/candidats`, this.getAuthHeaders());
   }
 
+
+  getCandidatsBySpecialite(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/candidats/by-specialite`, this.getAuthHeaders());
+  }
+
   // POST créer un candidat
   createCandidat(candidat: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/candidats`, candidat, this.getAuthHeaders());
@@ -59,5 +64,9 @@ export class AdminService {
   // DELETE un candidat
   deleteCandidat(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/candidats/${id}`, this.getAuthHeaders());
+  }
+
+  getSpecialites(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/specialites`, this.getAuthHeaders());
   }
 }

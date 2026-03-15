@@ -48,6 +48,7 @@ export class SignupComponent implements OnInit {
   signupForm!: FormGroup;
 
   etablissements:any[]=[];
+  specialites:any[]=[];
   errorMsg = '';
   successMsg = '';
   isLoading: boolean = false;
@@ -62,13 +63,20 @@ export class SignupComponent implements OnInit {
       nom: ['', Validators.required],
       prenom: ['', Validators.required],
       username: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required, Validators.minLength(6)],
+      password: ['', [Validators.required, Validators.minLength(6)]],
 
       numTel:['',Validators.required],
       emailPersonnel:['',[Validators.required,Validators.email]],
-
+      specialiteId:['',Validators.required],   // AJOUT
       etablissementId:['',Validators.required],
-      dateNais: ['', Validators.required]
+      dateNais: ['', Validators.required],
+
+    });
+//ajouter---
+    this.signupForm.get('etablissementId')?.valueChanges.subscribe(id=>{
+      if(id){
+        this.loadSpecialites(id);
+      }
     });
 
     this.loadEtablissements();
@@ -90,7 +98,35 @@ export class SignupComponent implements OnInit {
 
   }
 
-  onSubmit(){
+//ajouet ---
+  /*loadSpecialites(id:number){
+
+    this.etablissementService.getSpecialites(id).subscribe({
+      next:data=>{
+        this.specialites=data;
+      },
+      error:err=>{
+        console.error(err);
+      }
+    });
+
+  }*/
+
+  loadSpecialites(id:number){
+
+    this.etablissementService.getSpecialites(id).subscribe({
+      next:data=>{
+        console.log("SPECIALITES RECUES :",data); // IMPORTANT
+        this.specialites=data;
+      },
+      error:err=>{
+        console.error("ERREUR API :",err);
+      }
+    });
+
+  }
+
+  /*onSubmit(){
 
     if(this.signupForm.invalid){
       this.signupForm.markAllAsTouched();
@@ -124,6 +160,51 @@ export class SignupComponent implements OnInit {
 
       }
 
+    });
+
+  }*/
+
+
+
+  onSubmit(){
+
+    if(this.signupForm.invalid){
+      this.signupForm.markAllAsTouched();
+      return;
+    }
+
+    const formValue = { ...this.signupForm.value };
+
+    if (!formValue.etablissementId) {
+      this.errorMsg = "Veuillez choisir un établissement.";
+      return;
+    }
+
+    if (!formValue.specialiteId) {
+      this.errorMsg = "Veuillez choisir une spécialité.";
+      return;
+    }
+
+    // conversion importante
+    formValue.etablissementId = Number(formValue.etablissementId);
+    formValue.specialiteId = Number(formValue.specialiteId);
+
+    console.log("Payload envoyé :", formValue);
+
+    this.isLoading = true;
+
+    this.authService.register(formValue).subscribe({
+      next: res => {
+        this.isLoading = false;
+        alert("Inscription réussie");
+        this.router.navigate(['/login']);
+      },
+
+      error: err => {
+        this.isLoading = false;
+        this.errorMsg = "Erreur lors de l'inscription";
+        console.error(err);
+      }
     });
 
   }

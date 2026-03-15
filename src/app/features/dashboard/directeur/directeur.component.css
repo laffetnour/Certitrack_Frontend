@@ -1,13 +1,13 @@
 
 
 
-     /* Container principal */
-   .admin-container {
-     padding: 30px;
-     background-color: #f1f5f9;
-     min-height: 100vh;
-     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-   }
+/* Container principal */
+.admin-container {
+  padding: 30px;
+  background-color: #f1f5f9;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
 /* Header */
 .admin-header {
@@ -62,6 +62,13 @@
   font-weight: 500;
   animation: slideIn 0.3s ease;
 }
+.alert-container {
+  position: relative; /* ou fixed si tu veux que ça reste au même endroit */
+  margin-bottom: 20px;
+  height: 40px; /* pour éviter que le DOM se déplace */
+}
+
+
 
 @keyframes slideIn {
   from {
@@ -120,6 +127,17 @@
 
 .btn-deactivate {
   background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-delete{
+  background: #600a0a;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -482,9 +500,3 @@ form {
   color: #1e293b;
   flex: 1;
 }
-
-     .specialite-title{
-       margin:30px 0 10px;
-       font-size:20px;
-       color:#1e293b;
-     }

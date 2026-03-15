@@ -83,6 +83,7 @@ export class AdminComponent implements OnInit {
   loading = false;
   successMessage = '';
   errorMessage = '';
+  specialites: any[] = [];
 
   constructor(
     private adminService: AdminService,
@@ -94,14 +95,29 @@ export class AdminComponent implements OnInit {
       prenom: ['', Validators.required],
       username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      dateNais: ['', Validators.required] // Ajout du champ date
+      dateNais: ['', Validators.required],// Ajout du champ date
       //nomEtablissement: ['']
+
+      specialiteId: ['', Validators.required]  // ← nouveau champ
     });
   }
 
   ngOnInit(): void {
     console.log("AdminComponent chargé");
-    this.loadCandidats();
+    //this.loadCandidats();
+    this.loadCandidatsParSpecialite();
+    this.loadSpecialites();
+  }
+
+  loadSpecialites(): void {
+    this.adminService.getSpecialites().subscribe({
+      next: (data) => {
+        this.specialites = data;
+      },
+      error: () => {
+        this.errorMessage = 'Impossible de charger les spécialités';
+      }
+    });
   }
 
   loadCandidats(): void {
@@ -317,5 +333,23 @@ export class AdminComponent implements OnInit {
 
   isAllSelected(): boolean {
     return this.candidats.length > 0 && this.selectedCandidats.length === this.candidats.length;
+  }
+
+  specialitesCandidats: any = {};
+//ajouter---
+  loadCandidatsParSpecialite(): void {
+    this.loading = true;
+    this.adminService.getCandidatsBySpecialite().subscribe({
+      next: (data) => {
+        this.specialitesCandidats = data;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.errorMessage = 'Erreur lors du chargement';
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 }
