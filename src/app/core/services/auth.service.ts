@@ -33,8 +33,16 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(data));
   }
 
-  getUser() {
+  /*getUser() {
     return JSON.parse(localStorage.getItem('user')!);
+  }*/
+  getToken(): string | null {
+    return localStorage.getItem('token'); // Assure-toi que la clé est bien 'token'
+  }
+
+  getUser() {
+    const user = localStorage.getItem('currentUser');
+    return user ? JSON.parse(user) : null;
   }
 
   logout() {
