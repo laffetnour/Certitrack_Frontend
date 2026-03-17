@@ -69,4 +69,11 @@ export class AdminService {
   getSpecialites(): Observable<any> {
     return this.http.get(`${this.baseUrl}/specialites`, this.getAuthHeaders());
   }
+
+
+
+  // Dans ton AdminService.ts
+  getCandidatCountByEtab(idEtab: number): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/candidats/count/${idEtab}`, this.getAuthHeaders());
+  }
 }

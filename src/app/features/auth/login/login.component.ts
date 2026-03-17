@@ -35,7 +35,7 @@ export class LoginComponent {
 
         if (role === 'directeurEtab') this.router.navigate(['/directeur']);
         if (role === 'Candidat') this.router.navigate(['/candidat']);
-        if (role === 'adminEtab') this.router.navigate(['/admin']);
+        if (role === 'adminEtab') this.router.navigate(['//dashboard']);
         if (role === 'superAdmin') this.router.navigate(['/super-admin']);
         if (role === 'adminTenant') this.router.navigate(['/tenant']);
       },

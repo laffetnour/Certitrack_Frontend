@@ -1,5 +1,5 @@
 <div class="admin-container">
-  <!-- Header -->
+
   <div class="admin-header">
     <h1>Gestion des Candidats</h1>
     <button class="btn-add" (click)="openAddModal()">
@@ -7,11 +7,11 @@
     </button>
   </div>
 
-  <!-- Messages -->
+
   <div *ngIf="successMessage" class="alert success">{{ successMessage }}</div>
   <div *ngIf="errorMessage" class="alert error">{{ errorMessage }}</div>
 
-  <!-- Actions de masse -->
+
   <div class="bulk-actions" *ngIf="selectedCandidats.length > 0">
     <span>{{ selectedCandidats.length }} sélectionné(s)</span>
     <button class="btn-activate" (click)="activateSelected()">Activer</button>
@@ -23,31 +23,23 @@
 
   <div class="table-container">
 
-    <!-- Loading -->
+
     <div *ngIf="loading" class="loading">
       <div class="spinner"></div>
       <p>Chargement...</p>
     </div>
 
-    <!-- Table par spécialité -->
+
     <div *ngIf="!loading && specialitesCandidats">
 
       <div *ngFor="let sp of specialitesCandidats | keyvalue">
 
-        <!-- Nom spécialité -->
         <h3 class="specialite-title">{{ sp.key }}</h3>
 
         <table class="modern-table" *ngIf="sp.value.length > 0">
-
           <thead>
           <tr>
-            <th>
-              <input
-                type="checkbox"
-                [checked]="isAllSelected()"
-                (change)="selectAll($event)"
-              >
-            </th>
+            <th><input type="checkbox" [checked]="isAllSelected()" (change)="selectAll($event)"></th>
             <th>Nom</th>
             <th>Prénom</th>
             <th>Email</th>
@@ -163,12 +155,16 @@
           </tbody>
 
         </table>
+        <div class="no-data-alert" *ngIf="sp.value.length === 0">
+          <i class="fas fa-info-circle"></i>
+          <span>Aucun étudiant dans cette spécialité</span>
+        </div>
 
       </div>
 
     </div>
 
-    <!-- Aucun candidat -->
+
     <div *ngIf="!loading && (!specialitesCandidats || (specialitesCandidats | keyvalue)?.length === 0)"
          class="empty-state">
       <p>Aucun candidat trouvé</p>
@@ -176,7 +172,7 @@
 
   </div>
 
-  <!-- Modal Ajout/Modification -->
+
   <div class="modal" *ngIf="showModal" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
@@ -232,21 +228,7 @@
   </span>
         </div>
 
-        <!--<div class="form-group">
-          <label for="specialite">Spécialité</label>
-          <select
-            id="specialite"
-            formControlName="specialiteId"
-            class="form-control"
-            [class.error]="candidatForm.get('specialiteId')?.invalid && candidatForm.get('specialiteId')?.touched"
-          >
-            <option value="">-- Sélectionnez une spécialité --</option>
-            <option *ngFor="let sp of specialites" [value]="sp.idSpecialite">{{ sp.nom }}</option>
-          </select>
-          <span class="error-text" *ngIf="candidatForm.get('specialiteId')?.touched && candidatForm.get('specialiteId')?.invalid">
-    Spécialité requise
-  </span>
-        </div>-->
+
 
         <div class="form-group">
           <label for="specialite">Spécialité</label>
@@ -284,19 +266,10 @@
           >
         </div>
 
-        <!--<div class="form-group">
-          <label for="nomEtablissement">Établissement</label>
-
-          <input formControlName="nomEtablissement" type="text" class="form-control" [attr.disabled]="true">
-        </div>-->
 
         <div class="modal-footer">
           <button type="button" class="btn-cancel" (click)="closeModal()">Annuler</button>
-          <!--<button
-            type="submit"
-            class="btn-submit"
-            [disabled]="candidatForm.invalid || loading"
-          >-->
+
           <button
             type="submit"
             class="btn-submit"
@@ -310,7 +283,7 @@
     </div>
   </div>
 
-  <!-- Modal Voir profil -->
+
   <div class="modal" *ngIf="showViewModal" (click)="closeViewModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
@@ -383,3 +356,5 @@
     </div>
   </div>
 </div>
+
+

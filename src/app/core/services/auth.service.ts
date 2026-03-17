@@ -41,12 +41,13 @@ export class AuthService {
   }
 
   getUser() {
-    const user = localStorage.getItem('currentUser');
+    const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   }
 
   logout() {
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
 

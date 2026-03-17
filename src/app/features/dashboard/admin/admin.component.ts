@@ -128,12 +128,7 @@ export class AdminComponent implements OnInit {
 
   onSubmit(): void {
 
-    //ajouter---
-    /*if (this.isEditMode && this.candidatForm.pristine) {
-      this.errorMessage = "Aucune modification détectée";
-      setTimeout(() => this.errorMessage = '', 3000);
-      return;
-    }*/
+
 
     if (this.candidatForm.valid) {
       this.loading = true;
