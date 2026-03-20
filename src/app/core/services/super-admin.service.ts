@@ -43,4 +43,21 @@ export class SuperAdminService {
   getTenants(): Observable<any> {
     return this.http.get(`${this.baseUrl}/tenants`, this.getAuthHeaders());
   }
+
+
+  addTenant(tenant: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/tenant`,tenant, this.getAuthHeaders());
+  }
+
+  updateTenant(id: number, tenant: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/tenant/${id}`,tenant, this.getAuthHeaders());
+  }
+
+  toggleTenantStatus(id: number): Observable<any> {
+    return this.http.put(`${this.baseUrl}/tenant/${id}/status`, {}, this.getAuthHeaders());
+  }
+
+  deleteTenant(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/tenant/${id}`, this.getAuthHeaders());
+  }
 }

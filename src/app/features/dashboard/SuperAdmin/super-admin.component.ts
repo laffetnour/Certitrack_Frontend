@@ -3,13 +3,16 @@ import { CommonModule } from '@angular/common';
 import { SuperAdminService } from '../../../core/services/super-admin.service';
 import { AuthService } from '../../../core/services/auth.service';
 import {ChangeDetectorRef } from '@angular/core';
+import { RouterOutlet, RouterModule, Router } from '@angular/router';
 
 import { forkJoin } from 'rxjs';
+import {RouterLink, RouterLinkActive} from '@angular/router';
 
 @Component({
   selector: 'app-super-admin',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet,
+    RouterModule],
   templateUrl: './superAdmin.component.html',
   styleUrls: ['./superAdmin.component.css']
 })
@@ -20,6 +23,7 @@ export class SuperAdminComponent implements OnInit {
   isLoading: boolean = false;
 
   constructor(
+    public router: Router,
     private superAdminService: SuperAdminService,
     private authService: AuthService,
   private cdr: ChangeDetectorRef
