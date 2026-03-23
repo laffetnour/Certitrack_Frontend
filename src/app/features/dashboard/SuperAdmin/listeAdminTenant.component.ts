@@ -1,0 +1,176 @@
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SuperAdminService } from '../../../core/services/super-admin.service';
+
+@Component({
+  selector: 'app-liste-admins-tenant',
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  templateUrl: './listeAdminTenant.component.html',
+  styleUrls: ['./superAdmin.component.css']
+})
+export class ListeAdminsTenantComponent implements OnInit { // Correction du nom de la classe
+  admins: any[] = [];
+  tenants: any[] = [];
+  filteredAdmins: any[] = [];
+  showModal = false;
+  showViewModal = false;
+  isEditMode = false;
+  selectedAdmin: any = null;
+
+  adminForm: FormGroup;
+  loading = false;
+  successMessage = '';
+  errorMessage = '';
+
+  constructor(
+    private superAdminService: SuperAdminService,
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.adminForm = this.fb.group({
+      nom: ['', Validators.required],
+      prenom: ['', Validators.required],
+      username: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      dateNais: ['', Validators.required],
+      tenantId: ['', Validators.required]
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadAdmins();
+    this.loadTenants();
+  }
+
+  loadAdmins(): void {
+    this.loading = true;
+    this.superAdminService.getTenantAdmins().subscribe({
+      next: (data) => {
+        this.admins = data;
+        this.filteredAdmins = [...data];;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.errorMessage = 'Erreur de chargement';
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  loadTenants(): void {
+    this.superAdminService.getTenants().subscribe(data => this.tenants = data);
+  }
+
+  openAddModal(): void {
+    this.isEditMode = false;
+    this.selectedAdmin = null;
+    this.adminForm.reset();
+    // Re-appliquer le validateur requis pour le mot de passe en mode ajout
+    this.adminForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
+    this.adminForm.get('password')?.updateValueAndValidity();
+    this.showModal = true;
+  }
+
+  filterByTenant(event: any): void {
+    const selectedNom = event.target.value;
+    if (selectedNom === 'ALL') {
+      this.filteredAdmins = [...this.admins];
+    } else {
+      // On filtre sur le nom de l'établissement/tenant stocké dans le DTO
+      this.filteredAdmins = this.admins.filter(a => a.nomEtablissement === selectedNom);
+    }
+    this.cdr.detectChanges(); // Force le rafraîchissement de la vue
+  }
+  openEditModal(admin: any): void {
+    this.isEditMode = true;
+    this.selectedAdmin = admin;
+    const tenantTrouve = this.tenants.find(t => t.nom === admin.nomEtablissement);
+    const idToPatch = tenantTrouve ? tenantTrouve.idTenant : '';
+
+    // Retirer le validateur requis pour le mot de passe en mode édition
+    this.adminForm.get('password')?.clearValidators();
+    this.adminForm.get('password')?.updateValueAndValidity();
+
+    const formattedDate = admin.dateNais ? admin.dateNais.toString().substring(0, 10) : '';
+
+    this.adminForm.patchValue({
+      nom: admin.nom,
+      prenom: admin.prenom,
+      username: admin.username,
+      dateNais: formattedDate,
+      tenantId: idToPatch
+    });
+
+    this.showModal = true;
+    this.cdr.detectChanges();
+  }
+
+  viewAdmin(admin: any): void {
+    this.selectedAdmin = admin;
+    this.showViewModal = true;
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+    this.showViewModal = false;
+    this.selectedAdmin = null;
+  }
+
+  onSubmit(): void {
+    if (this.adminForm.valid) {
+      this.loading = true;
+      const formData = this.adminForm.value;
+
+      if (this.isEditMode) {
+        // On envoie l'ID et l'objet au service
+        this.superAdminService.updateUser(this.selectedAdmin.id, formData).subscribe({
+          next: () => this.handleSuccess('Administrateur mis à jour'),
+          error: () => this.handleError('Erreur lors de la modification')
+        });
+      } else {
+        this.superAdminService.addUser(formData).subscribe({
+          next: () => this.handleSuccess('Créé avec succès'),
+          error: () => this.handleError('Erreur lors de l ajout')
+        });
+      }
+    }
+  }
+
+  toggleStatus(admin: any): void {
+    this.superAdminService.toggleStatus(admin.id).subscribe({
+      next: () => {
+        admin.statut = !admin.statut;
+        this.successMessage = admin.statut ? 'Administrateur activé' : 'Administrateur désactivé';
+        this.cdr.detectChanges();
+        setTimeout(() => this.successMessage = '', 3000);
+      }
+    });
+  }
+
+  deleteUser(id: number): void {
+    if (confirm('Supprimer cet administrateur ?')) {
+      this.superAdminService.deleteUser(id).subscribe({
+        next: () => this.handleSuccess('Utilisateur supprimé'),
+        error: () => this.handleError('Erreur lors de la suppression')
+      });
+    }
+  }
+
+  private handleSuccess(msg: string): void {
+    this.successMessage = msg;
+    this.loading = false;
+    this.closeModal();
+    this.loadAdmins();
+    setTimeout(() => this.successMessage = '', 3000);
+  }
+
+  private handleError(msg: string): void {
+    this.errorMessage = msg;
+    this.loading = false;
+    setTimeout(() => this.errorMessage = '', 3000);
+  }
+}

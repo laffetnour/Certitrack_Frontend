@@ -60,4 +60,26 @@ export class SuperAdminService {
   deleteTenant(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/tenant/${id}`, this.getAuthHeaders());
   }
+
+// --- À AJOUTER POUR LES ADMINS TENANTS ---
+
+  getTenantAdmins(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/tenants-admins`, this.getAuthHeaders());
+  }
+
+  addUser(user: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/user`, user, this.getAuthHeaders());
+  }
+
+  updateUser(id: number, user: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/user/${id}`, user, this.getAuthHeaders());
+  }
+
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/user/${id}`, this.getAuthHeaders());
+  }
+
+  toggleStatus(id: number): Observable<any> {
+    return this.http.put(`${this.baseUrl}/user/${id}/status`, {}, this.getAuthHeaders());
+  }
 }

@@ -12,6 +12,7 @@ import { AdminComponent } from './features/dashboard/admin/admin.component';
 import { homeAdminComponent } from './features/dashboard/admin/homeAdmin.component';
 import { SuperAdminComponent } from './features/dashboard/SuperAdmin/super-admin.component';
 import { TenantComponent } from './features/dashboard/SuperAdmin/tenant.component';
+import{ListeAdminsTenantComponent} from './features/dashboard/SuperAdmin/listeAdminTenant.component';
 import { authGuard } from './core/guards/auth.guard';
 
 
@@ -25,8 +26,8 @@ export const routes: Routes = [
     component: SuperAdminComponent,
     canActivate: [authGuard],
     children: [
-      { path: 'tenants', component: TenantComponent }
-     // { path: 'admins', component: AdminListComponent }, // Si vous avez un composant pour la liste des admins
+      { path: 'tenants', component: TenantComponent },
+      { path: 'adminTenants', component: ListeAdminsTenantComponent } // Si vous avez un composant pour la liste des admins
       //{ path: 'stats', component: SuperAdminStatsComponent }, // Vos graphiques/cartes
      // { path: '', redirectTo: 'tenants', pathMatch: 'full' } // Route par défaut
     ]
