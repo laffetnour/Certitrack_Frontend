@@ -1,0 +1,134 @@
+<!-- FontAwesome (à mettre une seule fois dans index.html normalement) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<div class="dashboard-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- LOGO -->
+    <div class="logo-section">
+      <img src="LOGO-2026_VF.png" alt="Smartfuture" class="main-logo">
+    </div>
+
+    <!-- MENU -->
+    <nav class="nav-menu">
+
+      <div class="nav-item"
+           routerLink="/directeur/dashboard"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: true}">
+        <i class="fas fa-th-large"></i>
+        <span>Dashboard</span>
+      </div>
+
+      <div class="nav-item"
+           routerLink="/directeur/administrateurs"
+           routerLinkActive="active">
+        <i class="fas fa-user-shield"></i>
+        <span>Administrateurs</span>
+      </div>
+
+      <div class="nav-item"
+           routerLink="/directeur/candidats"
+           routerLinkActive="active">
+        <i class="fas fa-user-graduate"></i>
+        <span>Candidats</span>
+      </div>
+
+      <div class="nav-item"
+           routerLink="/directeur/specialites"
+           routerLinkActive="active">
+        <i class="fas fa-tags"></i>
+        <span>Spécialités</span>
+      </div>
+
+      <!-- PARCOURS -->
+      <div class="nav-item-group">
+        <div class="nav-item" (click)="isParcoursOpen = !isParcoursOpen">
+          <i class="fas fa-route"></i>
+          <span>Parcours</span>
+          <i class="fas fa-chevron-down arrow"
+             [style.transform]="isParcoursOpen ? 'rotate(180deg)' : 'none'"></i>
+        </div>
+
+        <div class="sub-menu" *ngIf="isParcoursOpen">
+          <div class="nav-item sub">Import GMetrix</div>
+          <div class="nav-item sub">Import Certiport</div>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <i class="fas fa-chart-line"></i>
+        <span>Résultats</span>
+      </div>
+
+      <div class="nav-item">
+        <i class="fas fa-calendar"></i>
+        <span>Session</span>
+      </div>
+
+      <div class="nav-item">
+        <i class="fas fa-percentage"></i>
+        <span>Seuil score</span>
+      </div>
+
+      <div class="nav-item">
+        <i class="fas fa-cog"></i>
+        <span>Paramètres</span>
+      </div>
+
+    </nav>
+
+    <!-- LOGOUT -->
+    <div class="logout" (click)="onLogout()">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Déconnexion</span>
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-layout">
+
+    <!-- HEADER -->
+    <header class="notification-bar">
+
+      <!-- SEARCH -->
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Recherche...">
+      </div>
+
+      <!-- USER -->
+      <div class="user-actions">
+
+        <div class="notification-icon">
+          <i class="fas fa-bell"></i>
+          <span class="dot-notification"></span>
+        </div>
+
+        <div class="profile">
+          <span class="user-role">
+            {{ currentUser?.prenom }} {{ currentUser?.nom }}
+          </span>
+
+          <div class="avatar-circle">
+            <i class="fas fa-user"></i>
+          </div>
+
+          <i class="fas fa-chevron-down arrow-user"></i>
+        </div>
+
+      </div>
+
+    </header>
+
+    <!-- CONTENU DYNAMIQUE -->
+    <main class="content-area">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+
+</div>

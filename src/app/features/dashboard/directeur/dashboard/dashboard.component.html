@@ -1,0 +1,47 @@
+<div class="welcome-section">
+  <h1>Tableau de Bord</h1>
+  <p>Bienvenue {{ currentUser?.prenom }} {{ currentUser?.nom }}</p>
+</div>
+<div class="stats-grid" *ngIf="stats">
+
+  <div class="stat-card">
+    <div class="stat-icon bg-dark">
+      <i class="fas fa-school"></i>
+    </div>
+    <div class="stat-info">
+      <h3>{{ stats.etablissement }}</h3>
+      <p>Etablissement</p>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon bg-red">
+      <i class="fas fa-user-shield"></i>
+    </div>
+    <div class="stat-info">
+      <h3>{{ stats.admins }}</h3>
+      <p>Administrateurs</p>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon bg-dark">
+      <i class="fas fa-users"></i>
+    </div>
+    <div class="stat-info">
+      <h3>{{ stats.candidats }}</h3>
+      <p>Candidats</p>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon bg-red">
+      <i class="fas fa-book"></i>
+    </div>
+    <div class="stat-info">
+      <h3>{{ stats.specialites }}</h3>
+      <p>Spécialités</p>
+    </div>
+  </div>
+
+</div>

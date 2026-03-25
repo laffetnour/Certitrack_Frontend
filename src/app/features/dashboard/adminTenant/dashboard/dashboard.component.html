@@ -1,0 +1,24 @@
+<div class="welcome-section">
+  <h1>Dashboard</h1>
+  <p>Bienvenue {{ currentUser?.prenom }} {{ currentUser?.nom }}</p>
+</div>
+
+<div class="stats-grid">
+
+  <div class="stat-card">
+    <div class="stat-icon">🏫</div>
+    <div class="stat-info">
+      <h3>{{ stats.etablissements }}</h3>
+      <p>Etablissements</p>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon">👨‍💼</div>
+    <div class="stat-info">
+      <h3>{{ stats.directeurs }}</h3>
+      <p>Directeurs</p>
+    </div>
+  </div>
+
+</div>

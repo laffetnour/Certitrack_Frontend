@@ -52,4 +52,39 @@ export class DirecteurService {
   deleteMultiple(ids: number[]): Observable<any> {
     return this.http.post(`${this.baseUrl}/administrateurs/delete-multiple`, ids, this.getAuthHeaders());
   }
+  getStats(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/stats`, this.getAuthHeaders());
+  }
+
+
+  // ================= SPECIALITES =================
+
+  getSpecialites(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/specialites`, this.getAuthHeaders());
+  }
+
+  addSpecialite(sp: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/specialites`, sp, this.getAuthHeaders());
+  }
+
+  updateSpecialite(id: number, sp: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/specialites/${id}`, sp, this.getAuthHeaders());
+  }
+
+  toggleSpecialite(id: number): Observable<any> {
+    return this.http.put(`${this.baseUrl}/specialites/${id}/status`, {}, this.getAuthHeaders());
+  }
+
+  deleteSpecialite(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/specialites/${id}`, this.getAuthHeaders());
+  }
+
+  activateMultipleSpecialites(ids: number[]) {
+    return this.http.put(`${this.baseUrl}/specialites/activate-multiple`, ids, this.getAuthHeaders());
+  }
+
+  deactivateMultipleSpecialites(ids: number[]) {
+    return this.http.put(`${this.baseUrl}/specialites/deactivate-multiple`, ids, this.getAuthHeaders());
+  }
+
 }

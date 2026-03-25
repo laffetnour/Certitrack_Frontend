@@ -37,7 +37,7 @@ export class LoginComponent {
         if (role === 'Candidat') this.router.navigate(['/candidat']);
         if (role === 'adminEtab') this.router.navigate(['//dashboard']);
         if (role === 'superAdmin') this.router.navigate(['/super-admin']);
-        if (role === 'adminTenant') this.router.navigate(['/tenant']);
+        if (role === 'adminTenant') this.router.navigate(['/adminTenant']);
       },
       error: (error: HttpErrorResponse) => {
         if (error.status === 403) {

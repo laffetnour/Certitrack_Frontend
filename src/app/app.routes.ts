@@ -6,7 +6,8 @@ export const routes: Routes = [];
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
-import { DirecteurComponent } from './features/dashboard/directeur/directeur.component';
+import { DirecteurLayoutComponent } from './features/dashboard/directeur/layout/directeur-layout.component';
+
 import { CandidatComponent } from './features/dashboard/candidat/candidat.component';
 import { AdminComponent } from './features/dashboard/admin/admin.component';
 import { homeAdminComponent } from './features/dashboard/admin/homeAdmin.component';
@@ -14,6 +15,12 @@ import { SuperAdminComponent } from './features/dashboard/SuperAdmin/super-admin
 import { TenantComponent } from './features/dashboard/SuperAdmin/tenant.component';
 import{ListeAdminsTenantComponent} from './features/dashboard/SuperAdmin/listeAdminTenant.component';
 import { authGuard } from './core/guards/auth.guard';
+import { DashboardComponent } from './features/dashboard/directeur/dashboard/dashboard.component';
+import { AdministrateursComponent } from './features/dashboard/directeur/administrateurs/administrateurs.component';
+import { SpecialiteComponent } from './features/dashboard/directeur/specialites/specialite.component';
+import { DirecteursComponent } from './features/dashboard/adminTenant/directeurs/directeurs.component';
+import { AdminTenantLayoutComponent } from './features/dashboard/adminTenant/layout/layout.component';
+
 
 
 export const routes: Routes = [
@@ -33,7 +40,7 @@ export const routes: Routes = [
     ]
   },
   //{ path: 'tenant', component: AdminTenantComponent, canActivate: [authGuard] },
-  { path: 'directeur', component: DirecteurComponent, canActivate: [authGuard] },
+
   { path: 'candidat', component: CandidatComponent, canActivate: [authGuard] },
 
   {
@@ -44,6 +51,26 @@ export const routes: Routes = [
 
       { path: 'candidats', component: AdminComponent }
       //{ path: '', redirectTo: 'candidats', pathMatch: 'full' }
+    ]
+  },
+  {
+    path: 'directeur',
+    component: DirecteurLayoutComponent,
+    children: [
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'administrateurs', component: AdministrateursComponent },
+      { path: 'specialites', component: SpecialiteComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+    ]
+  },
+  {
+    path: 'adminTenant',
+    component: AdminTenantLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'directeurs', component: DirecteursComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
 

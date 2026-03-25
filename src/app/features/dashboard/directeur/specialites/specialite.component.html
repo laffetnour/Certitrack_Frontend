@@ -1,0 +1,163 @@
+<div class="specialite-container">
+
+  <!-- Header -->
+  <div class="specialite-header">
+    <h1>Gestion des Spécialités</h1>
+    <button class="btn-add" (click)="openAdd()">
+      <span>+</span> Nouvelle Spécialité
+    </button>
+  </div>
+
+  <!-- Messages -->
+  <div class="alert-container">
+    <div *ngIf="successMessage" class="alert success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert error">{{ errorMessage }}</div>
+  </div>
+
+  <!-- Actions de masse -->
+  <div class="bulk-actions" *ngIf="selectedIds.length > 0">
+    <span>{{ selectedIds.length }} sélectionné(s)</span>
+    <button class="btn-activate" (click)="activateSelected()">Activer</button>
+    <button class="btn-deactivate" (click)="deactivateSelected()">Désactiver</button>
+    <button class="btn-delete" (click)="deleteSelected()">Supprimer</button>
+  </div>
+
+  <!-- Tableau -->
+  <div class="table-container">
+    <table class="modern-table" *ngIf="!loading && specialites.length > 0">
+
+      <thead>
+      <tr>
+        <th>
+          <input type="checkbox"
+                 [checked]="isAllSelected()"
+                 (change)="selectAll($event)">
+        </th>
+        <th>Nom</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let sp of specialites; trackBy: trackById">
+
+        <td>
+          <input type="checkbox"
+                 [checked]="selectedIds.includes(sp.idSpecialite)"
+                 (change)="onCheckboxChange(sp.idSpecialite, $event)">
+        </td>
+
+        <td>{{ sp.nom }}</td>
+
+        <td>
+          <span class="status-badge"
+                [class.active]="sp.statut"
+                [class.inactive]="!sp.statut">
+            {{ sp.statut ? 'Actif' : 'Inactif' }}
+          </span>
+        </td>
+
+        <td class="actions">
+
+          <!-- EDIT -->
+          <button class="btn-edit" (click)="openEdit(sp)" title="Modifier">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+
+          <!-- TOGGLE -->
+          <button
+            class="btn-toggle"
+            (click)="toggle(sp)"
+            [title]="sp.statut ? 'Désactiver' : 'Activer'"
+            [class.btn-activate-icon]="!sp.statut"
+          >
+            <svg *ngIf="sp.statut" xmlns="http://www.w3.org/2000/svg"
+                 width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+            </svg>
+
+            <svg *ngIf="!sp.statut" xmlns="http://www.w3.org/2000/svg"
+                 width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </button>
+
+          <!-- DELETE (IDENTIQUE ADMIN) -->
+          <button class="btn-delete" (click)="delete(sp.idSpecialite)" title="Supprimer">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+
+        </td>
+
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Chargement...</p>
+    </div>
+
+    <!-- Empty -->
+    <div *ngIf="!loading && specialites.length === 0" class="empty-state">
+      <p>Aucune spécialité trouvée</p>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <h2>{{ isEdit ? 'Modifier la spécialité' : 'Nouvelle spécialité' }}</h2>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+
+      <form>
+        <div class="form-group">
+          <label>Nom</label>
+          <input
+            type="text"
+            [(ngModel)]="form.nom"
+            name="nom"
+            class="form-control"
+          >
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="closeModal()">Annuler</button>
+
+          <button
+            type="button"
+            class="btn-submit"
+            (click)="save()"
+            [disabled]="isSubmitDisabled()"
+          >
+            {{ isEdit ? 'Modifier' : 'Ajouter' }}
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+</div>

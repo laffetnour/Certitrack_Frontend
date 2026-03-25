@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DirecteurService } from '../../../core/services/directeur.service';
+import { DirecteurService } from '../../../../core/services/directeur.service';
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-directeur',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './directeur.component.html',
-  styleUrls: ['./directeur.component.css']
+  templateUrl: './administrateurs.component.html',
+  styleUrls: ['./administrateurs.component.css']
 })
-export class DirecteurComponent implements OnInit {
+export class AdministrateursComponent implements OnInit {
 
   admins: any[] = [];
   selectedAdmins: number[] = [];
