@@ -82,4 +82,41 @@ export class SuperAdminService {
   toggleStatus(id: number): Observable<any> {
     return this.http.put(`${this.baseUrl}/user/${id}/status`, {}, this.getAuthHeaders());
   }
+
+
+
+// --- GESTION DES CATEGORIES DE MODULES ---
+
+getCategories(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.baseUrl}/categories`, this.getAuthHeaders());
+}
+
+addCategorie(categorie: any): Observable<any> {
+  return this.http.post(`${this.baseUrl}/categories`, categorie, this.getAuthHeaders());
+}
+
+updateCategorie(id: number, categorie: any): Observable<any> {
+  return this.http.put(`${this.baseUrl}/categories/${id}`, categorie, this.getAuthHeaders());
+}
+
+deleteCategorie(id: number): Observable<any> {
+  return this.http.delete(`${this.baseUrl}/categories/${id}`, this.getAuthHeaders());
+}
+
+// --- GESTION DES MODULES ---
+getModules(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.baseUrl}/modules`, this.getAuthHeaders());
+}
+
+addModule(module: any): Observable<any> {
+  return this.http.post(`${this.baseUrl}/modules`, module, this.getAuthHeaders());
+}
+
+updateModule(id: number, module: any): Observable<any> {
+  return this.http.put(`${this.baseUrl}/modules/${id}`, module, this.getAuthHeaders());
+}
+
+deleteModule(id: number): Observable<any> {
+  return this.http.delete(`${this.baseUrl}/modules/${id}`, this.getAuthHeaders());
+}
 }

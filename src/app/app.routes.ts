@@ -20,8 +20,8 @@ import { AdministrateursComponent } from './features/dashboard/directeur/adminis
 import { SpecialiteComponent } from './features/dashboard/directeur/specialites/specialite.component';
 import { DirecteursComponent } from './features/dashboard/adminTenant/directeurs/directeurs.component';
 import { AdminTenantLayoutComponent } from './features/dashboard/adminTenant/layout/layout.component';
-
-
+import { CategorieModuleComponent } from './features/dashboard/SuperAdmin/categorieModule/categorie-module.component';
+import { ModuleComponent } from './features/dashboard/SuperAdmin/Module/module.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -34,8 +34,9 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'tenants', component: TenantComponent },
-      { path: 'adminTenants', component: ListeAdminsTenantComponent } // Si vous avez un composant pour la liste des admins
-      //{ path: 'stats', component: SuperAdminStatsComponent }, // Vos graphiques/cartes
+      { path: 'adminTenants', component: ListeAdminsTenantComponent }, // Si vous avez un composant pour la liste des admins
+      { path: 'categories', component: CategorieModuleComponent },
+       { path: 'modules', component: ModuleComponent }
      // { path: '', redirectTo: 'tenants', pathMatch: 'full' } // Route par défaut
     ]
   },

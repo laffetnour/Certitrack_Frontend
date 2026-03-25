@@ -1,0 +1,77 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Catalogue des Modules</h1>
+    <div class="header-actions">
+      <select class="form-control filter-select" [(ngModel)]="selectedFilterCat" (change)="applyFilter()">
+        <option value="">Toutes les catégories</option>
+        <option *ngFor="let c of categories" [value]="c.id">{{ c.nom }}</option>
+      </select>
+      <button class="btn-add" (click)="openAddModal()">+ Nouveau Module</button>
+    </div>
+  </div>
+
+  <table class="modern-table">
+    <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Catégorie</th>
+      <th>Score Seuil</th>
+      <th>Durée (min)</th>
+      <th>Statut</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let m of filteredModules">
+      <td>{{ m.nom }}</td>
+      <td>
+  <span class="badge" *ngIf="m.nomCategorie">
+    {{ m.nomCategorie }}
+  </span>
+        <span *ngIf="!m.nomCategorie" style="color: #ccc;">Non classé</span>
+      </td>
+
+      <td>{{ m.seuilScore }}</td>
+      <td>{{ m.dureeQCM }} min</td>
+      <td>{{ m.disponibilite ? '✅ Dispo' : '❌ Hors ligne' }}</td>
+      <td class="actions">
+        <button class="btn-edit" (click)="openEditModal(m)">Edit</button>
+        <button class="btn-delete" (click)="deleteModule(m.idModule)">Suppr</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="modal" *ngIf="showModal">
+    <div class="modal-content">
+      <h2>{{ isEditMode ? 'Modifier' : 'Ajouter' }} Module</h2>
+      <form [formGroup]="moduleForm" (ngSubmit)="onSubmit()">
+
+        <label>Nom du module</label>
+        <input type="text" formControlName="nom" class="form-control">
+
+        <label>Catégorie</label>
+        <select formControlName="categorieModule" class="form-control">
+          <option [ngValue]="null">Choisir...</option>
+          <option *ngFor="let c of categories" [ngValue]="c">{{ c.nom }}</option>
+        </select>
+
+        <div style="display: flex; gap: 10px;">
+          <div>
+            <label>Seuil Score</label>
+            <input type="number" formControlName="seuilScore" class="form-control">
+          </div>
+          <div>
+            <label>Durée (min)</label>
+            <input type="number" formControlName="dureeQCM" class="form-control">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" (click)="showModal=false">Annuler</button>
+          <button type="submit" class="btn-submit" [disabled]="moduleForm.invalid">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

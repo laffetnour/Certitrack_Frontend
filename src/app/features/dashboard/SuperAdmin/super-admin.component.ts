@@ -22,6 +22,10 @@ export class SuperAdminComponent implements OnInit {
   stats: any = { tenants: 0, etablissements: 0, admins: 0 };
   isLoading: boolean = false;
 
+  isCatalogueOpen: boolean = false;
+    isParcoursOpen: boolean = false;
+
+
   constructor(
     public router: Router,
     private superAdminService: SuperAdminService,
@@ -34,6 +38,13 @@ export class SuperAdminComponent implements OnInit {
     this.loadDashboardData();
   }
 
+toggleCatalogue(): void {
+    this.isCatalogueOpen = !this.isCatalogueOpen;
+  }
+
+  toggleParcours(): void {
+    this.isParcoursOpen = !this.isParcoursOpen;
+  }
   loadDashboardData(): void {
     this.isLoading = true;
 
@@ -77,6 +88,7 @@ export class SuperAdminComponent implements OnInit {
       });
     }
   }
+
 
   onLogout(): void {
     this.authService.logout();

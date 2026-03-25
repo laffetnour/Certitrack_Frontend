@@ -28,9 +28,24 @@
         <i class="fas fa-chevron-down arrow"></i>
       </div>
 
-      <div class="nav-item">
-        <i class="fas fa-book"></i> <span>Catalogue</span>
-        <i class="fas fa-chevron-down arrow"></i>
+      <div class="nav-item-group">
+        <div class="nav-item" (click)="toggleCatalogue()">
+          <i class="fas fa-book"></i>
+          <span>Catalogue</span>
+          <i class="fas fa-chevron-down arrow"
+             [style.transform]="isCatalogueOpen ? 'rotate(180deg)' : 'none'"></i>
+        </div>
+
+        <div class="sub-menu" *ngIf="isCatalogueOpen">
+          <div class="nav-item sub" routerLink="/super-admin/categories" routerLinkActive="active">
+            <span>Catégories</span>
+          </div>
+
+          <div class="nav-item sub" routerLink="/super-admin/modules" routerLinkActive="active">
+            <i class="fas fa-cubes" style="font-size: 0.8rem; margin-right: 10px;"></i>
+            <span>Modules</span>
+          </div>
+        </div>
       </div>
 
       <div class="nav-item">
