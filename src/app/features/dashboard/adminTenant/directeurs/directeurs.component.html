@@ -211,15 +211,19 @@
 
         <select formControlName="etablissementId" class="form-control">
           <option [ngValue]="null" disabled>-- Choisir établissement --</option>
-          <option *ngFor="let e of etablissements" [value]="e.idEtab">
+
+          <option *ngFor="let e of etablissements" [ngValue]="e.idEtab">
             {{ e.nom }}
           </option>
         </select>
-
         <input *ngIf="!isEditMode" formControlName="password" type="password" placeholder="Mot de passe" class="form-control">
 
+
         <div class="modal-footer">
-          <button type="submit" class="btn-submit" [disabled]="directeurForm.invalid">Enregistrer</button>
+
+          <button type="submit" class="btn-submit" [disabled]="directeurForm.invalid">
+            Enregistrer
+          </button>
           <button type="button" (click)="closeModal()">Annuler</button>
         </div>
       </form>

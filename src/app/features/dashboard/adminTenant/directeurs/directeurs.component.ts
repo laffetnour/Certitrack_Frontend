@@ -225,7 +225,7 @@ export class DirecteursComponent implements OnInit {
     this.loadData();
   }
 
-  initForm() {
+  /*initForm() {
     this.directeurForm = this.fb.group({
       nom: ['', Validators.required],
       prenom: ['', Validators.required],
@@ -234,9 +234,49 @@ export class DirecteursComponent implements OnInit {
       password: [''],
       etablissementId: [null, Validators.required]
     });
-  }
+  }*/
 
-  loadData() {
+
+loadData() {
+  this.loading = true;
+  this.service.getEtablissements().subscribe({
+    next: (etabs) => {
+      this.etablissements = etabs;
+
+      this.service.getDirecteurs().subscribe({
+        next: (res) => {
+          console.log("Données reçues :", res);
+          this.allDirecteurs = res || [];
+          this.directeurs = [...this.allDirecteurs]; // Initialise la liste affichée
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error("Erreur 403 ou autre sur les directeurs :", err);
+          this.loading = false;
+        }
+      });
+    },
+    error: (err) => console.error("Erreur établissements :", err)
+  });
+}
+
+filterByEtablissement() {
+  const selectedId = this.selectedEtablissement;
+  console.log("Filtrage pour ID :", selectedId);
+
+  if (!selectedId || selectedId === "" || selectedId === "null") {
+    this.directeurs = [...this.allDirecteurs];
+  } else {
+    this.directeurs = this.allDirecteurs.filter(d => {
+      // On cherche dans la liste d'établissements renvoyée par ton UserReponse Java
+      return d.etablissements && d.etablissements.some((e: any) => e.id == selectedId);
+    });
+  }
+  console.log("Résultat :", this.directeurs.length, "trouvés");
+  this.cdr.detectChanges();
+}
+  /*loadData() {
     this.service.getEtablissements().subscribe(etabs => {
       this.etablissements = etabs;
 
@@ -248,30 +288,32 @@ export class DirecteursComponent implements OnInit {
       });
     });
   }
+filterByEtablissement() {
+  const selectedId = this.selectedEtablissement;
+  console.log("Filtrage en cours pour l'ID établissement :", selectedId);
 
-  filterByEtablissement() {
-    const selectedId = this.selectedEtablissement;
-    console.log("Filtrage pour l'ID d'établissement :", selectedId);
-
-    // Cas 1 : "Tous les établissements"
-    if (!selectedId || selectedId === "" || selectedId === "null") {
-      this.directeurs = [...this.allDirecteurs];
-    }
-    else {
-      // Cas 2 : On filtre les directeurs
-      this.directeurs = this.allDirecteurs.filter(d => {
-        // On vérifie si le directeur possède l'ID dans sa liste d'établissements
-        // (On utilise == pour comparer String et Number sans souci)
-        return d.etablissements && d.etablissements.some((e: any) => e.id == selectedId);
-      });
-    }
-
-    console.log("Résultat du filtre :", this.directeurs.length, "directeurs trouvés");
-    this.cdr.detectChanges();
+  if (!selectedId || selectedId === "" || selectedId === "null") {
+    // Si rien n'est sélectionné, on réaffiche tout
+    this.directeurs = [...this.allDirecteurs];
+  } else {
+    // FILTRAGE ROBUSTE :
+    this.directeurs = this.allDirecteurs.filter(dir => {
+      // 1. Vérifie si le directeur a une liste d'établissements
+      if (dir.etablissements && Array.isArray(dir.etablissements)) {
+        // 2. Vérifie si l'ID sélectionné est présent dans sa liste
+        // On utilise '==' pour comparer string et number sans erreur
+        return dir.etablissements.some((e: any) => e.id == selectedId);
+      }
+      return false;
+    });
   }
 
+  console.log("Nombre de directeurs après filtre :", this.directeurs.length);
+  this.cdr.detectChanges();
+}*/
+
   // --- MODAL HELPERS ---
-  openAddModal() {
+  /*openAddModal() {
     this.isEditMode = false;
     this.directeurForm.reset({ etablissementId: null });
     this.showModal = true;
@@ -291,7 +333,47 @@ export class DirecteursComponent implements OnInit {
       etablissementId: etabId
     });
     this.showModal = true;
-  }
+  }*/
+
+initForm() {
+  this.directeurForm = this.fb.group({
+    nom: ['', Validators.required],
+    prenom: ['', Validators.required],
+    username: ['', [Validators.required, Validators.email]], // Doit être un email valide !
+    dateNais: ['', Validators.required],
+    password: [''], // On le laisse vide par défaut
+    etablissementId: [null, Validators.required] // Ne doit pas être null
+  });
+}
+
+openAddModal() {
+  this.isEditMode = false;
+  this.directeurForm.reset({
+    etablissementId: null, // Force la valeur initiale à null
+    nom: '',
+    prenom: '',
+    username: '',
+    dateNais: ''
+  });
+  this.showModal = true;
+}
+
+openEditModal(d: any) {
+  this.isEditMode = true;
+  this.selectedDirecteur = d;
+  // On enlève le validateur requis pour la modification
+  this.directeurForm.get('password')?.clearValidators();
+  this.directeurForm.get('password')?.updateValueAndValidity();
+
+  this.directeurForm.patchValue({
+    nom: d.nom,
+    prenom: d.prenom,
+    username: d.username,
+    dateNais: d.dateNais,
+    etablissementId: d.etablissements?.[0]?.id || null
+  });
+  this.showModal = true;
+}
 
   closeModal() { this.showModal = false; }
 
