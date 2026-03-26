@@ -10,11 +10,13 @@ export interface Directeur {
   email: string;
   actif: boolean;
   etablissementId?: number;
+  statut: boolean;
 }
 
 export interface Etablissement {
   idEtab: number;
   nom: string;
+  statut: boolean; // 🔥 IMPORTANT
 }
 
 @Injectable({
@@ -83,5 +85,24 @@ export class AdminTenantService {
   // ========================== ETABLISSEMENTS ==========================
   getEtablissements(): Observable<Etablissement[]> {
     return this.http.get<Etablissement[]>(this.url('etablissements'), this.getHeaders());
+  }
+ /* getEtablissements(): Observable<any[]> {
+    return this.http.get<any[]>(this.url('etablissements'), this.getHeaders());
+  }*/
+
+  createEtablissement(data: any): Observable<any> {
+    return this.http.post<any>(this.url('etablissements'), data, this.getHeaders());
+  }
+
+  updateEtablissement(id: number, data: any): Observable<any> {
+    return this.http.put<any>(this.url(`etablissements/${id}`), data, this.getHeaders());
+  }
+
+  deleteEtablissement(id: number): Observable<void> {
+    return this.http.delete<void>(this.url(`etablissements/${id}`), this.getHeaders());
+  }
+
+  toggleEtablissementStatus(id: number): Observable<any> {
+    return this.http.put<any>(this.url(`etablissements/${id}/status`), {}, this.getHeaders());
   }
 }

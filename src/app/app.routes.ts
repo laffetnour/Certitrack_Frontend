@@ -22,7 +22,7 @@ import { DirecteursComponent } from './features/dashboard/adminTenant/directeurs
 import { AdminTenantLayoutComponent } from './features/dashboard/adminTenant/layout/layout.component';
 import { CategorieModuleComponent } from './features/dashboard/SuperAdmin/categorieModule/categorie-module.component';
 import { ModuleComponent } from './features/dashboard/SuperAdmin/Module/module.component';
-
+import { EtablissementsComponent } from './features/dashboard/adminTenant/etablissements/etablissements.component';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
@@ -71,6 +71,7 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'directeurs', component: DirecteursComponent },
+      { path: 'etablissements', component: EtablissementsComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

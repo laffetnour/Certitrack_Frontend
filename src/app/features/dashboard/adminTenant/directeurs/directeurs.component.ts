@@ -205,13 +205,17 @@ export class DirecteursComponent implements OnInit {
   allDirecteurs: any[] = [];   // Copie de sauvegarde pour le filtrage
   etablissements: any[] = [];
 
+  selectedDirecteurs: number[] = [];
 
+  showDeleteModal = false;
+  directeurToDeleteId: number | null = null;
 
   selectedEtablissement: any = ""; // Pour le [(ngModel)] du filtre
   loading = false;
   showModal = false;
   isEditMode = false;
   selectedDirecteur: any;
+  showViewModal = false;
   directeurForm!: FormGroup;
 
   constructor(
@@ -387,6 +391,7 @@ openEditModal(d: any) {
     obs.subscribe(() => {
       this.loadData();
       this.closeModal();
+      this.cdr.detectChanges();
     });
   }
 
@@ -405,13 +410,136 @@ openEditModal(d: any) {
 
           console.log('Directeur supprimé avec succès');
           this.loading = false;
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Erreur lors de la suppression', err);
           alert('Impossible de supprimer le directeur. Vérifiez vos permissions.');
           this.loading = false;
         }
+
       });
     }
   }
+
+  onCheckboxChange(id: number, e: any) {
+    if (e.target.checked) {
+      this.selectedDirecteurs.push(id);
+    } else {
+      this.selectedDirecteurs = this.selectedDirecteurs.filter(i => i !== id);
+    }
+  }
+
+  selectAll(e: any) {
+    this.selectedDirecteurs = e.target.checked
+      ? this.directeurs.map(d => d.id)
+      : [];
+  }
+
+  isAllSelected() {
+    return this.selectedDirecteurs.length === this.directeurs.length;
+  }
+
+  deleteSelected() {
+    this.service.deleteMultiple(this.selectedDirecteurs)
+      .subscribe(() => {
+        this.selectedDirecteurs = [];
+        this.loadData();
+        this.cdr.detectChanges();
+      });
+  }
+
+  activateSelected() {
+    this.service.activateMultiple(this.selectedDirecteurs)
+      .subscribe(() => {
+        this.allDirecteurs = this.allDirecteurs.map(dir =>
+          this.selectedDirecteurs.includes(dir.id) ? { ...dir, statut: true } : dir
+        );
+        this.directeurs = [...this.allDirecteurs];
+        this.selectedDirecteurs = [];
+        this.cdr.detectChanges();
+      });
+  }
+
+  deactivateSelected() {
+    this.service.deactivateMultiple(this.selectedDirecteurs)
+      .subscribe(() => {
+        this.allDirecteurs = this.allDirecteurs.map(dir =>
+          this.selectedDirecteurs.includes(dir.id) ? { ...dir, statut: false } : dir
+        );
+        this.directeurs = [...this.allDirecteurs];
+        this.selectedDirecteurs = [];
+        this.cdr.detectChanges();
+      });
+  }
+  trackById(index: number, item: any) {
+    return item.id;
+  }
+
+
+
+  viewDirecteur(d: any) {
+    this.selectedDirecteur = d;
+    this.showViewModal = true;
+  }
+
+  closeViewModal() {
+    this.showViewModal = false;
+  }
+
+  /*toggleStatus(d: any) {
+    this.service.toggleDirecteurStatus(d.id).subscribe(() => {
+      this.loadData();
+    });
+  }*/
+
+  toggleStatus(d: any) {
+    this.service.toggleDirecteurStatus(d.id).subscribe({
+      next: (updated) => {
+        this.directeurs = this.directeurs.map(dir =>
+          dir.id === d.id ? { ...dir, statut: updated.statut } : dir
+        );
+
+        // 🔹 IMPORTANT : mettre aussi à jour la liste complète utilisée pour le filtrage
+        this.allDirecteurs = this.allDirecteurs.map(dir =>
+          dir.id === d.id ? { ...dir, statut: updated.statut } : dir
+        );
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+
+
+// Confirmer suppression depuis le modal
+  confirmDelete(): void {
+    if (!this.directeurToDeleteId) return;
+
+    this.service.deleteDirecteur(this.directeurToDeleteId).subscribe({
+      next: () => {
+        this.showDeleteModal = false;
+        this.loadData();
+        this.selectedDirecteurs = this.selectedDirecteurs.filter(id => id !== this.directeurToDeleteId);
+        this.directeurToDeleteId = null;
+      },
+      error: (err) => {
+        console.error('Erreur suppression directeur', err);
+        this.showDeleteModal = false;
+        this.directeurToDeleteId = null;
+      }
+    });
+  }
+
+// Fermer modal delete
+  closeDeleteModal(): void {
+    this.showDeleteModal = false;
+    this.directeurToDeleteId = null;
+  }
+  openDeleteModal(id: number) {
+    this.directeurToDeleteId = id;
+    this.showDeleteModal = true;
+  }
+
 }
