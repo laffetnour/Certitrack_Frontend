@@ -29,6 +29,7 @@ export class DirecteursComponent implements OnInit {
   selectedDirecteur: any;
   showViewModal = false;
   directeurForm!: FormGroup;
+  statusFilter: string = ""; // Variable pour stocker le choix du select
 
   constructor(
     private service: AdminTenantService,
@@ -68,6 +69,32 @@ loadData() {
   });
 }
 
+/*
+
+filterByStatus() {
+  if (!this.statusFilter || this.statusFilter === "") {
+    this.directeurs = [...this.allDirecteurs];
+  } else {
+    const wantActive = (this.statusFilter === 'actif');
+
+    this.directeurs = this.allDirecteurs.filter(d => {
+      if (d.etablissements && d.etablissements.length > 0) {
+        const idDeLEtab = d.etablissements[0].id;
+
+        // On cherche l'établissement correspondant dans notre liste globale d'etablissements
+        const etabComplet = this.etablissements.find(e => e.idEtab === idDeLEtab);
+
+        // Si on le trouve, on compare son statut
+        if (etabComplet) {
+          return etabComplet.statut === wantActive;
+        }
+      }
+      return false;
+    });
+  }
+  this.cdr.detectChanges();
+}
+
 filterByEtablissement() {
   const selectedId = this.selectedEtablissement;
   console.log("Filtrage pour ID :", selectedId);
@@ -82,8 +109,80 @@ filterByEtablissement() {
   }
   console.log("Résultat :", this.directeurs.length, "trouvés");
   this.cdr.detectChanges();
+}*/
+
+// Vérifie si l'établissement lié au directeur est actif
+isEtablissementActive(d: any): boolean {
+  // 1. On vérifie si le directeur a une liste d'établissements
+  if (!d.etablissements || d.etablissements.length === 0) return false;
+
+  // 2. On récupère l'ID de son établissement (ex: 3)
+  const idDeLEtab = d.etablissements[0].id;
+
+  // 3. On cherche cet ID dans la liste complète chargée au ngOnInit
+  const etabComplet = this.etablissements.find(e => e.idEtab === idDeLEtab);
+
+  // 4. On retourne son statut (true ou false)
+  return etabComplet ? etabComplet.statut === true : false;
+}
+isBulkActionAllowed(): boolean {
+  if (this.selectedDirecteurs.length === 0) return false;
+
+  // On vérifie pour chaque ID sélectionné
+  return this.selectedDirecteurs.every(id => {
+    // 1. Trouver l'objet directeur complet
+    const d = this.allDirecteurs.find(dir => dir.id === id);
+    if (!d || !d.etablissements || d.etablissements.length === 0) return false;
+
+    // 2. Trouver le statut de son établissement dans la liste globale
+    const idEtab = d.etablissements[0].id;
+    const etab = this.etablissements.find(e => e.idEtab === idEtab);
+
+    // 3. Retourne true si l'établissement est actif
+    return etab ? etab.statut === true : false;
+  });
 }
 
+// Cette fonction unique gère les deux critères en même temps
+applyFilters() {
+  // 1. On repart toujours de la liste complète originale
+  let result = [...this.allDirecteurs];
+
+  // 2. On applique le premier filtre : Établissement spécifique (par ID)
+  if (this.selectedEtablissement && this.selectedEtablissement !== "") {
+    result = result.filter(d =>
+      d.etablissements && d.etablissements.some((e: any) => e.id == this.selectedEtablissement)
+    );
+  }
+
+  // 3. On applique le deuxième filtre : Statut de l'établissement (Actif/Inactif)
+  if (this.statusFilter !== "") {
+    const wantActive = (this.statusFilter === 'actif');
+
+    result = result.filter(d => {
+      if (d.etablissements && d.etablissements.length > 0) {
+        const idDeLEtab = d.etablissements[0].id;
+        // On cherche le statut dans la liste globale des établissements
+        const etab = this.etablissements.find(e => e.idEtab === idDeLEtab);
+        return etab ? etab.statut === wantActive : false;
+      }
+      return false;
+    });
+  }
+
+  // 4. On met à jour la liste affichée dans le tableau
+  this.directeurs = result;
+  this.cdr.detectChanges();
+}
+
+// Les fonctions appelées par le HTML se contentent d'appeler applyFilters
+filterByEtablissement() {
+  this.applyFilters();
+}
+
+filterByStatus() {
+  this.applyFilters();
+}
 initForm() {
   this.directeurForm = this.fb.group({
     nom: ['', Validators.required],
@@ -223,6 +322,7 @@ openEditModal(d: any) {
 
 
 
+
   viewDirecteur(d: any) {
     this.selectedDirecteur = d;
     this.showViewModal = true;
@@ -282,3 +382,9 @@ openEditModal(d: any) {
   }
 
 }
+
+
+
+
+
+

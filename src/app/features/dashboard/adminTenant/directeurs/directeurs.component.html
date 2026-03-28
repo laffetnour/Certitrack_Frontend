@@ -4,6 +4,13 @@
     <h1>Gestion des Directeurs</h1>
 
     <div style="display:flex; gap:10px;">
+     <!-- <select class="form-control" [(ngModel)]="selectedEtablissement" (change)="filterByEtablissement()">
+        <option value="">Tous les établissements</option>
+        <option *ngFor="let e of etablissements" [value]="e.idEtab">
+          {{ e.nom }}
+        </option>
+      </select>-->
+
       <select class="form-control" [(ngModel)]="selectedEtablissement" (change)="filterByEtablissement()">
         <option value="">Tous les établissements</option>
         <option *ngFor="let e of etablissements" [value]="e.idEtab">
@@ -19,9 +26,33 @@
     <div class="bulk-actions" *ngIf="selectedDirecteurs.length > 0">
       <span>{{ selectedDirecteurs.length }} sélectionné(s)</span>
 
+
+      <ng-container *ngIf="isBulkActionAllowed()">
       <button class="btn-activate" (click)="activateSelected()">Activer</button>
       <button class="btn-deactivate" (click)="deactivateSelected()">Désactiver</button>
+      </ng-container>
+
       <button class="btn-delete" (click)="deleteSelected()">Supprimer</button>
+    </div>
+
+    <!--<div class="filter-select-container"  >
+      <select class="status-filter-select"
+              [(ngModel)]="statusFilter"
+              (change)="filterByStatus()">
+          <option value="">filtre</option>
+          <option value="actif">Établissements activés</option>
+          <option value="inactif">Établissements désactivés</option>
+      </select>
+
+    </div>-->
+    <div class="filter-select-container">
+      <select class="status-filter-select"
+              [(ngModel)]="statusFilter"
+              (change)="filterByStatus()">
+        <option value="">Tous les statuts</option>
+        <option value="actif">Établissements activés</option>
+        <option value="inactif">Établissements désactivés</option>
+      </select>
     </div>
     <table class="modern-table">
 
@@ -57,11 +88,17 @@
         <td>{{ d.nomEtablissement }}</td>
 
         <td>
-      <span class="status-badge"
-            [class.active]="d.statut"
-            [class.inactive]="!d.statut">
-        {{ d.statut ? 'Actif' : 'Inactif' }}
-      </span>
+  <span class="status-badge"
+        [class.active]="d.statut && isEtablissementActive(d)"
+        [class.inactive]="!d.statut && isEtablissementActive(d)"
+        [class.etab-inactive]="!isEtablissementActive(d)">
+
+    {{ d.statut ? 'Actif' : 'Inactif' }}
+
+    <small *ngIf="!isEtablissementActive(d)" style="display: block; font-size: 10px;">
+      (Étab.désactivé)
+    </small>
+  </span>
         </td>
 
         <!-- ACTIONS -->
@@ -77,6 +114,8 @@
             </svg>
           </button>
 
+
+          <ng-container *ngIf="isEtablissementActive(d)">
           <!-- EDIT -->
           <button class="btn-edit" (click)="openEditModal(d)" title="Modifier">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -109,6 +148,8 @@
             </svg>
 
           </button>
+
+          </ng-container>
 
           <!-- DELETE -->
           <button class="btn-delete"

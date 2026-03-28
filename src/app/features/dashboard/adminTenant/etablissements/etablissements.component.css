@@ -423,8 +423,11 @@ form {
   box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.1); /* Halo discret */
 }
 
+
+
 /* Style du texte d'aide (Placeholder) */
 .custom-input::placeholder {
   color: #9ca3af;
   font-weight: 400;
 }
+
