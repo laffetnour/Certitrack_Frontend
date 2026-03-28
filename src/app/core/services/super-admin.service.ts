@@ -61,6 +61,25 @@ export class SuperAdminService {
     return this.http.delete(`${this.baseUrl}/tenant/${id}`, this.getAuthHeaders());
   }
 
+
+  // Exemple de méthodes à ajouter dans SuperAdminService
+  // --- ACTIONS GROUPÉES POUR LES TENANTS (CORRIGÉ) ---
+
+  activateTenantsBulk(ids: number[]): Observable<any> {
+    // Changé /users/ par /tenants/ + ajout des headers
+    return this.http.put(`${this.baseUrl}/tenants/activate-bulk`, ids, this.getAuthHeaders());
+  }
+
+  deactivateTenantsBulk(ids: number[]): Observable<any> {
+    // Changé /users/ par /tenants/ + ajout des headers
+    return this.http.put(`${this.baseUrl}/tenants/deactivate-bulk`, ids, this.getAuthHeaders());
+  }
+
+  deleteTenantsBulk(ids: number[]): Observable<any> {
+    // Changé /users/ par /tenants/ + ajout des headers
+    return this.http.post(`${this.baseUrl}/tenants/delete-bulk`, ids, this.getAuthHeaders());
+  }
+
 // --- À AJOUTER POUR LES ADMINS TENANTS ---
 
   getTenantAdmins(): Observable<any[]> {
@@ -82,6 +101,28 @@ export class SuperAdminService {
   toggleStatus(id: number): Observable<any> {
     return this.http.put(`${this.baseUrl}/user/${id}/status`, {}, this.getAuthHeaders());
   }
+
+
+    getFilteredTenantAdminsByTenantStatus(params: any): Observable<any[]> {
+      return this.http.get<any[]>(`${this.baseUrl}/tenant-admins/filter-tenant-status`, {
+        headers: this.getAuthHeaders().headers,
+        params: params
+      });
+    }
+
+  activateUsersBulk(ids: number[]): Observable<any> {
+    return this.http.put(`${this.baseUrl}/users/activate-bulk`, ids, this.getAuthHeaders());
+  }
+
+  deactivateUsersBulk(ids: number[]): Observable<any> {
+    return this.http.put(`${this.baseUrl}/users/deactivate-bulk`, ids, this.getAuthHeaders());
+  }
+
+  deleteUsersBulk(ids: number[]): Observable<any> {
+    // On utilise souvent POST pour envoyer un body avec un DELETE si l'API est configurée ainsi
+    return this.http.post(`${this.baseUrl}/users/delete-bulk`, ids, this.getAuthHeaders());
+  }
+
 
 
 

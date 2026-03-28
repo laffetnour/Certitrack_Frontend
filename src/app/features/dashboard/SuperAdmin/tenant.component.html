@@ -15,9 +15,27 @@
       <p>Chargement des tenants...</p>
     </div>
 
-    <table class="modern-table" *ngIf="!loading && tenants && tenants.length > 0">
+    <div class="bulk-actions" *ngIf="selectedTenants.length > 0">
+      <span>{{ selectedTenants.length }} sélectionné(s)</span>
+      <button class="btn-activate" (click)="activateSelected()">Activer</button>
+      <button class="btn-deactivate" (click)="deactivateSelected()">Désactiver</button>
+      <button class="btn-delete" (click)="deleteSelected()">Supprimer</button>
+    </div>
+
+    <div class="filter-select-container">
+      <select class="status-filter-select"  (change)="onStatusFilterChange($event)">
+        <option value="">Tous les tenants</option>
+        <option value="true">Tenants actifs</option>
+        <option value="false">Tenants désactivés</option>
+      </select>
+    </div>
+
+    <table class="modern-table" *ngIf="!loading && filteredTenants.length > 0">
       <thead>
       <tr>
+        <th>
+          <input type="checkbox" [checked]="isAllSelected()" (change)="selectAll($event)">
+        </th>
         <th>ID</th>
         <th>Nom du Tenant</th>
         <th>Établissements liés</th>
@@ -26,7 +44,12 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let tenant of tenants">
+      <tr *ngFor="let tenant of filteredTenants">
+        <td>
+          <input type="checkbox"
+                 [checked]="selectedTenants.includes(tenant.idTenant)"
+                 (change)="onCheckboxChange(tenant.idTenant, $event)">
+        </td>
         <td>{{ tenant.idTenant }}</td>
         <td><strong>{{ tenant.nom }}</strong></td>
         <td>
@@ -64,8 +87,8 @@
       </tbody>
     </table>
 
-    <div *ngIf="!loading && (!tenants || tenants.length === 0)" class="empty-state">
-      <p>Aucun tenant trouvé dans le système.</p>
+    <div *ngIf="!loading && filteredTenants.length === 0" class="empty-state">
+      <p>Aucun tenant ne correspond à ce filtre.</p>
     </div>
   </div>
 

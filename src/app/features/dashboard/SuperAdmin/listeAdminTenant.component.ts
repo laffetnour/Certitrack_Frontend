@@ -8,7 +8,7 @@ import { SuperAdminService } from '../../../core/services/super-admin.service';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './listeAdminTenant.component.html',
-  styleUrls: ['./superAdmin.component.css']
+  styleUrls: ['../adminTenant/directeurs/directeurs.component.css']
 })
 export class ListeAdminsTenantComponent implements OnInit { // Correction du nom de la classe
   admins: any[] = [];
@@ -18,11 +18,18 @@ export class ListeAdminsTenantComponent implements OnInit { // Correction du nom
   showViewModal = false;
   isEditMode = false;
   selectedAdmin: any = null;
-
+  selectedAdminIds: number[] = [];
   adminForm: FormGroup;
   loading = false;
   successMessage = '';
   errorMessage = '';
+  filteredTenants: any[] = [];
+
+  statusFilter: string = '';
+
+  selectedTenantId: number | null = null;
+  selectedStatus: boolean | null = null;
+  selectedTenantStatus: boolean | null = null;
 
   constructor(
     private superAdminService: SuperAdminService,
@@ -62,7 +69,12 @@ export class ListeAdminsTenantComponent implements OnInit { // Correction du nom
   }
 
   loadTenants(): void {
-    this.superAdminService.getTenants().subscribe(data => this.tenants = data);
+    this.superAdminService.getTenants().subscribe(data => {
+      this.tenants = data;
+      this.filteredTenants = [...data];
+
+      this.cdr.detectChanges(); // 🔥 IMPORTANT
+    });
   }
 
   openAddModal(): void {
@@ -168,9 +180,128 @@ export class ListeAdminsTenantComponent implements OnInit { // Correction du nom
     setTimeout(() => this.successMessage = '', 3000);
   }
 
+
+
+
   private handleError(msg: string): void {
     this.errorMessage = msg;
     this.loading = false;
     setTimeout(() => this.errorMessage = '', 3000);
   }
+//*******************************
+  onTenantStatusChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+
+    if (value === 'true') this.selectedTenantStatus = true;
+    else if (value === 'false') this.selectedTenantStatus = false;
+    else this.selectedTenantStatus = null;
+
+    // filtrer tenants
+    this.filteredTenants = this.selectedTenantStatus !== null
+      ? this.tenants.filter(t => t.statut === this.selectedTenantStatus)
+      : [...this.tenants];
+
+    this.selectedTenantId = null;
+
+    this.filterAdmins();
+  }
+
+  onTenantChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+
+    this.selectedTenantId = value ? +value : null;
+
+    this.filterAdmins();
+  }
+
+
+
+// Méthode pour appeler le backend avec les filtres
+  filterAdmins(): void {
+    const params: any = {};
+
+    if (this.selectedTenantStatus !== null) params.tenantStatut = this.selectedTenantStatus;
+    if (this.selectedTenantId) params.tenantId = this.selectedTenantId;
+
+    this.superAdminService.getFilteredTenantAdminsByTenantStatus(params).subscribe({
+      next: data => {
+        this.filteredAdmins = data;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.filteredAdmins = [];
+        this.errorMessage = 'Erreur lors du filtrage';
+        setTimeout(() => this.errorMessage = '', 3000);
+      }
+    });
+  }
+  isTenantActive(admin: any): boolean {
+    const tenant = this.tenants.find(t => t.nom === admin.nomEtablissement);
+    return tenant ? tenant.statut : false;
+  }
+
+
+
+  isBulkActionAllowed(): boolean {
+    // 1. Si rien n'est sélectionné, on ne montre rien
+    if (this.selectedAdminIds.length === 0) return false;
+
+    // 2. On récupère les objets complets des admins sélectionnés
+    const selectedAdminsObjects = this.filteredAdmins.filter(admin =>
+      this.selectedAdminIds.includes(admin.id)
+    );
+
+    // 3. On vérifie si PARMI les sélectionnés, il y en a un dont le tenant est inactif
+    const hasInactiveTenantSelected = selectedAdminsObjects.some(admin => !this.isTenantActive(admin));
+
+    // 4. On autorise Activer/Désactiver UNIQUEMENT si aucun tenant inactif n'est dans la sélection
+    return !hasInactiveTenantSelected;
+  }
+
+// Gestion des cases à cocher
+  onCheckboxChange(id: number, event: any) {
+    if (event.target.checked) {
+      this.selectedAdminIds.push(id);
+    } else {
+      this.selectedAdminIds = this.selectedAdminIds.filter(adminId => adminId !== id);
+    }
+  }
+
+  selectAll(event: any) {
+    if (event.target.checked) {
+      this.selectedAdminIds = this.filteredAdmins.map(a => a.id);
+    } else {
+      this.selectedAdminIds = [];
+    }
+  }
+
+  isAllSelected() {
+    return this.filteredAdmins.length > 0 && this.selectedAdminIds.length === this.filteredAdmins.length;
+  }
+
+// Actions Groupées (Appels au service)
+  activateSelected() {
+    this.superAdminService.activateUsersBulk(this.selectedAdminIds).subscribe(() => {
+      this.handleSuccess('Admins activés');
+      this.selectedAdminIds = [];
+    });
+  }
+
+  deactivateSelected() {
+    this.superAdminService.deactivateUsersBulk(this.selectedAdminIds).subscribe(() => {
+      this.handleSuccess('Admins désactivés');
+      this.selectedAdminIds = [];
+    });
+  }
+
+  deleteSelected() {
+    if(confirm("Supprimer les éléments sélectionnés ?")) {
+      this.superAdminService.deleteUsersBulk(this.selectedAdminIds).subscribe(() => {
+        this.handleSuccess('Admins supprimés');
+        this.selectedAdminIds = [];
+      });
+    }
+  }
+
+  protected readonly HTMLSelectElement = HTMLSelectElement;
 }

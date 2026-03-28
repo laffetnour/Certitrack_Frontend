@@ -8,7 +8,7 @@ import { SuperAdminService } from '../../../core/services/super-admin.service'; 
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './tenant.component.html',
-  styleUrls: ['./superAdmin.component.css']
+  styleUrls: ['../adminTenant/directeurs/directeurs.component.css']
 })
 export class TenantComponent implements OnInit {
   tenants: any[] = [];
@@ -23,6 +23,10 @@ export class TenantComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
 
+
+  filteredTenants: any[] = [];
+  statusFilter: string = '';
+
   constructor(
     private superAdminService: SuperAdminService,
     private fb: FormBuilder,
@@ -36,10 +40,12 @@ export class TenantComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("TenantComponent chargé");
+    // Initialisation par précaution
+    this.filteredTenants = [];
     this.loadTenants();
   }
 
-  loadTenants(): void {
+  /*loadTenants(): void {
     this.loading = true;
     this.superAdminService.getTenants().subscribe({
       next: (data: any) => {
@@ -51,6 +57,23 @@ export class TenantComponent implements OnInit {
 
         this.loading = false;
         // On force Angular à vérifier la vue immédiatement
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.errorMessage = 'Erreur lors du chargement';
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }*/
+
+  loadTenants(): void {
+    this.loading = true;
+    this.superAdminService.getTenants().subscribe({
+      next: (data: any) => {
+        this.tenants = Array.isArray(data) ? [...data] : [];
+        this.applyFilter(); // On applique le filtre après le chargement
+        this.loading = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -166,5 +189,75 @@ export class TenantComponent implements OnInit {
       this.successMessage = '';
       this.cdr.detectChanges();
     }, 3000);
+  }
+
+  onStatusFilterChange(event: any): void {
+    this.statusFilter = event.target.value;
+    this.applyFilter();
+  }
+
+  applyFilter(): void {
+    if (this.statusFilter === '') {
+      this.filteredTenants = [...this.tenants];
+    } else {
+      const boolFilter = this.statusFilter === 'true';
+      this.filteredTenants = this.tenants.filter(t => t.statut === boolFilter);
+    }
+    this.cdr.detectChanges();
+  }
+
+  onCheckboxChange(id: number, event: any) {
+    if (event.target.checked) {
+      this.selectedTenants.push(id);
+    } else {
+      this.selectedTenants = this.selectedTenants.filter(tId => tId !== id);
+    }
+  }
+
+  selectAll(event: any) {
+    if (event.target.checked) {
+      this.selectedTenants = this.filteredTenants.map(t => t.idTenant);
+    } else {
+      this.selectedTenants = [];
+    }
+  }
+
+  isAllSelected() {
+    return this.filteredTenants.length > 0 &&
+      this.selectedTenants.length === this.filteredTenants.length;
+  }
+
+// --- ACTIONS GROUPÉES (Appels API) ---
+
+  activateSelected() {
+    this.superAdminService.activateTenantsBulk(this.selectedTenants).subscribe({
+      next: () => {
+        this.handleSuccess('Tenants activés avec succès');
+        this.selectedTenants = [];
+      },
+      error: () => this.errorMessage = 'Erreur lors de l\'activation'
+    });
+  }
+
+  deactivateSelected() {
+    this.superAdminService.deactivateTenantsBulk(this.selectedTenants).subscribe({
+      next: () => {
+        this.handleSuccess('Tenants désactivés avec succès');
+        this.selectedTenants = [];
+      },
+      error: () => this.errorMessage = 'Erreur lors de la désactivation'
+    });
+  }
+
+  deleteSelected() {
+    if (confirm("Voulez-vous vraiment supprimer les tenants sélectionnés ?")) {
+      this.superAdminService.deleteTenantsBulk(this.selectedTenants).subscribe({
+        next: () => {
+          this.handleSuccess('Tenants supprimés avec succès');
+          this.selectedTenants = [];
+        },
+        error: () => this.errorMessage = 'Erreur lors de la suppression'
+      });
+    }
   }
 }

@@ -1,4 +1,4 @@
-<div class="admin-container">
+<!--<div class="admin-container">
   <div class="admin-header">
     <h1>Gestion des Admins Tenants</h1>
     <button class="btn-add" (click)="openAddModal()">
@@ -14,13 +14,28 @@
       <div class="spinner"></div>
       <p>Chargement des administrateurs...</p>
     </div>
-    <div class="mb-3">
-      <select (change)="filterByTenant($event)" class="form-select w-auto">
-        <option value="ALL">Toutes les organisations</option>
-        <option *ngFor="let t of tenants" [value]="t.nom">{{ t.nom }}</option>
-      </select>
-    </div>
 
+
+
+    <label>Filtrer par statut du tenant :</label>
+    <select class="form-select w-auto" (change)="onTenantStatusChange($event)">
+      <option value="">Tous les status</option>
+      <option value="true">Tenants activés</option>
+      <option value="false">Tenants désactivés</option>
+    </select>
+
+
+    <label>Filtrer par organisation :</label>
+    <select *ngIf="filteredTenants.length > 0"
+            class="form-select w-auto"
+            (change)="onTenantChange($event)">
+
+      <option value="">Tous les tenants</option>
+
+      <option *ngFor="let t of filteredTenants" [value]="t.idTenant">
+        {{ t.nom }}
+      </option>
+    </select>
     <table class="modern-table" *ngIf="!loading && admins.length > 0">
       <thead>
       <tr>
@@ -33,7 +48,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let admin of filteredAdmins">
+
       <tr *ngFor="let admin of filteredAdmins"> <td>{{ admin.nom }}</td>
         <td>{{ admin.prenom }}</td>
         <td>{{ admin.username }}</td>
@@ -152,6 +167,205 @@
         <div class="info-row"><strong>Email :</strong> {{ selectedAdmin.username }}</div>
         <div class="info-row"><strong>Organisation :</strong> {{ selectedAdmin.nomEtablissement || 'N/A' }}</div>
         <div class="info-row"><strong>Statut :</strong> {{ selectedAdmin.statut ? 'Actif' : 'Inactif' }}</div>
+      </div>
+    </div>
+  </div>
+</div>-->
+
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Gestion des Admins Tenants</h1>
+
+    <div style="display:flex; gap:10px;">
+      <select class="form-control" (change)="onTenantChange($event)">
+        <option value="">Toutes les organisations</option>
+        <option *ngFor="let t of filteredTenants" [value]="t.idTenant">
+          {{ t.nom }}
+        </option>
+      </select>
+
+      <button class="btn-add" (click)="openAddModal()">
+        <span>+</span> Nouveau Admin
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="successMessage" class="alert success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert error">{{ errorMessage }}</div>
+
+
+
+  <div class="table-container">
+
+    <div class="bulk-actions" *ngIf="selectedAdminIds.length > 0">
+      <span>{{ selectedAdminIds.length }} sélectionné(s)</span>
+
+      <ng-container *ngIf="isBulkActionAllowed()">
+        <button class="btn-activate" (click)="activateSelected()">Activer</button>
+        <button class="btn-deactivate" (click)="deactivateSelected()">Désactiver</button>
+      </ng-container>
+
+      <button class="btn-delete" (click)="deleteSelected()">Supprimer</button>
+    </div>
+
+    <div class="filter-select-container">
+      <select class="status-filter-select" (change)="onTenantStatusChange($event)">
+        <option value="">Tous les statuts (Tenants)</option>
+        <option value="true">Tenants activés</option>
+        <option value="false">Tenants désactivés</option>
+      </select>
+    </div>
+
+    <table class="modern-table" *ngIf="!loading && filteredAdmins.length > 0">
+      <thead>
+      <tr>
+        <th>
+          <input type="checkbox" [checked]="isAllSelected()" (change)="selectAll($event)">
+        </th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Organisation</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let admin of filteredAdmins">
+        <td>
+          <input type="checkbox"
+                 [checked]="selectedAdminIds.includes(admin.id)"
+                 (change)="onCheckboxChange(admin.id, $event)">
+        </td>
+        <td>{{ admin.nom }}</td>
+        <td>{{ admin.prenom }}</td>
+        <td>{{ admin.username }}</td>
+        <td><span class="badge-tenant">{{ admin.nomEtablissement }}</span></td>
+        <td>
+            <span class="status-badge"
+                  [class.active]="admin.statut && isTenantActive(admin)"
+                  [class.inactive]="!admin.statut && isTenantActive(admin)"
+                  [class.etab-inactive]="!isTenantActive(admin)">
+              {{ admin.statut ? 'Actif' : 'Inactif' }}
+              <small *ngIf="!isTenantActive(admin)" style="display: block; font-size: 10px;">
+                (Organisation désactivée)
+              </small>
+            </span>
+        </td>
+        <td class="actions">
+          <button class="btn-view" (click)="viewAdmin(admin)" title="Voir">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+
+          <ng-container *ngIf="isTenantActive(admin)">
+            <button class="btn-edit" (click)="openEditModal(admin)" title="Modifier">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+
+            <button class="btn-toggle" (click)="toggleStatus(admin)" [title]="admin.statut ? 'Désactiver' : 'Activer'">
+              <svg *ngIf="admin.statut" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+              </svg>
+              <svg *ngIf="!admin.statut" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </button>
+          </ng-container>
+
+          <button class="btn-delete" (click)="deleteUser(admin.id)" title="Supprimer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+            </svg>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ isEditMode ? 'Modifier l\'Admin' : 'Nouvel Admin Tenant' }}</h2>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+
+      <form [formGroup]="adminForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nom</label>
+            <input type="text" formControlName="nom" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Prénom</label>
+            <input type="text" formControlName="prenom" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email (Username)</label>
+          <input type="email" formControlName="username" class="form-control">
+        </div>
+
+        <div class="form-group" *ngIf="!isEditMode">
+          <label>Mot de passe</label>
+          <input type="password" formControlName="password" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label>Date de Naissance</label>
+          <input type="date" formControlName="dateNais" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label>Organisation (Tenant)</label>
+          <select formControlName="tenantId" class="form-control">
+            <option [ngValue]="null" disabled selected>-- Choisir un tenant active --</option>
+
+            <ng-container *ngFor="let t of tenants">
+              <option *ngIf="t.statut === true" [value]="t.idTenant">
+                {{ t.nom }}
+              </option>
+            </ng-container>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="closeModal()">Annuler</button>
+          <button type="submit" class="btn-submit" [disabled]="adminForm.invalid || loading">
+            {{ isEditMode ? 'Mettre à jour' : 'Créer' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" *ngIf="showViewModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Profil de l'Administrateur</h2>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+      <div class="profile-info" *ngIf="selectedAdmin">
+        <div class="profile-avatar">{{ selectedAdmin.nom?.charAt(0) }}{{ selectedAdmin.prenom?.charAt(0) }}</div>
+        <div class="info-row"><strong>Nom :</strong> {{ selectedAdmin.nom }} {{ selectedAdmin.prenom }}</div>
+        <div class="info-row"><strong>Email :</strong> {{ selectedAdmin.username }}</div>
+        <div class="info-row"><strong>Organisation :</strong> {{ selectedAdmin.nomEtablissement || 'N/A' }}</div>
+        <div class="info-row">
+          <strong>Statut :</strong>
+          <span class="status-badge" [class.active]="selectedAdmin.statut" [class.inactive]="!selectedAdmin.statut">
+            {{ selectedAdmin.statut ? 'Actif' : 'Inactif' }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
