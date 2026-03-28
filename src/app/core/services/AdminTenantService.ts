@@ -46,6 +46,9 @@ export class AdminTenantService {
   }
 
 
+ getStats(): Observable<any> {
+    return this.http.get<any>(this.url('stats'), this.getHeaders());
+  }
   getDirecteurs(): Observable<Directeur[]> {
     return this.http.get<Directeur[]>(this.url('directeurs'), this.getHeaders());
   }
@@ -80,9 +83,7 @@ export class AdminTenantService {
   }
 
 
-  getStats(): Observable<any> {
-    return this.http.get<any>(this.url('stats'), this.getHeaders());
-  }
+
 
 
   getEtablissements(): Observable<Etablissement[]> {
@@ -114,4 +115,7 @@ activateMultipleEtab(ids: number[]): Observable<void> {
 deactivateMultipleEtab(ids: number[]): Observable<void> {
   return this.http.post<void>(this.url('etablissements/deactivate'), ids, this.getHeaders());
 }
+
+
+
 }

@@ -26,11 +26,17 @@ export class EtablissementsComponent implements OnInit {
   selectedImage: string | SafeUrl = '';
   imageRaw: string = '';
 
+
+  // Sauvegarde de la liste complète
+  allEtablissements: any[] = [];
+  statusFilter: string = "";
+
   constructor(private service: AdminTenantService,private cdr: ChangeDetectorRef,
     private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
     this.loadData();
+    this.loadEtablissements();
   }
 
   loadData() {
@@ -44,6 +50,35 @@ export class EtablissementsComponent implements OnInit {
     });
   }
 
+loadEtablissements() {
+  this.service.getEtablissements().subscribe({
+    next: (data) => {
+      this.allEtablissements = data;
+      this.applyFilter(); // On applique le filtre initial (si existant)
+    },
+    error: (err) => console.error("Erreur chargement:", err)
+  });
+}
+
+filterByStatus() {
+  this.applyFilter();
+}
+
+applyFilter() {
+  if (!this.statusFilter || this.statusFilter === "") {
+    // Si pas de filtre, on affiche tout
+    this.etablissements = [...this.allEtablissements];
+  } else {
+    // Conversion du texte "actif" en booléen true
+    const wantActive = (this.statusFilter === 'actif');
+
+    this.etablissements = this.allEtablissements.filter(e => {
+      // On compare directement avec la propriété 'statut' de l'établissement
+      return e.statut === wantActive;
+    });
+  }
+  this.cdr.detectChanges();
+}
   trackByEtab(index: number, item: any) {
     return item.idEtab;
   }

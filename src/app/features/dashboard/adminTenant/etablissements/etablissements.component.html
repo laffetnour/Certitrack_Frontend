@@ -19,6 +19,15 @@
   </div>
   <!-- TABLE -->
   <div class="table-container">
+    <div class="filter-select-container">
+      <select class="status-filter-select"
+              [(ngModel)]="statusFilter"
+              (change)="filterByStatus()">
+        <option value="">Tous les statuts</option>
+        <option value="actif">Établissements activés</option>
+        <option value="inactif">Établissements désactivés</option>
+      </select>
+    </div>
 
     <table class="modern-table">
 

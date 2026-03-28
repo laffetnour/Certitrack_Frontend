@@ -16,6 +16,7 @@ import { TenantComponent } from './features/dashboard/SuperAdmin/tenant.componen
 import{ListeAdminsTenantComponent} from './features/dashboard/SuperAdmin/listeAdminTenant.component';
 import { authGuard } from './core/guards/auth.guard';
 import { DashboardComponent } from './features/dashboard/directeur/dashboard/dashboard.component';
+import { DashboardTenantComponent} from './features/dashboard/adminTenant/dashboard/DashboardTenant.component'
 import { AdministrateursComponent } from './features/dashboard/directeur/administrateurs/administrateurs.component';
 import { SpecialiteComponent } from './features/dashboard/directeur/specialites/specialite.component';
 import { DirecteursComponent } from './features/dashboard/adminTenant/directeurs/directeurs.component';
@@ -69,7 +70,7 @@ export const routes: Routes = [
     component: AdminTenantLayoutComponent,
     canActivate: [authGuard],
     children: [
-      { path: 'dashboard', component: DashboardComponent },
+      { path: 'dashboard', component: DashboardTenantComponent },
       { path: 'directeurs', component: DirecteursComponent },
       { path: 'etablissements', component: EtablissementsComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
