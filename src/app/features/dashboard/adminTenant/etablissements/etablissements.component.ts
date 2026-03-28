@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminTenantService } from '../../../../core/services/AdminTenantService';
 import { ChangeDetectorRef } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+// Modifiez votre import en haut du fichier pour inclure SafeUrl
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-etablissements',
   standalone: true,
@@ -14,30 +17,26 @@ export class EtablissementsComponent implements OnInit {
 
   etablissements: any[] = [];
 
-  // 🔥 MODALS
   showModal = false;
   showDeleteModal = false;
-
-  // 🔥 MODE
   isEditMode = false;
-
-  // 🔥 DATA
   selectedNom = '';
   selectedId: number | null = null;
+  selectedAdresse = '';
+  selectedImage: string | SafeUrl = '';
+  imageRaw: string = '';
 
-  constructor(private service: AdminTenantService,private cdr: ChangeDetectorRef) {}
+  constructor(private service: AdminTenantService,private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
-    this.loadData(); // ✅ suffit
+    this.loadData();
   }
 
-  // ================= LOAD =================
   loadData() {
     this.service.getEtablissements().subscribe({
       next: (res) => {
-        // On crée une nouvelle copie propre du tableau
         this.etablissements = [...res];
-        // On force la détection de changement
         this.cdr.markForCheck();
         this.cdr.detectChanges();
       },
@@ -49,67 +48,96 @@ export class EtablissementsComponent implements OnInit {
     return item.idEtab;
   }
 
-  // ================= ADD =================
   openAddModal() {
     this.isEditMode = false;
     this.selectedNom = '';
+    this.selectedAdresse = '';
+    this.selectedImage = '';
     this.showModal = true;
   }
 
-  // ================= EDIT =================
   openEditModal(e: any) {
     this.isEditMode = true;
     this.selectedId = e.idEtab;
     this.selectedNom = e.nom;
+    this.selectedAdresse = e.adresse;
+    this.imageRaw = e.image;
+    this.selectedImage = e.image ? this.sanitizer.bypassSecurityTrustUrl(e.image) : '';
     this.showModal = true;
   }
 
-  // ================= SAVE =================
-  save() {
-    console.log("Tentative de sauvegarde...", { mode: this.isEditMode, nom: this.selectedNom, id: this.selectedId });
+
+save() {
+    console.log("=== Tentative de sauvegarde ===");
+
 
     if (!this.selectedNom || this.selectedNom.trim() === '') {
-      alert("Le nom est obligatoire");
+      alert("Le nom de l'établissement est obligatoire.");
       return;
     }
 
-    // On prépare l'objet à envoyer au backend
-    const payload = { nom: this.selectedNom };
+
+    const payload: any = {
+      nom: this.selectedNom.trim(),
+      adresse: this.selectedAdresse.trim(),
+      image: this.imageRaw ? this.imageRaw.trim() : '',
+      statut: true
+    };
+
 
     if (this.isEditMode) {
-      // MODIFICATION
       if (!this.selectedId) {
-        console.error("ID manquant pour la modification");
+        console.error("Erreur : ID manquant pour la modification");
         return;
       }
 
+      console.log("Action : Modification de l'ID", this.selectedId);
+
       this.service.updateEtablissement(this.selectedId, payload).subscribe({
         next: (res) => {
-          console.log("Modification réussie", res);
+          console.log("✅ Modification réussie :", res);
           this.finaliserAction();
         },
-        error: (err) => console.error("Erreur modification:", err)
+        error: (err) => {
+          console.error("❌ Erreur 403 ou autre lors de la modification :", err);
+          this.gererErreur(err);
+        }
       });
 
     } else {
-      // AJOUT
+      console.log("Action : Création d'un nouvel établissement");
+
       this.service.createEtablissement(payload).subscribe({
         next: (res) => {
-          console.log("Ajout réussi", res);
+          console.log("✅ Ajout réussi :", res);
           this.finaliserAction();
         },
-        error: (err) => console.error("Erreur ajout:", err)
+        error: (err) => {
+          console.error("❌ Erreur 403 ou autre lors de l'ajout :", err);
+          this.gererErreur(err);
+        }
       });
     }
-  }
+}
 
-// Méthode pour centraliser le nettoyage après succès
+
+private gererErreur(err: any) {
+    if (err.status === 403) {
+      alert("Erreur 403 : Vous n'avez pas les permissions ou votre session a expiré.");
+    } else {
+      alert("Une erreur est survenue lors de la communication avec le serveur.");
+    }
+}
+
+
+
+
   private finaliserAction() {
-    this.closeModal(); // Ferme la modal et reset les variables
-    this.loadData();   // Recharge la liste
+    this.closeModal();
+    this.loadData();
   }
 
-  // ================= DELETE =================
+
   openDeleteModal(id: number) {
     this.selectedId = id;
     this.showDeleteModal = true;
@@ -123,7 +151,7 @@ export class EtablissementsComponent implements OnInit {
     });
   }
 
-  // ================= TOGGLE =================
+
   toggle(e: any) {
     // On passe l'ID de l'objet cliqué explicitement
     this.service.toggleEtablissementStatus(e.idEtab).subscribe({
@@ -134,18 +162,97 @@ export class EtablissementsComponent implements OnInit {
     });
   }
 
-  // ================= CLOSE =================
+
   closeModal() {
     this.showModal = false;
-    this.resetData(); // ✅ Nettoyer aussi quand on ferme manuellement
+    this.resetData();
   }
 
   resetData() {
     this.selectedId = null;
     this.selectedNom = '';
+    this.selectedAdresse = '';
+    this.selectedImage = '';
+    this.imageRaw = '';
     this.isEditMode = false;
   }
 
+
+selectedIds: Set<number> = new Set<number>();
+
+
+
+toggleSelection(id: number) {
+  if (this.selectedIds.has(id)) {
+    this.selectedIds.delete(id);
+  } else {
+    this.selectedIds.add(id);
+  }
+}
+
+toggleAll(event: any) {
+  if (event.target.checked) {
+    this.etablissements.forEach(e => this.selectedIds.add(e.idEtab));
+  } else {
+    this.selectedIds.clear();
+  }
+}
+
+isAllSelected(): boolean {
+  return this.etablissements.length > 0 && this.selectedIds.size === this.etablissements.length;
+}
+
+
+
+bulkToggle(newStatus: boolean) {
+  if (this.selectedIds.size === 0) return;
+
+  const ids = Array.from(this.selectedIds);
+  console.log("IDs à modifier :", ids);
+
+
+  const action = newStatus
+    ? this.service.activateMultipleEtab(ids)
+    : this.service.deactivateMultipleEtab(ids);
+
+  action.subscribe({
+    next: () => {
+      console.log("✅ Action groupée sur établissements réussie");
+      this.selectedIds.clear();
+      this.loadData(); // Rafraîchit la liste
+    },
+    error: (err: HttpErrorResponse) => {
+      console.error("❌ Erreur lors de l'action groupée :", err);
+      alert("Erreur lors de la modification groupée.");
+    }
+  });
+}
+onFileSelected(event: any) {
+  const file: File = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const base64String = e.target.result as string;
+
+      // 1. On stocke la version brute pour le serveur
+      this.imageRaw = base64String;
+
+      // 2. On stocke la version sécurisée pour l'affichage <img [src]>
+      this.selectedImage = this.sanitizer.bypassSecurityTrustUrl(base64String);
+
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// Méthode de suppression avec reset de l'input HTML
+removeImage(fileInput: HTMLInputElement) {
+  this.selectedImage = '';
+  this.imageRaw = '';
+  fileInput.value = ''; // Permet de re-sélectionner le même fichier si besoin
+  this.cdr.detectChanges();
+}
   closeDeleteModal() {
     this.showDeleteModal = false;
     this.selectedId = null;

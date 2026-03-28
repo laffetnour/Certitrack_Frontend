@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-admin-tenant-layout',
@@ -11,7 +12,12 @@ import { RouterModule } from '@angular/router';
 })
 export class AdminTenantLayoutComponent {
 
+
   currentUser: any = {};
+  constructor(
+
+      private authService: AuthService
+    ) {}
 
   ngOnInit() {
     const user = localStorage.getItem('user');
@@ -20,8 +26,7 @@ export class AdminTenantLayoutComponent {
     }
   }
 
-  onLogout() {
-    localStorage.clear();
-    window.location.href = '/login';
-  }
+  onLogout(): void {
+      this.authService.logout();
+    }
 }

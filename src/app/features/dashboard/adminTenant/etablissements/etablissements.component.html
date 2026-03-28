@@ -11,6 +11,12 @@
     </div>
   </div>
 
+  <div *ngIf="selectedIds.size > 0" style="display:flex; gap:10px; align-items:center; background:#f0f0f0; padding:5px 15px; border-radius:8px;">
+    <span style="font-weight:bold; font-size: 14px;">{{ selectedIds.size }} sélectionné(s)</span>
+
+    <button class="btn-toggle" (click)="bulkToggle(true)" style="padding: 5px 10px; font-size: 12px;">Activer</button>
+    <button class="btn-toggle" (click)="bulkToggle(false)" style="padding: 5px 10px; font-size: 12px;">Désactiver</button>
+  </div>
   <!-- TABLE -->
   <div class="table-container">
 
@@ -18,7 +24,13 @@
 
       <thead>
       <tr>
+        <th style="width: 40px;">
+          <input type="checkbox" (change)="toggleAll($event)" [checked]="isAllSelected()">
+        </th>
+        <th></th>
         <th>Nom</th>
+        <th>Adresse</th>
+
         <th>Statut</th>
         <th>Actions</th>
       </tr>
@@ -26,9 +38,24 @@
 
       <tbody>
       <tr *ngFor="let e of etablissements; trackBy: trackByEtab">
+        <td style="width: 40px;">
+          <input type="checkbox"
+                 [checked]="selectedIds.has(e.idEtab)"
+                 (change)="toggleSelection(e.idEtab)">
+        </td>
 
+        <td class="img-table-container">
+          <img *ngIf="e.image" [src]="e.image" class="img-table-rect">
+
+          <div *ngIf="!e.image" class="img-table-placeholder">
+            LOGO
+          </div>
+        </td>
         <!-- NOM -->
         <td>{{ e.nom }}</td>
+
+
+        <td>{{ e.adresse }}</td>
 
         <!-- STATUT -->
         <td>
@@ -75,7 +102,7 @@
           </button>
 
           <!-- DELETE -->
-          <button class="btn-delete"
+         <!-- <button class="btn-delete"
                   (click)="openDeleteModal(e.idEtab)"
                   title="Supprimer">
             <svg xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +112,7 @@
               <polyline points="3 6 5 6 21 6"/>
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
             </svg>
-          </button>
+          </button>-->
 
         </td>
 
@@ -105,10 +132,29 @@
         <button (click)="closeModal()">✖</button>
       </div>
 
-      <div style="padding:20px;">
+      <div class="input-group-container">
         <input [(ngModel)]="selectedNom"
                placeholder="Nom établissement"
-               class="form-control">
+               class="custom-input">
+      </div>
+
+      <div class="input-group-container">
+        <input [(ngModel)]="selectedAdresse"
+               placeholder="Adresse"
+               class="custom-input">
+      </div>
+
+      <div  class="input-group-container">
+        <label style="display: block; margin-bottom: 5px; font-size: 12px; color: #666;">Logo Établissement</label>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" class="custom-input">
+
+        <div *ngIf="selectedImage" class="img-modal-preview-container">
+          <img [src]="selectedImage" alt="Aperçu" class="img-modal-rect">
+
+          <button type="button" class="btn-remove-img" (click)="selectedImage = ''; imageRaw = ''">
+            ✕ Supprimer l'image
+          </button>
+        </div>
       </div>
 
       <div class="modal-footer">
@@ -125,7 +171,7 @@
   </div>
 
   <!-- MODAL DELETE -->
-  <div class="modal" *ngIf="showDeleteModal">
+  <!--<div class="modal" *ngIf="showDeleteModal">
     <div class="modal-content">
 
       <div class="modal-header">
@@ -142,6 +188,6 @@
       </div>
 
     </div>
-  </div>
+  </div>-->
 
 </div>

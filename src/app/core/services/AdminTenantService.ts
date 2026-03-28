@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-// 🔹 Optionnel : définir des interfaces pour le typage
+
 export interface Directeur {
   id: number;
   nom: string;
@@ -16,7 +16,9 @@ export interface Directeur {
 export interface Etablissement {
   idEtab: number;
   nom: string;
-  statut: boolean; // 🔥 IMPORTANT
+  statut: boolean;
+  adresse: string;
+  image: string;
 }
 
 @Injectable({
@@ -28,22 +30,22 @@ export class AdminTenantService {
 
   constructor(private http: HttpClient) {}
 
-  // 🔹 Crée les headers avec le token
+
   private getHeaders() {
     const token = localStorage.getItem('token');
-    console.log("Token utilisé:", token); // <--- Vérifie si ce n'est pas null
+    console.log("Token utilisé:", token);
     return {
       headers: new HttpHeaders({
         'Authorization': `Bearer ${token}`
       })
     };
   }
-  // 🔹 Pour construire les URLs complètes
+
   private url(path: string) {
     return `${this.baseUrl}/${path}`;
   }
 
-  // ========================== DIRECTEURS ==========================
+
   getDirecteurs(): Observable<Directeur[]> {
     return this.http.get<Directeur[]>(this.url('directeurs'), this.getHeaders());
   }
@@ -64,7 +66,7 @@ export class AdminTenantService {
     return this.http.put<Directeur>(this.url(`directeurs/${id}/status`), {}, this.getHeaders());
   }
 
-  // ========================== BULK ==========================
+
   deleteMultiple(ids: number[]): Observable<void> {
     return this.http.post<void>(this.url('directeurs/delete-multiple'), ids, this.getHeaders());
   }
@@ -77,18 +79,16 @@ export class AdminTenantService {
     return this.http.post<void>(this.url('directeurs/deactivate'), ids, this.getHeaders());
   }
 
-  // ========================== STATS ==========================
+
   getStats(): Observable<any> {
     return this.http.get<any>(this.url('stats'), this.getHeaders());
   }
 
-  // ========================== ETABLISSEMENTS ==========================
+
   getEtablissements(): Observable<Etablissement[]> {
     return this.http.get<Etablissement[]>(this.url('etablissements'), this.getHeaders());
   }
- /* getEtablissements(): Observable<any[]> {
-    return this.http.get<any[]>(this.url('etablissements'), this.getHeaders());
-  }*/
+
 
   createEtablissement(data: any): Observable<any> {
     return this.http.post<any>(this.url('etablissements'), data, this.getHeaders());
@@ -105,4 +105,13 @@ export class AdminTenantService {
   toggleEtablissementStatus(id: number): Observable<any> {
     return this.http.put<any>(this.url(`etablissements/${id}/status`), {}, this.getHeaders());
   }
+
+activateMultipleEtab(ids: number[]): Observable<void> {
+  return this.http.post<void>(this.url('etablissements/activate'), ids, this.getHeaders());
+}
+
+
+deactivateMultipleEtab(ids: number[]): Observable<void> {
+  return this.http.post<void>(this.url('etablissements/deactivate'), ids, this.getHeaders());
+}
 }

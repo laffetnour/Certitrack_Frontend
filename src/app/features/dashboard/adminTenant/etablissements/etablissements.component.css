@@ -211,7 +211,7 @@ form {
 
 .form-control {
   width: 100%;
-  padding: 10px 14px; /* légèrement plus confortable */
+  padding: 10px 12px;
   border: 1.5px solid #303D49;
   border-radius: 8px;
   font-size: 14px;
@@ -219,17 +219,18 @@ form {
   background-color: #ffffff;
 }
 
+/* État focus (cliqué) */
 .form-control:focus {
   outline: none;
-  border-color: #ea5357;
+  border-color: #ea5357; /* Rouge Smartfuture */
   box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.1);
 }
 
+/* Gestion des erreurs de validation */
 .form-control.error {
   border-color: #ef4444;
   background-color: #fef2f2;
 }
-
 .error-text {
   color: #ef4444;
   font-size: 12px;
@@ -323,4 +324,107 @@ form {
   text-align: center;
   padding: 30px;
   color: #64748b;
+}
+/* Style pour la miniature dans le tableau */
+.img-table-container {
+  width: 80px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.img-table-rect {
+  width: 55px;
+  height: 35px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #eee;
+  display: block;
+  margin: auto;
+}
+
+.img-table-placeholder {
+  width: 55px;
+  height: 35px;
+  border-radius: 4px;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  font-size: 9px;
+  color: #adb5bd;
+  border: 1px dashed #dee2e6;
+}
+
+/* Style pour le grand aperçu dans la modal */
+.img-modal-preview-container {
+  margin-top: 15px;
+  text-align: center;
+  border: 1px dashed #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.img-modal-rect {
+  width: 250px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: block;
+  margin: 0 auto;
+}
+
+.btn-remove-img {
+  display: block;
+  margin: 12px auto 0 auto;
+  color: #dc3545;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.btn-remove-img:hover {
+  text-decoration: underline;
+}
+
+/* Conteneur pour l'espacement entre les champs */
+.input-group-container {
+  padding: 10px 20px;
+}
+
+/* Style de l'input moderne */
+.custom-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  border: 1px solid #d1d5db; /* Gris doux */
+  border-radius: 12px;        /* Bords très arrondis comme sur votre image */
+  background-color: #ffffff;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+  box-sizing: border-box;    /* Évite que l'input dépasse du parent */
+  color: #374151;
+}
+
+/* Effet au survol */
+.custom-input:hover {
+  border-color: #9ca3af;
+}
+
+/* Effet quand on clique dedans (Focus) */
+.custom-input:focus {
+  border-color: #f87171;     /* Couleur rouge/corail assortie à votre bouton */
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.1); /* Halo discret */
+}
+
+/* Style du texte d'aide (Placeholder) */
+.custom-input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
 }
