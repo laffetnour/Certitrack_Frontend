@@ -1,4 +1,4 @@
-<div class="admin-container">
+<!--<div class="admin-container">
   <div class="admin-header">
     <h1>Catalogue des Modules</h1>
     <div class="header-actions">
@@ -67,6 +67,16 @@
           </div>
         </div>
 
+        <label>Nombre de mots-clés</label>
+        <input type="number" formControlName="nombreMotCle" (change)="onNombreChange()" class="form-control">
+
+        <div formArrayName="motCles">
+          <div *ngFor="let mcGroup of motCles.controls; let i = index" [formGroupName]="i">
+            <input formControlName="description" placeholder="Mot-clé {{i+1}}" class="form-control">
+            <button type="button" (click)="removeMotCle(i)">❌</button>
+          </div>
+        </div>
+
         <div class="modal-footer">
           <button type="button" (click)="showModal=false">Annuler</button>
           <button type="submit" class="btn-submit" [disabled]="moduleForm.invalid">Enregistrer</button>
@@ -74,4 +84,237 @@
       </form>
     </div>
   </div>
+</div>-->
+
+
+
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Catalogue des Modules</h1>
+
+    <div style="display:flex; gap:10px;">
+      <select class="form-control filter-select" [(ngModel)]="selectedFilterCat" (change)="applyFilter()">
+        <option value="">Toutes les catégories</option>
+        <option *ngFor="let c of categories" [value]="c.id">{{ c.nom }}</option>
+      </select>
+
+      <button class="btn-add" (click)="openAddModal()">
+        + Nouveau Module
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+
+    <div class="bulk-actions" *ngIf="selectedModules.length > 0">
+      <span>{{ selectedModules.length }} sélectionné(s)</span>
+
+      <button class="btn-activate" (click)="activateSelected()">Activer</button>
+      <button class="btn-deactivate" (click)="deactivateSelected()">Désactiver</button>
+      <button class="btn-delete" (click)="deleteSelected()">Supprimer</button>
+    </div>
+    <table class="modern-table">
+      <thead>
+      <tr>
+        <th>
+          <input type="checkbox"
+                 [checked]="isAllSelected()"
+                 (change)="selectAll($event)">
+        </th>
+        <th>Nom</th>
+        <th>Catégorie</th>
+        <th>Score Seuil</th>
+        <th>Durée</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let m of filteredModules">
+        <td>
+          <input type="checkbox"
+                 [checked]="selectedModules.includes(m.idModule)"
+                 (change)="onCheckboxChange(m.idModule, $event)">
+        </td>
+        <td>{{ m.nom }}</td>
+        <td>
+          <span class="badge" *ngIf="m.nomCategorie">{{ m.nomCategorie }}</span>
+          <span *ngIf="!m.nomCategorie" style="color: #ccc;">Non classé</span>
+        </td>
+        <td>{{ m.seuilScore }}%</td>
+        <td>{{ m.dureeQCM }} min</td>
+        <td>
+          <span class="status-badge"
+                [class.active]="m.disponibilite"
+                [class.inactive]="!m.disponibilite">
+            {{ m.disponibilite ? 'Actif' : 'Inactif' }}
+          </span>
+        </td>
+
+        <td class="actions">
+
+          <button class="btn-view" (click)="viewModule(m)" title="Voir">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+
+          <button class="btn-edit" (click)="openEditModal(m)" title="Modifier">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+
+          <button class="btn-toggle" (click)="toggleStatus(m)" [title]="m.disponibilite ? 'Désactiver' : 'Activer'">
+
+            <svg *ngIf="m.disponibilite" xmlns="http://www.w3.org/2000/svg"
+                 width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="#e74c3c" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+            </svg>
+
+            <svg *ngIf="!m.disponibilite" xmlns="http://www.w3.org/2000/svg"
+                 width="18" height="18" viewBox="0 0 24 24"
+                 fill="none" stroke="#2ecc71" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+
+          </button>
+          <button class="btn-delete" (click)="openDeleteModal(m.idModule)" title="Supprimer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal" *ngIf="showModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>{{ isEditMode ? 'Modifier' : 'Ajouter' }} Module</h2>
+        <button class="close-btn" (click)="showModal=false">✖</button>
+      </div>
+
+      <form [formGroup]="moduleForm" (ngSubmit)="onSubmit()">
+        <label>Nom du module</label>
+        <input type="text" formControlName="nom" class="form-control" placeholder="Ex: Java Avancé">
+
+        <label>Catégorie</label>
+        <select formControlName="categorieModule" class="form-control">
+          <option [ngValue]="null">Choisir une catégorie...</option>
+          <option *ngFor="let c of categories" [ngValue]="c">{{ c.nom }}</option>
+        </select>
+
+        <div class="form-row" style="display: flex; gap: 15px; margin-top: 15px;">
+          <div style="flex: 1;">
+            <label>Seuil Score (%)</label>
+            <input type="number" formControlName="seuilScore" class="form-control">
+          </div>
+          <div style="flex: 1;">
+            <label>Durée (min)</label>
+            <input type="number" formControlName="dureeQCM" class="form-control">
+          </div>
+        </div>
+
+        <hr style="margin: 20px 0;">
+
+        <div class="keyword-section">
+          <label>Nombre de mots-clés souhaités</label>
+          <input type="number" formControlName="nombreMotCle" (change)="onNombreChange()" class="form-control" min="0">
+
+          <div formArrayName="motCles" class="motcle-list">
+            <div *ngFor="let mcGroup of motCles.controls; let i = index" [formGroupName]="i" class="motcle-item">
+              <input formControlName="description" placeholder="Mot-clé #{{i+1}}" class="form-control">
+              <button type="button" class="btn-remove-item" (click)="removeMotCle(i)">✖</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn-submit" [disabled]="moduleForm.invalid">
+            {{ isEditMode ? 'Mettre à jour' : 'Enregistrer' }}
+          </button>
+          <button type="button" class="btn-cancel" (click)="showModal=false">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+ <div class="modal" *ngIf="showViewModal" (click)="showViewModal=false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Profil du Module</h2>
+        <button class="close-btn" (click)="showViewModal=false">&times;</button>
+      </div>
+
+      <div class="profile-info" *ngIf="moduleToView">
+        <div class="profile-avatar">
+          {{ moduleToView.nom?.charAt(0) }}
+        </div>
+
+        <div class="info-row">
+          <span class="label">Nom du module</span>
+          <span class="value">{{ moduleToView.nom }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Catégorie</span>
+          <span class="value">{{ moduleToView.nomCategorie }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Score Seuil</span>
+          <span class="value">{{ moduleToView.seuilScore }}%</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Statut</span>
+          <span class="value">
+            <span class="status-badge" [class.active]="moduleToView.disponibilite" [class.inactive]="!moduleToView.disponibilite">
+              {{ moduleToView.disponibilite ? 'Actif' : 'Inactif' }}
+            </span>
+          </span>
+        </div>
+
+        <div class="info-row" style="flex-direction: column; align-items: flex-start;">
+          <span class="label">Mots-clés</span>
+          <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;">
+            <span class="badge" *ngFor="let kw of moduleToView.motCles" style="background:#f1f5f9; color:#475569;">
+              #{{ kw.description }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" *ngIf="showDeleteModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Confirmation</h2>
+      </div>
+      <div style="padding:20px; text-align:center;">
+        Êtes-vous sûr de vouloir supprimer ce module ?
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="showDeleteModal=false">Annuler</button>
+        <button class="btn-delete" (click)="confirmDelete()">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
 </div>
+
+
+

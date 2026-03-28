@@ -44,7 +44,11 @@ login() {
 
      if (serverMessage === "ETABLISSEMENT_DISABLED") {
        this.errorMessage = "⚠️ L'établissement de votre compte est désactivé.";
-     } else if (serverMessage === "USER_DISABLED") {
+     }
+     else if(serverMessage === "TENANT_DISABLED") {
+       this.errorMessage = "🚫 Votre organisation est désactivée.";
+     }
+     else if (serverMessage === "USER_DISABLED") {
        this.errorMessage = "🚫 Votre compte personnel est désactivé.";
      } else {
        this.errorMessage = "Identifiants incorrects ou erreur de connexion.";

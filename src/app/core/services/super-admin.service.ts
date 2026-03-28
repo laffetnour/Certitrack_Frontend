@@ -119,4 +119,17 @@ updateModule(id: number, module: any): Observable<any> {
 deleteModule(id: number): Observable<any> {
   return this.http.delete(`${this.baseUrl}/modules/${id}`, this.getAuthHeaders());
 }
+
+  toggleModuleStatus(id: number): Observable<any> {
+
+    return this.http.put(`${this.baseUrl}/modules/${id}/toggle-status`, {}, this.getAuthHeaders());
+  }
+
+  activateModules(ids: number[]): Observable<any> {
+    return this.http.put(`${this.baseUrl}/modules/activate`, ids, this.getAuthHeaders());
+  }
+
+  deactivateModules(ids: number[]): Observable<any> {
+    return this.http.put(`${this.baseUrl}/modules/deactivate`, ids, this.getAuthHeaders());
+  }
 }
