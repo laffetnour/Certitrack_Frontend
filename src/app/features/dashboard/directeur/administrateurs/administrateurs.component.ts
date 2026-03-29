@@ -16,6 +16,7 @@ export class AdministrateursComponent implements OnInit {
   admins: any[] = [];
   selectedAdmins: number[] = [];
 
+
   showModal = false;
   showViewModal = false;
   isEditMode = false;
@@ -68,18 +69,6 @@ export class AdministrateursComponent implements OnInit {
   }
 
 
-  // TOGGLE STATUS SIMPLE
-
-  /*toggleStatus(admin: any): void {
-    this.directeurService.toggleAdminStatus(admin.id).subscribe({
-      next: (updated) => {
-        const index = this.admins.findIndex(a => a.id === admin.id);
-        if (index !== -1) this.admins[index].enabled = updated.enabled;
-        this.successMessage = updated.enabled ? 'Activé' : 'Désactivé';
-        setTimeout(() => this.successMessage = '', 3000);
-      }
-    });
-  }*/
 
   toggleStatus(admin: any): void {
 
@@ -114,18 +103,6 @@ export class AdministrateursComponent implements OnInit {
     });
   }
 
-
-  // DELETE SINGLE
-
-  /*deleteAdmin(id: number): void {
-    if (confirm('Supprimer cet administrateur ?')) {
-      this.directeurService.deleteAdmin(id).subscribe(() => {
-        this.successMessage = 'Administrateur supprimé';
-        this.loadAdmins();
-        setTimeout(() => this.successMessage = '', 3000);
-      });
-    }
-  }*/
 
   deleteAdmin(id: number): void {
     this.adminToDeleteId = id;
@@ -242,17 +219,6 @@ export class AdministrateursComponent implements OnInit {
     this.adminForm.reset();
   }
 
-  /*openEditModal(admin: any): void {
-    this.showModal = true;
-    this.isEditMode = true;
-    this.selectedAdmin = admin;
-    this.adminForm.patchValue({
-      nom: admin.nom,
-      prenom: admin.prenom,
-      username: admin.username,
-      password: ''
-    });
-  }*/
 
   openEditModal(admin: any): void {
     this.selectedAdmin = { ...admin }; // ← Copie
@@ -280,6 +246,7 @@ export class AdministrateursComponent implements OnInit {
   closeModal(): void {
     this.showModal = false;
     this.isEditMode = false;
+     this.errorMessage = '';
     this.adminForm.reset();
   }
 
@@ -289,46 +256,15 @@ export class AdministrateursComponent implements OnInit {
   }
 
 
-  /*onSubmit(): void {
-    if (this.adminForm.invalid) return;
-
-    this.loading = true;
-    const data = this.adminForm.value;
-
-    if (this.isEditMode && this.selectedAdmin) {
-      this.directeurService.updateAdmin(this.selectedAdmin.id, data).subscribe({
-        next: () => {
-          this.successMessage = 'Admin modifié';
-          this.loadAdmins();
-          this.closeModal();
-          this.loading = false;
-          setTimeout(() => this.successMessage = '', 3000);
-        },
-        error: () => this.loading = false
-      });
-    } else {
-      this.directeurService.createAdmin(data).subscribe({
-        next: () => {
-          this.successMessage = 'Admin ajouté';
-          this.loadAdmins();
-          this.closeModal();
-          this.loading = false;
-          setTimeout(() => this.successMessage = '', 3000);
-        },
-        error: () => this.loading = false
-      });
-    }
-  }*/
-
   onSubmit(): void {
 
     if (this.adminForm.invalid) {
       this.errorMessage = "Veuillez remplir tous les champs obligatoires";
-      setTimeout(() => this.errorMessage = '', 3000);
       return;
     }
 
     this.loading = true;
+    this.errorMessage = '';
     const data = this.adminForm.value;
 
     if (this.isEditMode && this.selectedAdmin) {
@@ -360,14 +296,15 @@ export class AdministrateursComponent implements OnInit {
         },
         error: (err) => {
 
+          this.loading = false;
           if (err.status === 400) {
-            this.errorMessage = "Utilisateur existe déjà";
+            this.errorMessage = err.error?.message || "Cet utilisateur existe déjà (email dupliqué)";
           } else {
             this.errorMessage = "Erreur lors de l'ajout";
           }
 
-          this.loading = false;
-          setTimeout(() => this.errorMessage = '', 3000);
+
+          this.cdr.detectChanges();
         }
       });
 

@@ -11,15 +11,16 @@ export class DirecteurService {
 
   constructor(private http: HttpClient) {}
 
-  private getAuthHeaders() {
-    const token = localStorage.getItem('token') || '';
-    return {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      })
-    };
-  }
+private getAuthHeaders() {
+  const token = localStorage.getItem('token');
+  console.log("Headers envoyés :", token ? "Token présent" : "TOKEN MANQUANT !");
+  return {
+    headers: new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    })
+  };
+}
 
   getAdmins(): Observable<any> {
     return this.http.get(`${this.baseUrl}/administrateurs`, this.getAuthHeaders());

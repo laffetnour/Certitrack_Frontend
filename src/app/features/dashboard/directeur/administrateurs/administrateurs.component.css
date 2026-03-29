@@ -324,3 +324,12 @@ form {
   padding: 30px;
   color: #64748b;
 }
+.error-message {
+  color: #dc2626;
+  background-color: #fee2e2;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+}

@@ -1,54 +1,81 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DirecteurService } from '../../../../core/services/directeur.service';
 import { CommonModule } from '@angular/common';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { ChangeDetectorRef } from '@angular/core';
+
+// Interface définie à l'extérieur pour la clarté
+interface DashboardStats {
+  etablissement: string;
+  admins: number;
+  candidats: number;
+  specialites: number;
+}
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
 
-  stats: any = null;
-  currentUser: any = {};
+  // Initialisation avec des valeurs par défaut (Évite les erreurs de template)
+  stats: DashboardStats = {
+    etablissement: '',
+    admins: 0,
+    candidats: 0,
+    specialites: 0
+  };
 
-  constructor(private directeurService: DirecteurService,
-              private router: Router,
-              private cdr: ChangeDetectorRef) {}
+  currentUser: any;
+  loading = true;
 
-  ngOnInit(): void {
-    const user = localStorage.getItem('user');
+  constructor(
+       private service: DirecteurService,
+       private cdr: ChangeDetectorRef // Importez ChangeDetectorRef depuis @angular/core
+     ) {}
 
-    if (user) {
-      this.currentUser = JSON.parse(user);
-    }
+   ngOnInit() {
+     this.currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+     this.loadDashboardData();
+   }
+  /**
+   * Charge les statistiques depuis le backend
+   */
+  loadDashboardData(): void {
+    this.loading = true;
 
-    this.loadStats();
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.loadStats();
-      });
+    this.service.getStats().subscribe({
+      next: (res) => {
+        console.log("📊 Data reçue du serveur :", res);
 
-  }
+        // Mapping sécurisé identique au principe du Tenant
+        this.stats = {
+          etablissement: res.etablissement || 'Établissement inconnu',
+          admins: res.admins || 0,
+          candidats: res.candidats || 0,
+          specialites: res.specialites || 0
+        };
 
-  loadStats() {
-    this.directeurService.getStats().subscribe({
-      next: (data) => {
-        console.log("STATS BACKEND =", data);
-        this.stats = { ...data };
-        this.cdr.detectChanges();// 🔥 IMPORTANT (force refresh)
+        this.loading = false;
+        this.cdr.detectChanges(); // Force le rendu pour éviter les délais
       },
       error: (err) => {
-        console.error('Erreur stats', err);
+        console.error("Erreur stats:", err);
+        this.loading = false;
       }
     });
   }
 
-
+  /**
+   * Mise à jour locale (Utile après une action CRUD sans rechargement API)
+   */
+  updateLocalStats(adminsList: any[], candidatsList: any[], specsList: any[]): void {
+    this.stats.admins = adminsList.length;
+    this.stats.candidats = candidatsList.length;
+    this.stats.specialites = specsList.length;
+    this.cdr.detectChanges();
+  }
 }

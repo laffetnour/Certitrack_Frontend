@@ -159,7 +159,15 @@
                  [class.error]="adminForm.get('password')?.invalid && adminForm.get('password')?.touched">
         </div>
 
+
+
+        <div *ngIf="errorMessage" class="error-msg">
+          {{ errorMessage }}
+        </div>
+
         <div class="modal-footer">
+
+
           <button type="button" class="btn-cancel" (click)="closeModal()">Annuler</button>
           <!--<button type="submit" class="btn-submit" [disabled]="adminForm.invalid || loading">-->
           <button
@@ -170,7 +178,9 @@
             <span *ngIf="!loading">{{ isEditMode ? 'Modifier' : 'Ajouter' }}</span>
             <span *ngIf="loading">Chargement...</span>
           </button>
+
         </div>
+
       </form>
     </div>
   </div>
