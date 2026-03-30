@@ -1,93 +1,3 @@
-<!--<div class="admin-container">
-  <div class="admin-header">
-    <h1>Catalogue des Modules</h1>
-    <div class="header-actions">
-      <select class="form-control filter-select" [(ngModel)]="selectedFilterCat" (change)="applyFilter()">
-        <option value="">Toutes les catégories</option>
-        <option *ngFor="let c of categories" [value]="c.id">{{ c.nom }}</option>
-      </select>
-      <button class="btn-add" (click)="openAddModal()">+ Nouveau Module</button>
-    </div>
-  </div>
-
-  <table class="modern-table">
-    <thead>
-    <tr>
-      <th>Nom</th>
-      <th>Catégorie</th>
-      <th>Score Seuil</th>
-      <th>Durée (min)</th>
-      <th>Statut</th>
-      <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let m of filteredModules">
-      <td>{{ m.nom }}</td>
-      <td>
-  <span class="badge" *ngIf="m.nomCategorie">
-    {{ m.nomCategorie }}
-  </span>
-        <span *ngIf="!m.nomCategorie" style="color: #ccc;">Non classé</span>
-      </td>
-
-      <td>{{ m.seuilScore }}</td>
-      <td>{{ m.dureeQCM }} min</td>
-      <td>{{ m.disponibilite ? '✅ Dispo' : '❌ Hors ligne' }}</td>
-      <td class="actions">
-        <button class="btn-edit" (click)="openEditModal(m)">Edit</button>
-        <button class="btn-delete" (click)="deleteModule(m.idModule)">Suppr</button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-
-  <div class="modal" *ngIf="showModal">
-    <div class="modal-content">
-      <h2>{{ isEditMode ? 'Modifier' : 'Ajouter' }} Module</h2>
-      <form [formGroup]="moduleForm" (ngSubmit)="onSubmit()">
-
-        <label>Nom du module</label>
-        <input type="text" formControlName="nom" class="form-control">
-
-        <label>Catégorie</label>
-        <select formControlName="categorieModule" class="form-control">
-          <option [ngValue]="null">Choisir...</option>
-          <option *ngFor="let c of categories" [ngValue]="c">{{ c.nom }}</option>
-        </select>
-
-        <div style="display: flex; gap: 10px;">
-          <div>
-            <label>Seuil Score</label>
-            <input type="number" formControlName="seuilScore" class="form-control">
-          </div>
-          <div>
-            <label>Durée (min)</label>
-            <input type="number" formControlName="dureeQCM" class="form-control">
-          </div>
-        </div>
-
-        <label>Nombre de mots-clés</label>
-        <input type="number" formControlName="nombreMotCle" (change)="onNombreChange()" class="form-control">
-
-        <div formArrayName="motCles">
-          <div *ngFor="let mcGroup of motCles.controls; let i = index" [formGroupName]="i">
-            <input formControlName="description" placeholder="Mot-clé {{i+1}}" class="form-control">
-            <button type="button" (click)="removeMotCle(i)">❌</button>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" (click)="showModal=false">Annuler</button>
-          <button type="submit" class="btn-submit" [disabled]="moduleForm.invalid">Enregistrer</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>-->
-
-
-
 <div class="admin-container">
   <div class="admin-header">
     <h1>Catalogue des Modules</h1>
@@ -97,6 +7,20 @@
         <option value="">Toutes les catégories</option>
         <option *ngFor="let c of categories" [value]="c.id">{{ c.nom }}</option>
       </select>
+      <input type="file" #fileInput
+             (change)="onFileSelected($event)"
+             accept=".csv"
+             style="display: none;">
+
+      <button class="btn-view" (click)="onImportClick()" [disabled]="loading"
+              style="background-color: #6366f1; color: white; display: flex; align-items: center; gap: 5px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+        Importer CSV
+      </button>
 
       <button class="btn-add" (click)="openAddModal()">
         + Nouveau Module

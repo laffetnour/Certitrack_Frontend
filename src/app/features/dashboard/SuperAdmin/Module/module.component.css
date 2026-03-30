@@ -324,3 +324,18 @@ form {
   padding: 30px;
   color: #64748b;
 }
+
+.btn-view {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-view:hover {
+    background-color: #4f46e5 !important; /* Indigo plus foncé */
+    transform: translateY(-1px);
+}
+
+.btn-view:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

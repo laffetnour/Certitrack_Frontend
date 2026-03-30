@@ -20,6 +20,16 @@ export class SuperAdminService {
     };
   }
 
+private getAuthHeadersForFile() {
+  const token = localStorage.getItem('token');
+  return {
+    headers: new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+      // SURTOUT PAS de 'Content-Type': 'application/json' ici
+    })
+  };
+}
+
   // --- STATISTIQUES ---
   getDashboardStats(): Observable<any> {
     return this.http.get(`${this.baseUrl}/stats`, this.getAuthHeaders());
@@ -176,4 +186,13 @@ deleteModule(id: number): Observable<any> {
   deactivateModules(ids: number[]): Observable<any> {
     return this.http.put(`${this.baseUrl}/modules/deactivate`, ids, this.getAuthHeaders());
   }
+importModuleCSV(file: File): Observable<any> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  // On enlève responseType: 'text' car on attend du JSON maintenant
+  return this.http.post(`${this.baseUrl}/modules/import`, formData, {
+    headers: this.getAuthHeadersForFile().headers
+  });
+}
 }
