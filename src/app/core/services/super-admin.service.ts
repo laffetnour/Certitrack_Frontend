@@ -75,10 +75,13 @@ export class SuperAdminService {
     return this.http.put(`${this.baseUrl}/tenants/deactivate-bulk`, ids, this.getAuthHeaders());
   }
 
+
   deleteTenantsBulk(ids: number[]): Observable<any> {
     // Changé /users/ par /tenants/ + ajout des headers
     return this.http.post(`${this.baseUrl}/tenants/delete-bulk`, ids, this.getAuthHeaders());
   }
+
+
 
 // --- À AJOUTER POUR LES ADMINS TENANTS ---
 
