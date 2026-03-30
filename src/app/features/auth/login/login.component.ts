@@ -31,7 +31,7 @@ login() {
 
       const role = res.role;
       // Votre logique de redirection existante...
-      if (role === 'directeurEtab') this.router.navigate(['/directeur']);
+      if (role === 'directeurEtab') this.router.navigate(['/directeur/dashboard']);
       if (role === 'Candidat') this.router.navigate(['/candidat']);
       if (role === 'adminEtab') this.router.navigate(['/dashboard']);
       if (role === 'superAdmin') this.router.navigate(['/super-admin']);

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-directeur-layout',
   standalone: true,
@@ -14,7 +14,7 @@ export class DirecteurLayoutComponent {
   isParcoursOpen: boolean = false;
   currentUser: any = {};
 
-
+constructor(private router: Router) {}
   ngOnInit(): void {
     const user = localStorage.getItem('user');
 
@@ -23,9 +23,8 @@ export class DirecteurLayoutComponent {
     }
   }
 
-  onLogout(): void {
-    localStorage.clear();
-    window.location.href = '/login';
-  }
-
+ onLogout(): void {
+   localStorage.clear();
+   this.router.navigate(['/login']); // Plus fluide que window.location
+ }
 }

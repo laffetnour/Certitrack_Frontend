@@ -58,11 +58,12 @@ export const routes: Routes = [
   {
     path: 'directeur',
     component: DirecteurLayoutComponent,
+    canActivate: [authGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'administrateurs', component: AdministrateursComponent },
-      { path: 'specialites', component: SpecialiteComponent },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+      { path: 'specialites', component: SpecialiteComponent }
+      //{ path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
   {
