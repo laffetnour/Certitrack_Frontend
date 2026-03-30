@@ -48,6 +48,32 @@
         </div>
       </div>
 
+      <div class="nav-item-group">
+        <div class="nav-item" (click)="toggleQuestionMenu()">
+          <i class="fas fa-question-circle"></i>
+          <span>Question/Réponse</span>
+          <i class="fas fa-chevron-down arrow"
+             [style.transform]="isQuestionOpen ? 'rotate(180deg)' : 'none'"></i>
+        </div>
+
+        <div class="sub-menu" *ngIf="isQuestionOpen">
+          <!--<div class="nav-item sub" routerLink="/super-admin/categories-questions" routerLinkActive="active">
+            <i class="fas fa-tags" style="font-size: 0.8rem; margin-right: 10px;"></i>
+            <span>Catégories des questions</span>
+          </div>-->
+
+          <div class="nav-item sub" routerLink="/super-admin/questions" routerLinkActive="active">
+            <i class="fas fa-list-ul" style="font-size: 0.8rem; margin-right: 10px;"></i>
+            <span>Questions</span>
+          </div>
+
+          <!--<div class="nav-item sub" routerLink="/super-admin/reponses" routerLinkActive="active">
+            <i class="fas fa-reply-all" style="font-size: 0.8rem; margin-right: 10px;"></i>
+            <span>Réponses</span>
+          </div>-->
+        </div>
+      </div>
+
       <div class="nav-item">
         <i class="fas fa-cog"></i> <span>Paramètres</span>
         <i class="fas fa-chevron-down arrow"></i>

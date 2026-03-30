@@ -23,7 +23,8 @@ export class SuperAdminComponent implements OnInit {
   isLoading: boolean = false;
 
   isCatalogueOpen: boolean = false;
-    isParcoursOpen: boolean = false;
+  isParcoursOpen: boolean = false;
+  isQuestionOpen: boolean = false;
 
 
   constructor(
@@ -40,6 +41,7 @@ export class SuperAdminComponent implements OnInit {
 
 toggleCatalogue(): void {
     this.isCatalogueOpen = !this.isCatalogueOpen;
+     if (this.isCatalogueOpen) this.isQuestionOpen = false;
   }
 
   toggleParcours(): void {
@@ -89,6 +91,13 @@ toggleCatalogue(): void {
     }
   }
 
+
+
+  toggleQuestionMenu() {
+    this.isQuestionOpen = !this.isQuestionOpen;
+    // Optionnel : fermer le catalogue quand on ouvre les questions
+    if (this.isQuestionOpen) this.isCatalogueOpen = false;
+  }
 
   onLogout(): void {
     this.authService.logout();

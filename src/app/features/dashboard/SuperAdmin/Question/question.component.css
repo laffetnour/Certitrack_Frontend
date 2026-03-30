@@ -1,0 +1,371 @@
+/*.accordion-button:not(.collapsed) {
+    background-color: #f8f9fa;
+    color: #000;
+    box-shadow: none;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(0,0,0,.125);
+}
+
+.badge {
+    font-size: 0.8rem;
+    padding: 0.5em 0.8em;
+}
+
+.accordion-item {
+    border-radius: 8px !important;
+    overflow: hidden;
+}
+
+.list-group-item {
+    border-left: 4px solid #dee2e6;
+}
+
+.list-group-item:hover {
+    background-color: #f1f1f1;
+}*/
+
+
+.admin-container {
+  background-color: #f8fafc;
+  padding: 20px;
+}
+
+/* ================= HEADER ================= */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  background: #ffffff;
+  padding: 20px 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.btn-add {
+  background-color: #ea5357; /* Rouge Smartfuture */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-add:hover {
+  background-color: #d44347;
+}
+
+/* TABLE */
+.table-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.modern-table th {
+  padding: 14px;
+  background: #f8fafc;
+  text-align: left;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.modern-table td {
+  padding: 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.modern-table tr:hover {
+  background: #f9fafb;
+}
+
+/* STATUS */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.active {
+  background: #e6fffa;
+  color: #319795;
+}
+
+.status-badge.inactive {
+  background: #fff5f5;
+  color: #e53e3e;
+}
+
+/* ACTIONS */
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+.btn-view { background: #e0f2fe; color: #0284c7; }
+.btn-edit { background: #fef3c7; color: #d97706; }
+.btn-toggle { background: #f3e8ff; color: #9333ea; }
+.btn-delete { background: #fee2e2; color: #dc2626; }
+
+.actions button:hover {
+  transform: scale(1.1);
+  filter: brightness(0.95);
+}
+
+/* ALERTS */
+.alert {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.alert.success {
+  background: #e6fffa;
+  color: #065f46;
+}
+
+.alert.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* BULK ACTIONS */
+.bulk-actions {
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.bulk-actions button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+/* ================= MODALS ================= */
+
+/* Background */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(48, 61, 73, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+}
+
+/* 🔥 AGRANDI ICI */
+.modal-content {
+  width: 600px;              /* AVANT trop large → réduit */
+  max-width: 90%;
+  background-color: #ffffff !important;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Header */
+.modal-header {
+  padding: 20px 25px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-footer {
+  padding: 20px 25px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* FORM */
+form {
+  padding: 20px 30px;
+  background-color: #ffffff;
+}
+/* 2 colonnes */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px; /* AVANT 15 → plus d’espace */
+}
+
+/* Champs */
+.form-group {
+  margin-bottom: 20px; /* AVANT 18 → un peu plus clean */
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #303D49;
+  margin-bottom: 6px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 14px; /* légèrement plus confortable */
+  border: 1.5px solid #303D49;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #ea5357;
+  box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.1);
+}
+
+.form-control.error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* FOOTER */
+.modal-footer {
+  padding-top: 20px;
+  margin-top: 10px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-cancel {
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-submit {
+  background-color: #ea5357;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: #d44347;
+}
+
+.btn-submit:disabled {
+  background-color: #fca5a5;
+  cursor: not-allowed;
+}
+
+/* PROFILE VIEW */
+.profile-info {
+  padding: 20px 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: #ffffff;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  background-color: #fef2f2;
+  color: #ea5357;
+  border: 2px solid #fca5a5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 auto 20px auto;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.value {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+/* LOADING + EMPTY */
+.loading, .empty-state {
+  text-align: center;
+  padding: 30px;
+  color: #64748b;
+}
+
+.btn-view {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-view:hover {
+    background-color: #4f46e5 !important; /* Indigo plus foncé */
+    transform: translateY(-1px);
+}
+
+.btn-view:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

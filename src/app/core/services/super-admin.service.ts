@@ -195,4 +195,19 @@ importModuleCSV(file: File): Observable<any> {
     headers: this.getAuthHeadersForFile().headers
   });
 }
+
+importQuestionsCSV(file: File): Observable<any> {
+  const formData = new FormData();
+  formData.append('file', file);
+  // On utilise getAuthHeadersForFile() (sans Content-Type JSON)
+  return this.http.post(`${this.baseUrl}/questions/import`, formData, this.getAuthHeadersForFile());
+}
+
+getQuestions(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/questions/all`, this.getAuthHeaders());
+  }
+
+getCatQuestions(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/categories-questions/all`, this.getAuthHeaders());
+  }
 }
