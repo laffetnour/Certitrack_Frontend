@@ -19,7 +19,7 @@ export class SpecialiteComponent implements OnInit {
   originalNom: string = '';
   loading = true;
 
-  // modal
+
   showModal = false;
   isEdit = false;
   form: any = { nom: '' };
@@ -35,7 +35,7 @@ export class SpecialiteComponent implements OnInit {
     this.loadSpecialites();
   }
 
-  // ================= LOAD =================
+
   loadSpecialites() {
     this.loading = true;
 
@@ -43,7 +43,7 @@ export class SpecialiteComponent implements OnInit {
       next: (data) => {
         this.specialites = data || [];
         this.loading = false;
-        this.cdr.detectChanges(); // 🔥 IMPORTANT
+        this.cdr.detectChanges();
       },
       error: () => {
         this.loading = false;
@@ -51,7 +51,7 @@ export class SpecialiteComponent implements OnInit {
     });
   }
 
-  // ================= SELECTION =================
+
   onCheckboxChange(id: number, event: any) {
     if (event.target.checked) {
       this.selectedIds.push(id);
@@ -77,7 +77,7 @@ export class SpecialiteComponent implements OnInit {
     return item.idSpecialite;
   }
 
-  // ================= MODAL =================
+
   openAdd() {
     this.originalNom = '';
     this.isEdit = false;
@@ -117,7 +117,7 @@ export class SpecialiteComponent implements OnInit {
     }
   }
 
-  // ================= ACTIONS =================
+
   toggle(sp: any) {
     this.directeurService.toggleSpecialite(sp.idSpecialite)
       .subscribe(() => this.loadSpecialites());
@@ -128,7 +128,7 @@ export class SpecialiteComponent implements OnInit {
       .subscribe(() => this.loadSpecialites());
   }
 
-  // ================= BULK =================
+
   activateSelected() {
     this.directeurService.activateMultipleSpecialites(this.selectedIds)
       .subscribe(() => {
@@ -163,10 +163,10 @@ deleteSelected() {
   isSubmitDisabled(): boolean {
     const nom = this.form.nom?.trim();
 
-    // champ vide
+
     if (!nom) return true;
 
-    // mode modification sans changement
+
     if (this.isEdit && nom === this.originalNom) return true;
 
     return false;

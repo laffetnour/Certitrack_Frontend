@@ -35,16 +35,15 @@ export class AdminComponent implements OnInit {
       prenom: ['', Validators.required],
       username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      dateNais: ['', Validators.required],// Ajout du champ date
-      //nomEtablissement: ['']
+      dateNais: ['', Validators.required],
 
-      specialiteId: ['', Validators.required]  // ← nouveau champ
+      specialiteId: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
     console.log("AdminComponent chargé");
-    //this.loadCandidats();
+
     this.loadCandidatsParSpecialite();
     this.loadSpecialites();
   }
@@ -82,7 +81,7 @@ export class AdminComponent implements OnInit {
 
   openAddModal(): void {
     this.isEditMode = false;
-    this.selectedCandidat = null; // Important pour que le filtre du HTML ne bloque rien
+    this.selectedCandidat = null;
     this.candidatForm.reset({ specialiteId: '' });
     this.showModal = true;
   }
@@ -92,7 +91,7 @@ export class AdminComponent implements OnInit {
     this.isEditMode = true;
     this.selectedCandidat = candidat;
 
-    // On retire le validateur 'required' pour le mot de passe en mode édition
+
     this.candidatForm.get('password')?.setValidators([]);
     this.candidatForm.get('password')?.updateValueAndValidity();
 
@@ -106,7 +105,7 @@ export class AdminComponent implements OnInit {
       specialiteId: candidat.specialite?.idSpecialite
     });
 
-    this.candidatForm.markAsPristine(); // ⭐ important
+    this.candidatForm.markAsPristine();
 
     this.showModal = true;
     this.cdr.detectChanges();
@@ -140,7 +139,7 @@ export class AdminComponent implements OnInit {
           next: () => {
             this.successMessage = 'Candidat modifié';
             this.loadCandidatsParSpecialite();
-            //this.loadCandidats();
+
             this.closeModal();
             this.loading = false;
             setTimeout(() => this.successMessage = '', 3000);
@@ -155,7 +154,7 @@ export class AdminComponent implements OnInit {
           next: () => {
             this.successMessage = 'Candidat ajouté';
             this.loadCandidatsParSpecialite();
-            //this.loadCandidats();
+
             this.closeModal();
             this.loading = false;
             setTimeout(() => this.successMessage = '', 3000);
@@ -170,27 +169,26 @@ export class AdminComponent implements OnInit {
   }
 
   toggleStatus(candidat: any): void {
-    // On réinitialise les messages pour éviter les confusions
+
     this.errorMessage = '';
     this.successMessage = '';
 
     this.adminService.toggleCandidatStatus(candidat.id).subscribe({
       next: (updated: any) => {
-        // 1. Mise à jour de l'objet local avec la réponse du serveur
-        //candidat.statut = updated.statut;
+
 
         this.loadCandidatsParSpecialite();
 
-        // 2. Message de succès dynamique
+
         this.successMessage = updated.statut ? 'Candidat activé avec succès' : 'Candidat désactivé';
 
-        // 3. Forcer Angular à redessiner le composant (très important avec les modales/tableaux)
+
         this.cdr.detectChanges();
 
-        // 4. Nettoyage du message après 3 secondes
+
         setTimeout(() => {
           this.successMessage = '';
-          this.cdr.detectChanges(); // On rafraîchit après disparition du message
+          this.cdr.detectChanges();
         }, 3000);
       },
       error: (err) => {
@@ -207,7 +205,7 @@ export class AdminComponent implements OnInit {
         next: () => {
           this.successMessage = 'Candidat supprimé';
           this.loadCandidatsParSpecialite();
-          //this.loadCandidats();
+
           setTimeout(() => this.successMessage = '', 3000);
         }
       });
@@ -236,7 +234,7 @@ export class AdminComponent implements OnInit {
         next: () => {
           this.successMessage = 'Candidats activés';
           this.loadCandidatsParSpecialite();
-          //this.loadCandidats();
+
           this.selectedCandidats = [];
           setTimeout(() => this.successMessage = '', 3000);
         }
@@ -250,7 +248,7 @@ export class AdminComponent implements OnInit {
         next: () => {
           this.successMessage = 'Candidats désactivés';
           this.loadCandidatsParSpecialite();
-          //this.loadCandidats();
+
           this.selectedCandidats = [];
           setTimeout(() => this.successMessage = '', 3000);
         }
@@ -263,7 +261,7 @@ export class AdminComponent implements OnInit {
   }
 
   specialitesCandidats: any = {};
-//ajouter---
+
   loadCandidatsParSpecialite(): void {
     this.loading = true;
     this.adminService.getCandidatsBySpecialite().subscribe({

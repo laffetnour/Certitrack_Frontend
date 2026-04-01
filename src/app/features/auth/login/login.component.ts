@@ -30,7 +30,7 @@ login() {
       localStorage.setItem('token', res.token);
 
       const role = res.role;
-      // Votre logique de redirection existante...
+
       if (role === 'directeurEtab') this.router.navigate(['/directeur/dashboard']);
       if (role === 'Candidat') this.router.navigate(['/candidat']);
       if (role === 'adminEtab') this.router.navigate(['/dashboard']);
@@ -38,7 +38,7 @@ login() {
       if (role === 'adminTenant') this.router.navigate(['/adminTenant']);
     },
    error: (error: HttpErrorResponse) => {
-     // Grace au GlobalExceptionHandler, error.error.message ne sera plus null
+
      const serverMessage = error.error?.message;
      console.log("Message reçu enfin :", serverMessage);
 

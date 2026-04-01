@@ -10,7 +10,7 @@ import { SuperAdminService } from '../../../core/services/super-admin.service';
   templateUrl: './listeAdminTenant.component.html',
   styleUrls: ['../adminTenant/directeurs/directeurs.component.css']
 })
-export class ListeAdminsTenantComponent implements OnInit { // Correction du nom de la classe
+export class ListeAdminsTenantComponent implements OnInit {
   admins: any[] = [];
   tenants: any[] = [];
   filteredAdmins: any[] = [];
@@ -73,7 +73,7 @@ export class ListeAdminsTenantComponent implements OnInit { // Correction du nom
       this.tenants = data;
       this.filteredTenants = [...data];
 
-      this.cdr.detectChanges(); // 🔥 IMPORTANT
+      this.cdr.detectChanges();
     });
   }
 
@@ -81,7 +81,7 @@ export class ListeAdminsTenantComponent implements OnInit { // Correction du nom
     this.isEditMode = false;
     this.selectedAdmin = null;
     this.adminForm.reset();
-    // Re-appliquer le validateur requis pour le mot de passe en mode ajout
+
     this.adminForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
     this.adminForm.get('password')?.updateValueAndValidity();
     this.showModal = true;
@@ -92,10 +92,10 @@ export class ListeAdminsTenantComponent implements OnInit { // Correction du nom
     if (selectedNom === 'ALL') {
       this.filteredAdmins = [...this.admins];
     } else {
-      // On filtre sur le nom de l'établissement/tenant stocké dans le DTO
+
       this.filteredAdmins = this.admins.filter(a => a.nomEtablissement === selectedNom);
     }
-    this.cdr.detectChanges(); // Force le rafraîchissement de la vue
+    this.cdr.detectChanges();
   }
   openEditModal(admin: any): void {
     this.isEditMode = true;
@@ -103,7 +103,7 @@ export class ListeAdminsTenantComponent implements OnInit { // Correction du nom
     const tenantTrouve = this.tenants.find(t => t.nom === admin.nomEtablissement);
     const idToPatch = tenantTrouve ? tenantTrouve.idTenant : '';
 
-    // Retirer le validateur requis pour le mot de passe en mode édition
+
     this.adminForm.get('password')?.clearValidators();
     this.adminForm.get('password')?.updateValueAndValidity();
 
@@ -138,7 +138,7 @@ export class ListeAdminsTenantComponent implements OnInit { // Correction du nom
       const formData = this.adminForm.value;
 
       if (this.isEditMode) {
-        // On envoie l'ID et l'objet au service
+
         this.superAdminService.updateUser(this.selectedAdmin.id, formData).subscribe({
           next: () => this.handleSuccess('Administrateur mis à jour'),
           error: () => this.handleError('Erreur lors de la modification')
@@ -188,7 +188,7 @@ export class ListeAdminsTenantComponent implements OnInit { // Correction du nom
     this.loading = false;
     setTimeout(() => this.errorMessage = '', 3000);
   }
-//*******************************
+
   onTenantStatusChange(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
 
@@ -196,7 +196,7 @@ export class ListeAdminsTenantComponent implements OnInit { // Correction du nom
     else if (value === 'false') this.selectedTenantStatus = false;
     else this.selectedTenantStatus = null;
 
-    // filtrer tenants
+
     this.filteredTenants = this.selectedTenantStatus !== null
       ? this.tenants.filter(t => t.statut === this.selectedTenantStatus)
       : [...this.tenants];
@@ -216,7 +216,7 @@ export class ListeAdminsTenantComponent implements OnInit { // Correction du nom
 
 
 
-// Méthode pour appeler le backend avec les filtres
+
   filterAdmins(): void {
     const params: any = {};
 
@@ -243,22 +243,20 @@ export class ListeAdminsTenantComponent implements OnInit { // Correction du nom
 
 
   isBulkActionAllowed(): boolean {
-    // 1. Si rien n'est sélectionné, on ne montre rien
+
     if (this.selectedAdminIds.length === 0) return false;
 
-    // 2. On récupère les objets complets des admins sélectionnés
     const selectedAdminsObjects = this.filteredAdmins.filter(admin =>
       this.selectedAdminIds.includes(admin.id)
     );
 
-    // 3. On vérifie si PARMI les sélectionnés, il y en a un dont le tenant est inactif
     const hasInactiveTenantSelected = selectedAdminsObjects.some(admin => !this.isTenantActive(admin));
 
-    // 4. On autorise Activer/Désactiver UNIQUEMENT si aucun tenant inactif n'est dans la sélection
+
     return !hasInactiveTenantSelected;
   }
 
-// Gestion des cases à cocher
+
   onCheckboxChange(id: number, event: any) {
     if (event.target.checked) {
       this.selectedAdminIds.push(id);
@@ -279,7 +277,7 @@ export class ListeAdminsTenantComponent implements OnInit { // Correction du nom
     return this.filteredAdmins.length > 0 && this.selectedAdminIds.length === this.filteredAdmins.length;
   }
 
-// Actions Groupées (Appels au service)
+
   activateSelected() {
     this.superAdminService.activateUsersBulk(this.selectedAdminIds).subscribe(() => {
       this.handleSuccess('Admins activés');

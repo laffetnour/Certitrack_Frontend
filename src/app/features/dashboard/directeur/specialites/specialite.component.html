@@ -1,6 +1,6 @@
 <div class="specialite-container">
 
-  <!-- Header -->
+
   <div class="specialite-header">
     <h1>Gestion des Spécialités</h1>
     <button class="btn-add" (click)="openAdd()">
@@ -8,13 +8,13 @@
     </button>
   </div>
 
-  <!-- Messages -->
+
   <div class="alert-container">
     <div *ngIf="successMessage" class="alert success">{{ successMessage }}</div>
     <div *ngIf="errorMessage" class="alert error">{{ errorMessage }}</div>
   </div>
 
-  <!-- Actions de masse -->
+
   <div class="bulk-actions" *ngIf="selectedIds.length > 0">
     <span>{{ selectedIds.length }} sélectionné(s)</span>
     <button class="btn-activate" (click)="activateSelected()">Activer</button>
@@ -22,7 +22,7 @@
     <button class="btn-delete" (click)="deleteSelected()">Supprimer</button>
   </div>
 
-  <!-- Tableau -->
+
   <div class="table-container">
     <table class="modern-table" *ngIf="!loading && specialites.length > 0">
 
@@ -60,7 +60,7 @@
 
         <td class="actions">
 
-          <!-- EDIT -->
+
           <button class="btn-edit" (click)="openEdit(sp)" title="Modifier">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -70,7 +70,7 @@
             </svg>
           </button>
 
-          <!-- TOGGLE -->
+
           <button
             class="btn-toggle"
             (click)="toggle(sp)"
@@ -94,7 +94,7 @@
             </svg>
           </button>
 
-          <!-- DELETE (IDENTIQUE ADMIN) -->
+
           <button class="btn-delete" (click)="delete(sp.idSpecialite)" title="Supprimer">
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="16" height="16" viewBox="0 0 24 24"
@@ -111,19 +111,19 @@
       </tbody>
     </table>
 
-    <!-- Loading -->
+
     <div *ngIf="loading" class="loading">
       <div class="spinner"></div>
       <p>Chargement...</p>
     </div>
 
-    <!-- Empty -->
+
     <div *ngIf="!loading && specialites.length === 0" class="empty-state">
       <p>Aucune spécialité trouvée</p>
     </div>
   </div>
 
-  <!-- MODAL -->
+
   <div class="modal" *ngIf="showModal" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
 

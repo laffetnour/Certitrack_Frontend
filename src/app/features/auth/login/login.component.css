@@ -1,4 +1,4 @@
-/* Structure de base */
+
 .auth-wrapper {
   position: relative;
   height: 100vh;
@@ -10,18 +10,18 @@
   overflow: hidden;
 }
 
-/* Image de fond floue */
+
 .auth-bg {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  /* Image contexte études : bibliothèque ou campus */
+
   background: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1000&auto=format&fit=crop') no-repeat center center/cover;
   filter: blur(6px);
-  transform: scale(1.1); /* Évite les bords flous visibles */
+  transform: scale(1.1);
   z-index: 1;
 }
 
-/* Carte centrale moderne */
+
 .auth-card {
   position: relative;
   z-index: 2;
@@ -34,14 +34,14 @@
   backdrop-filter: blur(10px);
 }
 
-/* Titres */
+
 .brand {
   text-align: center;
   margin-bottom: 30px;
 }
 
 .brand h2 {
-  color: #1e40af; /* Bleu foncé */
+  color: #1e40af;
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 5px;
@@ -52,7 +52,7 @@
   font-size: 14px;
 }
 
-/* Inputs */
+
 .input-group {
   margin-bottom: 20px;
   text-align: left;
@@ -73,7 +73,7 @@
   border-radius: 8px;
   font-size: 16px;
   transition: all 0.3s;
-  box-sizing: border-box; /* Important pour ne pas déborder */
+  box-sizing: border-box;
 }
 
 .input-group input:focus {
@@ -82,7 +82,7 @@
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
-/* Bouton Principal (Bleu) */
+
 .btn-primary {
   width: 100%;
   padding: 12px;
@@ -100,7 +100,7 @@
   background-color: #1d4ed8;
 }
 
-/* Message d'erreur */
+
 .error-message {
   color: #dc2626;
   background-color: #fee2e2;
@@ -111,7 +111,7 @@
   text-align: center;
 }
 
-/* Footer et Bouton Secondaire */
+
 .auth-footer {
   margin-top: 25px;
   text-align: center;

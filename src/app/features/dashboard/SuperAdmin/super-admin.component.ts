@@ -57,13 +57,13 @@ toggleCatalogue(): void {
       next: (result) => {
         console.log("Données reçues :", result);
 
-        // On assigne les données
+
         this.stats = result.stats;
         this.adminsList = result.admins;
 
         this.isLoading = false;
 
-        // 3. FORCEZ LA MISE À JOUR DE LA VUE
+
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -83,7 +83,7 @@ toggleCatalogue(): void {
     if (confirm('Voulez-vous vraiment supprimer cet administrateur ?')) {
       this.superAdminService.deleteAdmin(id).subscribe({
         next: () => {
-          // On recharge tout pour mettre à jour les stats et la liste proprement
+
           this.loadDashboardData();
         },
         error: (err) => console.error("Erreur suppression:", err)
@@ -95,7 +95,7 @@ toggleCatalogue(): void {
 
   toggleQuestionMenu() {
     this.isQuestionOpen = !this.isQuestionOpen;
-    // Optionnel : fermer le catalogue quand on ouvre les questions
+
     if (this.isQuestionOpen) this.isCatalogueOpen = false;
   }
 

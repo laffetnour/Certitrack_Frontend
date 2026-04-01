@@ -58,7 +58,7 @@ private getAuthHeaders() {
   }
 
 
-  // ================= SPECIALITES =================
+
 
   getSpecialites(): Observable<any> {
     return this.http.get(`${this.baseUrl}/specialites`, this.getAuthHeaders());

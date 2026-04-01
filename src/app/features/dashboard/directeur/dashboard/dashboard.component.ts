@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
-// Interface définie à l'extérieur pour la clarté
+
 interface DashboardStats {
   etablissement: string;
   admins: number;
@@ -21,7 +21,7 @@ interface DashboardStats {
 })
 export class DashboardComponent implements OnInit {
 
-  // Initialisation avec des valeurs par défaut (Évite les erreurs de template)
+
   stats: DashboardStats = {
     etablissement: '',
     admins: 0,
@@ -34,16 +34,14 @@ export class DashboardComponent implements OnInit {
 
   constructor(
        private service: DirecteurService,
-       private cdr: ChangeDetectorRef // Importez ChangeDetectorRef depuis @angular/core
+       private cdr: ChangeDetectorRef
      ) {}
 
    ngOnInit() {
      this.currentUser = JSON.parse(localStorage.getItem('user') || '{}');
      this.loadDashboardData();
    }
-  /**
-   * Charge les statistiques depuis le backend
-   */
+
   loadDashboardData(): void {
     this.loading = true;
 
@@ -51,7 +49,7 @@ export class DashboardComponent implements OnInit {
       next: (res) => {
         console.log("📊 Data reçue du serveur :", res);
 
-        // Mapping sécurisé identique au principe du Tenant
+
         this.stats = {
           etablissement: res.etablissement || 'Établissement inconnu',
           admins: res.admins || 0,
@@ -60,7 +58,7 @@ export class DashboardComponent implements OnInit {
         };
 
         this.loading = false;
-        this.cdr.detectChanges(); // Force le rendu pour éviter les délais
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error("Erreur stats:", err);
@@ -69,9 +67,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  /**
-   * Mise à jour locale (Utile après une action CRUD sans rechargement API)
-   */
+
   updateLocalStats(adminsList: any[], candidatsList: any[], specsList: any[]): void {
     this.stats.admins = adminsList.length;
     this.stats.candidats = candidatsList.length;

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AdminTenantService } from '../../../../core/services/AdminTenantService';
 import { ChangeDetectorRef } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-// Modifiez votre import en haut du fichier pour inclure SafeUrl
+
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-etablissements',
@@ -27,7 +27,7 @@ export class EtablissementsComponent implements OnInit {
   imageRaw: string = '';
 
 
-  // Sauvegarde de la liste complète
+
   allEtablissements: any[] = [];
   statusFilter: string = "";
 
@@ -54,7 +54,7 @@ loadEtablissements() {
   this.service.getEtablissements().subscribe({
     next: (data) => {
       this.allEtablissements = data;
-      this.applyFilter(); // On applique le filtre initial (si existant)
+      this.applyFilter();
     },
     error: (err) => console.error("Erreur chargement:", err)
   });
@@ -66,14 +66,14 @@ filterByStatus() {
 
 applyFilter() {
   if (!this.statusFilter || this.statusFilter === "") {
-    // Si pas de filtre, on affiche tout
+
     this.etablissements = [...this.allEtablissements];
   } else {
-    // Conversion du texte "actif" en booléen true
+
     const wantActive = (this.statusFilter === 'actif');
 
     this.etablissements = this.allEtablissements.filter(e => {
-      // On compare directement avec la propriété 'statut' de l'établissement
+
       return e.statut === wantActive;
     });
   }
@@ -181,14 +181,14 @@ private gererErreur(err: any) {
   confirmDelete() {
     this.service.deleteEtablissement(this.selectedId!).subscribe(() => {
       this.loadData();
-      this.cdr.detectChanges();// 🔥
+      this.cdr.detectChanges();
       this.closeDeleteModal();
     });
   }
 
 
   toggle(e: any) {
-    // On passe l'ID de l'objet cliqué explicitement
+
     this.service.toggleEtablissementStatus(e.idEtab).subscribe({
       next: () => {
         this.loadData();
@@ -269,10 +269,10 @@ onFileSelected(event: any) {
     reader.onload = (e: any) => {
       const base64String = e.target.result as string;
 
-      // 1. On stocke la version brute pour le serveur
+
       this.imageRaw = base64String;
 
-      // 2. On stocke la version sécurisée pour l'affichage <img [src]>
+
       this.selectedImage = this.sanitizer.bypassSecurityTrustUrl(base64String);
 
       this.cdr.detectChanges();
@@ -281,11 +281,11 @@ onFileSelected(event: any) {
   }
 }
 
-// Méthode de suppression avec reset de l'input HTML
+
 removeImage(fileInput: HTMLInputElement) {
   this.selectedImage = '';
   this.imageRaw = '';
-  fileInput.value = ''; // Permet de re-sélectionner le même fichier si besoin
+  fileInput.value = '';
   this.cdr.detectChanges();
 }
   closeDeleteModal() {

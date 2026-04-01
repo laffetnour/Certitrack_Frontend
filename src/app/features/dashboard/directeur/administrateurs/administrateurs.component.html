@@ -1,6 +1,6 @@
 <div class="admin-container">
 
-  <!-- Header -->
+
   <div class="admin-header">
     <h1>Gestion des Administrateurs</h1>
     <button class="btn-add" (click)="openAddModal()">
@@ -8,13 +8,13 @@
     </button>
   </div>
 
-  <!-- Messages -->
+
   <div class="alert-container">
     <div *ngIf="successMessage" class="alert success">{{ successMessage }}</div>
     <div *ngIf="errorMessage" class="alert error">{{ errorMessage }}</div>
   </div>
 
-  <!-- Actions de masse -->
+
   <div class="bulk-actions" *ngIf="selectedAdmins.length > 0">
     <span>{{ selectedAdmins.length }} sélectionné(s)</span>
     <button class="btn-activate" (click)="activateSelected()">Activer</button>
@@ -22,7 +22,7 @@
     <button class="btn-delete" (click)="deleteSelected()">Supprimer</button>
   </div>
 
-  <!-- Tableau -->
+
   <div class="table-container">
     <table class="modern-table" *ngIf="!loading && admins.length > 0">
       <thead>
@@ -51,7 +51,7 @@
           </span>
         </td>
         <td class="actions">
-          <!-- VIEW -->
+
           <button class="btn-view" (click)="viewAdmin(admin)" title="Voir">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -59,7 +59,7 @@
             </svg>
           </button>
 
-          <!-- EDIT -->
+
           <button class="btn-edit" (click)="openEditModal(admin)" title="Modifier">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -67,7 +67,7 @@
             </svg>
           </button>
 
-          <!-- TOGGLE -->
+
           <button
             class="btn-toggle"
             (click)="toggleStatus(admin); $event.stopPropagation()"
@@ -84,7 +84,7 @@
             </svg>
           </button>
 
-          <!-- DELETE -->
+
           <button class="btn-delete" (click)="deleteAdmin(admin.id)" title="Supprimer">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="3 6 5 6 21 6"></polyline>
@@ -96,13 +96,13 @@
       </tbody>
     </table>
 
-    <!-- Loading -->
+
     <div *ngIf="loading" class="loading">
       <div class="spinner"></div>
       <p>Chargement...</p>
     </div>
 
-    <!-- Empty -->
+
     <div *ngIf="!loading && admins.length === 0" class="empty-state">
       <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -114,7 +114,7 @@
     </div>
   </div>
 
-  <!-- Modal Ajout/Modification -->
+
   <div class="modal" *ngIf="showModal" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
@@ -169,7 +169,7 @@
 
 
           <button type="button" class="btn-cancel" (click)="closeModal()">Annuler</button>
-          <!--<button type="submit" class="btn-submit" [disabled]="adminForm.invalid || loading">-->
+
           <button
             type="submit"
             class="btn-submit"
@@ -185,7 +185,7 @@
     </div>
   </div>
 
-  <!-- Modal Voir profil -->
+
   <div class="modal" *ngIf="showViewModal" (click)="closeViewModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
@@ -260,7 +260,7 @@
   </div>
 
 
-  <!-- Modal Confirmation Suppression -->
+
   <div class="modal" *ngIf="showDeleteModal">
     <div class="modal-content">
       <div class="modal-header">

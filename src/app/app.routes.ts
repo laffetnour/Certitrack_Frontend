@@ -54,7 +54,7 @@ export const routes: Routes = [
     children: [
 
       { path: 'candidats', component: AdminComponent }
-      //{ path: '', redirectTo: 'candidats', pathMatch: 'full' }
+
     ]
   },
   {
@@ -65,7 +65,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'administrateurs', component: AdministrateursComponent },
       { path: 'specialites', component: SpecialiteComponent }
-      //{ path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+
     ]
   },
   {
@@ -80,9 +80,9 @@ export const routes: Routes = [
     ]
   },
 
-  // Redirection de la racine vers le login (ou dashboard selon votre logique)
+
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-  // TOUJOURS EN DERNIER : Capture les erreurs 404
+
   { path: '**', redirectTo: 'login' }
 ];

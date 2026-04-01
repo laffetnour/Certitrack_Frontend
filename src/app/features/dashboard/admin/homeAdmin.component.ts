@@ -34,7 +34,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { AdminService } from '../../../core/services/admin.service'; // Ajustez le chemin
+import { AdminService } from '../../../core/services/admin.service';
 
 @Component({
   selector: 'app-dashboard-admin',
@@ -46,54 +46,26 @@ import { AdminService } from '../../../core/services/admin.service'; // Ajustez 
 export class homeAdminComponent implements OnInit {
   currentUser: any;
   isParcoursOpen = false;
-  totalCandidats: number = 0; // Pour stocker le nombre de candidats
+  totalCandidats: number = 0;
   loading: boolean = false;
 
   constructor(
     private authService: AuthService,
     public router: Router,
-    private adminService: AdminService, // Injection du service
+    private adminService: AdminService,
   private cdr: ChangeDetectorRef
   ) {}
 
-  /*ngOnInit(): void {
-    this.currentUser = this.authService.getUser();
-    this.loadStats();
-  }
 
-  loadStats(): void {
-    // 1. On récupère l'ID de l'établissement depuis l'utilisateur connecté
-    // On vérifie d'abord que l'utilisateur et sa liste d'établissements existent
-    const etablissement = this.currentUser?.etablissements?.[0];
-    const idEtab = etablissement?.idEtab;
-
-    if (idEtab) {
-      this.loading = true; // Optionnel : pour afficher un spinner
-
-      // 2. Appel au service (AdminService)
-      // On utilise la méthode qui filtre par rôle et établissement au backend
-      this.adminService.getCandidatCountByEtab(idEtab).subscribe({
-        next: (count: number) => { // 'count' est un nombre, plus besoin de .length
-          this.totalCandidats = count;
-          this.loading = false;
-        },
-        error: (err) => {
-          this.loading = false;
-        }
-      });
-    } else {
-      console.warn("Impossible de charger les stats : aucun établissement trouvé pour cet utilisateur.");
-    }
-  }*/
 
   ngOnInit(): void {
-    // 1. On récupère d'abord l'utilisateur depuis le localStorage
+
     this.currentUser = this.authService.getUser();
 
     console.log("ngOnInit - Utilisateur récupéré :", this.currentUser);
 
     if (this.currentUser) {
-      // 2. Seulement s'il existe, on charge les stats
+
       this.loadStats();
     } else {
       console.warn("Pas d'utilisateur trouvé au refresh, redirection login...");
@@ -103,10 +75,10 @@ export class homeAdminComponent implements OnInit {
   loadStats(): void {
     const etablissement = this.currentUser?.etablissements?.[0];
 
-    // LOG DE DEBUG : Regarde bien dans la console F12 ce qui s'affiche ici
+
     console.log("Objet établissement complet :", etablissement);
 
-    // Remplace 'idEtab' par le nom exact que tu vois dans le log ci-dessus (ex: id, ou idEtablissement)
+
     const idToUse = etablissement?.idEtab || etablissement?.id;
 
     if (idToUse) {
@@ -126,7 +98,7 @@ export class homeAdminComponent implements OnInit {
       });
     }
   }
-  // ... vos autres méthodes (toggleParcoursMenu, onLogout)
+
   toggleParcoursMenu(): void {
     this.isParcoursOpen = !this.isParcoursOpen;
   }

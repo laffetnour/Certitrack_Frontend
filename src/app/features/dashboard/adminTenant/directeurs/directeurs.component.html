@@ -4,12 +4,7 @@
     <h1>Gestion des Directeurs</h1>
 
     <div style="display:flex; gap:10px;">
-     <!-- <select class="form-control" [(ngModel)]="selectedEtablissement" (change)="filterByEtablissement()">
-        <option value="">Tous les établissements</option>
-        <option *ngFor="let e of etablissements" [value]="e.idEtab">
-          {{ e.nom }}
-        </option>
-      </select>-->
+
 
       <select class="form-control" [(ngModel)]="selectedEtablissement" (change)="filterByEtablissement()">
         <option value="">Tous les établissements</option>
@@ -35,16 +30,7 @@
       <button class="btn-delete" (click)="deleteSelected()">Supprimer</button>
     </div>
 
-    <!--<div class="filter-select-container"  >
-      <select class="status-filter-select"
-              [(ngModel)]="statusFilter"
-              (change)="filterByStatus()">
-          <option value="">filtre</option>
-          <option value="actif">Établissements activés</option>
-          <option value="inactif">Établissements désactivés</option>
-      </select>
 
-    </div>-->
     <div class="filter-select-container">
       <select class="status-filter-select"
               [(ngModel)]="statusFilter"
@@ -75,7 +61,7 @@
       <tbody>
       <tr *ngFor="let d of directeurs; trackBy: trackById">
 
-        <!-- CHECKBOX -->
+
         <td>
           <input type="checkbox"
                  [checked]="selectedDirecteurs.includes(d.id)"
@@ -101,10 +87,10 @@
   </span>
         </td>
 
-        <!-- ACTIONS -->
+
         <td class="actions">
 
-          <!-- VIEW -->
+
           <button class="btn-view" (click)="viewDirecteur(d)" title="Voir">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -116,7 +102,7 @@
 
 
           <ng-container *ngIf="isEtablissementActive(d)">
-          <!-- EDIT -->
+
           <button class="btn-edit" (click)="openEditModal(d)" title="Modifier">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -126,12 +112,12 @@
             </svg>
           </button>
 
-          <!-- TOGGLE -->
+
           <button class="btn-toggle"
                   (click)="toggleStatus(d)"
                   [title]="d.statut ? 'Désactiver' : 'Activer'">
 
-            <!-- actif -->
+
             <svg *ngIf="d.statut" xmlns="http://www.w3.org/2000/svg"
                  width="16" height="16" viewBox="0 0 24 24"
                  fill="none" stroke="currentColor" stroke-width="2">
@@ -139,7 +125,7 @@
               <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
             </svg>
 
-            <!-- inactif -->
+
             <svg *ngIf="!d.statut" xmlns="http://www.w3.org/2000/svg"
                  width="16" height="16" viewBox="0 0 24 24"
                  fill="none" stroke="currentColor" stroke-width="2">
@@ -151,7 +137,7 @@
 
           </ng-container>
 
-          <!-- DELETE -->
+
           <button class="btn-delete"
                   (click)="openDeleteModal(d.id)"
                   title="Supprimer">

@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SuperAdminService } from '../../../core/services/super-admin.service'; // Ajuste le chemin selon ton projet
+import { SuperAdminService } from '../../../core/services/super-admin.service';
 
 @Component({
   selector: 'app-tenant',
@@ -12,7 +12,7 @@ import { SuperAdminService } from '../../../core/services/super-admin.service'; 
 })
 export class TenantComponent implements OnInit {
   tenants: any[] = [];
-  selectedTenants: number[] = []; // Pour une future sélection multiple si besoin
+  selectedTenants: number[] = [];
   showModal = false;
   showViewModal = false;
   isEditMode = false;
@@ -45,27 +45,7 @@ export class TenantComponent implements OnInit {
     this.loadTenants();
   }
 
-  /*loadTenants(): void {
-    this.loading = true;
-    this.superAdminService.getTenants().subscribe({
-      next: (data: any) => {
-        console.log('Données reçues:', data);
 
-        // On s'assure que tenants est toujours un tableau
-        // L'opérateur [...] crée une nouvelle instance de tableau
-        this.tenants = Array.isArray(data) ? [...data] : [];
-
-        this.loading = false;
-        // On force Angular à vérifier la vue immédiatement
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.errorMessage = 'Erreur lors du chargement';
-        this.loading = false;
-        this.cdr.detectChanges();
-      }
-    });
-  }*/
 
   loadTenants(): void {
     this.loading = true;
@@ -227,7 +207,7 @@ export class TenantComponent implements OnInit {
       this.selectedTenants.length === this.filteredTenants.length;
   }
 
-// --- ACTIONS GROUPÉES (Appels API) ---
+
 
   activateSelected() {
     this.superAdminService.activateTenantsBulk(this.selectedTenants).subscribe({

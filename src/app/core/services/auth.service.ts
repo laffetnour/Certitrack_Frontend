@@ -18,11 +18,7 @@ export class AuthService {
     return this.http.post(`${this.api}/signup`, data, {responseType: 'text'});
   }
 
-  /*register(data:any):Observable<any>{
 
-    return this.http.post(`${this.api}/signup`,data);
-
-  }*/
 
 
   login(username: string, password: string): Observable<any> {
@@ -33,11 +29,9 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(data));
   }
 
-  /*getUser() {
-    return JSON.parse(localStorage.getItem('user')!);
-  }*/
+
   getToken(): string | null {
-    return localStorage.getItem('token'); // Assure-toi que la clé est bien 'token'
+    return localStorage.getItem('token');
   }
 
   getUser() {

@@ -1,6 +1,6 @@
 <div class="admin-container">
 
-  <!-- HEADER -->
+
   <div class="admin-header">
     <h1>Gestion des Établissements</h1>
 
@@ -17,7 +17,7 @@
     <button class="btn-toggle" (click)="bulkToggle(true)" style="padding: 5px 10px; font-size: 12px;">Activer</button>
     <button class="btn-toggle" (click)="bulkToggle(false)" style="padding: 5px 10px; font-size: 12px;">Désactiver</button>
   </div>
-  <!-- TABLE -->
+
   <div class="table-container">
     <div class="filter-select-container">
       <select class="status-filter-select"
@@ -60,13 +60,13 @@
             LOGO
           </div>
         </td>
-        <!-- NOM -->
+
         <td>{{ e.nom }}</td>
 
 
         <td>{{ e.adresse }}</td>
 
-        <!-- STATUT -->
+
         <td>
           <span class="status-badge"
                 [class.active]="e.statut"
@@ -75,10 +75,9 @@
           </span>
         </td>
 
-        <!-- ACTIONS -->
+
         <td class="actions">
 
-          <!-- EDIT -->
           <button class="btn-edit" (click)="openEditModal(e)" title="Modifier">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -87,12 +86,12 @@
             </svg>
           </button>
 
-          <!-- TOGGLE -->
+
           <button class="btn-toggle"
                   (click)="toggle(e)"
                   [title]="e.statut ? 'Désactiver' : 'Activer'">
 
-            <!-- actif -->
+
             <svg *ngIf="e.statut" xmlns="http://www.w3.org/2000/svg"
                  width="16" height="16" viewBox="0 0 24 24"
                  fill="none" stroke="currentColor" stroke-width="2">
@@ -100,7 +99,7 @@
               <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
             </svg>
 
-            <!-- inactif -->
+
             <svg *ngIf="!e.statut" xmlns="http://www.w3.org/2000/svg"
                  width="16" height="16" viewBox="0 0 24 24"
                  fill="none" stroke="currentColor" stroke-width="2">
@@ -110,18 +109,7 @@
 
           </button>
 
-          <!-- DELETE -->
-         <!-- <button class="btn-delete"
-                  (click)="openDeleteModal(e.idEtab)"
-                  title="Supprimer">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 width="16" height="16"
-                 viewBox="0 0 24 24"
-                 fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="3 6 5 6 21 6"/>
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
-            </svg>
-          </button>-->
+
 
         </td>
 
@@ -132,7 +120,7 @@
 
   </div>
 
-  <!-- MODAL AJOUT / MODIF -->
+
   <div class="modal" *ngIf="showModal">
     <div class="modal-content">
 
@@ -179,24 +167,6 @@
     </div>
   </div>
 
-  <!-- MODAL DELETE -->
-  <!--<div class="modal" *ngIf="showDeleteModal">
-    <div class="modal-content">
 
-      <div class="modal-header">
-        <h2>Confirmation</h2>
-      </div>
-
-      <div style="padding:20px; text-align:center;">
-        Êtes-vous sûr de vouloir supprimer cet établissement ?
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn-cancel" (click)="closeDeleteModal()">Annuler</button>
-        <button class="btn-delete" (click)="confirmDelete()">Supprimer</button>
-      </div>
-
-    </div>
-  </div>-->
 
 </div>

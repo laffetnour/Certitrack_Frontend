@@ -12,8 +12,8 @@ import { AdminTenantService } from '../../../../core/services/AdminTenantService
   styleUrls: ['./directeurs.component.css']
 })
 export class DirecteursComponent implements OnInit {
-  directeurs: any[] = [];      // Liste affichée dans le tableau
-  allDirecteurs: any[] = [];   // Copie de sauvegarde pour le filtrage
+  directeurs: any[] = [];
+  allDirecteurs: any[] = [];
   etablissements: any[] = [];
 
   selectedDirecteurs: number[] = [];
@@ -22,14 +22,14 @@ export class DirecteursComponent implements OnInit {
   showDeleteModal = false;
   directeurToDeleteId: number | null = null;
 
-  selectedEtablissement: any = ""; // Pour le [(ngModel)] du filtre
+  selectedEtablissement: any = "";
   loading = false;
   showModal = false;
   isEditMode = false;
   selectedDirecteur: any;
   showViewModal = false;
   directeurForm!: FormGroup;
-  statusFilter: string = ""; // Variable pour stocker le choix du select
+  statusFilter: string = "";
 
   constructor(
     private service: AdminTenantService,
@@ -48,14 +48,14 @@ loadData() {
     next: (etabs) => {
     this.etablissements = etabs;
 
-          // 2. Liste filtrée pour le FORMULAIRE (Uniquement les actifs)
+
     this.activeEtablissements = etabs.filter((e: any) => e.statut === true);
 
       this.service.getDirecteurs().subscribe({
         next: (res) => {
           console.log("Données reçues :", res);
           this.allDirecteurs = res || [];
-          this.directeurs = [...this.allDirecteurs]; // Initialise la liste affichée
+          this.directeurs = [...this.allDirecteurs];
           this.loading = false;
           this.cdr.detectChanges();
         },
@@ -69,100 +69,54 @@ loadData() {
   });
 }
 
-/*
 
-filterByStatus() {
-  if (!this.statusFilter || this.statusFilter === "") {
-    this.directeurs = [...this.allDirecteurs];
-  } else {
-    const wantActive = (this.statusFilter === 'actif');
-
-    this.directeurs = this.allDirecteurs.filter(d => {
-      if (d.etablissements && d.etablissements.length > 0) {
-        const idDeLEtab = d.etablissements[0].id;
-
-        // On cherche l'établissement correspondant dans notre liste globale d'etablissements
-        const etabComplet = this.etablissements.find(e => e.idEtab === idDeLEtab);
-
-        // Si on le trouve, on compare son statut
-        if (etabComplet) {
-          return etabComplet.statut === wantActive;
-        }
-      }
-      return false;
-    });
-  }
-  this.cdr.detectChanges();
-}
-
-filterByEtablissement() {
-  const selectedId = this.selectedEtablissement;
-  console.log("Filtrage pour ID :", selectedId);
-
-  if (!selectedId || selectedId === "" || selectedId === "null") {
-    this.directeurs = [...this.allDirecteurs];
-  } else {
-    this.directeurs = this.allDirecteurs.filter(d => {
-      // On cherche dans la liste d'établissements renvoyée par ton UserReponse Java
-      return d.etablissements && d.etablissements.some((e: any) => e.id == selectedId);
-    });
-  }
-  console.log("Résultat :", this.directeurs.length, "trouvés");
-  this.cdr.detectChanges();
-}*/
-
-// Vérifie si l'établissement lié au directeur est actif
 isEtablissementActive(d: any): boolean {
-  // 1. On vérifie si le directeur a une liste d'établissements
+
   if (!d.etablissements || d.etablissements.length === 0) return false;
 
-  // 2. On récupère l'ID de son établissement (ex: 3)
   const idDeLEtab = d.etablissements[0].id;
 
-  // 3. On cherche cet ID dans la liste complète chargée au ngOnInit
   const etabComplet = this.etablissements.find(e => e.idEtab === idDeLEtab);
 
-  // 4. On retourne son statut (true ou false)
   return etabComplet ? etabComplet.statut === true : false;
 }
 isBulkActionAllowed(): boolean {
   if (this.selectedDirecteurs.length === 0) return false;
 
-  // On vérifie pour chaque ID sélectionné
   return this.selectedDirecteurs.every(id => {
-    // 1. Trouver l'objet directeur complet
+
     const d = this.allDirecteurs.find(dir => dir.id === id);
     if (!d || !d.etablissements || d.etablissements.length === 0) return false;
 
-    // 2. Trouver le statut de son établissement dans la liste globale
+
     const idEtab = d.etablissements[0].id;
     const etab = this.etablissements.find(e => e.idEtab === idEtab);
 
-    // 3. Retourne true si l'établissement est actif
+
     return etab ? etab.statut === true : false;
   });
 }
 
-// Cette fonction unique gère les deux critères en même temps
+
 applyFilters() {
-  // 1. On repart toujours de la liste complète originale
+
   let result = [...this.allDirecteurs];
 
-  // 2. On applique le premier filtre : Établissement spécifique (par ID)
+
   if (this.selectedEtablissement && this.selectedEtablissement !== "") {
     result = result.filter(d =>
       d.etablissements && d.etablissements.some((e: any) => e.id == this.selectedEtablissement)
     );
   }
 
-  // 3. On applique le deuxième filtre : Statut de l'établissement (Actif/Inactif)
+
   if (this.statusFilter !== "") {
     const wantActive = (this.statusFilter === 'actif');
 
     result = result.filter(d => {
       if (d.etablissements && d.etablissements.length > 0) {
         const idDeLEtab = d.etablissements[0].id;
-        // On cherche le statut dans la liste globale des établissements
+
         const etab = this.etablissements.find(e => e.idEtab === idDeLEtab);
         return etab ? etab.statut === wantActive : false;
       }
@@ -170,12 +124,12 @@ applyFilters() {
     });
   }
 
-  // 4. On met à jour la liste affichée dans le tableau
+
   this.directeurs = result;
   this.cdr.detectChanges();
 }
 
-// Les fonctions appelées par le HTML se contentent d'appeler applyFilters
+
 filterByEtablissement() {
   this.applyFilters();
 }
@@ -187,17 +141,17 @@ initForm() {
   this.directeurForm = this.fb.group({
     nom: ['', Validators.required],
     prenom: ['', Validators.required],
-    username: ['', [Validators.required, Validators.email]], // Doit être un email valide !
+    username: ['', [Validators.required, Validators.email]],
     dateNais: ['', Validators.required],
-    password: [''], // On le laisse vide par défaut
-    etablissementId: [null, Validators.required] // Ne doit pas être null
+    password: [''],
+    etablissementId: [null, Validators.required]
   });
 }
 
 openAddModal() {
   this.isEditMode = false;
   this.directeurForm.reset({
-    etablissementId: null, // Force la valeur initiale à null
+    etablissementId: null,
     nom: '',
     prenom: '',
     username: '',
@@ -209,7 +163,7 @@ openAddModal() {
 openEditModal(d: any) {
   this.isEditMode = true;
   this.selectedDirecteur = d;
-  // On enlève le validateur requis pour la modification
+
   this.directeurForm.get('password')?.clearValidators();
   this.directeurForm.get('password')?.updateValueAndValidity();
 
@@ -241,16 +195,13 @@ openEditModal(d: any) {
 
   deleteDirecteur(id: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer ce directeur ?')) {
-      this.loading = true; // Affiche un indicateur de chargement
+      this.loading = true;
 
       this.service.deleteDirecteur(id).subscribe({
         next: () => {
-          // Option 1 : Recharger toutes les données depuis le serveur
+
           this.loadData();
 
-          // Option 2 (Plus rapide) : Filtrer la liste locale immédiatement
-          // this.directeurs = this.directeurs.filter(d => d.id !== id);
-          // this.allDirecteurs = this.allDirecteurs.filter(d => d.id !== id);
 
           console.log('Directeur supprimé avec succès');
           this.loading = false;
@@ -339,7 +290,7 @@ openEditModal(d: any) {
           dir.id === d.id ? { ...dir, statut: updated.statut } : dir
         );
 
-        // 🔹 IMPORTANT : mettre aussi à jour la liste complète utilisée pour le filtrage
+
         this.allDirecteurs = this.allDirecteurs.map(dir =>
           dir.id === d.id ? { ...dir, statut: updated.statut } : dir
         );
@@ -351,8 +302,6 @@ openEditModal(d: any) {
   }
 
 
-
-// Confirmer suppression depuis le modal
   confirmDelete(): void {
     if (!this.directeurToDeleteId) return;
 
@@ -371,7 +320,7 @@ openEditModal(d: any) {
     });
   }
 
-// Fermer modal delete
+
   closeDeleteModal(): void {
     this.showDeleteModal = false;
     this.directeurToDeleteId = null;

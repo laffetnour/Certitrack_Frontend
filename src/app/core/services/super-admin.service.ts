@@ -25,17 +25,17 @@ private getAuthHeadersForFile() {
   return {
     headers: new HttpHeaders({
       'Authorization': `Bearer ${token}`
-      // SURTOUT PAS de 'Content-Type': 'application/json' ici
+
     })
   };
 }
 
-  // --- STATISTIQUES ---
+
   getDashboardStats(): Observable<any> {
     return this.http.get(`${this.baseUrl}/stats`, this.getAuthHeaders());
   }
 
-  // --- GESTION DES ADMINS ---
+
   getAllAdmins(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/admins`, this.getAuthHeaders());
   }
@@ -45,11 +45,11 @@ private getAuthHeadersForFile() {
   }
 
   toggleAdminStatus(id: number): Observable<any> {
-    // On passe un objet vide {} car c'est un PUT
+
     return this.http.put(`${this.baseUrl}/admins/${id}/status`, {}, this.getAuthHeaders());
   }
 
-  // --- GESTION DES TENANTS ---
+
   getTenants(): Observable<any> {
     return this.http.get(`${this.baseUrl}/tenants`, this.getAuthHeaders());
   }
@@ -72,28 +72,27 @@ private getAuthHeadersForFile() {
   }
 
 
-  // Exemple de méthodes à ajouter dans SuperAdminService
-  // --- ACTIONS GROUPÉES POUR LES TENANTS (CORRIGÉ) ---
+
 
   activateTenantsBulk(ids: number[]): Observable<any> {
-    // Changé /users/ par /tenants/ + ajout des headers
+
     return this.http.put(`${this.baseUrl}/tenants/activate-bulk`, ids, this.getAuthHeaders());
   }
 
   deactivateTenantsBulk(ids: number[]): Observable<any> {
-    // Changé /users/ par /tenants/ + ajout des headers
+
     return this.http.put(`${this.baseUrl}/tenants/deactivate-bulk`, ids, this.getAuthHeaders());
   }
 
 
   deleteTenantsBulk(ids: number[]): Observable<any> {
-    // Changé /users/ par /tenants/ + ajout des headers
+
     return this.http.post(`${this.baseUrl}/tenants/delete-bulk`, ids, this.getAuthHeaders());
   }
 
 
 
-// --- À AJOUTER POUR LES ADMINS TENANTS ---
+
 
   getTenantAdmins(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/tenants-admins`, this.getAuthHeaders());
@@ -132,14 +131,14 @@ private getAuthHeadersForFile() {
   }
 
   deleteUsersBulk(ids: number[]): Observable<any> {
-    // On utilise souvent POST pour envoyer un body avec un DELETE si l'API est configurée ainsi
+
     return this.http.post(`${this.baseUrl}/users/delete-bulk`, ids, this.getAuthHeaders());
   }
 
 
 
 
-// --- GESTION DES CATEGORIES DE MODULES ---
+
 
 getCategories(): Observable<any[]> {
   return this.http.get<any[]>(`${this.baseUrl}/categories`, this.getAuthHeaders());
@@ -157,7 +156,7 @@ deleteCategorie(id: number): Observable<any> {
   return this.http.delete(`${this.baseUrl}/categories/${id}`, this.getAuthHeaders());
 }
 
-// --- GESTION DES MODULES ---
+
 getModules(): Observable<any[]> {
   return this.http.get<any[]>(`${this.baseUrl}/modules`, this.getAuthHeaders());
 }
@@ -190,7 +189,7 @@ importModuleCSV(file: File): Observable<any> {
   const formData = new FormData();
   formData.append('file', file);
 
-  // On enlève responseType: 'text' car on attend du JSON maintenant
+
   return this.http.post(`${this.baseUrl}/modules/import`, formData, {
     headers: this.getAuthHeadersForFile().headers
   });
@@ -199,7 +198,7 @@ importModuleCSV(file: File): Observable<any> {
 importQuestionsCSV(file: File): Observable<any> {
   const formData = new FormData();
   formData.append('file', file);
-  // On utilise getAuthHeadersForFile() (sans Content-Type JSON)
+
   return this.http.post(`${this.baseUrl}/questions/import`, formData, this.getAuthHeadersForFile());
 }
 

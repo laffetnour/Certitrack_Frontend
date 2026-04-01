@@ -55,7 +55,7 @@ export class ModuleComponent implements OnInit {
 
   addMotCleField(id: number | null = null, desc: string = '') {
     this.motCles.push(this.fb.group({
-      idMotcle: [id], // On garde l'ID caché
+      idMotcle: [id],
       description: [desc, Validators.required]
     }));
   }
@@ -292,7 +292,7 @@ deleteSelected() {
 }
 
 onImportClick() {
-    this.fileInput.nativeElement.click(); // Déclenche le clic sur l'input invisible
+    this.fileInput.nativeElement.click();
   }
 
 

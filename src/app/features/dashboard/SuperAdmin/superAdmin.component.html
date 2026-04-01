@@ -57,20 +57,14 @@
         </div>
 
         <div class="sub-menu" *ngIf="isQuestionOpen">
-          <!--<div class="nav-item sub" routerLink="/super-admin/categories-questions" routerLinkActive="active">
-            <i class="fas fa-tags" style="font-size: 0.8rem; margin-right: 10px;"></i>
-            <span>Catégories des questions</span>
-          </div>-->
+
 
           <div class="nav-item sub" routerLink="/super-admin/questions" routerLinkActive="active">
             <i class="fas fa-list-ul" style="font-size: 0.8rem; margin-right: 10px;"></i>
             <span>Questions</span>
           </div>
 
-          <!--<div class="nav-item sub" routerLink="/super-admin/reponses" routerLinkActive="active">
-            <i class="fas fa-reply-all" style="font-size: 0.8rem; margin-right: 10px;"></i>
-            <span>Réponses</span>
-          </div>-->
+
         </div>
       </div>
 
@@ -149,40 +143,7 @@
         </div>
 
 
-      <!--<div class="card">
-        <div class="card-header">
-          <h3>Liste des Administrateurs</h3>
-          <button class="btn-add">+ Ajouter</button>
-        </div>
 
-        <table class="data-table">
-          <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Rôle</th>
-            <th>Statut</th>
-            <th>Actions</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let admin of adminsList">
-            <td>{{ admin.prenom }} {{ admin.nom }}</td>
-            <td>{{ admin.username }}</td>
-            <td><span class="badge">{{ admin.role }}</span></td>
-            <td>
-                <span [class]="admin.statut ? 'badge badge-active' : 'badge badge-inactive'">
-                  {{ admin.statut ? 'Actif' : 'Inactif' }}
-                </span>
-            </td>
-            <td class="action-buttons">
-              <i class="fas fa-sync text-blue" (click)="toggleStatus(admin.id)"></i>
-              <i class="fas fa-trash text-red" (click)="deleteAdmin(admin.id)"></i>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>-->
       </ng-container>
       <router-outlet></router-outlet>
     </main>

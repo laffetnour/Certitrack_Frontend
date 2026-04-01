@@ -46,7 +46,7 @@ export class AdministrateursComponent implements OnInit {
     this.loadAdmins();
   }
 
-  // LOAD ADMINS
+
 
   loadAdmins(): void {
     this.loading = true;
@@ -82,7 +82,7 @@ export class AdministrateursComponent implements OnInit {
     this.directeurService.toggleAdminStatus(admin.id).subscribe({
       next: () => {
 
-        // Recharge toute la liste pour éviter les bugs
+
         this.loadAdmins();
 
         this.successMessage = admin.statut
@@ -136,7 +136,7 @@ export class AdministrateursComponent implements OnInit {
   }
 
 
-  // MULTIPLE SELECTION
+
 
   onCheckboxChange(id: number, event: any): void {
     if (event.target.checked) {
@@ -159,7 +159,6 @@ export class AdministrateursComponent implements OnInit {
   }
 
 
-  // ACTIONS MULTIPLES
 
   activateSelected(): void {
     if (this.selectedAdmins.length === 0) return;
@@ -211,7 +210,7 @@ export class AdministrateursComponent implements OnInit {
   }
 
 
-  // MODALS
+
 
   openAddModal(): void {
     this.showModal = true;

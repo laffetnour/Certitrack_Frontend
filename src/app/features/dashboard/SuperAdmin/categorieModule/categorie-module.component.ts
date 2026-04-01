@@ -15,7 +15,7 @@ export interface CategorieModule {
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './categorie-module.component.html',
-  styleUrls: ['.././superAdmin.component.css'] // Utilise le même CSS pour la cohérence
+  styleUrls: ['.././superAdmin.component.css']
 })
 
 export class CategorieModuleComponent implements OnInit {
@@ -46,7 +46,7 @@ export class CategorieModuleComponent implements OnInit {
 
 loadCategories(): void {
   this.loading = true;
-  // Précise le type attendu dans l'Observable
+
   this.superAdminService.getCategories().subscribe({
     next: (data: CategorieModule[]) => {
       this.categories = data;
