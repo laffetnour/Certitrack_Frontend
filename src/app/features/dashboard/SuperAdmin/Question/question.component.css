@@ -1,32 +1,3 @@
-/*.accordion-button:not(.collapsed) {
-    background-color: #f8f9fa;
-    color: #000;
-    box-shadow: none;
-}
-
-.accordion-button:focus {
-    box-shadow: none;
-    border-color: rgba(0,0,0,.125);
-}
-
-.badge {
-    font-size: 0.8rem;
-    padding: 0.5em 0.8em;
-}
-
-.accordion-item {
-    border-radius: 8px !important;
-    overflow: hidden;
-}
-
-.list-group-item {
-    border-left: 4px solid #dee2e6;
-}
-
-.list-group-item:hover {
-    background-color: #f1f1f1;
-}*/
-
 
 .admin-container {
   background-color: #f8fafc;
@@ -34,16 +5,18 @@
 }
 
 /* ================= HEADER ================= */
-.admin-header {
+/*.admin-header {
   display: flex;
+
   justify-content: space-between;
+  gap: 1rem;
   align-items: center;
   margin-bottom: 25px;
   background: #ffffff;
   padding: 20px 30px;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
+}*/
 
 .btn-add {
   background-color: #ea5357; /* Rouge Smartfuture */
@@ -63,8 +36,10 @@
 /* TABLE */
 .table-container {
   background: white;
+   width: 100%;
   border-radius: 12px;
   padding: 20px;
+  overflow-x: auto;
 }
 
 .modern-table {
@@ -188,13 +163,25 @@
 }
 
 /* 🔥 AGRANDI ICI */
-.modal-content {
-  width: 600px;              /* AVANT trop large → réduit */
-  max-width: 90%;
+/*.modal-content {
+
+  width: 95%; max-width: 800px;
+   margin: 20px auto;
   background-color: #ffffff !important;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}*/
+
+.modal-content {
+  width: 95%;
+  max-width: 800px;
+  max-height: 90vh; /* Ne dépasse jamais 90% de la hauteur de l'écran */
+  overflow-y: auto; /* Ajoute un scroll si le formulaire est long */
+  margin: 20px auto;
+  background-color: #ffffff !important;
+  border-radius: 16px;
+  position: relative;
 }
 
 /* Header */
@@ -219,11 +206,12 @@ form {
   background-color: #ffffff;
 }
 /* 2 colonnes */
-.form-row {
+/*.form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 50px; /* AVANT 15 → plus d’espace */
-}
+  gap: 50px;
+  flex-wrap: wrap;
+}*/
 
 /* Champs */
 .form-group {
@@ -368,4 +356,26 @@ form {
 .btn-view:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+
+/* HEADER RESPONSIVE */
+.admin-header {
+  display: flex;
+
+  justify-content: space-between;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 25px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* FORMULAIRE RESPONSIVE (Grille qui passe à 1 colonne sur petit écran) */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Magie ici : s'adapte à la largeur */
+  gap: 20px;
 }

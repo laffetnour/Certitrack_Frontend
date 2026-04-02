@@ -10,65 +10,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './question.component.html',
   styleUrls: ['./question.component.css']
 })
-/*export class QuestionComponent implements OnInit {
-  questions: any[] = [];
-  searchTerm: string = '';
-  loading: boolean = false;
 
-  constructor(private service: SuperAdminService) { }
-
-  ngOnInit(): void {
-    this.loadQuestions();
-  }
-
-  loadQuestions() {
-    this.service.getTenantAdmins().subscribe({ // Adaptez avec votre méthode getQuestions()
-      next: (data) => this.questions = data,
-      error: (err) => console.error(err)
-    });
-  }
-
-  onUploadQuestions(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.loading = true;
-      this.service.importQuestionsCSV(file).subscribe({
-        next: (res) => {
-          this.loading = false;
-          let msg = `Importation terminée !\n`;
-          msg += `✅ Réussites : ${res.successCount}\n`;
-          if (res.errorCount > 0) {
-            msg += `❌ Ignorées : ${res.errorCount}\nLignes : ${res.ignoredLines.join(', ')}`;
-          }
-          alert(msg);
-          this.loadQuestions(); // Refresh automatique
-          event.target.value = '';
-        },
-        error: (err) => {
-          this.loading = false;
-          alert("Erreur lors de l'importation.");
-          event.target.value = '';
-        }
-      });
-    }
-  }
-
-  filteredQuestions() {
-    return this.questions.filter(q =>
-      q.texte.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      q.categorieQuestion?.nom.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-  }
-
-  getDifficultyClass(diff: string) {
-    switch (diff.toLowerCase()) {
-      case 'facile': return 'bg-info text-dark';
-      case 'moyenne': return 'bg-warning text-dark';
-      case 'difficile': return 'bg-danger';
-      default: return 'bg-secondary';
-    }
-  }
-}*/
 
 export class QuestionComponent implements OnInit {
   questions: any[] = [];
@@ -229,11 +171,6 @@ trackByQuestionId(index: number, question: any) {
 
 
 
- /* openDeleteModal(id: number) {
-    if (confirm("Supprimer cette question ?")) {
-      this.deleteQuestion(id);
-    }
-  }*/
 
   closeModal() {
     this.showModal = false;
@@ -247,81 +184,49 @@ trackByQuestionId(index: number, question: any) {
     this.currentQuestion.reponses.splice(index, 1);
   }
 
- /* saveQuestion() {
-    if (!this.currentQuestion.categorieQuestion) {
-      alert("Veuillez choisir une catégorie !");
-      return;
-    }
-
-    // Préparation de l'objet propre pour le backend
-    const payload = {
-      ...this.currentQuestion,
-      // On s'assure que chaque réponse a son texte et son score converti
-      reponses: this.currentQuestion.reponses.map((r: any) => ({
-        texte: r.texte,
-        score: parseFloat(r.score)
-      })),
-      // On envoie l'objet catégorie avec l'ID attendu par Hibernate
-      categorieQuestion: {
-        id: this.currentQuestion.categorieQuestion.id
-      }
-    };
-
-    if (this.isEditMode) {
-      this.service.updateQuestion(this.currentQuestion.idQuestion, payload)
-        .subscribe({
-          next: () => { this.closeModal(); this.refreshAll(); },
-          error: (err) => alert("Erreur lors de la modification")
-        });
-    } else {
-      this.service.addQuestion(payload) // On envoie le payload nettoyé
-        .subscribe({
-          next: () => { this.closeModal(); this.refreshAll(); },
-          error: (err) => {
-            //console.error(err); // Regarde la console (F12) pour voir l'erreur précise
-            alert("Erreur lors de l'ajout");
-          }
-        });
-    }
-  }*/
 
 
-  saveQuestion() {
-    // 1. Validation simple
-    if (!this.currentQuestion.categorieQuestion || !this.currentQuestion.categorieQuestion.id) {
-      alert("Erreur : Veuillez sélectionner une catégorie valide !");
-      return;
-    }
 
-    // 2. Construction du payload "propre" pour Spring Boot
-    const questionToSave = {
-      texte: this.currentQuestion.texte,
-      image: this.currentQuestion.image,
-      difficultee: this.currentQuestion.difficultee,
-      type: this.currentQuestion.type,
-      // On envoie juste l'ID attendu par ton service Java
-      categorieQuestion: {
-        id: Number(this.currentQuestion.categorieQuestion.id)
-      },
-      // On s'assure que les scores sont des nombres
-      reponses: this.currentQuestion.reponses.map((r: any) => ({
-        texte: r.texte,
-        score: parseFloat(r.score) || 0
-      }))
-    };
-
-    if (this.isEditMode) {
-      this.service.updateQuestion(this.currentQuestion.idQuestion, questionToSave).subscribe({
-        next: () => { this.closeModal(); this.refreshAll(); },
-        error: (err) => alert("Erreur modification : " + err.message)
-      });
-    } else {
-      this.service.addQuestion(questionToSave).subscribe({
-        next: () => { this.closeModal(); this.refreshAll(); },
-        error: (err) => alert("Erreur ajout : " + err.message)
-      });
-    }
+saveQuestion() {
+  // 1. Vérification de sécurité
+  if (!this.currentQuestion.categorieQuestion || !this.currentQuestion.categorieQuestion.id) {
+    alert("Veuillez sélectionner une catégorie !");
+    return;
   }
+
+  // 2. Construction d'un objet propre (Payload)
+  // On s'assure que les types correspondent à ce que Java attend
+  const questionToSave = {
+    texte: this.currentQuestion.texte,
+    difficultee: this.currentQuestion.difficultee, // "facile", "moyenne", etc.
+    type: this.currentQuestion.type,               // "choixUnique", etc.
+    desactivee: false,                             // Valeur par défaut
+    categorieQuestion: {
+      id: Number(this.currentQuestion.categorieQuestion.id) // Conversion forcée en nombre
+    },
+    reponses: this.currentQuestion.reponses.map((r: any) => ({
+      texte: r.texte,
+      score: Number(r.score) // Conversion forcée en nombre
+    }))
+  };
+
+  console.log("Tentative d'envoi :", questionToSave);
+
+  if (this.isEditMode) {
+    this.service.updateQuestion(this.currentQuestion.idQuestion, questionToSave).subscribe({
+      next: () => { this.showModal = false; this.refreshAll(); },
+      error: (err) => console.error("Erreur PUT", err)
+    });
+  } else {
+    this.service.addQuestion(questionToSave).subscribe({
+      next: () => { this.showModal = false; this.refreshAll(); },
+      error: (err) => {
+        console.error("Erreur détaillée :", err);
+        alert("L'ajout a échoué. Vérifiez la console (F12).");
+      }
+    });
+  }
+}
 
   openAddModal() {
     this.isEditMode = false;
