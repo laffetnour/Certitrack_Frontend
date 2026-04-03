@@ -206,9 +206,7 @@ getQuestions(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/questions/all`, this.getAuthHeaders());
   }
 
-getCatQuestions(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/categories-questions/all`, this.getAuthHeaders());
-  }
+
 //ajouter
 
 
@@ -239,4 +237,23 @@ getCatQuestions(): Observable<any[]> {
   deleteQuestionsBulk(ids: number[]) {
     return this.http.post(`${this.baseUrl}/questions/delete-bulk`, ids, this.getAuthHeaders());
   }
+
+
+
+// Categorie questions
+
+getCatQuestions(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/categories-questions/all`, this.getAuthHeaders());
+  }
+addCatQuestion(cat: any): Observable<any> {
+  return this.http.post(`${this.baseUrl}/categories-questions/add`, cat, this.getAuthHeaders());
+}
+
+updateCatQuestion(id: number, cat: any): Observable<any> {
+  return this.http.put(`${this.baseUrl}/categories-questions/update/${id}`, cat, this.getAuthHeaders());
+}
+
+deleteCatQuestion(id: number): Observable<any> {
+  return this.http.delete(`${this.baseUrl}/categories-questions/delete/${id}`, this.getAuthHeaders());
+}
 }

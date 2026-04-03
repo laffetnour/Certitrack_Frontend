@@ -25,6 +25,8 @@ import { CategorieModuleComponent } from './features/dashboard/SuperAdmin/catego
 import { ModuleComponent } from './features/dashboard/SuperAdmin/Module/module.component';
 import { EtablissementsComponent } from './features/dashboard/adminTenant/etablissements/etablissements.component';
 import {QuestionComponent} from './features/dashboard/SuperAdmin/Question/question.component'
+import {CatQuestionComponent} from './features/dashboard/SuperAdmin/categorieQuestion/catQuestion.component'
+
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
@@ -39,7 +41,8 @@ export const routes: Routes = [
       { path: 'adminTenants', component: ListeAdminsTenantComponent }, // Si vous avez un composant pour la liste des admins
       { path: 'categories', component: CategorieModuleComponent },
       { path: 'modules', component: ModuleComponent },
-      { path: 'questions', component: QuestionComponent }
+      { path: 'questions', component: QuestionComponent },
+      { path: 'cat-question', component: CatQuestionComponent }
      // { path: '', redirectTo: 'tenants', pathMatch: 'full' } // Route par défaut
     ]
   },

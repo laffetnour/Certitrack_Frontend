@@ -101,11 +101,27 @@ loadCategories(): void {
     }
   }
 
-  deleteCategorie(id: number): void {
-    if (confirm('Supprimer cette catégorie ? Cela peut affecter les modules liés.')) {
-      this.superAdminService.deleteCategorie(id).subscribe({
-        next: () => this.handleSuccess('Catégorie supprimée'),
-        error: () => this.handleError('Erreur lors de la suppression')
+deleteCategorie(cat: any) {
+    if (cat.modules && cat.modules.length > 0) {
+      alert("Action impossible : Cette catégorie contient des modules.");
+      return;
+    }
+
+    if (confirm(`Voulez-vous vraiment supprimer "${cat.nom}" ?`)) {
+      // On utilise 'this.service' (vérifie que le nom correspond au constructeur)
+      this.superAdminService.deleteCategorie(cat.id).subscribe({
+        next: () => {
+          this.successMessage = "Supprimé avec succès !";
+          this.loadCategories();
+        },
+        // CORRECTION 2 : On ajoute ': any' pour satisfaire TypeScript
+        error: (err: any) => {
+          if (err.status === 409 || err.status === 400) {
+            alert(err.error);
+          } else {
+            alert("Une erreur est survenue.");
+          }
+        }
       });
     }
   }

@@ -1,6 +1,6 @@
 <div class="admin-container">
   <div class="admin-header">
-    <h1>Gestion des Catégories de Modules</h1>
+      <h1>Gestion des Catégories de Questions</h1>
     <button class="btn-add" (click)="openAddModal()">
       <span>+</span> Nouvelle Catégorie
     </button>
@@ -15,23 +15,29 @@
       <p>Chargement des catégories...</p>
     </div>
 
-    <table class="modern-table" *ngIf="!loading && categories && categories.length > 0">
+    <table class="modern-table" *ngIf="!loading && categories.length > 0">
       <thead>
       <tr>
         <th>ID</th>
-        <th>Nom</th>
+        <th>Nom de la catégorie</th>
         <th>Description</th>
-        <th>Modules liés</th>
+        <th>Nb. Questions</th>
         <th>Actions</th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let cat of categories">
         <td>{{ cat.id }}</td>
-        <td><strong>{{ cat.nom }}</strong></td>
-        <td>{{ cat.description }}</td>
         <td>
-          <span class="badge-count">{{ cat.modules?.length || 0 }}</span>
+          <div><strong>{{ cat.nom }}</strong></div>
+        </td>
+        <td>
+          <div [title]="cat.description">
+            {{ cat.description || 'Aucune description' }}
+          </div>
+        </td>
+        <td>
+          <span class="count-badge">{{ cat.questions?.length || 0 }}</span>
         </td>
         <td class="actions">
           <button class="btn-edit" (click)="openEditModal(cat)" title="Modifier">
@@ -40,7 +46,6 @@
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
             </svg>
           </button>
-
           <button class="btn-delete" (click)="deleteCategorie(cat)" title="Supprimer">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -51,12 +56,13 @@
       </tbody>
     </table>
 
-    <div *ngIf="!loading && (!categories || categories.length === 0)" class="empty-state">
-      <p>Aucune catégorie de module définie.</p>
+    <div *ngIf="!loading && categories.length === 0" class="empty-state">
+      <div class="empty-icon">📁</div>
+      <p>Aucune catégorie trouvée. Commencez par en créer une !</p>
     </div>
   </div>
 
-  <div class="modal" *ngIf="showModal" (click)="closeModal()">
+  <div  class="modal" *ngIf="showModal" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>{{ isEditMode ? 'Modifier la Catégorie' : 'Nouvelle Catégorie' }}</h2>
@@ -64,28 +70,32 @@
       </div>
 
       <form [formGroup]="categorieForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label for="nom">Nom de la catégorie</label>
-          <input
-            id="nom"
-            formControlName="nom"
-            type="text"
-            class="form-control"
-            placeholder="Ex: Informatique, Management..."
-            [class.error]="categorieForm.get('nom')?.invalid && categorieForm.get('nom')?.touched"
-          >
-        </div>
 
-        <div class="form-group">
-          <label for="description">Description</label>
-          <textarea
-            id="description"
-            formControlName="description"
-            class="form-control"
-            rows="3"
-            placeholder="Description des modules de cette catégorie..."
-          ></textarea>
-        </div>
+          <div class="form-group">
+            <label for="nom">Nom de la catégorie <span class="required">*</span></label>
+            <input
+              type="text"
+              id="nom"
+              formControlName="nom"
+              class="form-control"
+              [class.error]="categorieForm.get('nom')?.invalid && categorieForm.get('nom')?.touched"
+            >
+            <div class="error-msg" *ngIf="categorieForm.get('nom')?.invalid && categorieForm.get('nom')?.touched">
+              Le nom est obligatoire.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description (Optionnel)</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              class="form-control"
+              rows="4"
+              placeholder="Décrivez brièvement le contenu de cette catégorie..."
+            ></textarea>
+          </div>
+
 
         <div class="modal-footer">
           <button type="button" class="btn-cancel" (click)="closeModal()">Annuler</button>
