@@ -256,4 +256,6 @@ updateCatQuestion(id: number, cat: any): Observable<any> {
 deleteCatQuestion(id: number): Observable<any> {
   return this.http.delete(`${this.baseUrl}/categories-questions/delete/${id}`, this.getAuthHeaders());
 }
+
+
 }

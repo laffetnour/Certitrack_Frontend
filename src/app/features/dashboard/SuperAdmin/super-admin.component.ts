@@ -4,6 +4,7 @@ import { SuperAdminService } from '../../../core/services/super-admin.service';
 import { AuthService } from '../../../core/services/auth.service';
 import {ChangeDetectorRef } from '@angular/core';
 import { RouterOutlet, RouterModule, Router } from '@angular/router';
+import { ConfigService } from '../../../core/services/config.service';
 
 import { forkJoin } from 'rxjs';
 import {RouterLink, RouterLinkActive} from '@angular/router';
@@ -31,7 +32,8 @@ export class SuperAdminComponent implements OnInit {
     public router: Router,
     private superAdminService: SuperAdminService,
     private authService: AuthService,
-  private cdr: ChangeDetectorRef
+  private cdr: ChangeDetectorRef,
+  public configService: ConfigService
   ) {}
 
   ngOnInit(): void {
@@ -102,4 +104,6 @@ toggleCatalogue(): void {
   onLogout(): void {
     this.authService.logout();
   }
+
+
 }

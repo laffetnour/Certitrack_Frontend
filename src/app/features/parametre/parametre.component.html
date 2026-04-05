@@ -1,0 +1,129 @@
+<div class="settings-layout">
+  <aside class="settings-nav-aside">
+    <div class="nav-title">Paramètres</div>
+
+    <button (click)="activeSection = 'profil'" [class.active]="activeSection === 'profil'">
+      <i class="fas fa-user-circle"></i> Mon Profil
+    </button>
+
+    <button
+            (click)="activeSection = 'admin'"
+            [class.active]="activeSection === 'admin'">
+      <i class="fas fa-tools"></i> Configuration Système
+    </button>
+  </aside>
+
+  <main class="settings-content">
+
+    <section *ngIf="activeSection === 'profil'" class="fade-in">
+      <div class="section-header">
+        <h2>Mon Profil Personnel</h2>
+      </div>
+
+      <div class="card profile-card">
+        <div class="avatar-section">
+          <div class="avatar-wrapper">
+            <img [src]="currentUser?.photo" alt="Profil">
+            <div *ngIf="isUploadingPhoto" class="loader-overlay">
+              <i class="fas fa-sync fa-spin"></i>
+            </div>
+          </div>
+          <label for="photoInput" class="btn-change-photo">
+            <i class="fas fa-camera"></i>
+          </label>
+          <input type="file" id="photoInput" (change)="onPhotoProfilChange($event)" hidden accept="image/*">
+        </div>
+
+        <div class="profile-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nom</label>
+              <input type="text" [(ngModel)]="currentUser.nom" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Prénom</label>
+              <input type="text" [(ngModel)]="currentUser.prenom" class="form-control">
+            </div>
+          </div>
+
+          <!--<div class="form-group">
+            <label>Email Professionnel (Identifiant)</label>
+            <input type="email" [(ngModel)]="currentUser.emailProfessionnel" class="form-control" disabled>
+            <small>L'email ne peut pas être modifié pour des raisons de sécurité.</small>
+          </div>-->
+
+          <div class="form-group">
+            <label>Nouveau mot de passe (laisser vide pour ne pas changer)</label>
+            <div class="password-input">
+              <input [type]="showPassword ? 'text' : 'password'"
+                     [(ngModel)]="currentUser.newPassword"
+                     class="form-control"
+                     placeholder="********">
+              <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" (click)="showPassword = !showPassword"></i>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-save-profile" (click)="updateFullProfile()" [disabled]="isSavingUser">
+              <i class="fas" [ngClass]="isSavingUser ? 'fa-spinner fa-spin' : 'fa-user-check'"></i>
+              {{ isSavingUser ? 'Mise à jour...' : 'Enregistrer mon profil' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section *ngIf="activeSection === 'admin'" class="fade-in">
+      <div class="section-header">
+        <h2>Paramètres de la Plateforme</h2>
+      </div>
+
+      <div class="card" *ngIf="globalConfig; else loadingTpl">
+
+        <div class="form-group">
+          <label class="label-title">Logo de l'application</label>
+          <div class="logo-preview-box">
+            <img [src]="globalConfig.logoSociete || 'LOGO-2026_VF.png'" alt="Logo">
+          </div>
+          <button class="btn-secondary" *ngIf="currentUser?.role === 'superAdmin'"  (click)="logoInput.click()">
+            <i class="fas fa-image"></i> Sélectionner un nouveau logo
+          </button>
+          <input #logoInput type="file" (change)="onLogoSocieteChange($event)" hidden accept="image/*">
+        </div>
+
+
+
+        <div class="theme-selector">
+          <label class="theme-option" [class.selected]="currentUser?.theme === 'light'">
+            <input type="radio" name="personalTheme" value="light"
+                   [(ngModel)]="currentUser.theme"
+                   (change)="changePersonalTheme('light')">
+            <div class="theme-box light">Mode Clair</div>
+          </label>
+
+          <label class="theme-option" [class.selected]="currentUser?.theme === 'dark'">
+            <input type="radio" name="personalTheme" value="dark"
+                   [(ngModel)]="currentUser.theme"
+                   (change)="changePersonalTheme('dark')">
+            <div class="theme-box dark">Mode Sombre</div>
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-save" (click)="saveGlobalSettings()" [disabled]="isSavingConfig">
+            <i class="fas" [ngClass]="isSavingConfig ? 'fa-spinner fa-spin' : 'fa-check-circle'"></i>
+            {{ isSavingConfig ? 'Enregistrement...' : 'Enregistrer les paramètres' }}
+          </button>
+        </div>
+      </div>
+
+      <ng-template #loadingTpl>
+        <div class="loading-state">
+          <i class="fas fa-circle-notch fa-spin"></i>
+          <p>Chargement de la configuration serveur...</p>
+        </div>
+      </ng-template>
+    </section>
+
+  </main>
+</div>

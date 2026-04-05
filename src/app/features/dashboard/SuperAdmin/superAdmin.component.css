@@ -1,5 +1,5 @@
 
-:root {
+/*:root {
   --smart-red: #ea5357;
   --smart-red-dark: #d44347;
   --smart-dark: #303D49;
@@ -32,36 +32,58 @@ body {
   flex-direction: column;
 }
 
-.logo-section { padding: 30px 20px; text-align: center; }
-.main-logo { max-width: 180px; height: auto; }
+
+
+.logo-section {
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+}
+
+.main-logo {
+  max-width: 100%;
+  max-height: 80px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.loading {
+  opacity: 0.6;
+  filter: grayscale(1);
+}
 
 .nav-item {
   padding: 12px 25px;
   display: flex;
   align-items: center;
-  color: #5a6779; /* Gris bleuté par défaut */
+  color: #5a6779;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   font-weight: 500;
   text-decoration: none;
-  border-right: 4px solid transparent; /* Prépare la bordure invisible */
+  border-right: 4px solid transparent;
 }
 
 .nav-item i { width: 25px; margin-right: 12px; font-size: 1.1rem; }
 
 .nav-item.active {
-  background-color: #fcf1f1; /* Très léger fond rouge/gris */
-  color: #ea5357 !important; /* Rouge Smartfuture */
-  border-right: 4px solid #ea5357; /* Barre rouge à droite */
+  background-color: #fcf1f1;
+  color: #ea5357 !important;
+  border-right: 4px solid #ea5357;
   font-weight: 600;
 }
 
-/* S'assurer que l'icône change aussi de couleur quand c'est actif */
+
 .nav-item.active i {
   color: #ea5357;
 }
 
-/* Optionnel : Effet au survol pour plus de réactivité */
+
 .nav-item:hover:not(.active) {
   background-color: #f8fafc;
   color: #303D49;
@@ -78,7 +100,7 @@ body {
 }
 
 .nav-item.sub {
-  padding: 10px 25px 10px 45px; /* Plus de padding à gauche pour l'indentation */
+  padding: 10px 25px 10px 45px;
   font-size: 0.9rem;
 }
 
@@ -104,9 +126,6 @@ body {
   gap: 10px;
 }
 
-/* ==========================================================================
-   3. TOPBAR & CONTENT AREA
-   ========================================================================== */
 .main-layout {
   flex: 1;
   display: flex;
@@ -116,7 +135,7 @@ body {
 
 .notification-bar {
   height: 70px;
-  background-color: #303D49; /* Bleu foncé */
+  background-color: #303D49;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -169,27 +188,68 @@ body {
   border: 2px solid #303D49;
 }
 
+
 .profile {
   display: flex;
   align-items: center;
   gap: 10px;
   cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 50px;
+  transition: background 0.3s ease;
 }
+
+.profile:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+
 .avatar-circle {
-  width: 38px;
-  height: 38px;
-  background-color: #4a5a6a;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  background-color: #f0f2f5;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  border: 2px solid #e0e0e0;
+  transition: border-color 0.3s;
+}
+
+.profile:hover .avatar-circle {
+  border-color: #3498db;
+}
+
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+.avatar-circle i {
+  font-size: 1.2rem;
+  color: #adb5bd;
+}
+
+
+.arrow-user {
+  font-size: 0.8rem;
+  color: #6c757d;
+  transition: transform 0.3s ease;
+}
+
+.profile:hover .arrow-user {
+  transform: translateY(2px);
+  color: #333;
 }
 
 .content-area { padding: 30px; overflow-y: auto; flex: 1; }
 
-/* ==========================================================================
-   4. GESTION DES CANDIDATS (TABLES & HEADER)
-   ========================================================================== */
+
 .admin-header {
   display: flex;
   justify-content: space-between;
@@ -202,7 +262,7 @@ body {
 }
 
 .btn-add {
-  background-color: #ea5357; /* Rouge Smartfuture */
+  background-color: #ea5357;
   color: white;
   padding: 10px 20px;
   border-radius: 8px;
@@ -247,9 +307,7 @@ body {
 
 .modern-table td { padding: 16px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
 
-/* ==========================================================================
-   5. BADGES & ACTIONS
-   ========================================================================== */
+
 .status-badge {
   padding: 6px 12px;
   border-radius: 20px;
@@ -275,9 +333,7 @@ body {
 
 .actions button:hover { transform: scale(1.1); filter: brightness(0.95); }
 
-/* ==========================================================================
-   6. MODALS
-   ========================================================================== */
+
 .modal {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(48, 61, 73, 0.7);
@@ -286,36 +342,36 @@ body {
 }
 
 .modal-content {
-  background-color: #ffffff !important; /* Force le blanc */
+  background-color: #ffffff !important;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Ombre pour détacher du fond gris de la page */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 .modal-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
 
 
 form {
-  padding: 20px 25px; /* Espace interne du formulaire */
+  padding: 20px 25px;
   background-color: #ffffff;
 }
 
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Sépare Nom et Prénom en deux colonnes */
-  gap: 15px; /* Espace entre les deux champs */
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
 
 }
 
 .form-group {
-  margin-bottom: 18px; /* Espace entre chaque bloc de saisie */
+  margin-bottom: 18px;
   display: flex;
   flex-direction: column;
 }
 .form-group label {
   font-size: 14px;
   font-weight: 600;
-  color:  #303D49; /* Gris foncé Smartfuture */
+  color:  #303D49;
   margin-bottom: 6px;
 }
 
@@ -329,14 +385,14 @@ form {
   background-color: #ffffff;
 }
 
-/* État focus (cliqué) */
+
 .form-control:focus {
   outline: none;
-  border-color: #ea5357; /* Rouge Smartfuture */
+  border-color: #ea5357;
   box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.1);
 }
 
-/* Gestion des erreurs de validation */
+
 .form-control.error {
   border-color: #ef4444;
   background-color: #fef2f2;
@@ -373,7 +429,7 @@ form {
 }
 
 .btn-submit {
-  background-color: #ea5357; /* Rouge Smartfuture */
+  background-color: #ea5357;
   color: white;
   border: none;
   padding: 10px 25px;
@@ -394,9 +450,9 @@ form {
   opacity: 0.7;
 }
 .no-data-alert {
-  background-color: #f8fafc; /* Gris très clair */
-  border: 1px dashed #cbd5e1; /* Bordure pointillée */
-  color: #64748b; /* Texte gris doux */
+  background-color: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  color: #64748b;
   padding: 20px;
   border-radius: 8px;
   text-align: center;
@@ -409,25 +465,25 @@ form {
 }
 
 .no-data-alert i {
-  color: #ea5357; /* Icône en rouge pour attirer l'attention doucement */
+  color: #ea5357;
   font-size: 1.1rem;
 }
 
-/* Conteneur principal des informations de profil */
+
 .profile-info {
   padding: 20px 25px;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  background-color: #ffffff; /* Fond blanc comme demandé */
+  background-color: #ffffff;
 }
 
-/* Avatar circulaire avec initiales */
+
 .profile-avatar {
   width: 80px;
   height: 80px;
-  background-color: #fef2f2; /* Fond rouge très clair */
-  color: #ea5357;           /* Rouge Smartfuture */
+  background-color: #fef2f2;
+  color: #ea5357;
   border: 2px solid #fca5a5;
   border-radius: 50%;
   display: flex;
@@ -435,47 +491,47 @@ form {
   justify-content: center;
   font-size: 24px;
   font-weight: 700;
-  margin: 0 auto 20px auto; /* Centrage de l'avatar */
+  margin: 0 auto 20px auto;
   text-transform: uppercase;
 }
 
-/* Ligne d'information (Label + Valeur) */
+
 .info-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid #f1f5f9; /* Séparation légère */
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .info-row:last-child {
-  border-bottom: none; /* Pas de ligne pour le dernier élément */
+  border-bottom: none;
 }
 
-/* Style des labels avec icônes SVG */
+
 .info-row .label {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #64748b; /* Gris muet */
+  color: #64748b;
   font-size: 14px;
   font-weight: 500;
 }
 
 .info-row .label svg {
-  color: #303D49; /* Gris foncé pour les icônes */
+  color: #303D49;
   opacity: 0.7;
 }
 
-/* Style des valeurs */
+
 .info-row .value {
-  color: #1e293b; /* Texte principal foncé */
+  color: #1e293b;
   font-size: 14px;
   font-weight: 600;
   text-align: right;
 }
 
-/* Ajustement spécifique pour le badge de statut dans le profil */
+
 .info-row .status-badge {
   padding: 4px 12px;
   font-size: 12px;
@@ -496,7 +552,7 @@ form {
 
 .stats-grid {
   display: grid;
-  /* Crée 3 colonnes de largeur égale */
+
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-bottom: 30px;
@@ -538,4 +594,571 @@ form {
   color: #64748b;
   font-size: 14px;
 }
+*/
 
+
+/* ==========================================================================
+   1. VARIABLES DYNAMIQUES & THÉMATISATION
+   ========================================================================== */
+:host {
+  /* Identité */
+  --smart-red: #ea5357;
+  --smart-red-dark: #d44347;
+
+  /* Couleurs Mode Clair (Par défaut) */
+  --smart-dark: #303D49;
+  --bg-page: #f8fafc;
+  --white: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --input-bg: #ffffff;
+
+  /* Dimensions & Effets */
+  --sidebar-width: 260px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+:host-context(.dark-mode) {
+  /* Couleurs Mode Sombre */
+  --smart-dark: #0f172a;
+  --bg-page: #0f172a;
+  --white: #1e293b;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --input-bg: #0f172a;
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================================================
+   2. LAYOUT GLOBAL (RESPONSIVE)
+   ========================================================================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--bg-page);
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0; /* Empêche la sidebar de s'écraser */
+  background: var(--white);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.main-layout {
+  flex: 1; /* Prend tout l'espace restant */
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Important pour que le contenu ne déborde pas en flex */
+}
+
+/* ==========================================================================
+   3. NAVIGATION & SIDEBAR
+   ========================================================================== */
+.logo-section {
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+}
+
+.main-logo {
+  max-width: 90%;
+  max-height: 70px;
+  height: auto;
+  object-fit: contain;
+}
+
+.nav-item {
+  padding: 12px 25px;
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: 0.2s;
+  font-weight: 500;
+  text-decoration: none;
+  border-right: 4px solid transparent;
+  white-space: nowrap; /* Empêche le texte de passer à la ligne */
+}
+
+.nav-item.active {
+  background-color: rgba(234, 83, 87, 0.08);
+  color: var(--smart-red) !important;
+  border-right: 4px solid var(--smart-red);
+}
+
+.logout {
+  padding: 20px 25px;
+  color: var(--smart-red);
+  font-weight: bold;
+  cursor: pointer;
+  border-top: 1px solid var(--border-color);
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ==========================================================================
+   4. TOPBAR (DYNAMIC SEARCH)
+   ========================================================================== */
+.notification-bar {
+  height: 70px;
+  background-color: var(--smart-dark);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2% ; /* Utilisation de % pour l'espacement latéral */
+  color: white;
+  flex-shrink: 0;
+}
+
+.search-container {
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 8px 15px;
+  border-radius: 25px;
+  width: 40%; /* Largeur dynamique */
+  max-width: 400px;
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+}
+
+.search-container input {
+  background: transparent;
+  border: none;
+  color: white;
+  margin-left: 10px;
+  width: 100%;
+  outline: none;
+}
+
+/* ==========================================================================
+   5. CONTENT AREA & GRIDS
+   ========================================================================== */
+.content-area {
+  padding: 2vw; /* Padding adaptatif selon la largeur d'écran */
+  overflow-y: auto;
+  flex: 1;
+  background-color: var(--bg-page);
+}
+
+.stats-grid {
+  display: grid;
+  /* S'adapte automatiquement : 3 colonnes sur PC, 1 ou 2 sur tablette/mobile */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: var(--white);
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: var(--text-main);
+}
+
+/* ==========================================================================
+   6. TABLES (RESPONSIVE SCROLL)
+   ========================================================================== */
+.table-container {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  overflow-x: auto; /* Scroll horizontal si le tableau est trop large */
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px; /* Garantit une lisibilité minimale */
+}
+
+.modern-table th {
+  padding: 16px;
+  text-align: left;
+  background: var(--bg-page);
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.modern-table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
+/* ==========================================================================
+   7. MODALS & FORMS
+   ========================================================================== */
+.modal {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  padding: 20px;
+}
+
+.modal-content, form {
+  background-color: var(--white) !important;
+  color: var(--text-main);
+  max-width: 600px;
+  width: 100%;
+}
+
+.form-control {
+  background-color: var(--input-bg);
+  border: 1.5px solid var(--border-color);
+  color: var(--text-main);
+}
+
+/* ==========================================================================
+   8. MEDIA QUERIES (ADAPTATION FINALE)
+   ========================================================================== */
+
+/* Écrans moyens (Tablettes) */
+@media (max-width: 1024px) {
+  --sidebar-width: 80px;
+
+  .nav-item span, .nav-title, .logout span, .arrow {
+    display: none; /* Cache le texte pour ne garder que les icônes */
+  }
+
+  .nav-item { justify-content: center; padding: 15px 0; }
+  .nav-item i { margin: 0; font-size: 1.3rem; }
+}
+
+.logo-section {
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+}
+
+.main-logo {
+  max-width: 100%;
+  max-height: 80px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: opacity 0.3s ease-in-out;
+}
+/* Petits écrans (Mobiles) */
+@media (max-width: 600px) {
+  .notification-bar { padding: 0 15px; }
+  .search-container { display: none; } /* Cache la recherche sur mobile pour gagner de la place */
+  .admin-header { flex-direction: column; gap: 15px; text-align: center; }
+}
+
+
+
+
+
+
+
+
+/**/
+
+
+
+/* ==========================================================================
+   1. DÉFINITION DES VARIABLES DE COULEURS
+   ========================================================================== */
+:host {
+  /* Mode Clair (Par défaut) */
+  --bg-admin: #f8fafc;
+  --bg-card: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --text-label: #303D49;
+  --border-color: #f1f5f9;
+  --table-th-bg: #f8fafc;
+  --row-hover: #f9fafb;
+  --input-border: #303D49;
+  --modal-bg: rgba(48, 61, 73, 0.7);
+
+  /* Couleurs Accent (Stables) */
+  --smart-red: #ea5357;
+  --smart-red-dark: #d44347;
+}
+
+:host-context(.dark-mode) {
+  /* Mode Sombre */
+  --bg-admin: #0f172a;
+  --bg-card: #1e293b;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-label: #cbd5e1;
+  --border-color: #334155;
+  --table-th-bg: #0f172a;
+  --row-hover: #262f3f;
+  --input-border: #475569;
+  --modal-bg: rgba(0, 0, 0, 0.8);
+}
+
+/* ==========================================================================
+   2. APPLICATION (STRUCTURE IDENTIQUE)
+   ========================================================================== */
+
+.admin-container {
+  background-color: var(--bg-admin);
+  padding: 20px;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  background: var(--bg-card);
+  padding: 20px 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  color: var(--text-main);
+}
+
+.btn-add {
+  background-color: var(--smart-red);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-add:hover {
+  background-color: var(--smart-red-dark);
+}
+
+/* TABLE */
+.table-container {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.modern-table th {
+  padding: 14px;
+  background: var(--table-th-bg);
+  text-align: left;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.modern-table td {
+  padding: 14px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
+.modern-table tr:hover {
+  background: var(--row-hover);
+}
+
+/* STATUS */
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 12px;
+  display: inline-block;
+  text-align: center;
+}
+
+.status-badge.active {
+  background: rgba(49, 151, 149, 0.2);
+  color: #319795;
+}
+
+.status-badge.inactive {
+  background: rgba(229, 62, 62, 0.2);
+  color: #e53e3e;
+}
+
+/* ACTIONS */
+.actions { display: flex; gap: 8px; }
+
+.actions button {
+  width: 34px; height: 34px; border-radius: 6px; border: none;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: 0.2s;
+}
+
+.btn-view { background: rgba(2, 132, 199, 0.15); color: #0284c7; }
+.btn-edit { background: rgba(217, 119, 6, 0.15); color: #d97706; }
+.btn-toggle { background: rgba(147, 51, 234, 0.15); color: #9333ea; }
+.btn-delete { background: rgba(224, 36, 36, 0.15); color: #dc2626; }
+
+/* MODALS */
+.modal {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: var(--modal-bg);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px); z-index: 1000;
+}
+
+.modal-content, form, .profile-info {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main);
+}
+
+.modal-header, .modal-footer {
+  border-color: var(--border-color);
+}
+
+/* FORMULAIRE */
+.form-group label {
+  color: var(--text-label);
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--input-border);
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  background-color: var(--bg-card);
+  color: var(--text-main);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--smart-red);
+}
+
+.btn-cancel {
+  background-color: var(--bg-admin);
+  color: var(--text-muted);
+}
+
+/* FILTRE SELECT */
+.status-filter-select {
+  min-width: 100px;
+  padding: 10px 35px 10px 40px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  appearance: none;
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12' viewBox='0 0 18 12'%3E%3Cpath d='M0 12h18v-2H0v2zm0-5h18V5H0v2zm0-7v2h18V0H0z' fill='%23888888'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  background-size: 16px;
+}
+
+/* PROFILE VIEW INFOS */
+.info-row {
+  border-bottom: 1px solid var(--border-color);
+}
+.label { color: var(--text-muted); }
+.value { color: var(--text-main); }
+
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.notification-icon {
+  position: relative;
+  cursor: pointer;
+}
+
+.dot-notification {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background-color: #ea5357;
+  border-radius: 50%;
+  border: 2px solid #303D49;
+}
+
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 50px;
+  transition: background 0.3s ease;
+}
+
+.profile:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 2px solid #e0e0e0;
+  transition: border-color 0.3s;
+}
+
+.profile:hover .avatar-circle {
+  border-color: #3498db;
+}
+
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+.avatar-circle i {
+  font-size: 1.2rem;
+  color: #adb5bd;
+}
+
+
+.arrow-user {
+  font-size: 0.8rem;
+  color: #6c757d;
+  transition: transform 0.3s ease;
+}
+
+.profile:hover .arrow-user {
+  transform: translateY(2px);
+  color: #333;
+}

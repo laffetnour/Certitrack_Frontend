@@ -26,6 +26,8 @@ import { ModuleComponent } from './features/dashboard/SuperAdmin/Module/module.c
 import { EtablissementsComponent } from './features/dashboard/adminTenant/etablissements/etablissements.component';
 import {QuestionComponent} from './features/dashboard/SuperAdmin/Question/question.component'
 import {CatQuestionComponent} from './features/dashboard/SuperAdmin/categorieQuestion/catQuestion.component'
+import {ParametreComponent} from './features/parametre/parametre.component'
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -42,7 +44,8 @@ export const routes: Routes = [
       { path: 'categories', component: CategorieModuleComponent },
       { path: 'modules', component: ModuleComponent },
       { path: 'questions', component: QuestionComponent },
-      { path: 'cat-question', component: CatQuestionComponent }
+      { path: 'cat-question', component: CatQuestionComponent },
+      { path: 'parametre', component: ParametreComponent }
      // { path: '', redirectTo: 'tenants', pathMatch: 'full' } // Route par défaut
     ]
   },
@@ -56,7 +59,8 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
 
-      { path: 'candidats', component: AdminComponent }
+      { path: 'candidats', component: AdminComponent },
+       { path: 'parametre', component: ParametreComponent }
 
     ]
   },
@@ -67,7 +71,8 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'administrateurs', component: AdministrateursComponent },
-      { path: 'specialites', component: SpecialiteComponent }
+      { path: 'specialites', component: SpecialiteComponent },
+       { path: 'parametre', component: ParametreComponent }
 
     ]
   },
@@ -79,7 +84,8 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardTenantComponent },
       { path: 'directeurs', component: DirecteursComponent },
       { path: 'etablissements', component: EtablissementsComponent },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+       { path: 'parametre', component: ParametreComponent }
     ]
   },
 
