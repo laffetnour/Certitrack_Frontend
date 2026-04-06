@@ -200,6 +200,7 @@ saveQuestion() {
     texte: this.currentQuestion.texte,
     difficultee: this.currentQuestion.difficultee, // "facile", "moyenne", etc.
     type: this.currentQuestion.type,               // "choixUnique", etc.
+    nature: this.currentQuestion.nature, // ✅ AJOUT
     desactivee: false,                             // Valeur par défaut
     categorieQuestion: {
       id: Number(this.currentQuestion.categorieQuestion.id) // Conversion forcée en nombre
@@ -234,6 +235,7 @@ saveQuestion() {
       texte: '',
       difficultee: 'facile',
       type: 'choixUnique',
+      nature: 'technique', // ✅ AJOUT
       categorieQuestion: null,
       image: '',
       reponses: [

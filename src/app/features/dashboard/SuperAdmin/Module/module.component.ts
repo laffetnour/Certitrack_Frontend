@@ -49,7 +49,7 @@ export class ModuleComponent implements OnInit {
     this.loadData();
   }
 
- get motCles(): FormArray {
+  get motCles(): FormArray {
     return this.moduleForm.get('motCles') as FormArray;
   }
 
@@ -274,52 +274,52 @@ export class ModuleComponent implements OnInit {
     });
   }
 
-deleteSelected() {
-  if (confirm("Supprimer les modules sélectionnés ?")) {
+  deleteSelected() {
+    if (confirm("Supprimer les modules sélectionnés ?")) {
 
-    const requests = this.selectedModules.map(id =>
-      this.service.deleteModule(id)
-    );
+      const requests = this.selectedModules.map(id =>
+        this.service.deleteModule(id)
+      );
 
-    forkJoin(requests).subscribe({
-      next: () => {
-        this.selectedModules = [];
-        this.loadData();
-      },
-      error: err => console.error(err)
-    });
+      forkJoin(requests).subscribe({
+        next: () => {
+          this.selectedModules = [];
+          this.loadData();
+        },
+        error: err => console.error(err)
+      });
+    }
   }
-}
 
-onImportClick() {
+  onImportClick() {
     this.fileInput.nativeElement.click();
   }
 
 
-onFileSelected(event: any) {
-  const file: File = event.target.files[0];
-  if (file) {
-    this.loading = true;
-   this.service.importModuleCSV(file).subscribe({
-     next: (res) => {
-       let msg = `Importation terminée !\n`;
-       msg += `- Réussites/Mises à jour : ${res.successCount}\n`;
-       msg += `- Lignes ignorées (categories Questions n'existent pas) : ${res.errorCount}\n`;
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.loading = true;
+      this.service.importModuleCSV(file).subscribe({
+        next: (res) => {
+          let msg = `Importation terminée !\n`;
+          msg += `- Réussites/Mises à jour : ${res.successCount}\n`;
+          msg += `- Lignes ignorées (categories Questions n'existent pas) : ${res.errorCount}\n`;
 
-       if (res.ignoredLines && res.ignoredLines.length > 0) {
-         msg += `- Numéros des lignes en erreur : ${res.ignoredLines.join(', ')}`;
-       }
+          if (res.ignoredLines && res.ignoredLines.length > 0) {
+            msg += `- Numéros des lignes en erreur : ${res.ignoredLines.join(', ')}`;
+          }
 
-       alert(msg);
-       this.loadData();
-       event.target.value = '';
-     },
-     error: (err) => {
-       alert("Erreur lors de l'envoi du fichier.");
-       this.loading = false;
-     }
-   });
+          alert(msg);
+          this.loadData();
+          event.target.value = '';
+        },
+        error: (err) => {
+          alert("Erreur lors de l'envoi du fichier.");
+          this.loading = false;
+        }
+      });
+    }
   }
-}
 
 }
