@@ -139,7 +139,7 @@
 }
 
 .form-control {
-  width: 100%;
+  width: auto;
   padding: 0.75rem;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
@@ -526,3 +526,103 @@
     grid-template-columns: 1fr; /* Une seule colonne sur mobile */
   }
 }
+
+/* ==========================================================================
+   STYLE POUR LE NOM DE LA PLATEFORME
+   ========================================================================== */
+
+.platform-name-group {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.label-title {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon i {
+  position: absolute;
+  left: 15px;
+  color: var(--smart-red);
+  font-size: 1.1rem;
+}
+
+.input-with-icon .form-control {
+  padding-left: 45px; /* Laisse de la place pour l'icône */
+  height: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 2px solid var(--border-color);
+  background-color: var(--input-bg);
+}
+
+.input-with-icon .form-control:focus {
+  border-color: var(--smart-red);
+  background-color: var(--white);
+  box-shadow: 0 4px 15px rgba(234, 83, 87, 0.1);
+}
+
+.helper-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* --- ADAPTATION DARK MODE --- */
+.dark-mode .input-with-icon .form-control {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-light);
+}
+
+.dark-mode .input-with-icon .form-control:focus {
+  background-color: var(--smart-dark);
+}
+
+
+/* Conteneur pour mettre une icône dans l'input */
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon i {
+  position: absolute;
+  left: 12px;
+  color: var(--text-muted);
+  font-size: 14px;
+  pointer-events: none; /* L'icône ne bloque pas le clic sur l'input */
+}
+
+.input-with-icon .form-control {
+  padding-left: 38px; /* On pousse le texte pour laisser la place à l'icône */
+}
+
+/* Effet au focus sur l'icône */
+.input-with-icon .form-control:focus + i {
+  color: var(--smart-red);
+}
+
+/* Responsive : sur petit écran, on repasse en une seule colonne */
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+

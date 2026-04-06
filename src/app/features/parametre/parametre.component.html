@@ -40,20 +40,42 @@
               <label>Nom</label>
               <input type="text" [(ngModel)]="currentUser.nom" class="form-control">
             </div>
+          </div>
+            <div class="form-row">
             <div class="form-group">
               <label>Prénom</label>
               <input type="text" [(ngModel)]="currentUser.prenom" class="form-control">
             </div>
           </div>
 
-          <!--<div class="form-group">
-            <label>Email Professionnel (Identifiant)</label>
-            <input type="email" [(ngModel)]="currentUser.emailProfessionnel" class="form-control" disabled>
-            <small>L'email ne peut pas être modifié pour des raisons de sécurité.</small>
-          </div>-->
+          <div class="form-row" *ngIf="currentUser?.contacts?.length > 0">
+            <div class="form-group">
+              <label>Email Personnel</label>
+              <div class="input-with-icon">
+                <i class="fas fa-envelope"></i>
+                <input type="email"
+                       [(ngModel)]="currentUser.contacts[0].type.emailPersonnel"
+                       class="form-control"
+                       placeholder="exemple@mail.com">
+              </div>
+            </div>
+          </div>
+            <div class="form-row" *ngIf="currentUser?.contacts?.length > 0">
+            <div class="form-group">
+              <label>Téléphone</label>
+              <div class="input-with-icon">
+                <i class="fas fa-phone"></i>
+                <input type="tel"
+                       [(ngModel)]="currentUser.contacts[0].type.numTel"
+                       class="form-control"
+                       placeholder="+216 -- --- ---">
+              </div>
+            </div>
+          </div>
+
 
           <div class="form-group">
-            <label>Nouveau mot de passe (laisser vide pour ne pas changer)</label>
+            <label>Nouveau mot de passe / laisser vide pour ne pas changer</label>
             <div class="password-input">
               <input [type]="showPassword ? 'text' : 'password'"
                      [(ngModel)]="currentUser.newPassword"
@@ -79,6 +101,20 @@
       </div>
 
       <div class="card" *ngIf="globalConfig; else loadingTpl">
+
+        <div class="form-group platform-name-group">
+          <label class="label-title">Nom de la plateforme</label>
+          <div class="input-with-icon">
+            <i class="fas fa-desktop"></i>
+            <input type="text"
+                   *ngIf="currentUser?.role === 'superAdmin'"
+                   [(ngModel)]="globalConfig.nomPlateforme"
+                   class="form-control"
+                   placeholder="Ex: My Dashboard Pro">
+            <span class="form-control"  *ngIf="currentUser?.role != 'superAdmin'">{{globalConfig.nomPlateforme}}</span>
+          </div>
+
+        </div>
 
         <div class="form-group">
           <label class="label-title">Logo de l'application</label>

@@ -32,7 +32,14 @@ export class ParametreComponent implements OnInit {
     // 1. Récupérer l'utilisateur connecté
     const user = this.authService.getUser();
     this.currentUser = JSON.parse(JSON.stringify(user));
-
+    if (!this.currentUser.contacts || this.currentUser.contacts.length === 0) {
+      this.currentUser.contacts = [{
+        type: {
+          emailPersonnel: '',
+          numTel: ''
+        }
+      }];
+    }
     // 2. Charger la configuration liée à cet utilisateur (pour le thème)
     this.loadUserConfiguration();
   }
@@ -56,6 +63,15 @@ export class ParametreComponent implements OnInit {
       }
     });
   }
+
+get contactInfo() {
+  // Sécurité pour éviter les erreurs "cannot read property of undefined"
+  if (this.currentUser && this.currentUser.contacts && this.currentUser.contacts[0]) {
+    return this.currentUser.contacts[0].type;
+  }
+  return { emailPersonnel: '', numTel: '' }; // Retourne un objet vide par défaut
+}
+
 
   onPhotoProfilChange(event: any): void {
     const file = event.target.files[0];
@@ -94,8 +110,14 @@ export class ParametreComponent implements OnInit {
       this.configService.getConfigByUserId(userId).subscribe({
         next: (conf) => {
           this.globalConfig = { ...conf };
-          this.currentUser.theme = conf.theme;
-          this.applyTheme(conf.theme);
+         if (conf.nomPlateforme) {
+                 document.title = conf.nomPlateforme;
+              }
+
+             this.currentUser.theme = conf.theme;
+             this.applyTheme(conf.theme);
+
+
           this.cdr.detectChanges();
         },
         error: (err) => {
