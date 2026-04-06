@@ -35,7 +35,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { AdminService } from '../../../core/services/admin.service';
-
+import { ConfigService } from '../../../core/services/config.service';
 
 @Component({
   selector: 'app-dashboard-admin',
@@ -54,7 +54,8 @@ export class homeAdminComponent implements OnInit {
     private authService: AuthService,
     public router: Router,
     private adminService: AdminService,
-  private cdr: ChangeDetectorRef
+  private cdr: ChangeDetectorRef,
+    public configService: ConfigService
   ) {}
 
 

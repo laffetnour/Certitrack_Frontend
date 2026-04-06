@@ -3,6 +3,7 @@ import { DirecteurService } from '../../../../core/services/directeur.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
+import { ConfigService } from '../../../../core/services/config.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -29,7 +30,8 @@ export class SpecialiteComponent implements OnInit {
   errorMessage = '';
 
   constructor(private directeurService: DirecteurService,
-              private cdr: ChangeDetectorRef) {}
+              private cdr: ChangeDetectorRef,
+              public configService: ConfigService) {}
 
   ngOnInit(): void {
     this.loadSpecialites();

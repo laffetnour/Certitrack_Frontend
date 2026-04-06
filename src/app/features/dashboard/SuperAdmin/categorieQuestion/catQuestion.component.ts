@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './catQuestion.component.html',
-  styleUrls: ['.././superAdmin.component.css']
+  styleUrls: ['../Module/module.component.css']
 })
 export class CatQuestionComponent implements OnInit {
   categories: any[] = [];

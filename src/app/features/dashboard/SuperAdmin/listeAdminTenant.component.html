@@ -67,7 +67,7 @@
         <td>{{ admin.nom }}</td>
         <td>{{ admin.prenom }}</td>
         <td>{{ admin.username }}</td>
-        <td><span class="badge-tenant">{{ admin.nomEtablissement }}</span></td>
+        <td><span class="badge-tenant"style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ admin.nomTenant }}</span></td>
         <td>
             <span class="status-badge"
                   [class.active]="admin.statut && isTenantActive(admin)"

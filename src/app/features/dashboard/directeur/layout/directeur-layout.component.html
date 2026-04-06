@@ -8,7 +8,15 @@
 
     <!-- LOGO -->
     <div class="logo-section">
-      <img src="LOGO-2026_VF.png" alt="Smartfuture" class="main-logo">
+      <ng-container *ngIf="configService.config$ | async as config; else loader">
+        <img [src]="config.logoSociete || 'LOGO-2026_VF.png'"
+             alt="Smartfuture"
+             class="main-logo">
+      </ng-container>
+
+      <ng-template #loader>
+        <img src="LOGO-2026_VF.png" alt="Smartfuture" class="main-logo loading">
+      </ng-template>
     </div>
 
     <!-- MENU -->
@@ -73,9 +81,9 @@
         <span>Seuil score</span>
       </div>
 
-      <div class="nav-item">
-        <i class="fas fa-cog"></i>
-        <span>Paramètres</span>
+      <div class="nav-item" routerLink="/directeur/parametre" routerLinkActive="active">
+        <i class="fas fa-cog"></i> <span>Paramètres</span>
+        <i class="fas fa-chevron-down arrow"></i>
       </div>
 
     </nav>
@@ -91,17 +99,17 @@
   <!-- MAIN -->
   <div class="main-layout">
 
-    <!-- HEADER -->
-    <header class="notification-bar">
 
-      <!-- SEARCH -->
+    <<header class="notification-bar">
+
+
       <div class="search-container">
         <i class="fas fa-search"></i>
         <input type="text" placeholder="Recherche...">
       </div>
 
-      <!-- USER -->
-      <div class="user-actions">
+
+      <!--<div class="user-actions">
 
         <div class="notification-icon">
           <i class="fas fa-bell"></i>
@@ -121,7 +129,28 @@
         </div>
 
       </div>
+    -->
 
+
+    <div class="user-actions">
+      <div class="notification-icon">
+        <i class="fas fa-bell"></i>
+        <span class="dot-notification"></span>
+      </div>
+      <div class="profile">
+        <span class="user-role">{{ currentUser?.prenom }} {{ currentUser?.nom }}</span>
+
+        <div class="avatar-circle">
+          <img *ngIf="currentUser?.photo"
+               [src]="currentUser.photo"
+               alt="Profil"
+               class="profile-img">
+
+          <i *ngIf="!currentUser?.photo" class="fas fa-user"></i>
+        </div>
+        <i class="fas fa-chevron-down arrow-user"></i>
+      </div>
+    </div>
     </header>
 
     <!-- CONTENU DYNAMIQUE -->

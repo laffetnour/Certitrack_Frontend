@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AdminTenantService } from '../../../../core/services/AdminTenantService';
+import { ConfigService } from '../../../../core/services/config.service';
 
 
 interface DashboardStats {
@@ -26,7 +27,8 @@ export class DashboardTenantComponent implements OnInit {
 
   constructor(
       private service: AdminTenantService,
-      private cdr: ChangeDetectorRef
+      private cdr: ChangeDetectorRef,
+      public configService: ConfigService
     ) {}
 
   ngOnInit() {

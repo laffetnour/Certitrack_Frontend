@@ -15,7 +15,7 @@ export interface CategorieModule {
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './categorie-module.component.html',
-  styleUrls: ['.././superAdmin.component.css']
+  styleUrls: ['../Module/module.component.css']
 })
 
 export class CategorieModuleComponent implements OnInit {

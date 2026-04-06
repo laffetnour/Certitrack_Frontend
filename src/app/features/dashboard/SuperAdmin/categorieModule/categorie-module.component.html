@@ -60,7 +60,7 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>{{ isEditMode ? 'Modifier la Catégorie' : 'Nouvelle Catégorie' }}</h2>
-        <button class="close-btn" (click)="closeModal()">&times;</button>
+        <button type="button" class="btn-remove-item" (click)="closeModal()">&times;</button>
       </div>
 
       <form [formGroup]="categorieForm" (ngSubmit)="onSubmit()">

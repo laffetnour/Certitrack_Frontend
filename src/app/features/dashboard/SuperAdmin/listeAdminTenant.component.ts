@@ -236,7 +236,7 @@ export class ListeAdminsTenantComponent implements OnInit {
     });
   }
   isTenantActive(admin: any): boolean {
-    const tenant = this.tenants.find(t => t.nom === admin.nomEtablissement);
+    const tenant = this.tenants.find(t => t.nom === admin.nomTenant);
     return tenant ? tenant.statut : false;
   }
 

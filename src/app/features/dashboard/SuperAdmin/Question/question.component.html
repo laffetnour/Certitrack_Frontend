@@ -2,7 +2,7 @@
   <div class="admin-header">
     <h1>Banque de Questions</h1>
 
-    <div style="display:flex; gap:10px;">
+    <div style="display:flex; gap:10px; ">
       <select class="form-control filter-select" [(ngModel)]="selectedFilterCat" (change)="applyFilter()">
         <option value="">Toutes les catégories</option>
         <option *ngFor="let c of categories" [value]="c.id">{{ c.nom }}</option>
@@ -60,14 +60,14 @@
           {{ q.texte }}
         </td>
         <td>
-          <span class="badge" style="background: #eef2ff; color: #6366f1;">{{ q.categorieQuestion?.nom }}</span>
+          <span class="badge" style=" color: #6366f1;">{{ q.categorieQuestion?.nom }}</span>
         </td>
         <td>
           <span class="badge" [ngClass]="getDifficultyClass(q.difficultee)">{{ q.difficultee }}</span>
         </td>
         <td>{{ q.type === 'choixUnique' ? 'Unique' : 'Multiple' }}</td>
          <td>
-            <span class="badge" style="background:#fef3c7; color:#92400e;">
+            <span class="badge" style=" color:#92400e;">
               {{ q.nature === 'technique' ? 'Technique' : 'Comportementale' }}
             </span>
          </td>
@@ -124,7 +124,7 @@
 
     <div class="modal-header">
       <h2>{{ isEditMode ? 'Modifier la Question' : 'Nouvelle Question' }}</h2>
-      <button class="close-btn" (click)="closeModal()">&times;</button>
+      <button type="button" class="btn-remove-item" (click)="closeModal()">&times;</button>
     </div>
 
     <form (ngSubmit)="saveQuestion()">
@@ -159,14 +159,6 @@
         </select>
       </div>
 
-      <!-- TYPE -->
-      <!--<div class="form-group">
-        <label>Type</label>
-        <select [(ngModel)]="currentQuestion.type" name="type" class="form-control">
-          <option value="choixUnique">Choix Unique</option>
-          <option value="choixMultiple">Choix Multiple</option>
-        </select>
-      </div>-->
       <div class="form-group">
         <label>Type de question</label>
 
@@ -222,15 +214,16 @@
 
         <div *ngFor="let r of currentQuestion.reponses; let i = index" class="form-row"  style="display:flex; gap:10px; flex-wrap: wrap;">
 
+          <button type="button" class="btn-remove-item"  (click)="removeReponse(i)" style="margin-left: auto;" >
+            ✕
+          </button>
           <input [(ngModel)]="r.texte" name="rep{{i}}" placeholder="Réponse"
                  class="form-control" required>
 
           <input [(ngModel)]="r.score" name="score{{i}}" type="number"
                  placeholder="Score" class="form-control" required>
 
-          <button type="button" class="btn-delete" (click)="removeReponse(i)">
-            ✕
-          </button>
+
         </div>
 
         <button type="button" class="btn-add" (click)="addReponse()">

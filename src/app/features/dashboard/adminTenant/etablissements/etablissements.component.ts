@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AdminTenantService } from '../../../../core/services/AdminTenantService';
 import { ChangeDetectorRef } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ConfigService } from '../../../../core/services/config.service';
 
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 @Component({
@@ -32,7 +33,7 @@ export class EtablissementsComponent implements OnInit {
   statusFilter: string = "";
 
   constructor(private service: AdminTenantService,private cdr: ChangeDetectorRef,
-    private sanitizer: DomSanitizer) {}
+    private sanitizer: DomSanitizer,public configService: ConfigService) {}
 
   ngOnInit(): void {
     this.loadData();

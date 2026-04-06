@@ -127,31 +127,35 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2>{{ isEditMode ? 'Modifier' : 'Ajouter' }} Module</h2>
-        <button class="close-btn" (click)="showModal=false">✖</button>
+        <button type="button" class="btn-remove-item" (click)="showModal=false">✖</button>
       </div>
 
       <form [formGroup]="moduleForm" (ngSubmit)="onSubmit()">
         <label>Nom du module</label>
         <input type="text" formControlName="nom" class="form-control" placeholder="Ex: Java Avancé">
 
-        <label>Catégorie</label>
+        <div style ="margin-top: 15px;">
+        <label >Catégorie</label>
         <select formControlName="categorieModule" class="form-control">
           <option [ngValue]="null">Choisir une catégorie...</option>
           <option *ngFor="let c of categories" [ngValue]="c">{{ c.nom }}</option>
         </select>
 
+        </div>
         <div class="form-row" style="display: flex; gap: 15px; margin-top: 15px;">
           <div style="flex: 1;">
             <label>Seuil Score (%)</label>
             <input type="number" formControlName="seuilScore" class="form-control">
           </div>
+        </div>
+        <div class="form-row" style="display: flex; gap: 15px; margin-top: 15px;">
           <div style="flex: 1;">
             <label>Durée (min)</label>
             <input type="number" formControlName="dureeQCM" class="form-control">
           </div>
         </div>
 
-        <hr style="margin: 20px 0;">
+
 
         <div class="keyword-section">
           <label>Nombre de mots-clés souhaités</label>

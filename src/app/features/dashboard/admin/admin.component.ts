@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminService } from '../../../core/services/admin.service';
+import { ConfigService } from '../../../core/services/config.service';
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
@@ -28,7 +29,8 @@ export class AdminComponent implements OnInit {
   constructor(
     private adminService: AdminService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public configService: ConfigService
   ) {
     this.candidatForm = this.fb.group({
       nom: ['', Validators.required],

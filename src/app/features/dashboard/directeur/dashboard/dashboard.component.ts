@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DirecteurService } from '../../../../core/services/directeur.service';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
+import { ConfigService } from '../../../../core/services/config.service';
 import { filter } from 'rxjs/operators';
 
 
@@ -34,7 +35,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
        private service: DirecteurService,
-       private cdr: ChangeDetectorRef
+       private cdr: ChangeDetectorRef,
+       public configService: ConfigService
      ) {}
 
    ngOnInit() {

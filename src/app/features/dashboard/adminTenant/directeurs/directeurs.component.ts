@@ -3,6 +3,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminTenantService } from '../../../../core/services/AdminTenantService';
+import { ConfigService } from '../../../../core/services/config.service';
 
 @Component({
   selector: 'app-directeurs',
@@ -34,7 +35,8 @@ export class DirecteursComponent implements OnInit {
   constructor(
     private service: AdminTenantService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public configService: ConfigService
   ) {}
 
   ngOnInit(): void {

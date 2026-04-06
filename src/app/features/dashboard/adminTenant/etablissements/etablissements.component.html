@@ -11,11 +11,14 @@
     </div>
   </div>
 
-  <div *ngIf="selectedIds.size > 0" style="display:flex; gap:10px; align-items:center; background:#f0f0f0; padding:5px 15px; border-radius:8px;">
-    <span style="font-weight:bold; font-size: 14px;">{{ selectedIds.size }} sélectionné(s)</span>
 
-    <button class="btn-toggle" (click)="bulkToggle(true)" style="padding: 5px 10px; font-size: 12px;">Activer</button>
-    <button class="btn-toggle" (click)="bulkToggle(false)" style="padding: 5px 10px; font-size: 12px;">Désactiver</button>
+
+    <div class="table-container">
+      <div class="bulk-actions" *ngIf="selectedIds.size > 0">
+        <span>{{ selectedIds.size }} sélectionné(s)</span>
+
+    <button class="btn-activate" (click)="bulkToggle(true)" style="padding: 5px 10px; font-size: 12px;">Activer</button>
+    <button class="btn-deactivate" (click)="bulkToggle(false)" style="padding: 5px 10px; font-size: 12px;">Désactiver</button>
   </div>
 
   <div class="table-container">
@@ -117,7 +120,7 @@
       </tbody>
 
     </table>
-
+  </div>
   </div>
 
 
@@ -129,19 +132,19 @@
         <button (click)="closeModal()">✖</button>
       </div>
 
-      <div class="input-group-container">
+      <div class="form-group">
         <input [(ngModel)]="selectedNom"
                placeholder="Nom établissement"
                class="custom-input">
       </div>
 
-      <div class="input-group-container">
+      <div class="form-group">
         <input [(ngModel)]="selectedAdresse"
                placeholder="Adresse"
                class="custom-input">
       </div>
 
-      <div  class="input-group-container">
+      <div  class="form-group">
         <label style="display: block; margin-bottom: 5px; font-size: 12px; color: #666;">Logo Établissement</label>
         <input type="file" (change)="onFileSelected($event)" accept="image/*" class="custom-input">
 

@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true, // Vérifiez si cette ligne existe
   imports: [CommonModule, FormsModule], // Ajoutez les imports ici
   templateUrl: './question.component.html',
-  styleUrls: ['./question.component.css']
+  styleUrls: ['../Module/module.component.css']
 })
 
 

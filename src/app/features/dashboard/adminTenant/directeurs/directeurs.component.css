@@ -452,10 +452,17 @@ form {
   background: var(--bg-card);
   border-radius: 12px;
   padding: 20px;
+   width: max-content;      /* Force le conteneur à prendre la largeur de son contenu */
+      min-width: 100%;         /* Optionnel : garantit qu'il prend au moins toute la largeur dispo */
+      max-width: 100%;         /* Empêche de déborder de l'écran si le tableau est trop grand */
+
+overflow: auto;
+
 }
 
 .modern-table {
   width: 100%;
+   min-width: 100%;
   border-collapse: collapse;
 }
 
@@ -528,26 +535,7 @@ form {
   border-color: var(--border-color);
 }
 
-/* FORMULAIRE */
-/*.form-group label {
-  color: var(--text-label);
-}
 
-.form-control {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid var(--input-border);
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  background-color: var(--bg-card);
-  color: var(--text-main);
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: var(--smart-red);
-}*/
 
 form {
   padding: 20px 30px;
@@ -570,8 +558,9 @@ form {
 .form-group label {
   font-size: 14px;
   font-weight: 600;
-  color: #303D49;
+  /*color: #303D49;*/
   margin-bottom: 6px;
+  color: var(--text-label);
 }
 
 .form-control {
@@ -581,25 +570,49 @@ form {
   border-radius: 8px;
   font-size: 14px;
   transition: all 0.2s ease;
-  background-color: #ffffff;
+  background-color: var(--bg-card);
+  color: var(--text-main);
 }
 
 .form-control:focus {
   outline: none;
-  border-color: #ea5357;
+  border-color:var(--bg-card);
   box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.1);
 }
 
 .form-control.error {
   border-color: #ef4444;
-  background-color: #fef2f2;
+  background-color: var(--bg-card);
 }
 
 
 .btn-cancel {
-  background-color: var(--bg-admin);
-  color: var(--text-muted);
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
 }
+
+.btn-submit {
+  background-color: #ea5357;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: #d44347;
+}
+
+.btn-submit:disabled {
+  background-color: #fca5a5;
+  cursor: not-allowed;
+}
+
 
 /* FILTRE SELECT */
 .status-filter-select {
@@ -620,8 +633,178 @@ form {
 }
 
 /* PROFILE VIEW INFOS */
-.info-row {
+/*.info-row {
   border-bottom: 1px solid var(--border-color);
+}*/
+
+
+.profile-info {
+  padding: 20px 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: #ffffff;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  background-color: #fef2f2;
+  color: #ea5357;
+  border: 2px solid #fca5a5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 auto 20px auto;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.info-row:last-child {
+  border-bottom: none;
 }
 .label { color: var(--text-muted); }
 .value { color: var(--text-main); }
+
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(48, 61, 73, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+}
+
+
+.modal-content {
+  width: 600px;
+  max-width: 90%;
+  background-color: var(--bg-card);
+  border-radius: 16px;
+  overflow: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+
+.modal-header {
+  padding: 20px 25px;
+  /*border-bottom: 1px solid #eee;*/
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-footer {
+  padding: 20px 25px;
+  /*border-top: 1px solid #f1f5f9;*/
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* ==========================================================================
+   BARRE D'ACTIONS GROUPÉES (BULK ACTIONS)
+   ========================================================================== */
+
+.bulk-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 25px;
+  background-color: var(--white); /* Utilise ta variable Midnight/White */
+  border: 1px solid var(--smart-red); /* Bordure rouge pour montrer l'importance */
+  border-radius: var(--radius-lg);
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(234, 83, 87, 0.1); /* Lueur rouge subtile */
+  animation: slideDown 0.3s ease-out; /* Animation à l'apparition */
+}
+
+/* Texte "X sélectionné(s)" */
+.bulk-actions span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-right: 10px;
+  padding-right: 15px;
+  border-right: 2px solid var(--border-color);
+}
+
+/* Style commun des boutons de la barre bulk */
+.bulk-actions button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Bouton Activer (Vert) */
+.btn-activate {
+  background-color: rgba(49, 151, 149, 0.1);
+  color: #319795;
+}
+.btn-activate:hover {
+  background-color: #319795;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Bouton Désactiver (Orange/Gris) */
+.btn-deactivate {
+  background-color: rgba(217, 119, 6, 0.1);
+  color: #d97706;
+}
+.btn-deactivate:hover {
+  background-color: #d97706;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Bouton Supprimer (Rouge - déjà défini dans tes actions, on l'ajuste) */
+.bulk-actions .btn-delete {
+  background-color: rgba(224, 36, 36, 0.1);
+  color: #dc2626;
+}
+.bulk-actions .btn-delete:hover {
+  background-color: #dc2626;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+/* Animation d'entrée */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- AJUSTEMENT DARK MODE --- */
+.dark-mode .bulk-actions {
+  background-color: var(--white); /* Ton bleu nuit profond */
+  border-color: rgba(234, 83, 87, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}

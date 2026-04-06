@@ -213,7 +213,9 @@ export class TenantComponent implements OnInit {
     this.superAdminService.activateTenantsBulk(this.selectedTenants).subscribe({
       next: () => {
         this.handleSuccess('Tenants activés avec succès');
-        this.selectedTenants = [];
+        //this.selectedTenants = [];
+        this.selectedTenants = [...this.selectedTenants];
+        this.cdr.detectChanges();
       },
       error: () => this.errorMessage = 'Erreur lors de l\'activation'
     });
@@ -223,7 +225,9 @@ export class TenantComponent implements OnInit {
     this.superAdminService.deactivateTenantsBulk(this.selectedTenants).subscribe({
       next: () => {
         this.handleSuccess('Tenants désactivés avec succès');
-        this.selectedTenants = [];
+        //this.selectedTenants = [];
+        this.selectedTenants = [...this.selectedTenants];
+        this.cdr.detectChanges();
       },
       error: () => this.errorMessage = 'Erreur lors de la désactivation'
     });
@@ -234,7 +238,9 @@ export class TenantComponent implements OnInit {
       this.superAdminService.deleteTenantsBulk(this.selectedTenants).subscribe({
         next: () => {
           this.handleSuccess('Tenants supprimés avec succès');
-          this.selectedTenants = [];
+          //this.selectedTenants = [];
+          this.selectedTenants = [...this.selectedTenants];
+          this.cdr.detectChanges();
         },
         error: () => this.errorMessage = 'Erreur lors de la suppression'
       });

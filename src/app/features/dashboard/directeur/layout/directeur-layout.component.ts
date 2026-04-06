@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
+import { ConfigService } from '../../../../core/services/config.service';
 @Component({
   selector: 'app-directeur-layout',
   standalone: true,
@@ -14,7 +15,7 @@ export class DirecteurLayoutComponent {
   isParcoursOpen: boolean = false;
   currentUser: any = {};
 
-constructor(private router: Router) {}
+constructor(private router: Router,public configService: ConfigService) {}
   ngOnInit(): void {
     const user = localStorage.getItem('user');
 

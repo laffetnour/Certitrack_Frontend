@@ -4,7 +4,15 @@
   <aside class="sidebar">
 
     <div class="logo-section">
-      <img src="LOGO-2026_VF.png" class="main-logo">
+      <ng-container *ngIf="configService.config$ | async as config; else loader">
+        <img [src]="config.logoSociete || 'LOGO-2026_VF.png'"
+             alt="Smartfuture"
+             class="main-logo">
+      </ng-container>
+
+      <ng-template #loader>
+        <img src="LOGO-2026_VF.png" alt="Smartfuture" class="main-logo loading">
+      </ng-template>
     </div>
 
     <nav class="nav-menu">
@@ -41,10 +49,10 @@
         <i class="fas fa-calendar"></i> Sessions
       </div>
 
-      <div class="nav-item">
-        <i class="fas fa-cog"></i> Paramètres
+      <div class="nav-item" routerLink="/adminTenant/parametre" routerLinkActive="active">
+        <i class="fas fa-cog"></i> <span>Paramètres</span>
+        <i class="fas fa-chevron-down arrow"></i>
       </div>
-
     </nav>
 
     <div class="logout" (click)="onLogout()">
@@ -65,7 +73,7 @@
       </div>
 
       <!-- USER -->
-      <div class="user-actions">
+     <!-- <div class="user-actions">
 
         <div class="notification-icon">
           <i class="fas fa-bell"></i>
@@ -84,6 +92,26 @@
           <i class="fas fa-chevron-down arrow-user"></i>
         </div>
 
+      </div>-->
+
+      <div class="user-actions">
+        <div class="notification-icon">
+          <i class="fas fa-bell"></i>
+          <span class="dot-notification"></span>
+        </div>
+        <div class="profile">
+          <span class="user-role">{{ currentUser?.prenom }} {{ currentUser?.nom }}</span>
+
+          <div class="avatar-circle">
+            <img *ngIf="currentUser?.photo"
+                 [src]="currentUser.photo"
+                 alt="Profil"
+                 class="profile-img">
+
+            <i *ngIf="!currentUser?.photo" class="fas fa-user"></i>
+          </div>
+          <i class="fas fa-chevron-down arrow-user"></i>
+        </div>
       </div>
 
     </header>

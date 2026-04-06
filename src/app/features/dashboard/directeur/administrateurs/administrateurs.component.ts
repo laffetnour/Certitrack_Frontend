@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DirecteurService } from '../../../../core/services/directeur.service';
+import { ConfigService } from '../../../../core/services/config.service';
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
@@ -31,6 +32,7 @@ export class AdministrateursComponent implements OnInit {
   constructor(
     private directeurService: DirecteurService,
     private fb: FormBuilder,
+    public configService: ConfigService,
     private cdr: ChangeDetectorRef
   ) {
     this.adminForm = this.fb.group({

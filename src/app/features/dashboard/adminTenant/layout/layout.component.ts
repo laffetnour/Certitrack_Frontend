@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
+import { ConfigService } from '../../../../core/services/config.service';
 
 @Component({
   selector: 'app-admin-tenant-layout',
@@ -16,7 +17,8 @@ export class AdminTenantLayoutComponent {
   currentUser: any = {};
   constructor(
 
-      private authService: AuthService
+      private authService: AuthService,
+      public configService: ConfigService
     ) {}
 
   ngOnInit() {
