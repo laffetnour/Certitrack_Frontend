@@ -80,9 +80,15 @@
               class="form-control"
               [class.error]="categorieForm.get('nom')?.invalid && categorieForm.get('nom')?.touched"
             >
-            <div class="error-msg" *ngIf="categorieForm.get('nom')?.invalid && categorieForm.get('nom')?.touched">
-              Le nom est obligatoire.
+            <div class="error-msg" *ngIf="categorieForm.get('nom')?.touched">
+              <span *ngIf="categorieForm.get('nom')?.errors?.['required']">Le nom est obligatoire.</span>
+              <span *ngIf="categorieForm.get('nom')?.errors?.['alreadyExists']">
+                {{ categorieForm.get('nom')?.errors?.['alreadyExists'] }}
+              </span>
             </div>
+            <!--<div class="error-msg" *ngIf="categorieForm.get('nom')?.invalid && categorieForm.get('nom')?.touched">
+              Le nom est obligatoire.
+            </div>-->
           </div>
 
           <div class="form-group">

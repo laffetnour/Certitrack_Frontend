@@ -90,12 +90,18 @@ loadCategories(): void {
       if (this.isEditMode) {
         this.superAdminService.updateCategorie(this.selectedCategorie.id, formData).subscribe({
           next: () => this.handleSuccess('Catégorie modifiée avec succès'),
-          error: () => this.handleError('Erreur lors de la modification')
+          error: (err: any) => {
+            const serverMsg = err.error;  // <-- message renvoyé par Spring
+            this.handleError(serverMsg);
+          }
         });
       } else {
         this.superAdminService.addCategorie(formData).subscribe({
           next: () => this.handleSuccess('Catégorie ajoutée avec succès'),
-          error: () => this.handleError('Erreur lors de l\'ajout')
+          error: (err: any) => {
+            const serverMsg = err.error; // <-- récupère le message envoyé par Spring
+            this.handleError(serverMsg);
+          }
         });
       }
     }
@@ -136,10 +142,29 @@ deleteCategorie(cat: any) {
     }, 3000);
   }
 
-  private handleError(msg: string): void {
+  /*private handleError(msg: string): void {
     this.errorMessage = msg;
     this.loading = false;
     this.cdr.detectChanges();
     setTimeout(() => this.errorMessage = '', 3000);
+  }*/
+
+  private handleError(msg: string): void {
+    this.loading = false;
+
+    // Si le message contient "existe déjà", on l'associe au champ 'nom'
+    if (msg.includes("existe déjà")) {
+      this.categorieForm.get('nom')?.setErrors({ alreadyExists: msg });
+    } else {
+      this.errorMessage = msg;
+    }
+
+    this.cdr.detectChanges();
+
+    // Efface le message global après 3s
+    setTimeout(() => {
+      this.errorMessage = '';
+      this.cdr.detectChanges();
+    }, 3000);
   }
 }

@@ -128,9 +128,30 @@ deleteCategorie(cat: any) { // On passe l'objet entier au lieu de l'ID
     }, 3000);
   }
 
-  private handleError(err: any) {
+  /*private handleError(err: any) {
     this.loading = false;
     this.errorMessage = err.error || "Une erreur est survenue";
     this.cdr.detectChanges();
+  }*/
+  private handleError(err: any) {
+    this.loading = false;
+
+    const msg = err.error || "Une erreur est survenue";
+
+    if (msg.includes("existe déjà")) {
+      // Associe le message directement au champ 'nom'
+      this.categorieForm.get('nom')?.setErrors({ alreadyExists: msg });
+    } else {
+      // Sinon message global
+      this.errorMessage = msg;
+    }
+
+    this.cdr.detectChanges();
+
+    // Efface le message global après 3s
+    setTimeout(() => {
+      this.errorMessage = '';
+      this.cdr.detectChanges();
+    }, 3000);
   }
 }
