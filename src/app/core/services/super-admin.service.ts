@@ -195,6 +195,13 @@ importModuleCSV(file: File): Observable<any> {
   });
 }
 
+
+  // ✅ Ajouter cette méthode
+  getMotCles(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/modules/mot-cles`, this.getAuthHeaders());
+  }
+
+
 importQuestionsCSV(file: File): Observable<any> {
   const formData = new FormData();
   formData.append('file', file);

@@ -29,6 +29,17 @@ export class ModuleComponent implements OnInit {
   idToDelete: number | null = null;
   showViewModal = false;
   moduleToView: any = null;
+
+
+  allCatQuestions: any[] = [];
+  selectedCategories: any[] = [];
+  showCatModal = false;
+  searchCat: string = '';
+  tempSelectedCategories: any[] = [];
+  allMotCles: any[] = [];
+  //filteredMotCles: any[] = [];
+  filteredMotCles: any[][] = [];
+
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   constructor(private service: SuperAdminService,private fb: FormBuilder,private cdr: ChangeDetectorRef)
@@ -36,8 +47,6 @@ export class ModuleComponent implements OnInit {
 
     this.moduleForm = this.fb.group({
       nom: ['', Validators.required],
-      seuilScore: [null],
-      dureeQCM: [null],
       disponibilite: [true],
       categorieModule: [null, Validators.required],
       nombreMotCle: [0],
@@ -53,16 +62,17 @@ export class ModuleComponent implements OnInit {
     return this.moduleForm.get('motCles') as FormArray;
   }
 
-  addMotCleField(id: number | null = null, desc: string = '') {
+  /*addMotCleField(id: number | null = null, desc: string = '') {
     this.motCles.push(this.fb.group({
       idMotcle: [id],
-      description: [desc, Validators.required]
+      //description: [desc, Validators.required]
+      description: [desc]//666666666666666666666666666666666666666666666666666666666666666666666666
     }));
-  }
+  }*/
 
-  removeMotCle(index: number) {
+  /*removeMotCle(index: number) {
     this.motCles.removeAt(index);
-  }
+  }*/
 
   onNombreChange() {
     const n = this.moduleForm.value.nombreMotCle;
@@ -84,7 +94,9 @@ export class ModuleComponent implements OnInit {
 
     forkJoin({
       cats: this.service.getCategories(),
-      mods: this.service.getModules()
+      mods: this.service.getModules(),
+      catQ: this.service.getCatQuestions(), // 🔥 ajouter 666666666666666666666666666666666666666666666666666666666666666666666666
+      motCles: this.service.getMotCles()//6666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
     }).subscribe({
       next: (result) => {
         this.categories = result.cats;
@@ -92,6 +104,8 @@ export class ModuleComponent implements OnInit {
         this.applyFilter();
         this.loading = false;
         this.cdr.detectChanges();
+        this.allCatQuestions = result.catQ; // 🔥ajouter 6666666666666666666666666666666666666666666666666666666666666666666666666
+        this.allMotCles = result.motCles;//666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
       },
       error: (err) => {
         console.error("Erreur chargement :", err);
@@ -117,12 +131,12 @@ export class ModuleComponent implements OnInit {
       nom: '',
       disponibilite: true,
       categorieModule: null,
-      seuilScore: null,
-      dureeQCM: null,
       nombreMotCle: 0
     });
 
     this.motCles.clear();
+    this.selectedCategories = []; // 🔥 IMPORTANT66666666666666666666666666666666666666666666666666666666666666666666666666666666
+
 
     this.showModal = true;
   }
@@ -133,8 +147,6 @@ export class ModuleComponent implements OnInit {
     this.moduleForm.patchValue({
       nom: m.nom,
       disponibilite: m.disponibilite,
-      seuilScore: m.seuilScore,
-      dureeQCM: m.dureeQCM,
       categorieModule: this.categories.find(c => c.id == m.idCategorie),
       nombreMotCle: m.motCles ? m.motCles.length : 0
     });
@@ -145,10 +157,13 @@ export class ModuleComponent implements OnInit {
         this.addMotCleField(mc.idMotcle, mc.description);
       });
     }
+
+    this.selectedCategories = m.categories ? [...m.categories] : [];//666666666666666666666666666666666666666666666666666666666666666666666
+
     this.showModal = true;
   }
 
-  onSubmit() {
+ /* onSubmit() {
     if (this.moduleForm.valid) {
 
       const formVal = this.moduleForm.value;
@@ -156,13 +171,13 @@ export class ModuleComponent implements OnInit {
       const dataToSend: any = {
         nom: formVal.nom,
         disponibilite: formVal.disponibilite,
-        seuilScore: formVal.seuilScore,
-        dureeQCM: formVal.dureeQCM,
         categorieModule: formVal.categorieModule,
         motCles: formVal.motCles.map((mc: any) => ({
           idMotcle: mc.idMotcle,
           description: mc.description
-        }))
+        })),
+        //categories: this.selectedCategories // 🔥 AJOUT ICI6666666666666666666666666666666666666666666666666666666666666666666666666666666
+        categories: [...this.selectedCategories]
       };
 
       if (this.isEditMode && this.selectedModule) {
@@ -183,7 +198,58 @@ export class ModuleComponent implements OnInit {
         }
       });
     }
+  }*/
+
+  //6666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
+  onSubmit() {
+    if (this.moduleForm.valid) {
+      const formVal = this.moduleForm.value;
+
+      const dataToSend = {
+        nom: formVal.nom,
+        disponibilite: formVal.disponibilite ?? true,
+        // Correction ici : le champ dans categorieModule est 'id'
+        categorieModule: {
+          id: formVal.categorieModule.id
+        },
+        // On envoie les mots-clés avec idMotcle s'ils existent
+        motCles: formVal.motCles.map((mc: any) => ({
+          idMotcle: mc.idMotcle || null,
+          description: mc.description
+        })),
+        categories: this.selectedCategories.map(cat => ({ id: cat.id }))
+      };
+
+      console.log("Payload final :", dataToSend);
+
+      const request = this.isEditMode
+        ? this.service.updateModule(this.selectedModule.idModule, dataToSend)
+        : this.service.addModule(dataToSend);
+
+      request.subscribe({
+        next: (res) => {
+          this.showModal = false;
+          this.loadData();
+        },
+        error: (err) => {
+          console.error("Erreur API complète :", err);
+          // Si erreur 400, vérifiez l'onglet Network > Response pour le détail
+        }
+      });
+    }
   }
+//66666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
+// Méthode utilitaire pour afficher les erreurs visuellement
+  private markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+      if ((control as any).controls) {
+        this.markFormGroupTouched(control as FormGroup);
+      }
+    });
+  }
+
+
 
   deleteModule(id: number) {
     if (id && confirm("Êtes-vous sûr ?")) {
@@ -322,4 +388,91 @@ export class ModuleComponent implements OnInit {
     }
   }
 
+  //6666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
+  /*toggleCategory(cat: any) {
+    const index = this.selectedCategories.findIndex(c => c.id === cat.id);
+
+    if (index > -1) {
+      this.selectedCategories.splice(index, 1);
+    } else {
+      this.selectedCategories.push(cat);
+    }
+  }*/
+
+  /*isSelectedCategory(cat: any): boolean {
+    return this.selectedCategories.some(c => c.id === cat.id);
+  }*/
+
+  openCatModal() {
+    this.tempSelectedCategories = [...this.selectedCategories];
+    this.showCatModal = true;
+  }
+  toggleCategory(cat: any) {
+    const index = this.tempSelectedCategories.findIndex(c => c.id === cat.id);
+
+    if (index > -1) {
+      this.tempSelectedCategories.splice(index, 1);
+    } else {
+      this.tempSelectedCategories.push(cat);
+    }
+  }
+
+  isSelectedCategory(cat: any): boolean {
+    return this.tempSelectedCategories.some(c => c.id === cat.id);
+  }
+
+  confirmCategories() {
+    this.selectedCategories = [...this.tempSelectedCategories];
+    this.showCatModal = false;
+    this.cdr.detectChanges(); // 🔥 IMPORTANT
+  }
+  cancelCategories() {
+    this.showCatModal = false;
+  }
+
+  get filteredCatQuestions() {
+    if (!this.searchCat) return this.allCatQuestions;
+
+    return this.allCatQuestions.filter(c =>
+      c.nom.toLowerCase().includes(this.searchCat.toLowerCase())
+    );
+  }
+
+  // 1. Ajoutez les méthodes de gestion des champs de mots-clés
+  addMotCleField(id: number | null = null, desc: string = '') {
+    this.motCles.push(this.fb.group({
+      idMotcle: [id],
+      description: [desc, Validators.required] // Le validateur ici bloque le bouton si vide
+    }));
+  }
+
+  removeMotCle(index: number) {
+    this.motCles.removeAt(index);
+    // On met à jour manuellement le compteur pour rester cohérent avec l'UI
+    this.moduleForm.patchValue({
+      nombreMotCle: this.motCles.length
+    }, { emitEvent: false });
+  }
+
+// 2. Ajoutez les méthodes de suggestion (utilisées dans votre HTML)
+  suggestMotCles(query: string, index: number) {
+    if (!query || query.trim() === '') {
+      this.filteredMotCles[index] = [];
+      return;
+    }
+    this.filteredMotCles[index] = this.allMotCles.filter(mc =>
+      mc.description.toLowerCase().includes(query.toLowerCase())
+    );
+  }
+
+  selectMotCle(mc: any, index: number) {
+    const control = this.motCles.at(index);
+    control.patchValue({
+      idMotcle: mc.idMotcle,
+      description: mc.description
+    });
+    this.filteredMotCles[index] = []; // On vide la liste après sélection
+  }
+
+  protected readonly HTMLInputElement = HTMLInputElement;
 }

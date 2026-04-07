@@ -47,8 +47,6 @@
         </th>
         <th>Nom</th>
         <th>Catégorie</th>
-        <th>Score Seuil</th>
-        <th>Durée</th>
         <th>Statut</th>
         <th>Actions</th>
       </tr>
@@ -66,8 +64,6 @@
           <span class="badge" *ngIf="m.nomCategorie">{{ m.nomCategorie }}</span>
           <span *ngIf="!m.nomCategorie" style="color: #ccc;">Non classé</span>
         </td>
-        <td>{{ m.seuilScore }}%</td>
-        <td>{{ m.dureeQCM }} min</td>
         <td>
           <span class="status-badge"
                 [class.active]="m.disponibilite"
@@ -142,19 +138,6 @@
         </select>
 
         </div>
-        <div class="form-row" style="display: flex; gap: 15px; margin-top: 15px;">
-          <div style="flex: 1;">
-            <label>Seuil Score (%)</label>
-            <input type="number" formControlName="seuilScore" class="form-control">
-          </div>
-        </div>
-        <div class="form-row" style="display: flex; gap: 15px; margin-top: 15px;">
-          <div style="flex: 1;">
-            <label>Durée (min)</label>
-            <input type="number" formControlName="dureeQCM" class="form-control">
-          </div>
-        </div>
-
 
 
         <div class="keyword-section">
@@ -162,12 +145,40 @@
           <input type="number" formControlName="nombreMotCle" (change)="onNombreChange()" class="form-control" min="0">
 
           <div formArrayName="motCles" class="motcle-list">
-            <div *ngFor="let mcGroup of motCles.controls; let i = index" [formGroupName]="i" class="motcle-item">
+            <!--<div *ngFor="let mcGroup of motCles.controls; let i = index" [formGroupName]="i" class="motcle-item">
               <input formControlName="description" placeholder="Mot-clé #{{i+1}}" class="form-control">
               <button type="button" class="btn-remove-item" (click)="removeMotCle(i)">✖</button>
+            </div>-->
+            <!--666666666666666666666666666666666666666666666666666666-->
+            <div *ngFor="let mcGroup of motCles.controls; let i = index" [formGroupName]="i" class="motcle-item">
+
+              <input formControlName="description"
+                     (input)="suggestMotCles(mcGroup.value.description, i)"
+                     placeholder="Mot-clé #{{i+1}}"
+                     class="form-control">
+
+              <!-- suggestions -->
+              <div *ngIf="filteredMotCles[i] && filteredMotCles[i].length > 0" class="dropdown">
+                <div *ngFor="let mc of filteredMotCles[i]"
+                     (click)="selectMotCle(mc, i)"
+                     class="dropdown-item">
+                  {{ mc.description }}
+                </div>
+              </div>
+
+              <button type="button" class="btn-remove-item" (click)="removeMotCle(i)">✖</button>
+
             </div>
           </div>
         </div>
+
+        <!--666666666666666666666666666666666666666666666666666666666666666666666-->
+
+
+            <button type="button" (click)="openCatModal()">
+              Choisir catégories questions
+            </button>
+
 
         <div class="modal-footer">
           <button type="submit" class="btn-submit" [disabled]="moduleForm.invalid">
@@ -201,10 +212,6 @@
           <span class="value">{{ moduleToView.nomCategorie }}</span>
         </div>
 
-        <div class="info-row">
-          <span class="label">Score Seuil</span>
-          <span class="value">{{ moduleToView.seuilScore }}%</span>
-        </div>
 
         <div class="info-row">
           <span class="label">Statut</span>
@@ -223,6 +230,19 @@
             </span>
           </div>
         </div>
+        <!--666666666666666666666666666666666666666666666666666666666666-->
+        <div class="info-row" style="flex-direction: column; align-items: flex-start; margin-top: 15px;">
+          <span class="label">Catégories de Questions</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;" *ngIf="moduleToView.categories && moduleToView.categories.length > 0">
+                <span class="badge" *ngFor="let catQ of moduleToView.categories" style="background:#e0f2fe; color:#0369a1; border: 1px solid #bae6fd;">
+                  {{ catQ.nom }}
+                </span>
+            </div>
+          <span class="value" *ngIf="!moduleToView.categories || moduleToView.categories.length === 0" style="color: #94a3b8; font-style: italic;">
+            Aucune catégorie sélectionnée
+          </span>
+        </div>
+
       </div>
     </div>
   </div>
@@ -239,6 +259,56 @@
         <button class="btn-cancel" (click)="showDeleteModal=false">Annuler</button>
         <button class="btn-delete" (click)="confirmDelete()">Supprimer</button>
       </div>
+    </div>
+  </div>
+
+  <!--666666666666666666666666666666666666666666666666666666666666666666666666666-->
+  <div class="modal" *ngIf="showCatModal">
+    <div class="modal-content">
+
+      <h3>Choisir catégories questions</h3>
+
+      <!-- 🔍 Recherche -->
+      <input type="text"
+             [(ngModel)]="searchCat"
+             placeholder="Rechercher catégorie..."
+             class="form-control"
+             style="margin-bottom:10px;">
+
+      <!-- ✅ Sélection en temps réel -->
+      <div style="margin-bottom:10px;">
+        <strong>Catégories sélectionnées :</strong>
+
+        <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;">
+        <span *ngFor="let cat of tempSelectedCategories"
+              style="background:#e0f2fe; padding:5px 10px; border-radius:15px;">
+
+          {{ cat.nom }}
+
+          <button type="button"
+                  (click)="toggleCategory(cat)"
+                  style="margin-left:5px; border:none; background:none; cursor:pointer;">
+            ✖
+          </button>
+
+        </span>
+        </div>
+      </div>
+
+      <!-- 📋 Liste -->
+      <div *ngFor="let cat of filteredCatQuestions">
+        <input type="checkbox"
+               [checked]="isSelectedCategory(cat)"
+               (change)="toggleCategory(cat)">
+        {{ cat.nom }}
+      </div>
+
+      <!-- 🎯 Actions -->
+      <div style="margin-top:10px;">
+        <button (click)="confirmCategories()">Confirmer</button>
+        <button (click)="cancelCategories()">Annuler</button>
+      </div>
+
     </div>
   </div>
 
