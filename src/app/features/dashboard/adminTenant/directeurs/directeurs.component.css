@@ -808,3 +808,24 @@ form {
   border-color: rgba(234, 83, 87, 0.4);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
+.btn-remove-item {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(224, 36, 36, 0.1);
+  color: #dc2626;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 12px;
+}
+
+.btn-remove-item:hover {
+  background: #dc2626;
+  color: white;
+  transform: scale(1.1);
+}

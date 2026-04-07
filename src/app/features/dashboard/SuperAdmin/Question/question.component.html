@@ -247,23 +247,26 @@
   <div class="modal-content" (click)="$event.stopPropagation()" style="max-width: 600px;">
     <div class="modal-header">
       <h2>Détails de la Question</h2>
-      <button class="close-btn" (click)="showViewModal=false">&times;</button>
+      <button type="button" class="btn-remove-item"  (click)="showViewModal=false">&times;</button>
     </div>
     <div class="profile-info" *ngIf="questionToView">
-      <p><strong>Texte:</strong> {{ questionToView.texte }}</p>
-
-      <p><strong>Nature:</strong> {{ questionToView.nature }}</p>
-      <p><strong>Type:</strong> {{ questionToView.type }}</p>
-
       <!--Image-->
-      <div *ngIf="questionToView.image" style="margin-top: 10px;">
-        <strong>Image :</strong><br>
-        <img [src]="'assets/images/questions/' + questionToView.image"
-             alt="Question Image"
-             style="max-width: 200px; border-radius: 8px;">
+      <div *ngIf="questionToView.image" class="image-preview-container">
+        <span class="image-label"><i class="fas fa-image"></i> Illustration :</span>
+        <div class="image-wrapper">
+          <img [src]="questionToView.image"
+               alt="Question Image"
+               class="question-img">
+        </div>
       </div>
+      <div class="info-row"><strong>Texte:</strong> {{ questionToView.texte }}</div>
+
+      <div class="info-row"><strong>Nature:</strong> {{ questionToView.nature }}</div>
+      <div class="info-row"><strong>Type:</strong> {{ questionToView.type }}</div>
+
+
       <hr>
-      <h6>Réponses :</h6>
+      <span>Réponses :</span>
       <div *ngFor="let r of questionToView.reponses" class="info-row" style="border-bottom: 1px solid #eee; padding: 10px 0;">
         <span class="value">{{ r.texte }}</span>
         <span class="badge" [style.background]="r.score > 0 ? '#dcfce7' : '#f1f5f9'" [style.color]="r.score > 0 ? '#166534' : '#475569'">

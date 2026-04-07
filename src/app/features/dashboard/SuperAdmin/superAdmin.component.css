@@ -567,3 +567,43 @@
   transform: translateY(2px);
   color: #333;
 }
+
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Espace entre les éléments */
+}
+
+.theme-toggle {
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  background: rgba(0, 0, 0, 0.05);
+  color: #555;
+}
+
+.theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
+}
+
+.theme-toggle i {
+  font-size: 1.1rem;
+}
+
+/* Couleurs spécifiques quand le thème change */
+.theme-toggle i.fa-sun {
+  color: #f1c40f; /* Jaune pour le soleil */
+}
+
+/* Adaptation Dark Mode */
+:host-context(.dark-mode) .theme-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ecf0f1;
+}

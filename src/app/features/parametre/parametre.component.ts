@@ -32,6 +32,8 @@ export class ParametreComponent implements OnInit {
     // 1. Récupérer l'utilisateur connecté
     const user = this.authService.getUser();
     this.currentUser = JSON.parse(JSON.stringify(user));
+    const savedTheme = localStorage.getItem('app-theme') || this.currentUser?.theme || 'light';
+    this.applyTheme(savedTheme);
     if (!this.currentUser.contacts || this.currentUser.contacts.length === 0) {
       this.currentUser.contacts = [{
         type: {
@@ -40,6 +42,8 @@ export class ParametreComponent implements OnInit {
         }
       }];
     }
+
+
     // 2. Charger la configuration liée à cet utilisateur (pour le thème)
     this.loadUserConfiguration();
   }
@@ -150,9 +154,12 @@ changePersonalTheme(theme: string): void {
 
   // 1. On met à jour l'objet local immédiatement
   this.globalConfig.theme = theme;
+  this.currentUser.theme = theme;
 
   // 2. On applique visuellement (CSS)
   this.applyTheme(theme);
+  localStorage.setItem('app-theme', theme);
+    this.authService.saveUser(this.currentUser);
   this.cdr.detectChanges();
 
 

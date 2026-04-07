@@ -12,7 +12,7 @@
              accept=".csv"
              style="display: none;">
 
-      <button class="btn-view" (click)="onImportClick()" [disabled]="loading"
+      <button class="btn-view" (click)="onImportClick()" [disabled]="loading" *ngIf="isSuperAdmin"
               style="background-color: #6366f1; color: white; display: flex; align-items: center; gap: 5px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -22,7 +22,7 @@
         Importer CSV
       </button>
 
-      <button class="btn-add" (click)="openAddModal()">
+      <button class="btn-add" (click)="openAddModal()"*ngIf="isSuperAdmin">
         + Nouveau Module
       </button>
     </div>
@@ -30,12 +30,34 @@
 
   <div class="table-container">
 
+    <div *ngIf="isSuperAdmin">
     <div class="bulk-actions" *ngIf="selectedModules.length > 0">
       <span>{{ selectedModules.length }} sélectionné(s)</span>
 
       <button class="btn-activate" (click)="activateSelected()">Activer</button>
       <button class="btn-deactivate" (click)="deactivateSelected()">Désactiver</button>
       <button class="btn-delete" (click)="deleteSelected()">Supprimer</button>
+    </div>
+    </div>
+
+    <!--<div *ngIf="!isAdmin">
+      <div class="bulk-actions" *ngIf="selectedModules.length > 0">
+        <span>{{ selectedModules.length }} sélectionné(s)</span>
+        <button class="btn-add-tenant" (click)="addToModuleTenant()">ajouter</button>
+      </div>
+    </div>-->
+
+    <div *ngIf="isAdminTenant">
+      <div class="bulk-actions" *ngIf="selectedModules.length > 0">
+        <span>{{ selectedModules.length }} module(s) sélectionné(s)</span>
+
+        <button class="btn-add-tenant"
+                (click)="addToModuleTenant()"
+                [disabled]="loading">
+          <span *ngIf="!loading">Ajouter à mon catalogue</span>
+          <span *ngIf="loading">Chargement en cours...</span>
+        </button>
+      </div>
     </div>
     <table class="modern-table">
       <thead>
@@ -48,7 +70,7 @@
         <th>Nom</th>
         <th>Catégorie</th>
         <th>Statut</th>
-        <th>Actions</th>
+        <th *ngIf="isSuperAdmin" >Actions</th>
       </tr>
       </thead>
 
@@ -72,7 +94,7 @@
           </span>
         </td>
 
-        <td class="actions">
+        <td class="actions" *ngIf="isSuperAdmin">
 
           <button class="btn-view" (click)="viewModule(m)" title="Voir">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -118,8 +140,9 @@
       </tbody>
     </table>
   </div>
+  <div *ngIf="isSuperAdmin" >
 
-  <div class="modal" *ngIf="showModal">
+  <div class="modal" *ngIf="showModal" >
     <div class="modal-content">
       <div class="modal-header">
         <h2>{{ isEditMode ? 'Modifier' : 'Ajouter' }} Module</h2>
@@ -194,14 +217,10 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>Profil du Module</h2>
-        <button class="close-btn" (click)="showViewModal=false">&times;</button>
+        <button type="button" class="btn-remove-item"  (click)="showViewModal=false">&times;</button>
       </div>
 
       <div class="profile-info" *ngIf="moduleToView">
-        <div class="profile-avatar">
-          {{ moduleToView.nom?.charAt(0) }}
-        </div>
-
         <div class="info-row">
           <span class="label">Nom du module</span>
           <span class="value">{{ moduleToView.nom }}</span>
@@ -312,4 +331,5 @@
     </div>
   </div>
 
+</div>
 </div>

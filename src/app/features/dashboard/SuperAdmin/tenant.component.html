@@ -96,7 +96,7 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>{{ isEditMode ? 'Modifier le Tenant' : 'Nouveau Tenant' }}</h2>
-        <button class="close-btn" (click)="closeModal()">&times;</button>
+        <button type="button" class="btn-remove-item" (click)="closeModal()">&times;</button>
       </div>
 
       <form [formGroup]="tenantForm" (ngSubmit)="onSubmit()">

@@ -123,7 +123,7 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>{{ isEditMode ? 'Modifier l\'Admin' : 'Nouvel Admin Tenant' }}</h2>
-        <button class="close-btn" (click)="closeModal()">&times;</button>
+        <button  type="button" class="btn-remove-item" (click)="closeModal()">&times;</button>
       </div>
 
       <form [formGroup]="adminForm" (ngSubmit)="onSubmit()">
@@ -180,13 +180,13 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>Profil de l'Administrateur</h2>
-        <button class="close-btn" (click)="closeModal()">&times;</button>
+        <button type="button" class="btn-remove-item" (click)="closeModal()">&times;</button>
       </div>
       <div class="profile-info" *ngIf="selectedAdmin">
         <div class="profile-avatar">{{ selectedAdmin.nom?.charAt(0) }}{{ selectedAdmin.prenom?.charAt(0) }}</div>
         <div class="info-row"><strong>Nom :</strong> {{ selectedAdmin.nom }} {{ selectedAdmin.prenom }}</div>
         <div class="info-row"><strong>Email :</strong> {{ selectedAdmin.username }}</div>
-        <div class="info-row"><strong>Organisation :</strong> {{ selectedAdmin.nomEtablissement || 'N/A' }}</div>
+        <div class="info-row"><strong>Organisation :</strong> {{ selectedAdmin.nomTenant || 'N/A' }}</div>
         <div class="info-row">
           <strong>Statut :</strong>
           <span class="status-badge" [class.active]="selectedAdmin.statut" [class.inactive]="!selectedAdmin.statut">

@@ -93,14 +93,14 @@ export class ListeAdminsTenantComponent implements OnInit {
       this.filteredAdmins = [...this.admins];
     } else {
 
-      this.filteredAdmins = this.admins.filter(a => a.nomEtablissement === selectedNom);
+      this.filteredAdmins = this.admins.filter(a => a.nomTenant === selectedNom);
     }
     this.cdr.detectChanges();
   }
   openEditModal(admin: any): void {
     this.isEditMode = true;
     this.selectedAdmin = admin;
-    const tenantTrouve = this.tenants.find(t => t.nom === admin.nomEtablissement);
+    const tenantTrouve = this.tenants.find(t => t.nom === admin.nomTenant);
     const idToPatch = tenantTrouve ? tenantTrouve.idTenant : '';
 
 

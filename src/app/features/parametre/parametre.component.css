@@ -254,6 +254,7 @@
 /* --- Animations --- */
 .fade-in {
   animation: fadeIn 0.4s ease-in;
+
 }
 
 @keyframes fadeIn {
@@ -298,7 +299,7 @@
 :host-context(.dark-mode) {
   --bg-page: #121212;      /* Fond de page noir */
   --bg-card: #1e1e1e;      /* Cartes gris foncé */
-  --bg-aside: #181818;     /* Barre latérale légèrement différente */
+  --bg-aside: #1e293b;     /* Barre latérale légèrement différente */
   --text-main: #f5f6fa;    /* Texte presque blanc */
   --text-muted: #a4b0be;   /* Texte gris clair */
   --border-color: #333333; /* Bordures discrètes */
@@ -310,7 +311,7 @@
 .settings-layout {
   display: flex;
   min-height: 100vh;
-  background-color: var(--bg-page);
+  background-color: var(--bg-aside);
   color: var(--text-main);
   transition: all 0.3s ease;
 }

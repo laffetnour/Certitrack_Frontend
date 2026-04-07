@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true, // Vérifiez si cette ligne existe
   imports: [CommonModule, FormsModule], // Ajoutez les imports ici
   templateUrl: './question.component.html',
-  styleUrls: ['../Module/module.component.css']
+  styleUrls: ['./question.component.css']
 })
 
 
@@ -200,7 +200,8 @@ saveQuestion() {
     texte: this.currentQuestion.texte,
     difficultee: this.currentQuestion.difficultee, // "facile", "moyenne", etc.
     type: this.currentQuestion.type,               // "choixUnique", etc.
-    nature: this.currentQuestion.nature, // ✅ AJOUT
+    nature: this.currentQuestion.nature,
+    image: this.currentQuestion.image,
     desactivee: false,                             // Valeur par défaut
     categorieQuestion: {
       id: Number(this.currentQuestion.categorieQuestion.id) // Conversion forcée en nombre

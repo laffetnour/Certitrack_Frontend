@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import {FormsModule,ReactiveFormsModule,FormBuilder,FormGroup,Validators,FormArray} from '@angular/forms';
 import { ElementRef, ViewChild } from '@angular/core';
 import { SuperAdminService } from '../../../../core/services/super-admin.service';
+import {AuthService} from '../../../../core/services/auth.service';
+import { ModuleTenantService } from '../../../../core/services/ModuleTenant.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -29,6 +31,8 @@ export class ModuleComponent implements OnInit {
   idToDelete: number | null = null;
   showViewModal = false;
   moduleToView: any = null;
+  isSuperAdmin: boolean = false;
+  isAdminTenant: boolean = false;
 
 
   allCatQuestions: any[] = [];
@@ -39,10 +43,14 @@ export class ModuleComponent implements OnInit {
   allMotCles: any[] = [];
   //filteredMotCles: any[] = [];
   filteredMotCles: any[][] = [];
+  currentUser: any;
 
   @ViewChild('fileInput') fileInput!: ElementRef;
 
-  constructor(private service: SuperAdminService,private fb: FormBuilder,private cdr: ChangeDetectorRef)
+  constructor(private service: SuperAdminService,private fb: FormBuilder,
+    private authService: AuthService,
+    private moduleTenantService: ModuleTenantService,
+    private cdr: ChangeDetectorRef)
   {
 
     this.moduleForm = this.fb.group({
@@ -55,7 +63,11 @@ export class ModuleComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.currentUser = this.authService.getUser();
+    this.isSuperAdmin = this.currentUser?.role === 'superAdmin';
+    this.isAdminTenant =this.currentUser?.role === 'adminTenant';
     this.loadData();
+
   }
 
   get motCles(): FormArray {
@@ -475,4 +487,59 @@ export class ModuleComponent implements OnInit {
   }
 
   protected readonly HTMLInputElement = HTMLInputElement;
+
+
+
+  // module.component.ts
+
+  // Méthode pour vérifier le rôle dans le template
+
+
+  addToModuleTenant(): void {
+    // 1. Récupération de l'utilisateur depuis ton AuthService
+    const user = this.authService.getUser();
+    const userId = user?.idUtilisateur;
+
+    // 2. Vérifications de sécurité avant l'envoi
+    if (!userId) {
+      alert("Erreur : Impossible de récupérer votre ID utilisateur. Veuillez vous reconnecter.");
+      return;
+    }
+
+    if (this.selectedModules.length === 0) {
+      alert("Veuillez sélectionner au moins un module.");
+      return;
+    }
+
+    this.loading = true; // Active l'état de chargement (pour le bouton)
+
+    // 3. Création de la liste des appels API (un pour chaque module sélectionné)
+    const requests = this.selectedModules.map(moduleId =>
+      this.moduleTenantService.addModuleToTenant(userId, moduleId)
+    );
+
+    // 4. Exécution de toutes les requêtes en parallèle avec forkJoin
+    import('rxjs').then(({ forkJoin }) => {
+      forkJoin(requests).subscribe({
+        next: (responses) => {
+          console.log(`${responses.length} modules ajoutés avec succès.`);
+          alert("✅ Les modules ont été ajoutés à votre catalogue avec succès !");
+
+          // 5. Nettoyage après succès
+          this.selectedModules = []; // Vide la sélection
+          this.loading = false;
+
+          this.cdr.detectChanges();
+          // Optionnel : rafraîchir une liste locale si nécessaire
+          // this.loadMyModules();
+        },
+        error: (err) => {
+          console.error("Erreur lors de l'ajout des modules :", err);
+          this.loading = false;
+          this.cdr.detectChanges();
+          alert("❌ Une erreur est survenue. Vérifiez que vous êtes bien lié à un établissement.");
+        }
+      });
+    });
+  }
 }
