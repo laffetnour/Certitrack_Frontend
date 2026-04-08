@@ -76,4 +76,29 @@ export class ModuleTenantService {
   // Cette URL doit pointer vers ton controller de modules globaux
   return this.http.get<any[]>('http://localhost:8080/api/modules', { headers });
 }*/
+
+
+
+
+  toggleModule(id: number) {
+    const token = JSON.parse(localStorage.getItem('user') || '{}').token || '';
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put(`${this.apiUrl}/${id}/toggle`, {}, { headers });
+  }
+
+  configTest(id: number, avecTest: boolean, seuilScore: number | null, dureeQCM: number | null) {
+    const token = JSON.parse(localStorage.getItem('user') || '{}').token || '';
+    let params = new HttpParams().set('avecTest', avecTest.toString());
+    if (seuilScore !== null) params = params.set('seuilScore', seuilScore.toString());
+    if (dureeQCM !== null) params = params.set('dureeQCM', dureeQCM.toString());
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put(`${this.apiUrl}/${id}/config-test`, null, { params, headers });
+  }
+
+  bulkUpdateStatus(ids: number[], active: boolean): Observable<any> {
+    const token = JSON.parse(localStorage.getItem('user') || '{}').token || '';
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const params = new HttpParams().set('active', active.toString());
+    return this.http.put(`${this.apiUrl}/bulk-status`, ids, { params, headers });
+  }
 }
