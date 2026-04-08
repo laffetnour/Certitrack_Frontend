@@ -36,6 +36,14 @@ export class ListeModuleTenantComponent implements OnInit {
   };
 
 
+  // Liste pour l'affichage filtré
+  filteredMyModules: any[] = [];
+
+// Variables pour les modèles de filtres
+  searchTerm: string = '';
+  testFilter: string = '';   // Valeurs : '', 'with', 'without'
+  statusFilter: string = ''; // Valeurs : '', 'active', 'inactive'
+
   constructor(
     private moduleTenantService: ModuleTenantService,
     private cdr: ChangeDetectorRef,
@@ -66,6 +74,7 @@ export class ListeModuleTenantComponent implements OnInit {
       next: (data) => {
 
         this.myModules = [...data];
+        this.applyFilters();//7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
         this.loading = false;
         console.log("Modules chargés avec succès :", data);
 
@@ -91,6 +100,7 @@ export class ListeModuleTenantComponent implements OnInit {
           // Mise à jour locale de la liste pour éviter un rechargement complet
           this.myModules = this.myModules.filter(m => m.id !== moduleTenantId);
           //alert('Module retiré avec succès.');
+          this.applyFilters();//77777777777777777777777777777777777777777777777777777777777777777777777777777777777777
           this.cdr.detectChanges();
         },
         error: (err) => {
@@ -110,22 +120,36 @@ export class ListeModuleTenantComponent implements OnInit {
   }
 }*/
 
-toggleAllMyModules(event: any): void {
+/*toggleAllMyModules(event: any): void {
   if (event.target.checked) {
     this.myModules.forEach(mt => this.selectedMyModulesIds.add(mt.id));
   } else {
     this.selectedMyModulesIds.clear();
   }
-}
+}*/
+//7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
+  toggleAllMyModules(event: any): void {
+    if (event.target.checked) {
+      // On n'ajoute que les modules visibles dans le filtre
+      this.filteredMyModules.forEach(mt => this.selectedMyModulesIds.add(mt.id));
+    } else {
+      // On ne retire que les modules visibles
+      this.filteredMyModules.forEach(mt => this.selectedMyModulesIds.delete(mt.id));
+    }
+  }
 
-isAllMyModulesSelected(): boolean {
+/*isAllMyModulesSelected(): boolean {
   return this.myModules.length > 0 && this.selectedMyModulesIds.size === this.myModules.length;
-}
+}*/
+//77777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
+  isAllMyModulesSelected(): boolean {
+    return this.filteredMyModules.length > 0 &&
+      this.filteredMyModules.every(m => this.selectedMyModulesIds.has(m.id));
+  }
 
 
 
-
-  onBulkRemove(): void {
+  /*onBulkRemove(): void {
     if (confirm(`Voulez-vous vraiment retirer ces ${this.selectedMyModulesIds.size} modules ?`)) {
       this.loading = true;
       const ids = Array.from(this.selectedMyModulesIds);
@@ -138,6 +162,37 @@ isAllMyModulesSelected(): boolean {
           // Filtrer localement pour faire disparaître les lignes immédiatement
           this.myModules = this.myModules.filter(m => !this.selectedMyModulesIds.has(m.id));
           this.selectedMyModulesIds.clear();
+        })
+        .catch(err => {
+          console.error(err);
+          alert('Erreur lors de la suppression.');
+        })
+        .finally(() => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        });
+    }
+  }*/
+
+  onBulkRemove(): void {
+    if (confirm(`Voulez-vous vraiment retirer ces ${this.selectedMyModulesIds.size} modules ?`)) {
+      this.loading = true;
+      const ids = Array.from(this.selectedMyModulesIds);
+
+      const requests = ids.map(id => this.moduleTenantService.deleteModuleTenant(id).toPromise());
+
+      Promise.all(requests)
+        .then(() => {
+          // 1. On met à jour la source principale
+          this.myModules = this.myModules.filter(m => !this.selectedMyModulesIds.has(m.id));
+
+          // 2. On vide le Set de sélection
+          this.selectedMyModulesIds.clear();
+
+          // 3. ICI : On appelle applyFilters pour rafraîchir l'affichage !
+          this.applyFilters();
+
+          console.log('Suppression groupée réussie');
         })
         .catch(err => {
           console.error(err);
@@ -185,6 +240,7 @@ isAllMyModulesSelected(): boolean {
           this.myModules[index] = updatedMt;
           // On recrée la référence du tableau pour notifier Angular du changement
           this.myModules = [...this.myModules];
+          this.applyFilters();//77777777777777777777777777777777777777777777777777777777777777777777777777777777777777
         }
         this.selectedModuleForTest = null;
         this.cdr.detectChanges(); // Sécurité supplémentaire pour le rendu
@@ -202,6 +258,7 @@ isAllMyModulesSelected(): boolean {
         const index = this.myModules.findIndex(m => m.id === updatedMt.id);
         if (index !== -1) {
           this.myModules[index] = updatedMt;
+          this.applyFilters();//777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
           this.myModules = [...this.myModules];
         }
         this.cdr.detectChanges();
@@ -264,6 +321,7 @@ isAllMyModulesSelected(): boolean {
 
         // 2. Vider la sélection
         this.selectedMyModulesIds.clear();
+        this.applyFilters();//77777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
 
         // 3. Forcer Angular à redessiner le tableau immédiatement
         this.cdr.detectChanges();
@@ -276,6 +334,25 @@ isAllMyModulesSelected(): boolean {
         // On ne met une alerte qu'en cas d'erreur réelle
         alert("Une erreur est survenue lors de la modification.");
       }
+    });
+  }
+
+  applyFilters(): void {
+    this.filteredMyModules = this.myModules.filter(mt => {
+      // Filtre Recherche Nom
+      const matchesSearch = mt.module.nom.toLowerCase().includes(this.searchTerm.toLowerCase());
+
+      // Filtre Avec/Sans Test
+      let matchesTest = true;
+      if (this.testFilter === 'with') matchesTest = mt.avecTest === true;
+      if (this.testFilter === 'without') matchesTest = mt.avecTest === false;
+
+      // Filtre Actif/Inactif
+      let matchesStatus = true;
+      if (this.statusFilter === 'active') matchesStatus = mt.estActif === true;
+      if (this.statusFilter === 'inactive') matchesStatus = mt.estActif === false;
+
+      return matchesSearch && matchesTest && matchesStatus;
     });
   }
 
