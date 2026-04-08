@@ -29,6 +29,9 @@ import {CatQuestionComponent} from './features/dashboard/SuperAdmin/categorieQue
 import {ParametreComponent} from './features/parametre/parametre.component'
 import {ModuleTenantComponent} from './features/dashboard/adminTenant/ListeModuleTenant/ModuleTenant.component'
 import {ListeModuleTenantComponent} from './features/dashboard/adminTenant/ListeModuleTenant/ListeModuleTenant.component'
+import {ListeModuleComponent} from './features/dashboard/directeur/ListeModule/ListeModule.component'
+
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -73,7 +76,8 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'administrateurs', component: AdministrateursComponent },
       { path: 'specialites', component: SpecialiteComponent },
-       { path: 'parametre', component: ParametreComponent }
+       { path: 'parametre', component: ParametreComponent },
+       { path: 'modules', component: ListeModuleComponent }
 
     ]
   },

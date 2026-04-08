@@ -1,0 +1,102 @@
+
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Catalogue Général des Modules</h1>
+
+  </div>
+
+  <div class="table-container">
+
+    <div class="filter-select-container">
+      <input type="text"
+             class="status-filter-select"
+             style="width: 300px;"
+             [(ngModel)]="searchTerm"
+             (input)="onSearch()"
+             placeholder="🔍 Rechercher un module...">
+
+      <select class="status-filter-select" [(ngModel)]="categoryFilter" (change)="onSearch()">
+        <option value="">Toutes les catégories</option>
+        <option *ngFor="let cat of categories" [value]="cat">{{cat}}</option>
+      </select>
+    </div>
+
+    <table class="modern-table">
+      <thead>
+      <tr>
+       <!-- <th style="width: 40px;">
+          <input type="checkbox" (change)="toggleAll($event)" [checked]="isAllSelected()">
+        </th>-->
+        <th>Nom du Module</th>
+        <th>Catégorie</th>
+        <th>Mots Clés</th>
+        <th>statut</th>
+        <th style="text-align: center;">Actions</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let m of filteredModules">
+        <!--<td style="width: 40px;">
+          <input type="checkbox"
+                 [checked]="selectedIds.has(m.idModule)"
+                 (change)="toggleSelection(m.idModule)">
+        </td>-->
+
+        <td><strong>{{ m.module?.nom }}</strong></td>
+
+        <td>
+            <span class="status-badge active" style="background: #e9ecef; color: #495057;">
+              {{ m.module?.nomCategorie }}
+            </span>
+        </td>
+
+        <td>
+
+          <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+            <span *ngFor="let tag of m.module?.motCles" class="tag-mini">#{{tag.description}}</span>
+          </div>
+        </td>
+        <td>
+          <!--<span class="status-badge" [class.active]="mt.estActif" [class.inactive]="!mt.estActif">
+            {{ mt.estActif ? 'Actif' : 'En attente' }}
+          </span>-->
+          <span class="status-badge"
+                [class.active]="m.estActif"
+                [class.inactive]="!m.estActif">
+
+              {{ m.estActif ? 'Actif' : 'Inactif' }}
+
+              <small *ngIf="m.avecTest" style="display:block;">
+                (Avec test)
+              </small>
+
+              <small *ngIf="!m.avecTest" style="display:block;">
+                (Sans test)
+              </small>
+            </span>
+        </td>
+
+
+
+        <!--<td class="actions" style="text-align: center;">
+         <button class="btn-add-single"
+                  (click)="addSingleModule(m.idModule)"
+                  title="Ajouter ce module"
+                  style="border: none; background: #2ecc71; color: white; padding: 5px; border-radius: 4px; cursor: pointer;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </td>-->
+      </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="loading" class="loader-container">Chargement du catalogue...</div>
+    <div *ngIf="!loading && filteredModules.length === 0" class="empty-state">
+      <p>Aucun module disponible ou correspondant à votre recherche.</p>
+    </div>
+  </div>
+</div>
