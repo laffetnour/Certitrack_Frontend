@@ -1,44 +1,89 @@
-<div class="container">
-  <h2>Mon Catalogue de Modules</h2>
 
-  <div *ngIf="loading" class="loader">Chargement de vos modules...</div>
-
-  <div *ngIf="errorMessage" class="alert-error">{{ errorMessage }}</div>
-
-  <div class="grid-modules" *ngIf="!loading && myModules.length > 0">
-    <div class="card" *ngFor="let mt of myModules">
-      <div class="card-header">
-        <strong>Nom du module : </strong>
-        <h3>{{ mt.module.nom }}</h3>
-        <strong>Statut : </strong>
-        <span class="status" [ngClass]="mt.estActif ? 'active' : 'inactive'">
-          {{ mt.estActif ? 'Activé' : 'En attente' }}
-        </span>
-      </div>
-
-      <div class="card-body">
-        <p><strong>Catégorie :</strong> {{ mt.module?.nomCategorie }}</p>
-        <!--<p><strong>Ajouté le :</strong> {{ mt.dateAjout | date:'dd/MM/yyyy' }}</p>-->
-
-        <div class="tags">
-          <strong>Mots Clés : </strong>
-          <span class="tag" *ngFor="let tag of mt.module.motCles">
-            #{{ tag.description }}
-          </span>
-        </div>
-      </div>
-
-      <div class="card-footer">
-        <button class="btn-delete" (click)="onRemoveModule(mt.id)">
-          Retirer
-        </button>
-
-
-      </div>
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Catalogue Général des Modules</h1>
+    <div style="display:flex; gap:10px;">
+      <button class="btn-cancel"  routerLink="/adminTenant/ListeModuleTenant" routerLinkActive="active">
+        ← Retour à ma liste
+      </button>
     </div>
   </div>
 
-  <div *ngIf="!loading && myModules.length === 0" class="empty-state">
-    <p>Vous n'avez pas encore ajouté de modules à votre catalogue.</p>
+  <div class="table-container">
+    <div class="bulk-actions" *ngIf="selectedIds.size > 0">
+      <span>{{ selectedIds.size }} module(s) sélectionné(s)</span>
+      <button class="btn-activate" (click)="confirmSelection()">
+        Ajouter au catalogue
+      </button>
+    </div>
+
+    <div class="filter-select-container">
+      <input type="text"
+             class="status-filter-select"
+             style="width: 300px;"
+             [(ngModel)]="searchTerm"
+             (input)="onSearch()"
+             placeholder="🔍 Rechercher un module...">
+
+      <select class="status-filter-select" [(ngModel)]="categoryFilter" (change)="onSearch()">
+        <option value="">Toutes les catégories</option>
+        <option *ngFor="let cat of categories" [value]="cat">{{cat}}</option>
+      </select>
+    </div>
+
+    <table class="modern-table">
+      <thead>
+      <tr>
+        <th style="width: 40px;">
+          <input type="checkbox" (change)="toggleAll($event)" [checked]="isAllSelected()">
+        </th>
+        <th>Nom du Module</th>
+        <th>Catégorie</th>
+        <th>Mots Clés</th>
+        <th style="text-align: center;">Actions</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let m of filteredModules">
+        <td style="width: 40px;">
+          <input type="checkbox"
+                 [checked]="selectedIds.has(m.idModule)"
+                 (change)="toggleSelection(m.idModule)">
+        </td>
+
+        <td><strong>{{ m.nom }}</strong></td>
+
+        <td>
+            <span class="status-badge active" style="background: #e9ecef; color: #495057;">
+              {{ m.nomCategorie }}
+            </span>
+        </td>
+
+        <td>
+          <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+            <span *ngFor="let tag of m.motCles" class="tag-mini">#{{tag.description}}</span>
+          </div>
+        </td>
+
+        <td class="actions" style="text-align: center;">
+          <button class="btn-add-single"
+                  (click)="addSingleModule(m.idModule)"
+                  title="Ajouter ce module"
+                  style="border: none; background: #2ecc71; color: white; padding: 5px; border-radius: 4px; cursor: pointer;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="loading" class="loader-container">Chargement du catalogue...</div>
+    <div *ngIf="!loading && filteredModules.length === 0" class="empty-state">
+      <p>Aucun module disponible ou correspondant à votre recherche.</p>
+    </div>
   </div>
 </div>

@@ -28,7 +28,7 @@ import {QuestionComponent} from './features/dashboard/SuperAdmin/Question/questi
 import {CatQuestionComponent} from './features/dashboard/SuperAdmin/categorieQuestion/catQuestion.component'
 import {ParametreComponent} from './features/parametre/parametre.component'
 import {ModuleTenantComponent} from './features/dashboard/adminTenant/ListeModuleTenant/ModuleTenant.component'
-
+import {ListeModuleTenantComponent} from './features/dashboard/adminTenant/ListeModuleTenant/ListeModuleTenant.component'
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -88,7 +88,8 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
        { path: 'parametre', component: ParametreComponent },
        { path: 'modules', component: ModuleComponent },
-       { path: 'moduleTenant', component: ModuleTenantComponent }
+       { path: 'moduleTenant', component: ModuleTenantComponent },
+       { path: 'ListeModuleTenant', component: ListeModuleTenantComponent }
     ]
   },
 

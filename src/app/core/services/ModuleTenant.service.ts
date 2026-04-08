@@ -67,4 +67,13 @@ export class ModuleTenantService {
       });
     return this.http.delete(`${this.apiUrl}/${moduleTenantId}`, { headers });
   }
+
+/*getAvailableModules(): Observable<any[]> {
+  const userData = localStorage.getItem('user');
+  const token = userData ? JSON.parse(userData).token : '';
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+  // Cette URL doit pointer vers ton controller de modules globaux
+  return this.http.get<any[]>('http://localhost:8080/api/modules', { headers });
+}*/
 }
