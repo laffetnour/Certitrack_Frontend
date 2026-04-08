@@ -11,6 +11,27 @@
 
   <div class="table-container">
 
+    <div class="filter-select-container">
+      <input type="text"
+             class="status-filter-select"
+             style="width: 300px;"
+             [(ngModel)]="searchTerm"
+             (input)="applyFilters()"
+             placeholder="🔍 Rechercher un module...">
+
+      <select class="status-filter-select" [(ngModel)]="testFilter" (change)="applyFilters()">
+        <option value="">Tous les types (Test/Sans)</option>
+        <option value="with">Avec Test</option>
+        <option value="without">Sans Test</option>
+      </select>
+
+      <select class="status-filter-select" [(ngModel)]="statusFilter" (change)="applyFilters()">
+        <option value="">Tous les statuts</option>
+        <option value="active">Activés</option>
+        <option value="inactive">Désactivés</option>
+      </select>
+    </div>
+
     <!--<div class="bulk-actions" *ngIf="selectedMyModulesIds.size > 0">
       <span>{{ selectedMyModulesIds.size }} module(s) sélectionné(s)</span>
       <button class="btn-deactivate" (click)="onBulkRemove()" style="background-color: #e74c3c;">
@@ -42,7 +63,7 @@
       </thead>
 
       <tbody>
-      <tr *ngFor="let mt of myModules">
+      <tr *ngFor="let mt of filteredMyModules">
         <td>
           <input type="checkbox"
                  [checked]="selectedMyModulesIds.has(mt.id)"
