@@ -30,6 +30,7 @@ import {ParametreComponent} from './features/parametre/parametre.component'
 import {ModuleTenantComponent} from './features/dashboard/adminTenant/ListeModuleTenant/ModuleTenant.component'
 import {ListeModuleTenantComponent} from './features/dashboard/adminTenant/ListeModuleTenant/ListeModuleTenant.component'
 import {ListeModuleComponent} from './features/dashboard/directeur/ListeModule/ListeModule.component'
+import {AffichageListeComponent} from './features/dashboard/directeur/ListeModule/AffichageListe.component'
 
 
 
@@ -77,7 +78,8 @@ export const routes: Routes = [
       { path: 'administrateurs', component: AdministrateursComponent },
       { path: 'specialites', component: SpecialiteComponent },
        { path: 'parametre', component: ParametreComponent },
-       { path: 'modules', component: ListeModuleComponent }
+       { path: 'modules', component: ListeModuleComponent },
+       { path: 'Listemodules', component: AffichageListeComponent }
 
     ]
   },

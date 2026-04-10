@@ -82,5 +82,9 @@ updateUserOnServer(user: any): Observable<any> {
   return this.http.put(`${this.api}/update-user`, user, { headers });
 }
 
+// Dans ton auth.service.ts
+sendCode(email: string): Observable<any> {
+  return this.http.post(`${this.api}/send-otp`, { email: email });
+}
 
 }

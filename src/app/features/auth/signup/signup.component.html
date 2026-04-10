@@ -1,33 +1,15 @@
-<!--<h2>Signup</h2>
-
-<input [(ngModel)]="user.nom" placeholder="Nom">
-<input [(ngModel)]="user.prenom" placeholder="Prénom">
-<input [(ngModel)]="user.username" placeholder="Email">
-<input [(ngModel)]="user.password" type="password" placeholder="Password">
-<input [(ngModel)]="user.nomEtablissement" placeholder="Etablissement">
-
-<button (click)="signup()">Signup</button> -->
-
-<!--<form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-  <input formControlName="nom" placeholder="Nom" />
-  <input formControlName="prenom" placeholder="Prénom" />
-  <input formControlName="username" placeholder="Email" />
-  <input formControlName="password" type="password" placeholder="Mot de passe" />
-  <input formControlName="nomEtablissement" placeholder="Nom établissement" />
-  <button type="submit">Signup</button>
-</form>-->
-
 <div class="signup-wrapper">
   <div class="signup-bg"></div>
 
   <div class="signup-container">
     <div class="signup-card">
+
       <div class="brand-title">
-        <h2>Créer un compte</h2>
-        <p>Inscrivez-vous pour passer vos certifications</p>
+        <h2>{{ isVerificationStep ? 'Vérification' : 'Créer un compte' }}</h2>
+        <p>{{ isVerificationStep ? 'Un code a été envoyé à votre adresse professionnelle' : 'Inscrivez-vous pour passer vos certifications' }}</p>
       </div>
 
-      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="signupForm" (ngSubmit)="onSendCode()" *ngIf="!isVerificationStep">
 
         <div class="form-row">
           <div class="form-group">
@@ -42,78 +24,101 @@
             <span class="error-text" *ngIf="signupForm.get('prenom')?.touched && signupForm.get('prenom')?.invalid">Prénom requis</span>
           </div>
         </div>
+
         <div class="form-group">
           <label for="dateNais">Date de naissance</label>
-          <input id="dateNais"
-                 formControlName="dateNais"
-                 type="date"
-                 class="modern-input">
-          <span class="error-text" *ngIf="signupForm.get('dateNais')?.touched && signupForm.get('dateNais')?.invalid">
-    Date de naissance requise
-  </span>
+          <input id="dateNais" formControlName="dateNais" type="date" class="modern-input">
         </div>
 
         <div class="form-group">
-          <label for="username">Email</label>
-          <input id="username" formControlName="username" type="email" class="modern-input" placeholder="jean@exemple.com">
-          <span class="error-text" *ngIf="signupForm.get('username')?.touched && signupForm.get('username')?.invalid">Email valide requis</span>
+          <label for="username">Email Professionnel</label>
+          <input id="username" formControlName="username" type="email" class="modern-input" placeholder="jean@entreprise.com">
         </div>
 
         <div class="form-group">
           <label for="password">Mot de passe</label>
           <input id="password" formControlName="password" type="password" class="modern-input" placeholder="••••••••">
-          <span class="error-text" *ngIf="signupForm.get('password')?.touched && signupForm.get('password')?.invalid">Min 6 caractères</span>
         </div>
 
-        <div class="form-group">
-          <label>Téléphone</label>
-          <input type="text" formControlName="numTel" class="modern-input">
-        </div>
-
-        <div class="form-group">
-          <label>Email personnel</label>
-          <input type="email" formControlName="emailPersonnel" class="modern-input">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Téléphone</label>
+            <input type="text" formControlName="numTel" class="modern-input">
+          </div>
+          <div class="form-group">
+            <label>Email personnel</label>
+            <input type="email" formControlName="emailPersonnel" class="modern-input">
+          </div>
         </div>
 
         <div class="form-group">
           <label>Établissement</label>
-
           <select formControlName="etablissementId" class="modern-input">
             <option value="">Choisir un établissement</option>
-            <option *ngFor="let e of etablissements" [value]="e.idEtab">
-              {{e.nom}}
-            </option>
+            <option *ngFor="let e of etablissements" [value]="e.idEtab">{{e.nom}}</option>
           </select>
-
         </div>
-
 
         <div class="form-group" *ngIf="specialites.length > 0">
           <label>Spécialité</label>
-
           <select formControlName="specialiteId" class="modern-input">
             <option value="">Choisir une spécialité</option>
-
-            <option *ngFor="let s of specialites" [value]="s.idSpecialite">
-              {{s.nom}}
-            </option>
+            <option *ngFor="let s of specialites" [value]="s.idSpecialite">{{s.nom}}</option>
           </select>
+        </div>
 
+        <div *ngIf="errorMsg && !isVerificationStep" class="error-msg">
+          {{ errorMsg }}
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="isLoading">
+          {{ isLoading ? 'Envoi du mail...' : 'S\'inscrire' }}
+        </button>
+      </form>
+
+      <div *ngIf="isVerificationStep" class="otp-container">
+
+        <div class="form-group" style="text-align: center; margin-top: 20px;">
+          <label style="display: block; margin-bottom: 10px; font-weight: bold;">
+            Code de validation
+          </label>
+
+          <input type="text"
+                 [(ngModel)]="verificationCodeInput"
+                 class="modern-input"
+                 placeholder="000000"
+                 maxlength="6"
+                 style="text-align: center; font-size: 28px; letter-spacing: 10px; font-weight: bold; width: 80%; margin: 0 auto;">
+
+          <p style="margin-top: 15px; font-size: 0.85em; color: #555;">
+            Entrez les 6 chiffres reçus par e-mail.
+          </p>
+          <p style="margin-top: 10px; font-size: 0.8em;">
+            Pas reçu ?
+            <a (click)="onSendCode()" style="color: blue; cursor: pointer; text-decoration: underline;">
+              Renvoyer le code
+            </a>
+          </p>
         </div>
 
         <div *ngIf="errorMsg" class="error-msg">
           {{ errorMsg }}
         </div>
 
-        <button type="submit" class="btn-primary" [disabled]="isLoading">
-          {{ isLoading ? 'Inscription...' : 'S\'inscrire' }}
+        <button (click)="onSubmit()" class="btn-primary" [disabled]="isLoading || verificationCodeInput.length < 6">
+          {{ isLoading ? 'Vérification...' : 'Confirmer l\'inscription' }}
         </button>
-      </form>
 
-      <div class="footer-links">
+        <button (click)="isVerificationStep = false" class="btn-secondary" style="margin-top: 15px; width: 100%; border: 1px dashed #ccc;">
+          Modifier mes informations
+        </button>
+      </div>
+
+      <div class="footer-links" *ngIf="!isVerificationStep">
         <p>Déjà inscrit ?</p>
         <a routerLink="/login" class="btn-secondary">Se connecter</a>
       </div>
+
     </div>
   </div>
 </div>

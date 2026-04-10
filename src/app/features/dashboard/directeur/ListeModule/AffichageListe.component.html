@@ -1,0 +1,122 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Modules partagés</h1>
+    <button *ngIf="selectedIds.size > 0" class="btn-bulk-delete" (click)="supprimerSelection()">
+      Supprimer sélection ({{ selectedIds.size }})
+    </button>
+    <button *ngIf="selectedSpecId" class="btn-add-main" (click)="openAddModal()">
+      + Ajouter un module
+    </button>
+  </div>
+
+    <div class="table-container">
+
+      <div class="filter-select-container">
+        <div class="bulk-actions" *ngIf="selectedSpecId">
+          <span class="mode-label">Mode d'affichage :</span>
+
+            <button class="btn-activate" [class.active]="currentMode === 'FIXE'" (click)="updateGlobalMode('FIXE')">FIXE</button>
+            <button class="btn-deactivate" [class.active]="currentMode === 'OUVERTE'" (click)="updateGlobalMode('OUVERTE')">OUVERTE</button>
+        </div>
+        <select [(ngModel)]="selectedSpecId" (change)="onSpecChange()" class="status-filter-select">
+          <option [ngValue]="null">Sélectionnez une spécialité...</option>
+          <option *ngFor="let s of allSpecialities" [value]="s.idSpecialite">{{ s.nom }}</option>
+        </select>
+
+
+      </div>
+
+
+    <table class="modern-table">
+      <thead>
+      <tr>
+        <th>
+          <input type="checkbox" (change)="toggleAll($event)" [checked]="selectedIds.size === modulesAffectes.length && modulesAffectes.length > 0">
+        </th>
+        <th>Spécialité</th>
+        <th>Module</th>
+        <th>Catégorie</th>
+        <th>Mode</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let sm of modulesAffectes" [class.selected-row]="selectedIds.has(sm.id)">
+        <td>
+          <input type="checkbox"
+                 [checked]="selectedIds.has(sm.id)"
+                 (change)="toggleSelection(sm.id)">
+        </td>
+        <td>
+          <span>{{ sm.specialite?.nom }}</span>
+        </td>
+        <td><strong>{{ sm.moduleTenant?.module?.nom }}</strong></td>
+        <td>{{ sm.moduleTenant?.module?.nomCategorie }}</td>
+        <td>
+          <span>
+            {{ sm.modeAffichage }}
+          </span>
+        </td>
+        <td class="actions">
+          <button class="btn-delete" (click)="retirerModule(sm.id)" title="Supprimer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+        </td>
+
+
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+
+  <div class="modal-overlay" *ngIf="showAddModal">
+    <div class="modal-content">
+      <div class="admin-header">
+        <h2>Ajouter des modules</h2>
+        <button (click)="showAddModal = false" type="button" class="btn-remove-item">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Rechercher un module..." class="search-bar">
+
+        <div class="available-modules-list">
+          <div *ngFor="let m of filteredAvailableModules"
+               class="module-selection-item"
+               (click)="toggleModuleSelection(m.id)"> <div class="item-left">
+            <input type="checkbox"
+                   [checked]="selectedModulesToAdd.has(m.id)"
+                   (change)="toggleCheckbox($event, m.id)">
+
+            <div class="module-text">
+              <span class="module-name">{{ m.module?.nom }}</span>
+              <span class="module-category">{{ m.module?.nomCategorie }}</span>
+            </div>
+          </div>
+          </div>
+
+          <div *ngIf="filteredAvailableModules.length === 0" class="no-data">
+            Aucun module disponible.
+          </div>
+
+        </div>
+      </div>
+
+      <div class="modal-footer">
+      <span class="count-label" *ngIf="selectedModulesToAdd.size > 0">
+        {{ selectedModulesToAdd.size }} sélectionné(s)
+      </span>
+        <button class="btn-cancel" (click)="showAddModal = false">Annuler</button>
+        <button type="submit" class="btn-submit"
+                [disabled]="selectedModulesToAdd.size === 0"
+                (click)="ajouterModulesSelectionnes()">
+          Ajouter les modules
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
