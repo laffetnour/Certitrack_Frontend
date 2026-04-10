@@ -24,8 +24,7 @@ export class ListeModuleTenantComponent implements OnInit {
 
   testForm = {
     avecTest: false,
-    seuilScore: null,
-    dureeQCM: null
+    seuilScore: null
   };
 
   selectedModuleConfig: any = null;
@@ -62,6 +61,7 @@ export class ListeModuleTenantComponent implements OnInit {
   loadMyCatalogue(): void {
     this.loading = true;
     const user = this.authService.getUser();
+    console.log(user);
     const userId = user?.idUtilisateur; // Ici, userId sera égal à 7
 
     if (!userId) {
@@ -210,8 +210,7 @@ export class ListeModuleTenantComponent implements OnInit {
 
     this.testForm = {
       avecTest: mt.avecTest,
-      seuilScore: mt.seuilScore,
-      dureeQCM: mt.dureeQCM
+      seuilScore: mt.seuilScore
     };
   }
 
@@ -219,7 +218,7 @@ export class ListeModuleTenantComponent implements OnInit {
 
 
 
-  confirmTest() {
+  /*confirmTest() {
     const mt = this.selectedModuleForTest;
 
     if (this.testForm.avecTest && (!this.testForm.seuilScore || !this.testForm.dureeQCM)) {
@@ -244,6 +243,36 @@ export class ListeModuleTenantComponent implements OnInit {
         }
         this.selectedModuleForTest = null;
         this.cdr.detectChanges(); // Sécurité supplémentaire pour le rendu
+      },
+      error: (err) => {
+        console.error("Erreur de configuration", err);
+        alert("Erreur lors de la sauvegarde.");
+      }
+    });
+  }*/
+
+  confirmTest() {
+    const mt = this.selectedModuleForTest;
+
+    if (this.testForm.avecTest && !this.testForm.seuilScore) {
+      alert("Veuillez remplir le seuil score");
+      return;
+    }
+
+    this.moduleTenantService.configTest(
+      mt.id,
+      this.testForm.avecTest,
+      this.testForm.seuilScore ?? null
+    ).subscribe({
+      next: (updatedMt: any) => {
+        const index = this.myModules.findIndex(m => m.id === updatedMt.id);
+        if (index !== -1) {
+          this.myModules[index] = updatedMt;
+          this.myModules = [...this.myModules];
+          this.applyFilters();
+        }
+        this.selectedModuleForTest = null;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error("Erreur de configuration", err);

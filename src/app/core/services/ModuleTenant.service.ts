@@ -86,12 +86,26 @@ export class ModuleTenantService {
     return this.http.put(`${this.apiUrl}/${id}/toggle`, {}, { headers });
   }
 
-  configTest(id: number, avecTest: boolean, seuilScore: number | null, dureeQCM: number | null) {
+  /*configTest(id: number, avecTest: boolean, seuilScore: number | null, dureeQCM: number | null) {
     const token = JSON.parse(localStorage.getItem('user') || '{}').token || '';
     let params = new HttpParams().set('avecTest', avecTest.toString());
     if (seuilScore !== null) params = params.set('seuilScore', seuilScore.toString());
     if (dureeQCM !== null) params = params.set('dureeQCM', dureeQCM.toString());
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put(`${this.apiUrl}/${id}/config-test`, null, { params, headers });
+  }*/
+
+  configTest(id: number, avecTest: boolean, seuilScore: number | null) {
+    const token = JSON.parse(localStorage.getItem('user') || '{}').token || '';
+
+    let params = new HttpParams().set('avecTest', avecTest.toString());
+
+    if (seuilScore !== null) {
+      params = params.set('seuilScore', seuilScore.toString());
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
     return this.http.put(`${this.apiUrl}/${id}/config-test`, null, { params, headers });
   }
 
@@ -100,5 +114,23 @@ export class ModuleTenantService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const params = new HttpParams().set('active', active.toString());
     return this.http.put(`${this.apiUrl}/bulk-status`, ids, { params, headers });
+  }
+
+  //PARTIESQUOTAS
+
+  getActiveModules(userId: number): Observable<any[]> {
+    const token = JSON.parse(localStorage.getItem('user') || '{}').token || '';
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.get<any[]>(`${this.apiUrl}/active/${userId}`, { headers });
+  }
+
+  updateCapacite(id: number, capacite: number) {
+    const token = JSON.parse(localStorage.getItem('user') || '{}').token || '';
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    const params = new HttpParams().set('capacite', capacite.toString());
+
+    return this.http.put(`${this.apiUrl}/${id}/capacite`, null, { params, headers });
   }
 }

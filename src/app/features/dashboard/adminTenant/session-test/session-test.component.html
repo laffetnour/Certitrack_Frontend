@@ -1,0 +1,403 @@
+<div class="admin-container">
+
+  <!-- HEADER -->
+  <div class="admin-header">
+    <h1>Sessions de Test</h1>
+
+    <div style="display:flex; gap:10px;">
+      <!--<button class="btn-cancel"
+              (click)="viewMode='modules'">
+        Ajouter Session
+      </button>
+
+      <button class="btn-cancel"
+              (click)="viewMode='sessions'">
+        Mes Sessions
+      </button>-->
+
+      <button class="btn-cancel"
+              (click)="setViewMode('modules')">
+        Ajouter Session
+      </button>
+
+      <button class="btn-cancel"
+              (click)="setViewMode('sessions')">
+        Mes Sessions
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+
+    <!-- 🔍 FILTER -->
+    <div class="filter-select-container">
+
+      <input type="text"
+             class="status-filter-select"
+             placeholder="🔍 Rechercher..."
+             [(ngModel)]="searchTerm"
+             (input)="applyFilters()">
+
+      <!-- filtre état -->
+      <select *ngIf="viewMode==='sessions'"
+              class="status-filter-select"
+              [(ngModel)]="filterEtat"
+              (change)="applyFilters()">
+        <option value="">Tous</option>
+        <option value="enCours">En cours</option>
+        <option value="cloturee">Clôturée</option>
+      </select>
+
+    </div>
+
+    <!-- ================= MODULES ================= -->
+    <table class="modern-table" *ngIf="viewMode==='modules'">
+      <thead>
+      <tr>
+        <th>Nom Module</th>
+        <th>Catégorie</th>
+        <th>Capacité</th>
+        <th>Seuil</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <!--<tr *ngFor="let m of modules">-->
+      <tr *ngFor="let m of filteredModules">
+
+        <td><strong>{{ m.nom }}</strong></td>
+
+        <td>
+          <span class="status-badge active"
+                style="background:#e9ecef;color:#495057;">
+            {{ m.categorie }}
+          </span>
+        </td>
+
+        <td>{{ m.capacite }}</td>
+        <td>{{ m.seuilScore }}</td>
+
+        <td class="actions">
+
+          <!-- VIEW SESSIONS -->
+          <button class="btn-view"
+                  (click)="viewSessionsByModule(m.id)"
+                  title="Voir sessions">
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+
+          </button>
+
+          <!-- ADD SESSION -->
+          <button class="btn-edit"
+                  (click)="openAddModal(m.id)"
+                  title="Ajouter session">
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+
+          </button>
+
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- ================= SESSIONS ================= -->
+    <table class="modern-table" *ngIf="viewMode==='sessions'">
+      <thead>
+      <tr>
+        <th>Titre</th>
+        <th>Module</th>
+        <th>Date Début</th>
+        <th>Date Fin</th>
+        <th>Durée</th>
+        <th>État</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let s of filteredSessions">
+
+        <td><strong>{{ s.titre }}</strong></td>
+        <td>{{ s.moduleNom }}</td>
+
+        <td>{{ s.dateDebut | date:'dd/MM/yyyy' }}</td>
+        <td>{{ s.dateFin | date:'dd/MM/yyyy' }}</td>
+
+        <td>{{ s.dureeMax }} min</td>
+
+        <td>
+          <span class="status-badge"
+                [class.active]="s.etat==='enCours'"
+                [class.inactive]="s.etat==='cloturee'">
+            {{ s.etat }}
+          </span>
+        </td>
+
+        <td class="actions">
+
+          <!-- VIEW -->
+          <button class="btn-view"
+                  (click)="viewSession(s)"
+                  title="Voir">
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+
+          </button>
+
+          <!-- EDIT -->
+          <button class="btn-edit"
+                  *ngIf="canEdit(s)"
+                  (click)="openEditModal(s)"
+                  title="Modifier">
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+
+          </button>
+
+          <!-- DELETE -->
+          <button class="btn-delete"
+                  *ngIf="canEdit(s)"
+                  (click)="openDeleteModal(s.idSessionTest)"
+                  title="Supprimer">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="16" height="16"
+                 viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+            </svg>
+
+          </button>
+
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <!-- ================= MODAL ADD SESSION ================= -->
+  <div class="modal" *ngIf="showAddModal">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h2>{{ selectedSession ? 'Modifier' : 'Ajouter' }} Session</h2>
+        <button (click)="closeModal()">✖</button>
+      </div>
+      <form [formGroup]="addSessionForm" (ngSubmit)="submitSession()">
+
+        <div style="padding:20px; display:flex; flex-direction:column; gap:10px;">
+          <label>Titre Session</label>
+          <input formControlName="titre" placeholder="Titre session" class="form-control">
+          <label>Date Début</label>
+          <input type="date" formControlName="dateDebut" class="form-control">
+          <label>Date Fin</label>
+          <input type="date" formControlName="dateFin" class="form-control">
+
+          <label>Durée (minutes)</label>
+          <input type="number" formControlName="dureeMax" placeholder="Durée (min)" class="form-control">
+          <label>Nombre Questions techniques</label>
+          <input type="number" formControlName="nbreQuestionTechnique"
+                 placeholder="Questions techniques" class="form-control">
+          <label>Nombre Questions comportementales</label>
+          <input type="number" formControlName="nbreQuestionComportementale"
+                 placeholder="Questions comportementales" class="form-control">
+
+        </div>
+
+        <div class="modal-footer">
+          <!--<button type="submit" class="btn-submit"
+                  [disabled]="addSessionForm.invalid">
+            Enregistrer
+          </button>-->
+
+          <button type="submit" class="btn-submit"
+                  [disabled]="isSubmitDisabled()">
+            Enregistrer
+          </button>
+
+          <button type="button" (click)="closeModal()">Annuler</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL VIEW SESSION ================= -->
+  <div class="modal" *ngIf="showViewModal" (click)="closeViewModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <h2>Détails Session</h2>
+        <button (click)="closeViewModal()">✖</button>
+      </div>
+
+      <div style="padding:20px;" *ngIf="selectedSession">
+
+        <p><strong>Titre :</strong> {{ selectedSession.titre }}</p>
+        <p><strong>Module :</strong> {{ selectedSession.moduleNom }}</p>
+        <p><strong>Date début :</strong> {{ selectedSession.dateDebut | date }}</p>
+        <p><strong>Date fin :</strong> {{ selectedSession.dateFin | date }}</p>
+        <p><strong>Durée :</strong> {{ selectedSession.dureeMax }} min</p>
+
+        <p>
+          <strong>État :</strong>
+          <span class="status-badge"
+                [class.active]="selectedSession.etat==='enCours'"
+                [class.inactive]="selectedSession.etat==='cloturee'">
+            {{ selectedSession.etat }}
+          </span>
+        </p>
+
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <div class="modal" *ngIf="showModuleSessionsModal" (click)="closeModuleSessionsModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+
+      <!-- HEADER -->
+      <div class="modal-header">
+        <h2>Sessions du module</h2>
+        <button (click)="closeModuleSessionsModal()">✖</button>
+      </div>
+
+      <!-- TABLE -->
+      <div style="padding:20px; max-height:400px; overflow:auto;">
+
+        <table class="modern-table">
+          <thead>
+          <tr>
+            <th>Titre</th>
+            <th>Date Début</th>
+            <th>Date Fin</th>
+            <th>Durée</th>
+            <th>État</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr *ngFor="let s of filteredSessions">
+
+            <td><strong>{{ s.titre }}</strong></td>
+
+            <td>{{ s.dateDebut | date:'dd/MM/yyyy' }}</td>
+            <td>{{ s.dateFin | date:'dd/MM/yyyy' }}</td>
+
+            <td>{{ s.dureeMax }} min</td>
+
+            <td>
+              <span class="status-badge"
+                    [class.active]="s.etat==='enCours'"
+                    [class.inactive]="s.etat==='cloturee'">
+                {{ s.etat }}
+              </span>
+            </td>
+
+          </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <div class="modal" *ngIf="alertVisible">
+    <div class="modal-content alert-modal">
+
+      <div class="modal-header">
+        <h2>
+          <span *ngIf="alertType==='success'">Succès</span>
+          <span *ngIf="alertType==='error'">Erreur</span>
+          <span *ngIf="alertType==='warning'">Attention</span>
+        </h2>
+
+        <button (click)="alertVisible=false">✖</button>
+      </div>
+
+      <div class="alert-body">
+
+        <!-- SUCCESS ICON -->
+        <svg *ngIf="alertType==='success'" width="40" height="40" viewBox="0 0 24 24"
+             fill="none" stroke="green" stroke-width="2">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+
+        <!-- ERROR ICON -->
+        <svg *ngIf="alertType==='error'" width="40" height="40" viewBox="0 0 24 24"
+             fill="none" stroke="red" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+
+        <!-- WARNING ICON -->
+        <svg *ngIf="alertType==='warning'" width="40" height="40" viewBox="0 0 24 24"
+             fill="none" stroke="orange" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <circle cx="12" cy="17" r="1"/>
+        </svg>
+
+        <p>{{ alertMessage }}</p>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- Modal Confirmation Suppression Session -->
+  <div class="modal" *ngIf="showDeleteModal">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h2>Confirmation</h2>
+        <button (click)="closeDeleteModal()">✖</button>
+      </div>
+
+      <div style="padding:20px; text-align:center;">
+        Êtes-vous sûr de vouloir supprimer cette session ?
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeDeleteModal()">
+          Annuler
+        </button>
+
+        <button class="btn-delete" (click)="confirmDelete()">
+          Supprimer
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>

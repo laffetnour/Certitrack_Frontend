@@ -182,10 +182,6 @@
                    [(ngModel)]="testForm.seuilScore"
                    name="seuilScore">
 
-            <input type="number" class="form-control"
-                   placeholder="Durée QCM"
-                   [(ngModel)]="testForm.dureeQCM"
-                   name="dureeQCM">
           </div>
 
         </div>
@@ -194,7 +190,7 @@
 
           <button type="submit"
                   class="btn-submit"
-                  [disabled]="testForm.avecTest && (!testForm.seuilScore || !testForm.dureeQCM)">
+                  [disabled]="testForm.avecTest && !testForm.seuilScore">
             Enregistrer
           </button>
 
