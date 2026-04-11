@@ -1,0 +1,47 @@
+
+
+.content-area {
+  padding: 2vw; /* Padding adaptatif selon la largeur d'écran */
+  overflow-y: auto;
+  flex: 1;
+  background-color: var(--bg-page);
+}
+
+.stats-grid {
+  display: grid;
+  /* S'adapte automatiquement : 3 colonnes sur PC, 1 ou 2 sur tablette/mobile */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: var(--white);
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: var(--text-main);
+}
+
+.stat-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.etab-card .stat-icon-wrapper {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.dir-card .stat-icon-wrapper {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}

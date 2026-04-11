@@ -1,0 +1,83 @@
+<div class="dashboard-container">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="logo-section">
+      <ng-container *ngIf="configService.config$ | async as config; else loader">
+        <img [src]="config.logoSociete || 'LOGO-2026_VF.png'"
+             alt="Smartfuture"
+             class="main-logo">
+      </ng-container>
+
+      <ng-template #loader>
+        <img src="LOGO-2026_VF.png" alt="Smartfuture" class="main-logo loading">
+      </ng-template>
+    </div>
+    <nav class="nav-menu">
+
+      <div class="nav-item" routerLink="/candidat/dashboard" routerLinkActive="active">
+        <i class="fas fa-th-large"></i> Dashboard
+      </div>
+
+      <div class="nav-item" routerLink="/candidat/modules" routerLinkActive="active">
+        <i class="fas fa-book"></i> Modules
+      </div>
+
+      <div class="nav-item" routerLink="/candidat/reservations" routerLinkActive="active">
+        <i class="fas fa-calendar-plus"></i> Réservation session
+      </div>
+
+      <div class="nav-item" routerLink="/candidat/parametre" routerLinkActive="active">
+        <i class="fas fa-cog"></i> Paramètres
+      </div>
+
+    </nav>
+
+    <div class="logout" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i> Déconnexion
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-layout">
+
+    <!-- TOPBAR -->
+    <<!-- HEADER -->
+    <header class="notification-bar">
+
+      <!-- SEARCH -->
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Recherche...">
+      </div>
+
+      <div class="user-actions">
+        <div class="notification-icon">
+          <i class="fas fa-bell"></i>
+          <span class="dot-notification"></span>
+        </div>
+        <div class="profile">
+          <span class="user-role">{{ currentUser?.prenom }} {{ currentUser?.nom }}</span>
+
+          <div class="avatar-circle">
+            <img *ngIf="currentUser?.photo"
+                 [src]="currentUser.photo"
+                 alt="Profil"
+                 class="profile-img">
+
+            <i *ngIf="!currentUser?.photo" class="fas fa-user"></i>
+          </div>
+          <i class="fas fa-chevron-down arrow-user"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="content-area">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+
+</div>

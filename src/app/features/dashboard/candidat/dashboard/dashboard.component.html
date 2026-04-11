@@ -1,0 +1,48 @@
+<div class="welcome-section">
+  <h1>Dashboard Candidat</h1>
+  <p>Bienvenue {{ currentUser?.prenom }}</p>
+</div>
+
+<div class="stats-grid">
+
+  <div class="stat-card">
+    <div class="stat-icon-wrapper">
+      <i class="fas fa-calendar"></i>
+    </div>
+    <div>
+      <p>Sessions disponibles</p>
+      <h3>{{ stats.sessionsDisponibles }}</h3>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon-wrapper">
+      <i class="fas fa-user-check"></i>
+    </div>
+    <div>
+      <p>Mes inscriptions</p>
+      <h3>{{ stats.inscriptions }}</h3>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon-wrapper">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    <div>
+      <p>Validées</p>
+      <h3>{{ stats.approuvees }}</h3>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon-wrapper">
+      <i class="fas fa-clock"></i>
+    </div>
+    <div>
+      <p>En attente</p>
+      <h3>{{ stats.attente }}</h3>
+    </div>
+  </div>
+
+</div>

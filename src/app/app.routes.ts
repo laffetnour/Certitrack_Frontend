@@ -8,7 +8,7 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
 import { DirecteurLayoutComponent } from './features/dashboard/directeur/layout/directeur-layout.component';
 
-import { CandidatComponent } from './features/dashboard/candidat/candidat.component';
+
 import { AdminComponent } from './features/dashboard/admin/admin.component';
 import { homeAdminComponent } from './features/dashboard/admin/homeAdmin.component';
 import { SuperAdminComponent } from './features/dashboard/SuperAdmin/super-admin.component';
@@ -33,6 +33,9 @@ import {ListeModuleComponent} from './features/dashboard/directeur/ListeModule/L
 import {AffichageListeComponent} from './features/dashboard/directeur/ListeModule/AffichageListe.component'
 import { QuotasComponent } from './features/dashboard/adminTenant/quotas/quotas.component';
 import { SessionTestComponent } from './features/dashboard/adminTenant/session-test/session-test.component';
+import { DashboardCandidatComponent } from './features/dashboard/candidat/dashboard/dashboard.component';
+import { CandidatLayoutComponent } from './features/dashboard/candidat/layout/layout.component';
+import { ModulesCandidatComponent } from './features/dashboard/candidat/modules/modules.component';
 
 
 
@@ -58,7 +61,18 @@ export const routes: Routes = [
   },
   //{ path: 'tenant', component: AdminTenantComponent, canActivate: [authGuard] },
 
-  { path: 'candidat', component: CandidatComponent, canActivate: [authGuard] },
+  //{ path: 'candidat', component: CandidatComponent, canActivate: [authGuard] },
+  {
+    path: 'candidat',
+    component: CandidatLayoutComponent,
+    children: [
+      { path: 'dashboard', component: DashboardCandidatComponent },
+      { path: 'modules', component: ModulesCandidatComponent },
+      //{ path: 'reservations', component: ReservationComponent },
+      { path: 'parametre', component: ParametreComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+    ]
+  },
 
   {
     path: 'dashboard',

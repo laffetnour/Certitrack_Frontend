@@ -1,0 +1,129 @@
+/* 🔹 zone globale */
+.content-area {
+  padding: 20px;
+}
+
+/* 🔍 recherche */
+.search-input {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  margin-bottom: 25px;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.search-input:focus {
+  border-color: #1976d2;
+  outline: none;
+}
+
+/* 🔹 grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* 🔹 card */
+.stat-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  transition: 0.3s;
+  position: relative;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+/* 🔹 icon */
+.stat-icon-wrapper {
+  width: 55px;
+  height: 55px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e3f2fd;
+  color: #1976d2;
+  font-size: 20px;
+}
+
+/* 🔹 contenu */
+.stat-card h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.stat-card p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #555;
+}
+
+/* 🔹 badges */
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  margin-top: 5px;
+}
+
+.badge-test {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-no-test {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+/* 🔹 bouton inscrire */
+.btn-inscrire {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 10px;
+  background: #1976d2;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-inscrire:hover {
+  background: #125ea7;
+}
+
+/* 🔹 bouton autres modules */
+.btn-autres {
+  margin-top: 25px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 12px;
+  background: #f5f5f5;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-autres:hover {
+  background: #e0e0e0;
+}
+
+/* 🔹 responsive */
+@media (max-width: 600px) {
+  .stat-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
