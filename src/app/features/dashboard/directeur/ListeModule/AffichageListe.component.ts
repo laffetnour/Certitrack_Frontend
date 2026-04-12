@@ -39,14 +39,35 @@ export class AffichageListeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadSpecialites();
-    this.loadAllSpecialiteModules(true);
+
+    this.loading = true;
+      const user = this.authService.getUser();
+      const etabId = user?.etablissements?.[0]?.idEtab;
+
+      if (etabId) {
+        // 1. On charge les spécialités d'abord
+        this.etablissementService.getSpecialites(etabId).subscribe({
+          next: (specs) => {
+            this.allSpecialities = specs;
+            // 2. SEULEMENT APRÈS, on charge les modules
+            this.loadAllSpecialiteModules(true);
+          },
+          error: (err) => {
+            console.error("Erreur specs", err);
+            this.loading = false;
+          }
+        });
+      }
   }
 
 
   loadAllSpecialiteModules(shouldFilter: boolean = false): void {
       this.loading = true;
+      const user = this.authService.getUser();
+      const etabId = user?.etablissements?.[0]?.idEtab;
 
-      this.specModuleService.getAllSpecialiteModules().subscribe({
+       if (etabId) {
+      this.specModuleService.getAllSpecialiteModules(etabId).subscribe({
         next: (data) => {
           const sortedData = data.sort((a, b) =>
             a.specialite?.nom.localeCompare(b.specialite?.nom)
@@ -54,7 +75,6 @@ export class AffichageListeComponent implements OnInit {
 
           this.allModulesData = sortedData;
           this.modulesAffectes = [...sortedData];
-
 
           if (shouldFilter) {
                   this.onSpecChange();
@@ -71,6 +91,11 @@ export class AffichageListeComponent implements OnInit {
         }
       });
   }
+else {
+    console.error("Impossible de charger les modules : Aucun établissement trouvé pour cet utilisateur.");
+    this.loading = false;
+  }
+}
 
   onSpecChange(): void {
     if (!this.selectedSpecId || this.selectedSpecId.toString() === 'null') {

@@ -48,10 +48,17 @@ export class SpecialiteModuleService {
   }
 
 // Récupère absolument toutes les liaisons Module-Spécialité existantes
-    getAllSpecialiteModules(): Observable<any[]> {
+   /* getAllSpecialiteModules(): Observable<any[]> {
       return this.http.get<any[]>(`${this.BASE_URL}/all`, {
         headers: this.getAuthHeaders() // Syntaxe correcte : headers attend un objet HttpHeaders
       });
-    }
+    }*/
+
+  // Dans SpecialiteModule.service.ts
+
+  getAllSpecialiteModules(idEtab: number): Observable<any[]> {
+    // On ajoute l'ID à la fin de l'URL comme défini dans votre Controller @GetMapping
+    return this.http.get<any[]>(`${this.BASE_URL}/etablissement/${idEtab}`, { headers: this.getAuthHeaders() });
+  }
 
 }

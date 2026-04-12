@@ -54,11 +54,16 @@ export class ListeModuleComponent implements OnInit {
     }
 
 loadAllSpecModules(): void {
-  this.specialiteModuleService.getAllSpecialiteModules().subscribe({
+    this.loading = true;
+        const user = this.authService.getUser();
+        const etabId = user?.etablissements?.[0]?.idEtab;
+
+         if (etabId) {
+  this.specialiteModuleService.getAllSpecialiteModules(etabId).subscribe({
     next: (data) => { this.allModulesData = data; },
     error: (err) => console.error("Erreur technique lors de la récupération des modes", err)
   });
-}
+}}
 loadMyCatalogue(): void {
   this.loading = true;
   const user = this.authService.getUser();
