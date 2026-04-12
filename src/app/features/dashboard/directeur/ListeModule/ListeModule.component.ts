@@ -69,11 +69,19 @@ loadMyCatalogue(): void {
   const user = this.authService.getUser();
  const userId = user?.idUtilisateur;
   console.log(user);
-  if (!userId) {
+  /*if (!userId) {
     this.errorMessage = "Impossible de récupérer les informations du Tenant.";
     this.loading = false;
     return;
-  }
+  }*/
+
+const etabId = user?.etablissements?.[0]?.idEtab;
+
+  if (etabId) {
+    // 1. On charge d'abord les spécialités de l'établissement
+    this.etablissementService.getSpecialites(etabId).subscribe({
+      next: (specs) => {
+        this.allSpecialities = specs;
   this.moduleTenantService.getMyModules(userId).subscribe({
     next: (data: any[]) => {
 
@@ -85,13 +93,14 @@ loadMyCatalogue(): void {
 
       this.loading = false;
       this.cdr.detectChanges();
-    },
-    error: (err) => {
-      this.errorMessage = "Erreur lors de la récupération des modules du catalogue.";
-      this.loading = false;
-    }
-  });
-}
+   },   error: (err) => {
+           this.errorMessage = "Erreur lors de la récupération des modules du catalogue.";
+           this.loading = false;
+         }
+       });
+         }
+       });
+}}
 
 onSearch(): void {
   const term = this.searchTerm.toLowerCase().trim();
@@ -420,6 +429,38 @@ isAlreadyAssigned(specId: number): boolean {
   return this.selectedModule.specialiteModules.some(
     (sm: any) => sm.specialite.idSpecialite === specId
   );
+}
+
+
+
+
+
+
+isSpecFromMyEtab(sm: any): boolean {
+  // Si le module n'a pas de spécialité ou si ma liste locale est vide, on n'affiche rien
+  if (!sm.specialite || !this.allSpecialities || this.allSpecialities.length === 0) {
+    return false;
+  }
+
+  // On vérifie si l'ID de la spécialité du module (ex: ID 6 pour DSI)
+  // est présent dans ma liste de spécialités autorisées (ex: IDs 11 et 12 pour A et B)
+  return this.allSpecialities.some(s => s.idSpecialite === sm.specialite.idSpecialite);
+}
+
+
+
+/**
+ * Vérifie si le module possède au moins une spécialité
+ * appartenant à l'établissement du directeur connecté.
+ */
+hasVisibleSpec(m: any): boolean {
+  // Si le module n'a pas de spécialités rattachées, on retourne false
+  if (!m.specialiteModules || m.specialiteModules.length === 0) {
+    return false;
+  }
+
+  // On utilise la fonction isSpecFromMyEtab pour voir s'il y en a au moins une de visible
+  return m.specialiteModules.some((sm: any) => this.isSpecFromMyEtab(sm));
 }
 }
 

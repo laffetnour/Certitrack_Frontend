@@ -190,14 +190,28 @@ else {
         next: (allModules) => {
           this.allModulesEtab = allModules;
           console.log(allModules);
-          const idsDejaPresents = new Set(
+          /*const idsDejaPresents = new Set(
             this.allModulesData
               .filter(am => am.specialite?.idSpecialite == this.selectedSpecId)
               .map(am => am.moduleTenant?.id)
           );
           this.availableModules = this.allModulesEtab.filter(
             m => !idsDejaPresents.has(m.id)
-          );
+          );*/
+
+
+        const idsDejaPresents = new Set(
+                  this.allModulesData
+                    .filter(am => am.specialite?.idSpecialite == this.selectedSpecId)
+                    .map(am => am.moduleTenant?.id)
+                );
+
+                // 2. FILTRAGE : On ne garde que les modules qui :
+                // - Sont ACTIFS (m.estActif === true)
+                // - ET ne sont pas déjà présents dans la spécialité
+                this.availableModules = this.allModulesEtab.filter(m =>
+                  m.estActif === true && !idsDejaPresents.has(m.id)
+                );
 
           this.loading = false;
           this.cdr.detectChanges();

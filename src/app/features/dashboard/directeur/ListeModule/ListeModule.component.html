@@ -65,8 +65,10 @@
             <span *ngFor="let tag of m.module?.motCles" class="tag-mini">#{{tag.description}}</span>
           </div>
         </td>
+        <!--
         <td>
           <div class="spec-badge-container">
+
     <span *ngIf="!m.specialiteModules || m.specialiteModules.length === 0" class="no-spec">
       <i class="fas fa-info-circle"></i> Aucune affectation
     </span>
@@ -75,8 +77,30 @@
       <i class="fas fa-tag" style="font-size: 8px;"></i> {{ sm.specialite?.nom }}
     </span>
           </div>
+        </td>-->
+
+        <td>
+          <div class="spec-badge-container">
+    <span *ngIf="!m.specialiteModules || m.specialiteModules.length === 0" class="no-spec">
+      <i class="fas fa-info-circle"></i> Aucune affectation
+    </span>
+
+            <ng-container *ngFor="let sm of m.specialiteModules">
+
+      <span *ngIf="isSpecFromMyEtab(sm)" class="spec-mini-badge">
+        <i class="fas fa-tag" style="font-size: 8px;"></i> {{ sm.specialite?.nom }}
+      </span>
+
+            </ng-container>
+
+            <span *ngIf="m.specialiteModules?.length > 0 && !hasVisibleSpec(m)" class="no-spec-others">
+      <small>(Affecté à d'autres établissements)</small>
+    </span>
+          </div>
         </td>
         <td>
+
+
 
           <span class="status-badge"
                 [class.active]="m.estActif"
