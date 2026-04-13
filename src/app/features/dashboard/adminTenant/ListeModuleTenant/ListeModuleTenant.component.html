@@ -177,6 +177,9 @@
 
           <!-- CHAMPS -->
           <div *ngIf="testForm.avecTest" style="margin-top:15px;">
+            <label style="display:block; font-weight:600; margin-bottom:5px;">
+              Seuil score
+            </label>
             <input type="number" class="form-control"
                    placeholder="Seuil score"
                    [(ngModel)]="testForm.seuilScore"

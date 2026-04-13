@@ -70,6 +70,7 @@ export class SessionTestComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    console.log("USER ID =", this.getUserId());
     this.loadModules();
     this.loadSessions();
   }
@@ -87,34 +88,7 @@ export class SessionTestComponent implements OnInit {
   }
 
 
-  /*loadModules() {
-    const user = this.authService.getUser();
-    const userId = user?.idUtilisateur;
 
-    console.log(user);
-
-    if (!userId) {
-      console.error("Impossible de trouver l'ID du Tenant");
-      return;
-    }
-
-    this.sessionService.getActiveModulesWithTest(userId)
-
-      .subscribe((res: any[]) => {
-        console.log(res);
-        this.modules = res.map(mt => ({
-          id: mt.id,
-          // On accède à mt.module.nom
-          nom: mt.module?.nom ?? '---',
-          // ATTENTION : Dans votre JSON c'est mt.module.nomCategorie
-          categorie: mt.module?.nomCategorie ?? '---',
-          capacite: mt.capacite ?? 0,
-          seuilScore: mt.seuilScore ?? 0
-        }));
-      });
-    this.cdr.detectChanges();
-
-    }*/
 
   loadModules() {
     const user = this.authService.getUser();
@@ -149,24 +123,11 @@ export class SessionTestComponent implements OnInit {
       });
   }
 
+
+
+
+
   /*loadSessions() {
-    this.sessionService.getAllSessions()
-      .subscribe((res: any[]) => {
-        this.sessions = res.map(s => {
-          // On cherche le nom soit dans moduleTenant.module, soit dans l'objet directement
-          const moduleNom = s.moduleTenant?.module?.nom || 'Module Inconnu';
-          return {
-            ...s,
-            moduleNom: moduleNom
-          };
-        });
-
-        this.applyFilters();
-        this.cdr.detectChanges();
-      });
-  }*/
-
-  loadSessions() {
     const user = this.authService.getUser();
     const userId = user?.idUtilisateur;
 
@@ -180,24 +141,33 @@ export class SessionTestComponent implements OnInit {
         this.applyFilters();
         this.cdr.detectChanges();
       });
+  }*/
+
+  loadSessions() {
+    const userId = this.getUserId();
+    if (!userId) return;
+
+    this.sessionService.getMySessions(userId).subscribe({
+      next: (res: any[]) => {
+        // On map les données pour s'assurer que moduleNom est disponible pour les filtres
+        this.sessions = res.map(s => ({
+          ...s,
+          moduleNom: s.moduleTenant?.module?.nom || 'Module Inconnu'
+        }));
+
+        // On applique les filtres et le tri immédiatement
+        this.applyFilters();
+
+        // On force la détection car les données arrivent de manière asynchrone
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error("Erreur lors du chargement des sessions :", err);
+      }
+    });
   }
 
-  // ================= FILTER =================
-  /*applyFilters() {
 
-    this.filteredSessions = this.sessions
-      .filter(s =>
-        s.titre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        s.moduleNom.toLowerCase().includes(this.searchTerm.toLowerCase())
-      )
-      .filter(s => !this.filterEtat || s.etat === this.filterEtat);
-
-    this.filteredModules = this.modules.filter(m =>
-      m.nom.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-
-    this.sortSessions();
-  }*/
 
 
   applyFilters() {
@@ -283,67 +253,9 @@ export class SessionTestComponent implements OnInit {
     this.showModuleSessionsModal = false;
   }
 
-  // ================= SESSION CRUD =================
 
 
   /*submitSession() {
-
-    if (this.addSessionForm.invalid || this.selectedModuleId === null) return;
-
-    const form = this.addSessionForm.value;
-
-    const d1 = new Date(form.dateDebut);
-    const d2 = new Date(form.dateFin);
-    const today = new Date();
-
-    // ✅ règle 1
-    if (d2 <= d1) {
-      this.showAlert('error', "❌ Date fin doit être après date début");
-      return;
-    }
-
-    if (d1 <= today) {
-      this.showAlert('error', "❌ Date début doit être supérieure à aujourd'hui");
-      return;
-    }
-
-    // 🔥 DIFFERENCE ADD / UPDATE
-    if (this.selectedSession) {
-
-      // ✅ UPDATE
-      this.sessionService.updateSession(this.selectedSession.idSessionTest, form)
-        .subscribe({
-          next: () => {
-            //alert('✅ Session modifiée');
-            this.closeModal();
-            this.loadSessions();
-          },
-          error: (err) => {
-            alert(err.error?.message || '❌ Erreur update');
-          }
-        });
-
-    } else {
-
-      // ✅ ADD
-      this.sessionService.addSession(this.selectedModuleId, form)
-        .subscribe({
-          next: () => {
-            //alert('✅ Session ajoutée');
-            this.closeModal();
-            this.viewMode = 'sessions'; // Basculer pour voir le résultat
-            this.loadSessions();
-            this.cdr.detectChanges();
-          },
-          error: (err) => {
-            alert(err.error?.message || '❌ Conflit ou erreur');
-          }
-        });
-
-    }
-  }*/
-
-  submitSession() {
 
     if (this.addSessionForm.invalid || this.selectedModuleId === null) return;
 
@@ -386,6 +298,7 @@ export class SessionTestComponent implements OnInit {
             this.closeModal();
             this.viewMode = 'sessions';
             this.loadSessions();
+            this.cdr.detectChanges(); // 🔥 AJOUTE ÇA
           },
           error: (err) => {
             this.showAlert('error', err.error?.message || '❌ Erreur serveur');
@@ -420,17 +333,76 @@ export class SessionTestComponent implements OnInit {
           }
         });
     }
+  }*/
+
+  submitSession() {
+    if (this.addSessionForm.invalid || this.selectedModuleId === null) return;
+
+    const form = this.addSessionForm.value;
+    const userId = this.getUserId();
+
+    // On prépare les dates pour la comparaison
+    const d1 = new Date(form.dateDebut);
+    const d2 = new Date(form.dateFin);
+    const today = new Date();
+
+
+    // ✅ Règle 1 : Date fin après date début
+    if (d2 <= d1) {
+      this.showAlert('error', "❌ La date de fin doit être après la date de début.");
+      return;
+    }
+
+    // ✅ Règle 2 : Date début dans le futur
+    if (d1 <= today) {
+      this.showAlert('error', "❌ La date de début doit être supérieure à aujourd'hui.");
+      return;
+    }
+
+    // ✅ Règle 3 : Vérification des conflits de dates en local
+    if (this.isDateConflict(form)) {
+      this.showAlert('warning', "⚠️ Une session existe déjà sur cette période pour ce module.");
+      return;
+    }
+
+    // --- TRAITEMENT API ---
+
+    // CAS : AJOUT
+    if (!this.selectedSession) {
+      this.sessionService.addSession(this.selectedModuleId, userId, form).subscribe({
+        next: () => {
+          this.closeModal();
+          this.viewMode = 'sessions';
+          this.loadSessions(); // Rafraîchissement après succès
+          this.showAlert('success', "✅ Session ajoutée avec succès.");
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          // On cherche le message dans err.error.message ou err.error
+          const errorMsg = err.error?.message || err.error || '❌ Erreur serveur';
+          this.showAlert('error', errorMsg);
+        }
+      });
+    }
+    // CAS : MODIFICATION
+    else {
+      this.sessionService.updateSession(this.selectedSession.idSessionTest, userId, form).subscribe({
+        next: () => {
+          this.closeModal();
+          this.loadSessions(); // Rafraîchissement après succès
+          this.showAlert('success', "✏️ Session modifiée avec succès.");
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          // On cherche le message dans err.error.message ou err.error
+          const errorMsg = err.error?.message || err.error || '❌ Erreur serveur';
+          this.showAlert('error', errorMsg);
+        }
+      });
+    }
   }
 
-  /*deleteSession(id: number) {
-    if (!confirm("Supprimer cette session ?")) return;
 
-    this.sessionService.deleteSession(id)
-      .subscribe(() => {
-        this.loadSessions();
-      });
-
-  }*/
 
   // ================= VIEW =================
   viewSession(session: any) {
