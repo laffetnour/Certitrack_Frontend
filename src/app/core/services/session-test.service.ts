@@ -101,8 +101,15 @@ export class SessionTestService {
   }
 
   // Récupérer toutes les sessions
-  getAllSessions(): Observable<SessionTest[]> {
+  /*getAllSessions(): Observable<SessionTest[]> {
     return this.http.get<SessionTest[]>(`${this.baseUrl}/all`, { headers: this.getAuthHeaders() });
+  }*/
+
+  getMySessions(userId: number): Observable<SessionTest[]> {
+    return this.http.get<SessionTest[]>(
+      `${this.baseUrl}/my-sessions/${userId}`,
+      { headers: this.getAuthHeaders() }
+    );
   }
 
   // Récupérer les sessions d’un module
@@ -116,18 +123,39 @@ export class SessionTestService {
   }
 
   // Ajouter une session
-  addSession(moduleTenantId: number, session: SessionTest): Observable<SessionTest> {
+  /*addSession(moduleTenantId: number, session: SessionTest): Observable<SessionTest> {
     return this.http.post<SessionTest>(`${this.baseUrl}/add/${moduleTenantId}`, session, { headers: this.getAuthHeaders() });
+  }*/
+  addSession(moduleTenantId: number, userId: number, session: SessionTest) {
+    return this.http.post(
+      `${this.baseUrl}/add/${moduleTenantId}/${userId}`,
+      session,
+      { headers: this.getAuthHeaders() }
+    );
   }
 
   // Mettre à jour une session
-  updateSession(id: number, session: SessionTest): Observable<SessionTest> {
+  /*updateSession(id: number, session: SessionTest): Observable<SessionTest> {
     return this.http.put<SessionTest>(`${this.baseUrl}/update/${id}`, session, { headers: this.getAuthHeaders() });
+  }*/
+  updateSession(id: number, userId: number, session: SessionTest) {
+    return this.http.put(
+      `${this.baseUrl}/update/${id}/${userId}`,
+      session,
+      { headers: this.getAuthHeaders() }
+    );
   }
 
   // Supprimer une session
-  deleteSession(id: number): Observable<any> {
+  /*deleteSession(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/delete/${id}`, { headers: this.getAuthHeaders() });
+  }*/
+
+  deleteSession(id: number, userId: number) {
+    return this.http.delete(
+      `${this.baseUrl}/delete/${id}/${userId}`,
+      { headers: this.getAuthHeaders() }
+    );
   }
 
   // Filtrer par état
@@ -143,4 +171,6 @@ export class SessionTestService {
       headers: this.getAuthHeaders()
     });
   }
+
+
 }

@@ -58,10 +58,15 @@ export class SessionTestComponent implements OnInit {
   showDeleteModal = false;
   sessionToDeleteId: number | null = null;
 
+
+
   constructor(
     private sessionService: SessionTestService,private authService: AuthService,
     private fb: FormBuilder, private cdr: ChangeDetectorRef
   ) {}
+  getUserId(): number {
+    return this.authService.getUser()?.idUtilisateur;
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -144,7 +149,7 @@ export class SessionTestComponent implements OnInit {
       });
   }
 
-  loadSessions() {
+  /*loadSessions() {
     this.sessionService.getAllSessions()
       .subscribe((res: any[]) => {
         this.sessions = res.map(s => {
@@ -155,6 +160,22 @@ export class SessionTestComponent implements OnInit {
             moduleNom: moduleNom
           };
         });
+
+        this.applyFilters();
+        this.cdr.detectChanges();
+      });
+  }*/
+
+  loadSessions() {
+    const user = this.authService.getUser();
+    const userId = user?.idUtilisateur;
+
+    this.sessionService.getMySessions(userId)
+      .subscribe((res: any[]) => {
+        this.sessions = res.map(s => ({
+          ...s,
+          moduleNom: s.moduleTenant?.module?.nom || 'Module Inconnu'
+        }));
 
         this.applyFilters();
         this.cdr.detectChanges();
@@ -353,7 +374,12 @@ export class SessionTestComponent implements OnInit {
         return;
       }
 
-      this.sessionService.addSession(this.selectedModuleId, form)
+      //this.sessionService.addSession(this.selectedModuleId, form)
+      this.sessionService.addSession(
+        this.selectedModuleId!,
+        this.getUserId(),
+        form
+      )
         .subscribe({
           next: () => {
             //this.showAlert('success', "✅ Session ajoutée");
@@ -377,7 +403,12 @@ export class SessionTestComponent implements OnInit {
       }
 
 
-      this.sessionService.updateSession(this.selectedSession.idSessionTest, form)
+      //this.sessionService.updateSession(this.selectedSession.idSessionTest, form)
+      this.sessionService.updateSession(
+        this.selectedSession.idSessionTest,
+        this.getUserId(),
+        form
+      )
         .subscribe({
           next: () => {
             //this.showAlert('success', "✏️ Session modifiée");
@@ -503,7 +534,11 @@ export class SessionTestComponent implements OnInit {
   confirmDelete() {
     if (!this.sessionToDeleteId) return;
 
-    this.sessionService.deleteSession(this.sessionToDeleteId)
+    //this.sessionService.deleteSession(this.sessionToDeleteId)
+    this.sessionService.deleteSession(
+      this.sessionToDeleteId!,
+      this.getUserId()
+    )
       .subscribe({
         next: () => {
           this.loadSessions();
