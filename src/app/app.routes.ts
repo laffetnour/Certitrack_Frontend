@@ -33,6 +33,9 @@ import {ListeModuleComponent} from './features/dashboard/directeur/ListeModule/L
 import {AffichageListeComponent} from './features/dashboard/directeur/ListeModule/AffichageListe.component'
 import { QuotasComponent } from './features/dashboard/adminTenant/quotas/quotas.component';
 import { SessionTestComponent } from './features/dashboard/adminTenant/session-test/session-test.component';
+
+import { SessionInscComponent} from './features/dashboard/adminTenant/session-insc/session-insc.component';
+
 import { DashboardCandidatComponent } from './features/dashboard/candidat/dashboard/dashboard.component';
 import { CandidatLayoutComponent } from './features/dashboard/candidat/layout/layout.component';
 import { ModulesCandidatComponent } from './features/dashboard/candidat/modules/modules.component';
@@ -113,7 +116,8 @@ export const routes: Routes = [
        { path: 'moduleTenant', component: ModuleTenantComponent },
        { path: 'ListeModuleTenant', component: ListeModuleTenantComponent },
       { path: 'quotas', component: QuotasComponent },
-      { path: 'session-test', component: SessionTestComponent }
+      { path: 'session-test', component: SessionTestComponent },
+      { path: 'session-insc', component: SessionInscComponent }
     ]
   },
 

@@ -66,6 +66,12 @@ saveUser(data: any) {
     return user ? JSON.parse(user) : null;
   }
 
+getTenantId(): number | null {
+  const user = this.getUser();
+  // On descend dans la hiérarchie : user -> tenant -> id
+  return user?.tenant?.idTenant || null;
+}
+
   logout() {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
