@@ -16,6 +16,12 @@ export class EtablissementService{
     return this.http.get(this.api);
 
   }
+
+getAll ():Observable<any>{
+
+   return this.http.get(`${this.api}/public/all`);
+
+ }
   getSpecialites(etabId:number):Observable<any>{
     return this.http.get(`${this.api}/${etabId}/specialites`);
   }

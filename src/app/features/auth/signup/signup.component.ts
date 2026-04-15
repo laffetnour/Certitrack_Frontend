@@ -130,10 +130,12 @@ onSubmit() {
 
   loadEtablissements(){
 
-    this.etablissementService.getEtablissements().subscribe({
+    this.etablissementService.getAll().subscribe({
 
       next:data=>{
+        console.log("Établissements reçus :", data);
         this.etablissements=data;
+        this.cdr.detectChanges();
       },
 
       error:err=>{
