@@ -1,261 +1,498 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { SessionInscService } from '../../../../core/services/session-insc.service';
 import { AuthService } from '../../../../core/services/auth.service';
-import { ModuleTenantService} from '../../../../core/services/ModuleTenant.service';
 
 @Component({
   selector: 'app-session-insc',
-    standalone: true,
-    imports: [
-      CommonModule,
-      ReactiveFormsModule
-    ],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DatePipe
+  ],
   templateUrl: './session-insc.component.html',
-  styleUrls: ['../ListeModuleTenant/ModuleTenant.component.css']// Réutilise ton CSS modern-table
+  styleUrls: ['../ListeModuleTenant/ModuleTenant.component.css']
 })
 export class SessionInscComponent implements OnInit {
+
+  // ================= DATA =================
   sessions: any[] = [];
-  activeModules: any[] = [];
-  filteredModulesForSelect: any[] = [];
-
-  searchTermModule: string = '';
-  selectedModuleName: string = '';
-  showModuleResults: boolean = false;
-
-
-
   filteredSessions: any[] = [];
-  addSessionForm: FormGroup;
 
-    showAddModal = false;
-    showDeleteModal = false;
-    alertVisible = false;
-    selectedSession: any = null;
-    idToDelete: number | null = null;
-    alertType: 'success' | 'error' | 'warning' = 'success';
-    alertMessage = '';
+  modules: any[] = [];
+  filteredModules: any[] = [];
 
-  constructor(private fb: FormBuilder, private service: SessionInscService,
-    private authService: AuthService,
-    private moduleTenantService: ModuleTenantService,
+  selectedModule: any = null;
+  selectedModuleId: number | null = null;
+
+  selectedSession: any = null;
+
+  viewMode: 'modules' | 'sessions' = 'modules';
+
+  // ================= UI =================
+  searchTerm = '';
+  filterEtat = '';
+
+  showAddModal = false;
+  showViewModal = false;
+  showDeleteModal = false;
+
+  // ================= FORM =================
+  addSessionForm!: FormGroup;
+
+  // ================= ALERT =================
+  alertVisible = false;
+  alertMessage = '';
+  alertType: 'success' | 'error' | 'warning' = 'success';
+
+  moduleSessions: any[] = [];
+  showModuleSessionsModal = false;
+
+  today: Date = new Date();
+  filterType = '';
+
+  constructor(
+    private service: SessionInscService,
+    private auth: AuthService,
+    private fb: FormBuilder,
     private cdr: ChangeDetectorRef
-    ) {
+  ) {}
+
+  ngOnInit(): void {
+    this.initForm();
+    this.loadData();
+  }
+
+  getUserId(): number {
+    return this.auth.getUser()?.idUtilisateur;
+  }
+
+  // ================= INIT FORM =================
+  initForm() {
     this.addSessionForm = this.fb.group({
-      nomSession: ['', Validators.required],
-      dateDebutInsc: ['', Validators.required],
-      dateFinInsc: ['', Validators.required],
-      moduleTenantId: [null, Validators.required]
+      titre: ['', Validators.required],
+      dateDebut: ['', Validators.required],
+      dateFin: ['', Validators.required],
+      dureeMax: [null],
+      nbreQuestionTechnique: [null]
     });
   }
 
-  ngOnInit(): void {
-    this.loadSessions();
+  // ================= LOAD DATA =================
+  loadData() {
+    const userId = this.getUserId();
+
+    // 🔵 sessions
+    this.service.getMySessions(userId).subscribe(res => {
+      this.sessions = res.map(s => ({
+        ...s,
+        moduleNom: s.moduleTenant?.module?.nom || '---'
+      }));
+      this.cdr.detectChanges();
+      this.applyFilters();
+    });
+
+    // 🟢 modules actifs
+    this.service.getModules(userId).subscribe(res => {
+      this.modules = res.map(m => ({
+        id: m.id,
+        nom: m.module?.nom || '---',
+        categorie: m.module?.nomCategorie || '---', // 🔥 CORRIGÉ ICI
+        capacite: m.capacite,
+        seuilScore: m.seuilScore,
+        avecTest: m.avecTest
+      }));
+
+      this.filteredModules = this.modules;
+
+      this.cdr.detectChanges(); // ✅ IMPORTANT
+    });
   }
 
-showAlert(type: 'success' | 'error' | 'warning', msg: string) {
-  this.alertType = type;
-  this.alertMessage = msg;
-  this.alertVisible = true;
+  // ================= FILTER =================
+  applyFilters() {
 
-  // On force Angular à rafraîchir la vue
-  this.cdr.detectChanges();
+    const search = this.searchTerm.toLowerCase();
 
-  // L'alerte disparaît automatiquement après 5 secondes
-  setTimeout(() => {
-    this.alertVisible = false;
-    this.cdr.detectChanges();
-  }, 5000);
-}
-loadSessions() {
-  const user = this.authService.getUser();
+    this.filteredSessions = this.sessions.filter(s => {
 
-  // On accède à l'ID du tenant en suivant la hiérarchie de ton objet
-  // On utilise l'opérateur ?. pour éviter les erreurs si l'objet est absent
-  const tenantId = user?.idTenant;
+      const matchSearch =
+        s.titre?.toLowerCase().includes(search) ||
+        s.moduleNom?.toLowerCase().includes(search);
 
-  if (tenantId) {
-    console.log("Chargement des sessions pour le Tenant ID:", tenantId);
+      const matchEtat =
+        !this.filterEtat ||
+        s.etat?.toLowerCase() === this.filterEtat.toLowerCase();
 
-    this.service.getSessionsByTenant(tenantId).subscribe({
-      next: (data) => {
-        console.log("Données reçues :", data);
-        this.sessions = data;
-        this.filteredSessions = [...data];
+      return matchSearch && matchEtat;
+    });
+
+    /*this.filteredModules = this.modules.filter(m =>
+      m.nom.toLowerCase().includes(search)
+    );*/
+    this.filteredModules = this.modules.filter(m => {
+      const matchSearch = m.nom.toLowerCase().includes(search);
+
+      // Logique pour le type de test
+      let matchType = true;
+      if (this.filterType === 'avecTest') matchType = m.avecTest === true;
+      if (this.filterType === 'sansTest') matchType = m.avecTest === false;
+
+      return matchSearch && matchType;
+    });
+  }
+
+  // ================= MODULE ACTIONS =================
+  openAddModal(moduleId: number) {
+
+    this.selectedSession = null;
+    this.selectedModuleId = moduleId;
+
+    this.selectedModule = this.modules.find(m => m.id === moduleId);
+
+    console.log("MODULE SELECTED =", this.selectedModule); // DEBUG
+
+    this.addSessionForm.reset({
+      dureeMax: null,
+      nbreQuestionTechnique: null
+    });
+
+    this.showAddModal = true;
+  }
+
+  /*viewSessionsByModule(moduleId: number) {
+
+    this.service.getSessionsByModule(moduleId).subscribe(res => {
+
+      this.sessions = res.map(s => ({
+        ...s,
+        moduleNom: s.moduleTenant?.module?.nom || '---'
+      }));
+
+      this.viewMode = 'sessions';
+      this.applyFilters();
+    });
+  }*/
+
+  viewSessionsByModule(moduleId: number) {
+    this.selectedModule = this.modules.find(m => m.id === moduleId);
+    this.moduleSessions = []; // Reset le tableau avant l'appel
+
+    this.service.getSessionsByModule(moduleId).subscribe({
+      next: (res) => {
+        // On remplit les données
+        this.moduleSessions = res.map(s => ({
+          ...s,
+          moduleNom: s.moduleTenant?.module?.nom || '---'
+        }));
+
+        // 🔥 IMPORTANT : On ouvre le modal SEULEMENT après avoir reçu les données
+        this.showModuleSessionsModal = true;
+
+        // 🔥 FORCE la mise à jour de la vue immédiatement
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error("Erreur lors de la récupération des sessions", err);
-        this.showAlert('error', 'Impossible de charger les sessions.');
+        this.showAlert('error', 'Erreur lors de la récupération des sessions');
       }
     });
-  } else {
-    console.error("Structure utilisateur :", user);
-    this.showAlert('error', "ID Tenant introuvable dans votre profil.");
-  }
-}
-
-
-  /*openEditModal(s: any) {
-    this.selectedSession = s;
-    this.addSessionForm.patchValue({
-      nomSession: s.nomSession,
-      dateDebutInsc: s.dateDebutInsc.split('T')[0],
-      dateFinInsc: s.dateFinInsc.split('T')[0],
-      moduleTenantId: s.moduleTenant.id
-    });
-    this.showAddModal = true;
-  }*/
-
-
-openEditModal(s: any) {
-  this.loadActiveModules(); // <--- CRUCIAL : Charger la liste pour la recherche
-  this.selectedSession = s;
-  this.showAddModal = true;
-
-  this.addSessionForm.patchValue({
-    nomSession: s.nomSession,
-    moduleTenantId: s.moduleTenant?.id,
-    dateDebutInsc: s.dateDebutInsc ? s.dateDebutInsc.split('T')[0] : '',
-    dateFinInsc: s.dateFinInsc ? s.dateFinInsc.split('T')[0] : ''
-  });
-
-  if (s.moduleTenant && s.moduleTenant.module) {
-    this.searchTermModule = s.moduleTenant.module.nom;
-    this.selectedModuleName = s.moduleTenant.module.nom;
-  } else {
-    this.searchTermModule = '';
-    this.selectedModuleName = '';
   }
 
-  this.showModuleResults = false;
-}
+  // ================= SUBMIT =================
+  /*submitSession() {
 
+    if (this.addSessionForm.invalid || !this.selectedModuleId) return;
 
-submitSession() {
+    const form = this.addSessionForm.value;
+    const userId = this.getUserId();
 
-  const data = { ...this.addSessionForm.value };
+    const d1 = new Date(form.dateDebut);
+    const d2 = new Date(form.dateFin);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-  // 2. Sécurité : Vérifier si les dates existent avant de concaténer "T00:00:00"
-  if (data.dateDebutInsc && !data.dateDebutInsc.includes('T')) {
-    data.dateDebutInsc = data.dateDebutInsc + "T00:00:00";
-  }
-  if (data.dateFinInsc && !data.dateFinInsc.includes('T')) {
-    data.dateFinInsc = data.dateFinInsc + "T23:59:59";
-  }
-
-  const request = this.selectedSession
-    ? this.service.updateSession(this.selectedSession.id, data)
-    : this.service.creerSession(data);
-
-  request.subscribe({
-    next: () => {
-      this.showAlert('success', 'Opération réussie');
-      this.closeModal();
-      this.loadSessions();
-    },
-    error: (err) => {
-      /*console.error("Détail de l'erreur reçue :", err);
-
-      // Gestion du 403 (Forbidden)
-      if (err.status === 403) {
-        this.showAlert('error', "Accès refusé (403) : Vérifiez votre connexion ou vos droits.");
-        return;
-      }
-
-      // Extraction sécurisée du message d'erreur pour éviter le crash "properties of null"
-      let errorMessage = 'Une erreur serveur est survenue';
-
-      if (err.error) {
-        // On cherche le message dans l'ordre de probabilité (Spring Boot ou ton erreur custom)
-        errorMessage = err.error.message || err.error.error || errorMessage;
-      }
-
-      this.showAlert('error', errorMessage);*/
-
-      const msg = err.error?.error || "Erreur lors de la création";
-        this.showAlert('error', msg);
+    // ✅ DATE FIN > DATE DEBUT
+    if (d2 <= d1) {
+      this.showAlert('error', '❌ Date fin doit être après date début');
+      return;
     }
-  });
-}
 
+    // ✅ DATE DEBUT > AUJOURD’HUI
+    if (d1 <= today) {
+      this.showAlert('error', '❌ Date début doit être dans le futur');
+      return;
+    }
 
+    // ✅ CONFLIT
+    if (this.isDateConflict(form)) {
+      this.showAlert('warning', '⚠️ Conflit avec une session existante');
+      return;
+    }
 
+    // ✅ SI MODULE SANS TEST → vider champs
+    if (!this.selectedModule?.avecTest) {
+      form.dureeMax = null;
+      form.nbreQuestionTechnique = null;
+    }
 
-  /*showAlert(type: any, msg: string) {
-    this.alertType = type;
-    this.alertMessage = msg;
-    this.alertVisible = true;
+    // ================= ADD =================
+    if (!this.selectedSession) {
+
+      this.service.addSession(this.selectedModuleId, userId, form)
+        .subscribe({
+          next: () => {
+            this.closeModal();
+            this.viewMode = 'sessions';
+            this.loadData();
+            this.showAlert('success', '✅ Session ajoutée');
+          },
+          error: (err) => {
+            this.showAlert('error', err.error?.message || 'Erreur serveur');
+          }
+        });
+    }
+
+    // ================= UPDATE =================
+    else {
+
+      this.service.updateSession(this.selectedSession.id, userId, form)
+        .subscribe({
+          next: () => {
+            this.closeModal();
+            this.loadData();
+            this.showAlert('success', '✏️ Session modifiée');
+          },
+          error: (err) => {
+            this.showAlert('error', err.error?.message || 'Erreur update');
+          }
+        });
+    }
   }*/
 
-  closeModal() { this.showAddModal = false; }
-  openDeleteModal(id: number) { this.idToDelete = id; this.showDeleteModal = true; }
+  // DANS session-insc.component.ts
 
-  confirmDelete() {
-    if (this.idToDelete) {
-      this.service.deleteSession(this.idToDelete).subscribe({
+  submitSession() {
+    // 1. Vérification si le formulaire est valide
+    if (this.addSessionForm.invalid || !this.selectedModuleId) {
+      this.showAlert('error', '❌ Veuillez remplir tous les champs obligatoires.');
+      return;
+    }
+
+    const form = this.addSessionForm.value;
+    const userId = this.getUserId();
+
+    // Conversion des dates pour comparaison
+    const d1 = new Date(form.dateDebut);
+    const d2 = new Date(form.dateFin);
+    const today = new Date();
+    //today.setHours(0, 0, 0, 0); // Reset l'heure pour comparer uniquement le jour
+
+    // ✅ TEST 1 : DATE FIN > DATE DEBUT
+    if (d2 <= d1) {
+      console.log("Erreur: date fin <= date debut"); // Debug
+      this.showAlert('error', '❌ La date de fin doit être strictement après la date de début.');
+      return;
+    }
+
+    // ✅ TEST 2 : DATE DEBUT >= AUJOURD'HUI
+    if (d1 < today) {
+      console.log("Erreur: date debut dans le passé"); // Debug
+      this.showAlert('error', '❌ Date début doit être supérieure à aujourd\'hui.');
+      return;
+    }
+
+    // ✅ TEST 3 : CONFLIT DE DATES
+    if (this.isDateConflict(form)) {
+      this.showAlert('warning', '⚠️ Cette période chevauche une session existante pour ce module.');
+      return;
+    }
+
+    // Logique d'envoi (Add ou Update)
+    if (!this.selectedSession) {
+      this.service.addSession(this.selectedModuleId, userId, form).subscribe({
         next: () => {
-          this.showAlert('success', 'Session supprimée');
-          this.showDeleteModal = false;
-          this.loadSessions();
-          this.cdr.detectChanges(); // Force le rafraîchissement
+          this.closeModal();
+          this.viewMode = 'sessions';
+          this.loadData();
+          this.showAlert('success', '✅ Session ajoutée avec succès !');
         },
-        error: (err) => {
-          this.showAlert('error', 'Erreur lors de la suppression');
-          this.showDeleteModal = false;
-        }
+        error: (err) => this.showAlert('error', 'Erreur lors de l\'ajout.')
+      });
+    } else {
+      this.service.updateSession(this.selectedSession.id, userId, form).subscribe({
+        next: () => {
+          this.closeModal();
+          this.loadData();
+          this.showAlert('success', '✏️ Session modifiée avec succès !');
+        },
+        error: (err) => this.showAlert('error', 'Erreur lors de la modification.')
       });
     }
   }
 
-  loadActiveModules() {
-      const user = this.authService.getUser();
-      const userId = user?.idUtilisateur;
-      if (userId) {
-        this.moduleTenantService.getActiveModules(userId).subscribe(data => {
-          this.activeModules = data;
-          console.log("data : ",data);
-          this.filteredModulesForSelect = data;
-        });
+  // ================= CONFLICT =================
+  isDateConflict(form: any): boolean {
+
+    const newStart = new Date(form.dateDebut).getTime();
+    const newEnd = new Date(form.dateFin).getTime();
+
+    return this.sessions.some(s => {
+
+      const start = new Date(s.dateDebut).getTime();
+      const end = new Date(s.dateFin).getTime();
+
+      if (this.selectedSession && s.id === this.selectedSession.id) {
+        return false;
       }
-    }
 
-
-
-     openAddModal() {
-      this.loadActiveModules(); // On charge les modules au moment d'ouvrir
-      this.showAddModal = true;
-      this.addSessionForm.reset();
-    }
-
-
-
-filterModules(event: any) {
-  const val = (event.target.value || '').toLowerCase();
-  this.searchTermModule = val; // Met à jour la variable liée à l'input
-  this.showModuleResults = true; // Affiche la liste des résultats
-
-  if (!this.activeModules || this.activeModules.length === 0) {
-    // Si la liste est vide, on tente de la recharger
-    this.loadActiveModules();
-    return;
+      return (
+        s.moduleTenant?.id === this.selectedModuleId &&
+        !(newEnd < start || newStart > end)
+      );
+    });
   }
 
-  this.filteredModulesForSelect = this.activeModules.filter(mt => {
-    return mt?.module?.nom && mt.module.nom.toLowerCase().includes(val);
-  });
-}
+  // ================= DELETE =================
+  openDeleteModal(s: any) {
+    this.selectedSession = s;
+    this.showDeleteModal = true;
+  }
 
-  selectModule(mt: any) {
-    // On met à jour le formulaire avec l'ID du module choisi
+  confirmDelete() {
+
+    const userId = this.getUserId();
+
+    this.service.deleteSession(this.selectedSession.id, userId)
+      .subscribe(() => {
+        this.showDeleteModal = false;
+        this.loadData();
+        this.showAlert('success', '🗑 Session supprimée');
+      });
+  }
+
+  // ================= VIEW =================
+  viewSession(s: any) {
+    this.selectedSession = s;
+    this.showViewModal = true;
+  }
+
+  // ================= UTILS =================
+  closeModal() {
+    this.showAddModal = false;
+    this.selectedModuleId = null;
+    this.selectedSession = null;
+  }
+
+  closeViewModal() {
+    this.showViewModal = false;
+  }
+
+  /*setViewMode(mode: 'modules' | 'sessions') {
+    this.viewMode = mode;
+
+    if (mode === 'sessions') {
+      this.loadData();
+    }
+  }*/
+
+  setViewMode(mode: 'modules' | 'sessions') {
+    this.viewMode = mode;
+    this.searchTerm = '';
+    this.filterEtat = '';
+    this.filterType = ''; // Réinitialise le filtre type
+    this.applyFilters();
+
+    if (mode === 'sessions') {
+      this.loadData();
+    }
+  }
+
+  canEdit(s: any): boolean {
+    return s.etat !== 'cloturee';
+  }
+
+  /*isSubmitDisabled(): boolean {
+    return this.addSessionForm.invalid;
+  }*/
+  // Remplacez l'ancienne version par celle-ci
+  isSubmitDisabled(): boolean {
+    // 1. Si les validateurs (Validators.required) ne sont pas respectés, on bloque
+    if (this.addSessionForm.invalid) {
+      return true;
+    }
+
+    // 2. Si on est en mode MODIFICATION (selectedSession existe)
+    if (this.selectedSession) {
+      // On bloque le bouton SI le formulaire n'est PAS "sale" (donc aucune modif faite)
+      return !this.addSessionForm.dirty;
+    }
+
+    // 3. En mode AJOUT, on ne bloque pas si le formulaire est valide
+    return false;
+  }
+
+  // ================= ALERT =================
+  showAlert(type: 'success' | 'error' | 'warning', msg: string) {
+    this.alertType = type;
+    this.alertMessage = msg;
+    this.alertVisible = true;
+
+    setTimeout(() => {
+      this.alertVisible = false;
+    }, 3000);
+  }
+
+  // ================= EDIT =================
+  /*openEditModal(session: any) {
+
+    this.selectedSession = session;
+    this.selectedModuleId = session.moduleTenant?.id;
+
+    this.selectedModule = this.modules.find(m => m.id === this.selectedModuleId);
+
+    // remplir le formulaire avec les données existantes
     this.addSessionForm.patchValue({
-      moduleTenantId: mt.id
+      titre: session.titre,
+      dateDebut: this.formatDate(session.dateDebut),
+      dateFin: this.formatDate(session.dateFin),
+      dureeMax: session.dureeMax,
+      nbreQuestionTechnique: session.nbreQuestionTechnique
     });
 
-    // On met à jour l'affichage
-    this.selectedModuleName = mt.module.nom;
-    this.searchTermModule = mt.module.nom;
-    this.showModuleResults = false; // On cache la liste
+    this.showAddModal = true;
+  }*/
+  openEditModal(session: any) {
+    this.selectedSession = session;
+    this.selectedModuleId = session.moduleTenant?.id;
+    this.selectedModule = this.modules.find(m => m.id === this.selectedModuleId);
+
+    // On patch avec les dates corrigées
+    this.addSessionForm.patchValue({
+      titre: session.titre,
+      dateDebut: this.formatDate(session.dateDebut),
+      dateFin: this.formatDate(session.dateFin),
+      dureeMax: session.dureeMax,
+      nbreQuestionTechnique: session.nbreQuestionTechnique
+    });
+
+    this.addSessionForm.markAsPristine(); // Marque le formulaire comme "non touché"
+    this.showAddModal = true;
+    this.cdr.detectChanges(); // Force le rendu du modal avec les données
+  }
+
+  formatDate(dateInput: any): string {
+    if (!dateInput) return '';
+    const d = new Date(dateInput);
+    // On ajuste le décalage horaire local (ex: Tunisie +1h) pour éviter le -1 jour
+    const offset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - offset).toISOString().slice(0, 10);
+  }
+
+  closeModuleSessionsModal() {
+    this.showModuleSessionsModal = false;
   }
 }

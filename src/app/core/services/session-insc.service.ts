@@ -1,54 +1,87 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
+
+export interface Session {
+  id?: number;
+  titre: string;
+  dateDebut: string;
+  dateFin: string;
+  dureeMax?: number;
+  nbreQuestionTechnique?: number;
+  etat?: string;
+  moduleTenant?: any;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class SessionInscService {
-  private apiUrl = 'http://localhost:8080/api/sessions-inscription';
 
-  constructor(private http: HttpClient) {}
+  private api = 'http://localhost:8080/api/session';
 
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-    console.log(localStorage.getItem('token'))
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
+  private getHeaders() {
+    const token = this.authService.getToken();
+    return {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      })
+    };
   }
 
-  getSessionsByTenant(tenantId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/admin/tenant/${tenantId}`, {
-      headers: this.getAuthHeaders()
-    });
+  // ================= SESSIONS =================
+
+  getMySessions(userId: number): Observable<Session[]> {
+    return this.http.get<Session[]>(
+      `${this.api}/my/${userId}`,
+      this.getHeaders()
+    );
   }
 
-  creerSession(sessionData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/admin/creer`, sessionData, {
-      headers: this.getAuthHeaders()
-    });
+  getSessionsByModule(moduleId: number): Observable<Session[]> {
+    return this.http.get<Session[]>(
+      `${this.api}/module/${moduleId}`,
+      this.getHeaders()
+    );
   }
 
-  updateSession(id: number, sessionData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/admin/${id}`, sessionData, {
-      headers: this.getAuthHeaders()
-    });
+  // SessionInscService.ts
+
+  addSession(moduleId: number, userId: number, session: Session) {
+    // L'ordre dans l'URL doit correspondre au Controller : /add/{moduleId}/{userId}
+    return this.http.post(
+      `${this.api}/add/${moduleId}/${userId}`, // Vérifiez bien l'ordre ici
+      session,
+      this.getHeaders()
+    );
   }
 
-  deleteSession(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/admin/${id}`, {
-      headers: this.getAuthHeaders()
-    });
+  updateSession(id: number, userId: number, session: Session) {
+    return this.http.put(
+      `${this.api}/update/${id}/${userId}`,
+      session,
+      this.getHeaders()
+    );
   }
 
-  /**
-   * Récupère les modules actifs (nécessite aussi l'auth)
-   */
-  getActiveModules(userId: number): Observable<any[]> {
-    return this.http.get<any[]>(`http://localhost:8080/api/tenant-modules/active/${userId}`, {
-      headers: this.getAuthHeaders()
-    });
+  deleteSession(id: number, userId: number) {
+    return this.http.delete(
+      `${this.api}/${id}/${userId}`,
+      this.getHeaders()
+    );
   }
+
+  getModules(userId: number) {
+    return this.http.get<any[]>(
+      `${this.api}/modules/${userId}`,
+      this.getHeaders()
+    );
+  }
+
 }

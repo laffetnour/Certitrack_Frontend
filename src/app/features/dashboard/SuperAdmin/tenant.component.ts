@@ -34,7 +34,9 @@ export class TenantComponent implements OnInit {
   ) {
     this.tenantForm = this.fb.group({
       nom: ['', [Validators.required, Validators.minLength(3)]],
-      statut: [true]
+      statut: [true],
+      logo: [''],
+      banniere: ['']
     });
   }
 
@@ -360,5 +362,20 @@ deleteSelected() {
     });
   }
 }
+
+  onFileSelected(event: any, field: string) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.tenantForm.patchValue({
+        [field]: reader.result // base64
+      });
+    };
+
+    reader.readAsDataURL(file);
+  }
 
 }
