@@ -1036,3 +1036,42 @@ input[type="checkbox"] {
 .btn-confirm-bulk:not(:disabled):hover {
   filter: brightness(1.1);
 }
+
+
+.header-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.btn-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  background-color: transparent;
+  color: #64748b; /* Gris-bleu discret */
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-right: 15px; /* Espace avec les autres boutons */
+}
+
+.btn-back:hover {
+  background-color: #f1f5f9;
+  color: #1e293b;
+  border-color: #cbd5e1;
+}
+
+.btn-back i {
+  font-size: 14px;
+}
+
+/* On garde les header-actions flexibles */
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}

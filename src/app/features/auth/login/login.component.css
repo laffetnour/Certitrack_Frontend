@@ -1,4 +1,4 @@
-
+/*
 .auth-wrapper {
   position: relative;
   height: 100vh;
@@ -86,7 +86,7 @@
 .btn-primary {
   width: 100%;
   padding: 12px;
-  background-color: #2563eb; /* Bleu principal */
+  background-color: #2563eb;
   color: white;
   border: none;
   border-radius: 8px;
@@ -148,4 +148,478 @@
   font-size: 14px;
   text-align: center;
   border: 1px solid #fca5a5;
+}
+*/
+
+/* =========================================
+   VARIABLES & RESET
+   ========================================= */
+:host {
+  --primary-color: #ea5357;       /* Rouge/Rose */
+  --secondary-color: #303D49;     /* Gris foncé/Bleu nuit */
+  --bg-color: #f4f7f6;
+  --text-main: #2d3436;
+  --text-muted: #636e72;
+  --white: #ffffff;
+  --error-bg: #fff5f5;
+  --error-text: #e74c3c;
+  --info-bg: #e3f2fd;
+  --info-text: #1976d2;
+
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.12);
+  --transition: all 0.3s ease;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* =========================================
+   CONTENEUR PRINCIPAL
+   ========================================= */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-color);
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+/* Arrière-plan stylisé (cercles subtils) */
+.auth-bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(circle at 10% 10%, rgba(234, 83, 87, 0.03) 0%, transparent 30%),
+    radial-gradient(circle at 90% 90%, rgba(48, 61, 73, 0.03) 0%, transparent 40%);
+  z-index: 1;
+}
+
+.auth-container {
+  display: flex;
+  width: 100%;
+  max-width: 1100px; /* Largeur max pour le grand écran */
+  background-color: var(--white);
+  border-radius: 20px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  z-index: 2;
+  /* Animation d'apparition */
+  animation: slideUp 0.6s ease-out;
+}
+
+/* =========================================
+   PARTIE GAUCHE : INFO (55%)
+   ========================================= */
+.auth-info {
+  flex: 1 1 55%;
+  background-color: var(--secondary-color);
+  color: var(--white);
+  padding: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Motif d'arrière-plan subtil pour la partie gauche */
+.auth-info::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.05;
+  /*background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");*/
+}
+
+.info-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 450px;
+}
+
+.theme-icon {
+  color: var(--primary-color);
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 30px;
+  /* Animation douce */
+  animation: pulse 3s infinite;
+}
+
+.brand-details h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+  letter-spacing: -1px;
+}
+
+.brand-details h1 span {
+  color: var(--primary-color);
+}
+
+.brand-details .description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 40px;
+}
+
+.info-features {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 30px;
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.feature .icon {
+  font-size: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.feature .text {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+/* =========================================
+   PARTIE DROITE : FORMULAIRE (45%)
+   ========================================= */
+.auth-form-section {
+  flex: 1 1 45%;
+  padding: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--white);
+}
+
+.form-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-header {
+  margin-bottom: 35px;
+}
+
+.form-header h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--secondary-color);
+  margin-bottom: 10px;
+}
+
+.form-header p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* =========================================
+   STYLES DES INPUTS
+   ========================================= */
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--secondary-color);
+  margin-bottom: 8px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 15px 15px 15px 45px; /* Padding gauche pour l'icône */
+  border: 2px solid #e1e8ed;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  color: var(--text-main);
+  transition: var(--transition);
+  background-color: #fbfcfd;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  background-color: var(--white);
+  box-shadow: 0 0 0 4px rgba(234, 83, 87, 0.1);
+}
+
+/* Gestion basique des erreurs sur l'input */
+.input-group input.ng-touched.ng-invalid {
+  border-color: var(--error-text);
+}
+
+.error-text {
+  font-size: 0.8rem;
+  color: var(--error-text);
+  margin-top: 5px;
+  display: block;
+}
+
+/* Actions du formulaire (Mot de passe oublié) */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 25px;
+  margin-top: -10px;
+}
+
+.forgot-password {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.forgot-password:hover {
+  color: var(--primary-color);
+}
+
+/* =========================================
+   BOUTONS & ALERTES
+   ========================================= */
+.btn-primary {
+  width: 100%;
+  padding: 15px;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 12px rgba(234, 83, 87, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: #d6454a; /* Version légèrement plus sombre du rouge */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(234, 83, 87, 0.3);
+}
+
+.btn-primary:disabled {
+  background-color: #fabebf;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Styles pour vos alertes Angular */
+.custom-alert {
+  padding: 12px 15px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  border-left: 4px solid;
+  animation: fadeIn 0.4s ease;
+}
+
+.alert-danger {
+  background-color: var(--error-bg);
+  color: var(--error-text);
+  border-color: var(--error-text);
+}
+
+.alert-info {
+  background-color: var(--info-bg);
+  color: var(--info-text);
+  border-color: var(--info-text);
+}
+
+/* =========================================
+   FOOTER (Créer un compte)
+   ========================================= */
+.auth-footer {
+  margin-top: 35px;
+  padding-top: 25px;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.auth-footer p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 15px;
+}
+
+.btn-secondary {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: transparent;
+  color: var(--secondary-color);
+  border: 2px solid #e1e8ed;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.btn-secondary:hover {
+  border-color: var(--secondary-color);
+  background-color: #f8fbfd;
+}
+
+/* =========================================
+   ANIMATIONS & RESPONSIVE
+   ========================================= */
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Responsive pour Tablettes et Mobiles */
+@media (max-width: 900px) {
+  .auth-container {
+    flex-direction: column; /* Empiler les éléments */
+    max-width: 500px;
+  }
+
+  .auth-info {
+    padding: 40px;
+  }
+
+  .brand-details h1 {
+    font-size: 2.2rem;
+  }
+
+  .auth-form-section {
+    padding: 40px;
+  }
+}
+
+@media (max-width: 500px) {
+  .auth-wrapper {
+    padding: 10px;
+  }
+
+  .auth-info {
+    padding: 30px 20px;
+  }
+
+  .info-features {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .brand-details .description {
+    font-size: 1rem;
+    margin-bottom: 25px;
+  }
+
+  .auth-form-section {
+    padding: 30px 20px;
+  }
+
+  .form-header h2 {
+    font-size: 1.8rem;
+  }
+}
+
+
+/* Conteneur du logo pour la gestion de l'espacement */
+.logo-wrapper {
+  margin-bottom: 20px; /* Espace entre le logo et le titre CertiTrack */
+  display: flex;
+  justify-content: center;
+}
+
+/* Style du logo Smartfuture */
+.main-logo {
+  max-width: 180px;    /* Ajustez la taille selon vos préférences */
+  height: auto;
+  object-fit: contain;
+  /* Optionnel : ajout d'un filtre si le logo est sombre et que le fond est sombre */
+  /* filter: brightness(0) invert(1); */
+}
+
+/* Ajustement du titre juste en dessous */
+.brand-details h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-top: 0;      /* On réduit la marge haute car le logo est juste au dessus */
+  margin-bottom: 15px;
+  color: var(--white);
+  letter-spacing: -1px;
+}
+
+/* On peut garder l'icône de thème (chêne) ou la supprimer si le logo suffit */
+.theme-icon {
+  display: none; /* Cache l'ancienne icône SVG pour mettre le logo en avant */
+}
+
+.logo-wrapper {
+  min-height: 80px; /* Taille approximative de ton logo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.main-logo.placeholder {
+  opacity: 0.5;
+  filter: grayscale(1);
 }

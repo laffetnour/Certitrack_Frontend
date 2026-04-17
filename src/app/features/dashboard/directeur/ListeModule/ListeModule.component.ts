@@ -5,13 +5,14 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { EtablissementService } from '../../../../core/services/etablissement.service';
 import { SpecialiteModuleService } from '../../../../core/services/SpecialiteModule.service';
 import { FormsModule } from '@angular/forms';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { forkJoin } from 'rxjs'; // <--- INDISPENSABLE
 
 
 @Component({
   selector: 'app-module',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule, RouterLink, RouterLinkActive],
   templateUrl: './ListeModule.component.html',
   styleUrls: ['./ListeModule.component.css']
 })

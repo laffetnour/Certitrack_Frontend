@@ -1,11 +1,21 @@
 <div class="specialite-container">
 
+  <div class="header-actions">
+    <button class="btn-nav" routerLink="/directeur/modules" routerLinkActive="active">
+      <i class="fas fa-cubes"></i> Modules
+    </button>
+
+    <button class="btn-nav" routerLink="/directeur/Listemodules" routerLinkActive="active">
+      <i class="fas fa-certificate"></i> Parcours de certification par spécialité
+    </button>
+  </div>
 
   <div class="specialite-header">
     <h1>Gestion des Spécialités</h1>
     <button class="btn-add" (click)="openAdd()">
       <span>+</span> Nouvelle Spécialité
     </button>
+
   </div>
 
 
@@ -19,7 +29,7 @@
     <span>{{ selectedIds.length }} sélectionné(s)</span>
     <button class="btn-activate" (click)="activateSelected()">Activer</button>
     <button class="btn-deactivate" (click)="deactivateSelected()">Désactiver</button>
-    <button class="btn-delete" (click)="deleteSelected()">Supprimer</button>
+    <!--<button class="btn-delete" (click)="deleteSelected()">Supprimer</button>-->
   </div>
 
 
@@ -95,7 +105,7 @@
           </button>
 
 
-          <button class="btn-delete" (click)="delete(sp.idSpecialite)" title="Supprimer">
+          <button class="btn-delete" (click)="delete(sp)" title="Supprimer">
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="16" height="16" viewBox="0 0 24 24"
                  fill="none" stroke="currentColor" stroke-width="2"
@@ -141,6 +151,54 @@
             name="nom"
             class="form-control"
           >
+        </div>
+
+        <div class="form-group">
+          <label>Mode d'affichage des modules</label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" [(ngModel)]="form.modeAffichage" name="mode" value="OUVERTE"> Ouverte
+            </label>
+            <label>
+              <input type="radio" [(ngModel)]="form.modeAffichage" name="mode" value="FIXE"> Fixe
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Affecter des Modules (Tenant Actifs)</label>
+
+          <div class="search-box">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Rechercher par nom, mot-clé ou catégorie..."
+              [(ngModel)]="moduleSearchTerm"
+              name="searchModule"
+            >
+          </div>
+
+          <div class="module-selection-list">
+            <div *ngFor="let mt of filteredModules" class="module-item"
+                 [class.selected]="selectedModuleIds.has(mt.id)"
+                 (click)="toggleModule(mt.id)">
+              <div class="module-info">
+                <span class="module-name">{{ mt.module?.nom }}</span>
+                <!--<div class="categories-tags">
+                  <small *ngFor="let cat of mt.module?.categories" class="tag-category">
+                    {{ cat.nom || cat }}
+                  </small>
+                </div>
+                <div class="module-tags">
+                  <small *ngFor="let tag of mt.module?.motCles" class="tag">
+                    {{ tag.description }}
+                  </small>
+                </div>-->
+              </div>
+              <input type="checkbox" [checked]="selectedModuleIds.has(mt.id)" (click)="$event.stopPropagation()">
+            </div>
+          </div>
+          <p class="selection-count">{{ selectedModuleIds.size }} module(s) sélectionné(s)</p>
         </div>
 
         <div class="modal-footer">

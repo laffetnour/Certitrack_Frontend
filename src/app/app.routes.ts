@@ -46,6 +46,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
 
+
   // Routes spécifiques d'abord
   {
     path: 'super-admin',

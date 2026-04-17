@@ -1,15 +1,16 @@
-<div class="signup-wrapper">
+<!--<div class="signup-wrapper">
   <div class="signup-bg"></div>
 
   <div class="signup-container">
     <div class="signup-card">
 
+
       <div class="brand-title">
-        <h2>{{ isVerificationStep ? 'Vérification' : 'Créer un compte' }}</h2>
-        <p>{{ isVerificationStep ? 'Un code a été envoyé à votre adresse professionnelle' : 'Inscrivez-vous pour passer vos certifications' }}</p>
+        <h2>{{ isVerificationStep ? 'Vérification en attente' : 'Créer un compte' }}</h2>
+        <p>{{ isVerificationStep ? 'Vérifiez votre boîte mail' : 'Inscrivez-vous pour passer vos certifications' }}</p>
       </div>
 
-      <form [formGroup]="signupForm" (ngSubmit)="onSendCode()" *ngIf="!isVerificationStep">
+      <form [formGroup]="signupForm" (ngSubmit)="onSendVerificationLink()" *ngIf="!isVerificationStep">
 
         <div class="form-row">
           <div class="form-group">
@@ -71,46 +72,37 @@
           {{ errorMsg }}
         </div>
 
-        <button type="submit" class="btn-primary" [disabled]="isLoading">
-          {{ isLoading ? 'Envoi du mail...' : 'S\'inscrire' }}
-        </button>
+
+          <button type="submit" class="btn-primary" [disabled]="isLoading">
+            {{ isLoading ? 'Envoi du lien...' : 'S\'inscrire' }}
+          </button>
+
       </form>
 
-      <div *ngIf="isVerificationStep" class="otp-container">
 
-        <div class="form-group" style="text-align: center; margin-top: 20px;">
-          <label style="display: block; margin-bottom: 10px; font-weight: bold;">
-            Code de validation
-          </label>
+      <div *ngIf="isVerificationStep" class="verification-waiting">
+        <div class="icon-mail-sent" style="font-size: 50px; text-align: center; margin-bottom: 20px;">📧</div>
 
-          <input type="text"
-                 [(ngModel)]="verificationCodeInput"
-                 class="modern-input"
-                 placeholder="000000"
-                 maxlength="6"
-                 style="text-align: center; font-size: 28px; letter-spacing: 10px; font-weight: bold; width: 80%; margin: 0 auto;">
+        <p style="text-align: center; line-height: 1.6;">
+          Un lien de vérification a été envoyé à l'adresse : <br>
+          <strong>{{ signupForm.get('username')?.value }}</strong>
+        </p>
 
-          <p style="margin-top: 15px; font-size: 0.85em; color: #555;">
-            Entrez les 6 chiffres reçus par e-mail.
-          </p>
-          <p style="margin-top: 10px; font-size: 0.8em;">
-            Pas reçu ?
-            <a (click)="onSendCode()" style="color: blue; cursor: pointer; text-decoration: underline;">
-              Renvoyer le code
-            </a>
+        <div class="info-box" style="background: #f0f7ff; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <p style="font-size: 0.9em; color: #0056b3; margin: 0;">
+            Veuillez cliquer sur le lien contenu dans l'e-mail pour finaliser votre inscription.
           </p>
         </div>
 
-        <div *ngIf="errorMsg" class="error-msg">
-          {{ errorMsg }}
-        </div>
+        <p style="text-align: center; font-size: 0.8em;">
+          Pas reçu ?
+          <a (click)="onSendVerificationLink()" style="color: blue; cursor: pointer; text-decoration: underline;">
+            Renvoyer le lien de vérification
+          </a>
+        </p>
 
-        <button (click)="onSubmit()" class="btn-primary" [disabled]="isLoading || verificationCodeInput.length < 6">
-          {{ isLoading ? 'Vérification...' : 'Confirmer l\'inscription' }}
-        </button>
-
-        <button (click)="isVerificationStep = false" class="btn-secondary" style="margin-top: 15px; width: 100%; border: 1px dashed #ccc;">
-          Modifier mes informations
+        <button (click)="isVerificationStep = false" class="btn-secondary" style="margin-top: 30px; width: 100%;">
+          Retour au formulaire
         </button>
       </div>
 
@@ -119,6 +111,143 @@
         <a routerLink="/login" class="btn-secondary">Se connecter</a>
       </div>
 
+    </div>
+  </div>
+</div>-->
+
+
+<div class="auth-wrapper">
+  <div class="auth-bg-overlay"></div>
+
+  <div class="auth-container signup-container">
+
+    <div class="auth-info">
+      <div class="info-content">
+        <div class="logo-wrapper">
+          <ng-container *ngIf="configService.config$ | async as config; else loader">
+            <img [src]="config.logoSociete || 'LOGO-2026_VF.png'" alt="Smartfuture" class="main-logo">
+          </ng-container>
+          <ng-template #loader>
+            <img src="LOGO-2026_VF.png" alt="Logo" class="main-logo">
+          </ng-template>
+        </div>
+
+        <div class="brand-details">
+          <h1>Certi<span>Track</span></h1>
+          <p class="description">
+            Certitrack est votre solution centralisée pour le recensement et le pilotage des parcours de certification.
+            Suivez votre progression, validez vos acquis et accélérez votre réussite professionnelle sur une plateforme intuitive.          </p>
+        </div>
+
+        <div class="info-features">
+          <div class="feature">
+            <span class="icon">📜</span>
+          </div>
+          <div class="feature">
+            <span class="icon">🎓</span>
+          </div>
+          <div class="feature">
+            <span class="icon">📊</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-form-section">
+      <div class="form-card">
+
+        <div class="form-header">
+          <h2>{{ isVerificationStep ? 'Vérification' : 'Créer un compte' }}</h2>
+          <p>{{ isVerificationStep ? 'Un e-mail vous a été envoyé.' : 'Remplissez vos informations professionnelles.' }}</p>
+        </div>
+
+        <form [formGroup]="signupForm" (ngSubmit)="onSendVerificationLink()" *ngIf="!isVerificationStep">
+
+          <div class="form-row">
+            <div class="input-group">
+              <label>Nom</label>
+              <input formControlName="nom" type="text" placeholder="Dupont">
+            </div>
+            <div class="input-group">
+              <label>Prénom</label>
+              <input formControlName="prenom" type="text" placeholder="Jean">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Date de naissance</label>
+            <input formControlName="dateNais" type="date">
+          </div>
+
+          <div class="input-group">
+            <label>Email Professionnel</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input formControlName="username" type="email" placeholder="nom@entreprise.com">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Mot de passe</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔑</span>
+              <input formControlName="password" type="password" placeholder="••••••••">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label>Téléphone</label>
+              <input formControlName="numTel" type="text" placeholder="0123456789">
+            </div>
+            <div class="input-group">
+              <label>Email personnel</label>
+              <input formControlName="emailPersonnel" type="email" placeholder="perso@mail.com">
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Établissement</label>
+            <select formControlName="etablissementId">
+              <option value="" disabled selected>Choisir un établissement</option>
+              <option *ngFor="let e of etablissements" [value]="e.idEtab">{{e.nom}}</option>
+            </select>
+          </div>
+
+          <div class="input-group" *ngIf="specialites.length > 0">
+            <label>Spécialité</label>
+            <select formControlName="specialiteId">
+              <option value="" disabled selected>Choisir une spécialité</option>
+              <option *ngFor="let s of specialites" [value]="s.idSpecialite">{{s.nom}}</option>
+            </select>
+          </div>
+
+          <div *ngIf="errorMsg" class="custom-alert alert-danger">
+            {{ errorMsg }}
+          </div>
+
+          <button type="submit" class="btn-primary" [disabled]="isLoading || signupForm.invalid">
+            {{ isLoading ? 'Envoi en cours...' : 'S\'inscrire' }}
+          </button>
+        </form>
+
+        <div *ngIf="isVerificationStep" class="verification-step">
+          <div class="mail-icon">📧</div>
+          <p class="mail-info">
+            Lien envoyé à : <strong>{{ signupForm.get('username')?.value }}</strong>
+          </p>
+          <div class="custom-alert alert-info">
+            Consultez vos e-mails pour valider votre compte.
+          </div>
+          <button (click)="isVerificationStep = false" class="btn-secondary w-100">Retour au formulaire</button>
+        </div>
+
+        <div class="auth-footer" *ngIf="!isVerificationStep">
+          <p>Déjà inscrit ?</p>
+          <a routerLink="/login" class="btn-secondary">Se connecter</a>
+        </div>
+
+      </div>
     </div>
   </div>
 </div>

@@ -1,5 +1,5 @@
 
-
+<!--
 <div class="auth-wrapper">
 
   <div class="auth-bg"></div>
@@ -32,5 +32,118 @@
       <p>Pas encore de compte ?</p>
       <a routerLink="/signup" class="btn-secondary">Créer un compte</a>
     </div>
+  </div>
+</div>-->
+
+
+<div class="auth-wrapper">
+
+  <div class="auth-bg-overlay"></div>
+
+  <div class="auth-container">
+
+    <div class="auth-info">
+      <div class="info-content">
+        <div class="theme-icon">
+
+          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M32 60V44M32 44C24 44 16 38 16 30C16 22 24 16 32 16C40 16 48 22 48 30C48 38 40 44 32 44Z" />
+            <path d="M32 16C32 10 28 4 20 4C12 4 4 10 4 18C4 26 12 32 20 32C24 32 28 30 32 26" />
+            <path d="M32 16C32 10 36 4 44 4C52 4 60 10 60 18C60 26 52 32 44 32C40 32 36 30 32 26" />
+          </svg>
+        </div>
+
+        <div class="brand-details">
+          <div class="logo-wrapper">
+            <ng-container *ngIf="configService.config$ | async as config; else loader">
+              <img [src]="config.logoSociete || 'LOGO-2026_VF.png'"
+                   alt="Smartfuture"
+                   class="main-logo">
+            </ng-container>
+            <ng-template #loader>
+              <img src="LOGO-2026_VF.png" alt="Smartfuture" class="main-logo loading">
+            </ng-template>
+          </div>
+          <h1>Certi<span>Track</span></h1>
+          <p class="description">
+            Certitrack est votre solution centralisée pour le recensement et le pilotage des parcours de certification.
+            Suivez votre progression, validez vos acquis et accélérez votre réussite professionnelle sur une plateforme intuitive.
+          </p>
+        </div>
+
+        <div class="info-features">
+          <div class="feature">
+            <span class="icon">📜</span>
+          </div>
+          <div class="feature">
+            <span class="icon">🎓</span>
+          </div>
+          <div class="feature">
+            <span class="icon">📊</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-form-section">
+      <div class="form-card">
+        <div class="form-header">
+          <h2>Connexion</h2>
+          <p>Bienvenue ! Veuillez renseigner vos identifiants professionnels.</p>
+        </div>
+
+        <form (ngSubmit)="login()" #loginForm="ngForm">
+          <div class="input-group">
+            <label for="username">Email professionnel</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input
+                id="username"
+                [(ngModel)]="username"
+                name="username"
+                type="email"
+                placeholder="nom@entreprise.com"
+                required
+                #userRef="ngModel">
+            </div>
+            <span class="error-text" *ngIf="userRef.touched && userRef.invalid">Email requis</span>
+          </div>
+
+          <div class="input-group">
+            <label for="password">Mot de passe</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔑</span>
+              <input
+                id="password"
+                [(ngModel)]="password"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                required>
+            </div>
+          </div>
+
+
+
+          <div *ngIf="message" [ngClass]="isError ? 'alert-danger' : 'alert-info'" class="custom-alert">
+            {{ message }}
+          </div>
+
+          <div *ngIf="errorMessage" class="alert-danger custom-alert">
+            {{ errorMessage }}
+          </div>
+
+          <button type="submit" class="btn-primary" [disabled]="!loginForm.form.valid">
+            Se connecter
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          <p>Pas encore de compte ?</p>
+          <a routerLink="/signup" class="btn-secondary">Créer un compte</a>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>

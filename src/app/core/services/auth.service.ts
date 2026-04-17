@@ -15,8 +15,16 @@ export class AuthService {
 
 
 
-  register(data: any): Observable<any> {
+  /*register(data: any): Observable<any> {
     return this.http.post(`${this.api}/signup`, data, {responseType: 'text'});
+  }*/
+
+
+verifyAccount(token: string): Observable<any> {
+
+    return this.http.get(`${this.api}/verify`, {
+      params: { token: token }
+    });
   }
 
 
@@ -89,8 +97,13 @@ updateUserOnServer(user: any): Observable<any> {
 }
 
 // Dans ton auth.service.ts
-sendCode(email: string): Observable<any> {
+/*sendCode(email: string): Observable<any> {
   return this.http.post(`${this.api}/send-otp`, { email: email });
+}*/
+
+sendVerificationLink(userData: any) {
+  // userData contient nom, prenom, username, password, etc.
+  return this.http.post(`${this.api}/send-verification-link`, userData);
 }
 
 }

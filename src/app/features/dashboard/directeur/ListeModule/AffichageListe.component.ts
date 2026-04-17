@@ -6,11 +6,12 @@ import { EtablissementService } from '../../../../core/services/etablissement.se
 import { AuthService } from '../../../../core/services/auth.service';
 import { ModuleTenantService } from '../../../../core/services/ModuleTenant.service';
 import { forkJoin } from 'rxjs';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app',
   standalone: true,
-  imports: [CommonModule, FormsModule ],
+  imports: [CommonModule, FormsModule, RouterLink, RouterLinkActive ],
   templateUrl: './AffichageListe.component.html',
   styleUrls: ['./ListeModule.component.css']
 })

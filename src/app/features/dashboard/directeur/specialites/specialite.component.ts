@@ -3,13 +3,17 @@ import { DirecteurService } from '../../../../core/services/directeur.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
-import { ConfigService } from '../../../../core/services/config.service';
+/*import { ConfigService } from '../../../../core/services/config.service';*/
+import { ModuleTenantService } from '../../../../core/services/ModuleTenant.service';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth.service';
+import { SpecialiteModuleService } from '../../../../core/services/SpecialiteModule.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-specialite',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink, RouterLinkActive],
   templateUrl: './specialite.component.html',
   styleUrls: ['./specialite.component.css']
 })
@@ -19,6 +23,15 @@ export class SpecialiteComponent implements OnInit {
   selectedIds: number[] = [];
   originalNom: string = '';
   loading = true;
+
+originalModuleIds: number[] = [];
+
+originalMode: string = '';
+originalModules: number[] = [];
+
+  activeModules: any[] = [];
+  selectedModuleIds: Set<number> = new Set();
+  moduleSearchTerm: string = '';
 
 
   showModal = false;
@@ -31,7 +44,10 @@ export class SpecialiteComponent implements OnInit {
 
   constructor(private directeurService: DirecteurService,
               private cdr: ChangeDetectorRef,
-              public configService: ConfigService) {}
+              private moduleTenantService: ModuleTenantService,
+              private specModuleService: SpecialiteModuleService,
+              private authService: AuthService
+              /*public configService: ConfigService*/) {}
 
   ngOnInit(): void {
     this.loadSpecialites();
@@ -80,56 +96,14 @@ export class SpecialiteComponent implements OnInit {
   }
 
 
-  openAdd() {
-    this.originalNom = '';
-    this.isEdit = false;
-    this.form = { nom: '' };
-    this.showModal = true;
-  }
-
-  openEdit(sp: any) {
-    this.isEdit = true;
-    this.form = { nom: sp.nom };
-    this.originalNom = sp.nom;
-    this.currentId = sp.idSpecialite;
-    this.showModal = true;
-  }
-
   closeModal() {
     this.showModal = false;
   }
 
-  save() {
-    if (this.isSubmitDisabled()) return;
-
-    if (this.isEdit) {
-      this.directeurService.updateSpecialite(this.currentId!, this.form)
-        .subscribe(() => {
-          this.successMessage = "Spécialité modifiée";
-          this.loadSpecialites();
-          this.closeModal();
-        });
-    } else {
-      this.directeurService.addSpecialite(this.form)
-        .subscribe(() => {
-          this.successMessage = "Spécialité ajoutée";
-          this.loadSpecialites();
-          this.closeModal();
-        });
-    }
-  }
-
-
-  toggle(sp: any) {
+ toggle(sp: any) {
     this.directeurService.toggleSpecialite(sp.idSpecialite)
       .subscribe(() => this.loadSpecialites());
   }
-
-  delete(id: number) {
-    this.directeurService.deleteSpecialite(id)
-      .subscribe(() => this.loadSpecialites());
-  }
-
 
   activateSelected() {
     this.directeurService.activateMultipleSpecialites(this.selectedIds)
@@ -162,16 +136,190 @@ deleteSelected() {
   });
 }
 
-  isSubmitDisabled(): boolean {
-    const nom = this.form.nom?.trim();
+isSubmitDisabled(): boolean {
+  const nom = this.form.nom?.trim();
+  if (!nom) return true;
+  if (!this.isEdit) return false;
+  const nomChanged = nom !== this.originalNom;
+  const modeChanged = this.form.modeAffichage !== this.originalMode;
+  const currentIds = Array.from(this.selectedModuleIds);
+  const modulesChanged = currentIds.length !== this.originalModuleIds.length ||
+                         currentIds.some(id => !this.originalModuleIds.includes(id));
 
+  return !(nomChanged || modeChanged || modulesChanged);
+}
 
-    if (!nom) return true;
-
-
-    if (this.isEdit && nom === this.originalNom) return true;
-
-    return false;
+loadActiveTenantModules() {
+  const user = this.authService.getUser();
+  if (user?.idUtilisateur) {
+    this.moduleTenantService.getActiveModules(user.idUtilisateur).subscribe(data => {
+      this.activeModules = data;
+      this.cdr.detectChanges();
+    });
   }
+}
 
+
+
+get filteredModules() {
+  const term = this.moduleSearchTerm.toLowerCase().trim();
+  if (!term) return this.activeModules;
+
+  return this.activeModules.filter(mt => {
+    const mod = mt.module;
+    if (!mod) return false;
+
+    const nom = mod.nom?.toLowerCase() || '';
+    const catString = Array.isArray(mod.categories)
+          ? mod.categories.map((c: any) => c.nom || c.description || '').join(' ').toLowerCase()
+          : '';
+    const tagsString = Array.isArray(mod.motCles)
+          ? mod.motCles.map((t: any) => t.description || '').join(' ').toLowerCase()
+          : '';
+
+    return nom.includes(term) || catString.includes(term) || tagsString.includes(term);
+  });
+}
+
+toggleModule(id: number) {
+  if (this.selectedModuleIds.has(id)) {
+    this.selectedModuleIds.delete(id);
+  } else {
+    this.selectedModuleIds.add(id);
+  }
+}
+openAdd() {
+  this.isEdit = false;
+  this.form = { nom: '', modeAffichage: 'FIXE' };
+  this.selectedModuleIds.clear();
+  this.loadActiveTenantModules();
+  this.showModal = true;
+}
+
+save() {
+  if (this.isSubmitDisabled()) return;
+
+  const user = this.authService.getUser();
+  const specAction = this.isEdit
+    ? this.directeurService.updateSpecialite(this.currentId!, this.form)
+    : this.directeurService.addSpecialite(this.form);
+
+  specAction.subscribe((savedSpec: any) => {
+    const specId = this.isEdit ? this.currentId : savedSpec.idSpecialite;
+    const payload = {
+      specialiteIds: [specId],
+      moduleTenantIds: Array.from(this.selectedModuleIds),
+      modeAffichage: this.form.modeAffichage,
+      ajoutePar: user?.nom || 'Directeur'
+    };
+
+    this.specModuleService.affecterModules(payload).subscribe({
+      next: () => {
+        if (this.isEdit) {
+          this.specModuleService.updateModeBySpec(specId!, this.form.modeAffichage).subscribe({
+            next: () => {
+              this.successMessage = "Spécialité et tous les modules mis à jour en mode " + this.form.modeAffichage;
+              this.finalizeSave();
+            }
+          });
+        } else {
+          this.successMessage = "Enregistrement réussi";
+          this.finalizeSave();
+        }
+      }
+    });
+  });
+}
+
+finalizeSave() {
+  this.loadSpecialites();
+  this.closeModal();
+  this.cdr.detectChanges();
+}
+
+openEdit(sp: any) {
+  this.isEdit = true;
+  this.currentId = sp.idSpecialite;
+  this.originalNom = sp.nom;
+  this.form = { nom: sp.nom, modeAffichage: 'FIXE' };
+
+  this.selectedModuleIds.clear();
+  this.moduleSearchTerm = '';
+  this.loading = true;
+
+  const user = this.authService.getUser();
+  if (user?.idUtilisateur) {
+    forkJoin({
+      allModules: this.moduleTenantService.getActiveModules(user.idUtilisateur),
+      currentLinks: this.specModuleService.getModulesBySpec(this.currentId!)
+    }).subscribe({
+      next: (res) => {
+        this.activeModules = res.allModules;
+        if (res.currentLinks && res.currentLinks.length > 0) {
+
+        const currentMode = res.currentLinks [0].modeAffichage;
+                this.form.modeAffichage = currentMode;
+                this.originalMode = currentMode;
+         this.originalModules = res.currentLinks.map((link: any) => link.moduleTenant?.id);
+
+          const ids: number[] = [];
+          res.currentLinks.forEach((link: any) => {
+            if (link.moduleTenant) {
+              this.selectedModuleIds.add(link.moduleTenant.id);
+              ids.push(link.moduleTenant.id);
+            }
+          });
+
+          this.originalModuleIds = ids;
+        } else {
+          this.form.modeAffichage = 'FIXE';
+                  this.originalMode = 'FIXE';
+                  this.originalModuleIds = [];
+        }
+        this.loading = false;
+        this.showModal = true;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+}
+
+
+delete(sp: any) {
+
+  const confirmFirst = confirm(`Voulez-vous vraiment supprimer la spécialité "${sp.nom}" ?`);
+
+  if (confirmFirst) {
+    this.loading = true;
+    this.specModuleService.getModulesBySpec(sp.idSpecialite).subscribe({
+      next: (modules) => {
+        if (modules && modules.length > 0) {
+
+          this.loading = false;
+          alert(`Action impossible : Vous devez supprimer les modules affectés à la spécialité "${sp.nom}" avant de pouvoir la supprimer.`);
+          this.errorMessage = "Suppression avortée : modules encore présents.";
+          this.loadSpecialites();
+          this.cdr.detectChanges();
+        } else {
+
+          this.directeurService.deleteSpecialite(sp.idSpecialite).subscribe({
+            next: () => {
+              this.successMessage = "Suppression réussie !";
+              this.errorMessage = '';
+              this.loadSpecialites();
+            },
+            error: (err) => {
+              this.errorMessage = "Erreur lors de la suppression sur le serveur.";
+              this.loading = false;
+            }
+          });
+        }
+      },
+      error: (err) => {
+        console.error("Erreur lors de la vérification des modules", err);
+        this.loading = false;
+      }
+    });
+  }
+}
 }

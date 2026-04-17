@@ -182,7 +182,10 @@ export class AdminComponent implements OnInit {
         this.loadCandidatsParSpecialite();
 
 
-        this.successMessage = updated.statut ? 'Candidat activé avec succès' : 'Candidat désactivé';
+        this.successMessage = updated.statut
+                ? 'Candidat activé et notifié par email'
+                : 'Candidat désactivé et notifié par email';
+              this.cdr.detectChanges();
 
 
         this.cdr.detectChanges();
