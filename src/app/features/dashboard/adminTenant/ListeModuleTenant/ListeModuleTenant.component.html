@@ -94,14 +94,13 @@
               </small>
             </span>
         </td>
-        <td class="actions" style="text-align: center;">
-          <!-- ACTIVER / DESACTIVER -->
+        <!--<td class="actions" style="text-align: center;">
+
           <button class="btn-toggle"
                   (click)="toggleModule(mt)"
                   [title]="mt.estActif ? 'Désactiver' : 'Activer'">
 
-            <!-- actif -->
-            <!-- actif -->
+
             <svg *ngIf="mt.estActif" xmlns="http://www.w3.org/2000/svg"
                  width="16" height="16" viewBox="0 0 24 24"
                  fill="none" stroke="currentColor" stroke-width="2">
@@ -109,7 +108,7 @@
               <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
             </svg>
 
-            <!-- inactif -->
+
             <svg *ngIf="!mt.estActif" xmlns="http://www.w3.org/2000/svg"
                  width="16" height="16" viewBox="0 0 24 24"
                  fill="none" stroke="currentColor" stroke-width="2">
@@ -119,13 +118,13 @@
 
           </button>
 
-          <!-- CONFIGURER MODULE -->
+
           <button class="btn-edit"
                   (click)="openTestForm(mt)"
                   title="Configurer test du module">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
                  stroke="currentColor" stroke-width="2">
-              <path d="M12 3v10m4-4h-8"/> <!-- icône stylisée "configuration" -->
+              <path d="M12 3v10m4-4h-8"/>
             </svg>
           </button>
 
@@ -136,6 +135,49 @@
             </svg>
           </button>
 
+
+        </td>-->
+        <td class="actions" style="text-align: center;">
+
+          <button class="btn-toggle"
+                  (click)="toggleModule(mt)"
+                  [disabled]="hasActiveSession(mt)"
+                  [style.opacity]="hasActiveSession(mt) ? '0.5' : '1'"
+                  [style.cursor]="hasActiveSession(mt) ? 'not-allowed' : 'pointer'"
+                  [title]="hasActiveSession(mt) ? 'Session en cours : action bloquée' : (mt.estActif ? 'Désactiver' : 'Activer')">
+
+            <svg *ngIf="mt.estActif" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+            </svg>
+
+            <svg *ngIf="!mt.estActif" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </button>
+
+          <button class="btn-edit"
+                  (click)="openTestForm(mt)"
+                  [disabled]="hasActiveSession(mt)"
+                  [style.opacity]="hasActiveSession(mt) ? '0.5' : '1'"
+                  [style.cursor]="hasActiveSession(mt) ? 'not-allowed' : 'pointer'"
+                  [title]="hasActiveSession(mt) ? 'Session en cours : modification bloquée' : 'Configurer test du module'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3v10m4-4h-8"/>
+            </svg>
+          </button>
+
+          <button class="btn-toggle"
+                  (click)="onRemoveModule(mt.id)"
+                  [disabled]="hasActiveSession(mt)"
+                  [style.opacity]="hasActiveSession(mt) ? '0.5' : '1'"
+                  [style.cursor]="hasActiveSession(mt) ? 'not-allowed' : 'pointer'"
+                  [style.color]="hasActiveSession(mt) ? '#6c757d' : '#e74c3c'"
+                  [title]="hasActiveSession(mt) ? 'Session en cours : suppression impossible' : 'Retirer du catalogue'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
 
         </td>
       </tr>
@@ -152,58 +194,209 @@
 
 
 
-  <div class="modal" *ngIf="selectedModuleForTest">
+
+
+
+
+ <div class="modal" *ngIf="selectedModuleForTest">
     <div class="modal-content">
 
       <div class="modal-header">
-        <h2>Configurer Test Module</h2>
+        <h2>Configurer Module</h2>
         <button (click)="selectedModuleForTest = null">✖</button>
       </div>
 
       <form (ngSubmit)="confirmTest()">
 
-        <div style="padding:20px;">
+        <div style="padding:20px; display:flex; flex-direction:column; gap:10px;">
 
-          <!-- CHOIX -->
+
           <label>
-            <input type="radio" [(ngModel)]="testForm.avecTest" name="test" [value]="true">
+            <input type="radio"
+                   [(ngModel)]="testForm.avecTest"
+                   name="test"
+                   [value]="true">
             Avec test
           </label>
 
-          <label style="margin-left:20px;">
-            <input type="radio" [(ngModel)]="testForm.avecTest" name="test" [value]="false">
+          <label>
+            <input type="radio"
+                   [(ngModel)]="testForm.avecTest"
+                   name="test"
+                   [value]="false">
             Sans test
           </label>
 
-          <!-- CHAMPS -->
-          <div *ngIf="testForm.avecTest" style="margin-top:15px;">
-            <label style="display:block; font-weight:600; margin-bottom:5px;">
-              Seuil score
-            </label>
-            <input type="number" class="form-control"
-                   placeholder="Seuil score"
+
+          <div *ngIf="testForm.avecTest">
+            <label>Seuil score</label>
+            <input type="number"
+                   class="form-control"
                    [(ngModel)]="testForm.seuilScore"
                    name="seuilScore">
+          </div>
 
+
+          <div>
+            <label>Capacité (quota)</label>
+            <input type="number"
+                   class="form-control"
+                   [(ngModel)]="testForm.capacite"
+                   name="capacite">
           </div>
 
         </div>
 
-        <div class="modal-footer">
 
-          <button type="submit"
-                  class="btn-submit"
-                  [disabled]="testForm.avecTest && !testForm.seuilScore">
-            Enregistrer
+        <div class="modal-footer" style="display:flex; justify-content:space-between;">
+
+
+          <button type="button"
+                  class="btn-cancel"
+                  (click)="onAddSessionClick(selectedModuleForTest)">
+            ➕ Ajouter session
           </button>
 
-          <button type="button" (click)="selectedModuleForTest = null">
-            Annuler
-          </button>
+          <div>
+            <button type="submit" class="btn-submit">
+              Enregistrer
+            </button>
+
+            <button class="btn-cancel" type="button" (click)="selectedModuleForTest = null">
+              Annuler
+            </button>
+          </div>
 
         </div>
 
       </form>
+
+    </div>
+  </div>
+
+
+
+  <div class="modal" *ngIf="showSessionFormModal">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h2>Ajouter session</h2>
+        <button (click)="showSessionFormModal=false">✖</button>
+      </div>
+
+      <div style="padding:20px; display:flex; flex-direction:column; gap:12px;">
+
+        <!-- TITRE -->
+        <label class="form-label">Titre de la session</label>
+        <input [(ngModel)]="sessionForm.titre"
+               name="titre"
+               class="form-control"
+               placeholder="Titre de la session">
+
+        <!-- DATE DEBUT -->
+        <label class="form-label">Date début</label>
+        <input type="date"
+               [(ngModel)]="sessionForm.dateDebut"
+               name="dateDebut"
+               class="form-control">
+
+        <!-- DATE FIN -->
+        <label class="form-label">Date fin</label>
+        <input type="date"
+               [(ngModel)]="sessionForm.dateFin"
+               name="dateFin"
+               class="form-control">
+
+        <!-- AVEC TEST -->
+        <ng-container *ngIf="sessionChoice">
+
+          <label class="form-label">Durée (minutes)</label>
+          <input type="number"
+                 [(ngModel)]="sessionForm.dureeMax"
+                 name="dureeMax"
+                 class="form-control"
+                 placeholder="Durée (minutes)">
+
+          <label class="form-label">Nombre de questions techniques</label>
+          <input type="number"
+                 [(ngModel)]="sessionForm.nbreQuestionTechnique"
+                 name="nbreQuestionTechnique"
+                 class="form-control"
+                 placeholder="Nombre de questions techniques">
+
+        </ng-container>
+
+      </div>
+
+      <!-- FOOTER -->
+      <div class="modal-footer">
+
+        <button class="btn-submit"
+                (click)="submitSession()"
+                [disabled]="!sessionForm.titre || !sessionForm.dateDebut || !sessionForm.dateFin">
+          Enregistrer
+        </button>
+
+        <button class="btn-cancel"
+                (click)="showSessionFormModal=false">
+          Annuler
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="modal" *ngIf="alertVisible" style="z-index: 9999;">
+    <div class="modal-content alert-modal" style="max-width: 400px; text-align: center;">
+
+      <!-- HEADER -->
+      <div class="modal-header">
+        <h2 [style.color]="alertType === 'error' ? 'red' : alertType === 'warning' ? 'orange' : 'green'">
+          <span *ngIf="alertType==='success'">Succès</span>
+          <span *ngIf="alertType==='error'">Erreur</span>
+          <span *ngIf="alertType==='warning'">Attention</span>
+        </h2>
+        <button (click)="alertVisible=false">✖</button>
+      </div>
+
+      <!-- BODY -->
+      <div class="alert-body" style="padding: 20px;">
+
+        <!-- SUCCESS -->
+        <svg *ngIf="alertType==='success'" width="50" height="50"
+             viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+
+        <!-- ERROR -->
+        <svg *ngIf="alertType==='error'" width="50" height="50"
+             viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+
+        <!-- WARNING -->
+        <svg *ngIf="alertType==='warning'" width="50" height="50"
+             viewBox="0 0 24 24" fill="none" stroke="orange" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <circle cx="12" cy="17" r="1"/>
+        </svg>
+
+        <p style="margin-top: 15px; font-size: 16px;">
+          {{ alertMessage }}
+        </p>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="modal-footer" style="justify-content: center;">
+        <button class="btn-cancel" (click)="alertVisible=false">
+          Fermer
+        </button>
+      </div>
 
     </div>
   </div>

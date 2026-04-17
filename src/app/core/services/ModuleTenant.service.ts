@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ModuleTenantService {
   private apiUrl = 'http://localhost:8080/api/tenant-modules';
+  private apiUrlSession = 'http://localhost:8080/api/session';
 
   constructor(private http: HttpClient) { }
 
@@ -95,13 +96,32 @@ export class ModuleTenantService {
     return this.http.put(`${this.apiUrl}/${id}/config-test`, null, { params, headers });
   }*/
 
-  configTest(id: number, avecTest: boolean, seuilScore: number | null) {
+  /*configTest(id: number, avecTest: boolean, seuilScore: number | null) {
     const token = JSON.parse(localStorage.getItem('user') || '{}').token || '';
 
     let params = new HttpParams().set('avecTest', avecTest.toString());
 
     if (seuilScore !== null) {
       params = params.set('seuilScore', seuilScore.toString());
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.put(`${this.apiUrl}/${id}/config-test`, null, { params, headers });
+  }*/
+
+  configTest(id: number, avecTest: boolean, seuilScore: number | null, capacite: number | null) {
+    const token = JSON.parse(localStorage.getItem('user') || '{}').token || '';
+
+    let params = new HttpParams()
+      .set('avecTest', avecTest.toString());
+
+    if (seuilScore !== null) {
+      params = params.set('seuilScore', seuilScore.toString());
+    }
+
+    if (capacite !== null) {
+      params = params.set('capacite', capacite.toString());
     }
 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -132,5 +152,22 @@ export class ModuleTenantService {
     const params = new HttpParams().set('capacite', capacite.toString());
 
     return this.http.put(`${this.apiUrl}/${id}/capacite`, null, { params, headers });
+  }
+
+
+
+  addSession(moduleId: number, userId: number, session: any): Observable<any> {
+    const userData = localStorage.getItem('user');
+    const token = userData ? JSON.parse(userData).token : '';
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.post(
+      `${this.apiUrlSession}/add/${moduleId}/${userId}`,
+      session,
+      { headers }
+    );
   }
 }

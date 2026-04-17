@@ -31,8 +31,7 @@ import {ModuleTenantComponent} from './features/dashboard/adminTenant/ListeModul
 import {ListeModuleTenantComponent} from './features/dashboard/adminTenant/ListeModuleTenant/ListeModuleTenant.component'
 import {ListeModuleComponent} from './features/dashboard/directeur/ListeModule/ListeModule.component'
 import {AffichageListeComponent} from './features/dashboard/directeur/ListeModule/AffichageListe.component'
-import { QuotasComponent } from './features/dashboard/adminTenant/quotas/quotas.component';
-import { SessionTestComponent } from './features/dashboard/adminTenant/session-test/session-test.component';
+
 
 import { SessionInscComponent} from './features/dashboard/adminTenant/session-insc/session-insc.component';
 
@@ -117,8 +116,8 @@ export const routes: Routes = [
        { path: 'modules', component: ModuleComponent },
        { path: 'moduleTenant', component: ModuleTenantComponent },
        { path: 'ListeModuleTenant', component: ListeModuleTenantComponent },
-      { path: 'quotas', component: QuotasComponent },
-      { path: 'session-test', component: SessionTestComponent },
+      //{ path: 'quotas', component: QuotasComponent },
+      //{ path: 'session-test', component: SessionTestComponent },
       { path: 'session-insc', component: SessionInscComponent }
     ]
   },

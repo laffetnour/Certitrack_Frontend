@@ -633,3 +633,10 @@ form::-webkit-scrollbar-thumb:hover {
   background-color: var(--smart-dark);
   color: white;
 }
+
+.status-badge.planned {
+  background: #cfe2ff;
+  color: #084298;
+}
+
+
