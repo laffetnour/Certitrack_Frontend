@@ -7,6 +7,7 @@ import { SuperAdminService } from '../../../../core/services/super-admin.service
 import {AuthService} from '../../../../core/services/auth.service';
 import { ModuleTenantService } from '../../../../core/services/ModuleTenant.service';
 import { forkJoin } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-module',
@@ -49,6 +50,7 @@ export class ModuleComponent implements OnInit {
 
   constructor(private service: SuperAdminService,private fb: FormBuilder,
     private authService: AuthService,
+    private router: Router,
     private moduleTenantService: ModuleTenantService,
     private cdr: ChangeDetectorRef)
   {
@@ -62,6 +64,15 @@ export class ModuleComponent implements OnInit {
     });
   }
 
+goToQuestions(moduleId: number) {
+  // Cela générera l'URL : /super-admin/questions/1
+  this.router.navigate(['/super-admin/questions', moduleId]);
+}
+goToBehavioralQuestions() {
+  // On utilise souvent '0' ou une route dédiée pour les questions générales/comportementales
+  // Assurez-vous que cette route existe dans votre app-routing.module.ts
+  this.router.navigate(['/super-admin/questions/0']);
+}
   ngOnInit(): void {
     this.currentUser = this.authService.getUser();
     this.isSuperAdmin = this.currentUser?.role === 'superAdmin';
@@ -74,17 +85,6 @@ export class ModuleComponent implements OnInit {
     return this.moduleForm.get('motCles') as FormArray;
   }
 
-  /*addMotCleField(id: number | null = null, desc: string = '') {
-    this.motCles.push(this.fb.group({
-      idMotcle: [id],
-      //description: [desc, Validators.required]
-      description: [desc]//666666666666666666666666666666666666666666666666666666666666666666666666
-    }));
-  }*/
-
-  /*removeMotCle(index: number) {
-    this.motCles.removeAt(index);
-  }*/
 
   onNombreChange() {
     const n = this.moduleForm.value.nombreMotCle;
@@ -107,7 +107,7 @@ export class ModuleComponent implements OnInit {
     forkJoin({
       cats: this.service.getCategories(),
       mods: this.service.getModules(),
-      catQ: this.service.getCatQuestions(), // 🔥 ajouter 666666666666666666666666666666666666666666666666666666666666666666666666
+      //catQ: this.service.getCatQuestions(), // 🔥 ajouter 666666666666666666666666666666666666666666666666666666666666666666666666
       motCles: this.service.getMotCles()//6666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
     }).subscribe({
       next: (result) => {
@@ -116,7 +116,7 @@ export class ModuleComponent implements OnInit {
         this.applyFilter();
         this.loading = false;
         this.cdr.detectChanges();
-        this.allCatQuestions = result.catQ; // 🔥ajouter 6666666666666666666666666666666666666666666666666666666666666666666666666
+        //this.allCatQuestions = result.catQ; // 🔥ajouter 6666666666666666666666666666666666666666666666666666666666666666666666666
         this.allMotCles = result.motCles;//666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
       },
       error: (err) => {
@@ -175,42 +175,6 @@ export class ModuleComponent implements OnInit {
     this.showModal = true;
   }
 
- /* onSubmit() {
-    if (this.moduleForm.valid) {
-
-      const formVal = this.moduleForm.value;
-
-      const dataToSend: any = {
-        nom: formVal.nom,
-        disponibilite: formVal.disponibilite,
-        categorieModule: formVal.categorieModule,
-        motCles: formVal.motCles.map((mc: any) => ({
-          idMotcle: mc.idMotcle,
-          description: mc.description
-        })),
-        //categories: this.selectedCategories // 🔥 AJOUT ICI6666666666666666666666666666666666666666666666666666666666666666666666666666666
-        categories: [...this.selectedCategories]
-      };
-
-      if (this.isEditMode && this.selectedModule) {
-        dataToSend.idModule = this.selectedModule.idModule;
-      }
-
-      const request = this.isEditMode
-        ? this.service.updateModule(this.selectedModule.idModule, dataToSend)
-        : this.service.addModule(dataToSend);
-
-      request.subscribe({
-        next: () => {
-          this.showModal = false;
-          this.loadData();
-        },
-        error: (err) => {
-          console.error("Erreur Backend :", err);
-        }
-      });
-    }
-  }*/
 
   //6666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
   onSubmit() {
@@ -220,11 +184,9 @@ export class ModuleComponent implements OnInit {
       const dataToSend = {
         nom: formVal.nom,
         disponibilite: formVal.disponibilite ?? true,
-        // Correction ici : le champ dans categorieModule est 'id'
         categorieModule: {
           id: formVal.categorieModule.id
         },
-        // On envoie les mots-clés avec idMotcle s'ils existent
         motCles: formVal.motCles.map((mc: any) => ({
           idMotcle: mc.idMotcle || null,
           description: mc.description
@@ -382,7 +344,7 @@ export class ModuleComponent implements OnInit {
         next: (res) => {
           let msg = `Importation terminée !\n`;
           msg += `- Réussites/Mises à jour : ${res.successCount}\n`;
-          msg += `- Lignes ignorées (categories Questions n'existent pas) : ${res.errorCount}\n`;
+
 
           if (res.ignoredLines && res.ignoredLines.length > 0) {
             msg += `- Numéros des lignes en erreur : ${res.ignoredLines.join(', ')}`;
@@ -400,20 +362,6 @@ export class ModuleComponent implements OnInit {
     }
   }
 
-  //6666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
-  /*toggleCategory(cat: any) {
-    const index = this.selectedCategories.findIndex(c => c.id === cat.id);
-
-    if (index > -1) {
-      this.selectedCategories.splice(index, 1);
-    } else {
-      this.selectedCategories.push(cat);
-    }
-  }*/
-
-  /*isSelectedCategory(cat: any): boolean {
-    return this.selectedCategories.some(c => c.id === cat.id);
-  }*/
 
   openCatModal() {
     this.tempSelectedCategories = [...this.selectedCategories];
@@ -442,13 +390,13 @@ export class ModuleComponent implements OnInit {
     this.showCatModal = false;
   }
 
-  get filteredCatQuestions() {
+  /*get filteredCatQuestions() {
     if (!this.searchCat) return this.allCatQuestions;
 
     return this.allCatQuestions.filter(c =>
       c.nom.toLowerCase().includes(this.searchCat.toLowerCase())
     );
-  }
+  }*/
 
   // 1. Ajoutez les méthodes de gestion des champs de mots-clés
   addMotCleField(id: number | null = null, desc: string = '') {

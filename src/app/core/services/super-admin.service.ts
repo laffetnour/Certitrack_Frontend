@@ -202,9 +202,11 @@ importModuleCSV(file: File): Observable<any> {
   }
 
 
-importQuestionsCSV(file: File): Observable<any> {
+
+importQuestionsCSV(file: File, moduleId: number): Observable<any> {
   const formData = new FormData();
   formData.append('file', file);
+  formData.append('moduleId', moduleId.toString()); // Assurez-vous d'ajouter cette ligne
 
   return this.http.post(`${this.baseUrl}/questions/import`, formData, this.getAuthHeadersForFile());
 }
@@ -212,57 +214,30 @@ importQuestionsCSV(file: File): Observable<any> {
 getQuestions(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/questions/all`, this.getAuthHeaders());
   }
+getByModule(id: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/questions/module/${id}`, this.getAuthHeaders());
+  }
 
 
-//ajouter
 
 
   addQuestion(q: any) {
     return this.http.post(`${this.baseUrl}/questions`, q, this.getAuthHeaders());
   }
 
-  updateQuestion(id: number, q: any) {
-    return this.http.put(`${this.baseUrl}/questions/${id}`, q, this.getAuthHeaders());
-  }
+
 
   deleteQuestion(id: number) {
     return this.http.delete(`${this.baseUrl}/questions/${id}`, this.getAuthHeaders());
   }
 
-  toggleQuestionStatus(id: number) {
-    return this.http.put(`${this.baseUrl}/questions/${id}/toggle-status`, {}, this.getAuthHeaders());
-  }
 
-  activateQuestions(ids: number[]) {
-    return this.http.put(`${this.baseUrl}/questions/activate`, ids, this.getAuthHeaders());
-  }
-
-  deactivateQuestions(ids: number[]) {
-    return this.http.put(`${this.baseUrl}/questions/deactivate`, ids, this.getAuthHeaders());
-  }
 
   deleteQuestionsBulk(ids: number[]) {
     return this.http.post(`${this.baseUrl}/questions/delete-bulk`, ids, this.getAuthHeaders());
   }
 
 
-
-// Categorie questions
-
-getCatQuestions(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/categories-questions/all`, this.getAuthHeaders());
-  }
-addCatQuestion(cat: any): Observable<any> {
-  return this.http.post(`${this.baseUrl}/categories-questions/add`, cat, this.getAuthHeaders());
-}
-
-updateCatQuestion(id: number, cat: any): Observable<any> {
-  return this.http.put(`${this.baseUrl}/categories-questions/update/${id}`, cat, this.getAuthHeaders());
-}
-
-deleteCatQuestion(id: number): Observable<any> {
-  return this.http.delete(`${this.baseUrl}/categories-questions/delete/${id}`, this.getAuthHeaders());
-}
 
 
 }

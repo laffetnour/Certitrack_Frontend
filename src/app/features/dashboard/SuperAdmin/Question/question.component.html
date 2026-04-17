@@ -1,297 +1,108 @@
+
 <div class="admin-container">
   <div class="admin-header">
-    <h1>Banque de Questions</h1>
+    <div class="header-left">
+      <button class="btn-back" (click)="goBack()">← Retour</button>
+      <!--<h1>Questions du Module #{{ moduleId }}</h1>-->
+      <h1>{{ isBehavioralMode()? 'Banque de Questions Comportementales' : 'Questions Techniques du Module' }}</h1>
+    </div>
 
-    <div style="display:flex; gap:10px; ">
-      <select class="form-control filter-select" [(ngModel)]="selectedFilterCat" (change)="applyFilter()">
-        <option value="">Toutes les catégories</option>
-        <option *ngFor="let c of categories" [value]="c.id">{{ c.nom }}</option>
-      </select>
-
-      <input type="file" #fileInput (change)="onUploadQuestions($event)" accept=".csv" style="display: none;">
-
-      <button class="btn-view" (click)="fileInput.click()" [disabled]="loading"
-              style="background-color: #6366f1; color: white; display: flex; align-items: center; gap: 5px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-          <polyline points="17 8 12 3 7 8"></polyline>
-          <line x1="12" y1="3" x2="12" y2="15"></line>
-        </svg>
-        Importer Questions CSV
-      </button>
-
-      <button class="btn-add" (click)="openAddModal()">
-        <span>+</span> Nouvelle Question
-      </button>
+    <div class="header-actions">
+      <label class="btn-import">
+        <input type="file" (change)="onImportCSV($event)" accept=".csv" style="display: none;">
+        📥 Importer CSV
+      </label>
     </div>
   </div>
 
-  <div class="table-container">
-    <div class="bulk-actions" *ngIf="selectedQuestions.length > 0">
-      <span>{{ selectedQuestions.length }} sélectionnée(s)</span>
-      <button class="btn-activate" (click)="bulkToggle(false)">Activer</button>
-      <button class="btn-deactivate" (click)="bulkToggle(true)">Désactiver</button>
-      <button class="btn-delete" (click)="bulkDelete()">Supprimer</button>
-    </div>
+  <div class="bulk-actions" *ngIf="selectedIds.length > 0">
+    <span>{{ selectedIds.length }} sélectionnée(s)</span>
+    <button class="btn-bulk-delete" (click)="deleteMultiple()">🗑️ Tout supprimer</button>
+  </div>
 
+
+
+  <div class="table-container">
     <table class="modern-table">
       <thead>
       <tr>
-        <th>
-          <input type="checkbox" [checked]="isAllSelected()" (change)="selectAll($event)">
-        </th>
+        <th><input type="checkbox" [checked]="isAllSelected()" (change)="selectAll($event)"></th>
         <th>Question</th>
-        <th>Catégorie</th>
+        <th>Note (pts)</th>
+
         <th>Difficulté</th>
-        <th>Type</th>
         <th>Nature</th>
-        <th>Statut</th>
         <th>Actions</th>
       </tr>
       </thead>
-
       <tbody>
-       <tr *ngFor="let q of filteredQuestions; trackBy: trackByQuestionId">
-        <td>
-          <input type="checkbox" [checked]="selectedQuestions.includes(q.idQuestion)"
-                 (change)="onCheckboxChange(q.idQuestion, $event)">
-        </td>
-        <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-          {{ q.texte }}
-        </td>
-        <td>
-          <span class="badge" style=" color: #6366f1;">{{ q.categorieQuestion?.nom }}</span>
-        </td>
-        <td>
-          <span class="badge" [ngClass]="getDifficultyClass(q.difficultee)">{{ q.difficultee }}</span>
-        </td>
-        <td>{{ q.type === 'choixUnique' ? 'Unique' : 'Multiple' }}</td>
-         <td>
-            <span class="badge" style=" color:#92400e;">
-              {{ q.nature === 'technique' ? 'Technique' : 'Comportementale' }}
-            </span>
-         </td>
-        <td>
-          <span class="status-badge" [class.active]="!q.desactivee" [class.inactive]="q.desactivee">
-            {{ q.desactivee ? 'Désactivée' : 'Active' }}
-          </span>
-        </td>
+      <tr *ngFor="let q of questions">
+        <ng-container *ngIf="(isBehavioralMode() && q.nature === 'comportementale') || (!isBehavioralMode() && q.nature === 'technique')">
 
+        <td>
+          <input type="checkbox"
+                 [checked]="selectedIds.includes(q.idQuestion)"
+                 (change)="toggleSelection(q.idQuestion, $event)">
+        </td>
+        <td><strong>{{ q.texte }}</strong></td>
+        <td>{{ q.note }}</td>
+        <td>{{ q.difficultee }}</td>
+        <td>{{ q.nature }}</td>
         <td class="actions">
-          <button class="btn-view" (click)="viewQuestion(q)" title="Voir réponses">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
-          </button>
 
-          <button class="btn-edit" (click)="openEditModal(q)" title="Modifier">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-              <path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-            </svg>
-          </button>
 
-          <!-- Toggle -->
-          <button class="btn-toggle"
-                  (click)="toggleStatus(q)"
-                  [title]="q.desactivee ? 'Activer' : 'Désactiver'">
-
-            <svg *ngIf="q.desactivee" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
-            </svg>
-            <svg *ngIf="!q.desactivee" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
-          </button>
-
-          <button class="btn-delete" (click)="openDeleteModal(q.idQuestion)" title="Supprimer">
+          <button class="btn-delete" (click)="deleteSingle(q.idQuestion)"  title="Supprimer">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6"></polyline>
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
             </svg>
           </button>
+
+
+          <button class="btn-view" (click)="openViewModal(q)" title="Voir">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
         </td>
+        </ng-container>
       </tr>
       </tbody>
     </table>
-  </div>
-</div>
 
-
-<div class="modal" *ngIf="showModal" (click)="closeModal()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-
-    <div class="modal-header">
-      <h2>{{ isEditMode ? 'Modifier la Question' : 'Nouvelle Question' }}</h2>
-      <button type="button" class="btn-remove-item" (click)="closeModal()">&times;</button>
-    </div>
-
-    <form (ngSubmit)="saveQuestion()">
-
-      <!-- TEXTE -->
-      <div class="form-group">
-        <label>Question</label>
-        <textarea [(ngModel)]="currentQuestion.texte" name="texte" class="form-control" required></textarea>
-      </div>
-
-      <!-- CATEGORIE -->
-      <div class="form-group">
-        <label>Catégorie</label>
-        <select [(ngModel)]="currentQuestion.categorieQuestion"
-                [compareWith]="compareCategories"
-                name="categorie"
-                class="form-control" required>
-          <option [ngValue]="null" disabled>-- Choisir une catégorie --</option>
-          <option *ngFor="let c of categories" [ngValue]="c">
-            {{ c.nom }}
-          </option>
-        </select>
-      </div>
-
-      <!-- DIFFICULTE -->
-      <div class="form-group">
-        <label>Difficulté</label>
-        <select [(ngModel)]="currentQuestion.difficultee" name="difficultee" class="form-control">
-          <option value="facile">Facile</option>
-          <option value="moyenne">Moyenne</option>
-          <option value="difficile">Difficile</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Type de question</label>
-
-        <div style="display:flex; gap:20px;">
-          <label>
-            <input type="radio"
-                   name="type"
-                   [(ngModel)]="currentQuestion.type"
-                   value="choixUnique">
-            Choix Unique
-          </label>
-
-          <label>
-            <input type="radio"
-                   name="type"
-                   [(ngModel)]="currentQuestion.type"
-                   value="choixMultiple">
-            Choix Multiple
-          </label>
-        </div>
-      </div>
-      <!--nature-->
-      <div class="form-group">
-        <label>Nature de la question</label>
-
-        <div style="display:flex; gap:20px;">
-          <label>
-            <input type="radio"
-                   name="nature"
-                   [(ngModel)]="currentQuestion.nature"
-                   value="technique">
-            Technique
-          </label>
-
-          <label>
-            <input type="radio"
-                   name="nature"
-                   [(ngModel)]="currentQuestion.nature"
-                   value="comportementale">
-            Comportementale
-          </label>
-        </div>
-      </div>
-      <!--image-->
-      <div class="form-group">
-        <label>URL de l'image (optionnel)</label>
-        <input [(ngModel)]="currentQuestion.image" name="image" class="form-control" placeholder="nom_image.png">
-      </div>
-
-      <!-- REPONSES -->
-      <div class="form-group">
-        <label>Réponses</label>
-
-        <div *ngFor="let r of currentQuestion.reponses; let i = index" class="form-row"  style="display:flex; gap:10px; flex-wrap: wrap;">
-
-          <button type="button" class="btn-remove-item"  (click)="removeReponse(i)" style="margin-left: auto;" >
-            ✕
-          </button>
-          <input [(ngModel)]="r.texte" name="rep{{i}}" placeholder="Réponse"
-                 class="form-control" required>
-
-          <input [(ngModel)]="r.score" name="score{{i}}" type="number"
-                 placeholder="Score" class="form-control" required>
-
-
+    <div class="modal" *ngIf="showViewModal" (click)="closeViewModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Détails de la Question</h2>
+          <button class="btn-remove-item" (click)="closeViewModal()">×</button>
         </div>
 
-        <button type="button" class="btn-add" (click)="addReponse()">
-          + Ajouter réponse
-        </button>
-      </div>
+        <div class="profile-info" *ngIf="questionToView">
+          <div>
+            <label class="label">Texte de la question :</label>
+            <p class="value">{{ questionToView.texte }}</p>
+          </div>
 
-      <!-- FOOTER -->
-      <div class="modal-footer">
-        <button type="button" class="btn-cancel" (click)="closeModal()">Annuler</button>
+          <div class="image-section" *ngIf="questionToView.image">
+            <label class="label">Image jointe :</label>
+            <div class="img-container">
+              <img [src]="questionToView.image" alt="Illustration question" />
+            </div>
+          </div>
 
-        <button type="submit" class="btn-submit">
-          {{ isEditMode ? 'Modifier' : 'Ajouter' }}
-        </button>
-      </div>
-
-    </form>
-  </div>
-</div>
-<div class="modal" *ngIf="showViewModal" (click)="showViewModal=false">
-  <div class="modal-content" (click)="$event.stopPropagation()" style="max-width: 600px;">
-    <div class="modal-header">
-      <h2>Détails de la Question</h2>
-      <button type="button" class="btn-remove-item"  (click)="showViewModal=false">&times;</button>
-    </div>
-    <div class="profile-info" *ngIf="questionToView">
-      <!--Image-->
-      <div *ngIf="questionToView.image" class="image-preview-container">
-        <span class="image-label"><i class="fas fa-image"></i> Illustration :</span>
-        <div class="image-wrapper">
-          <img [src]="questionToView.image"
-               alt="Question Image"
-               class="question-img">
+          <div class="responses-section">
+            <label>Réponses possibles :</label>
+            <ul class="response-list">
+              <li *ngFor="let rep of questionToView.reponses" [class.correct]="rep.score > 0">
+                <span class="status-icon">{{ rep.score > 0 ? '✅' : '❌' }}</span>
+                {{ rep.texte }}
+                <span class="score-badge">({{ rep.score }}%)</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-      <div class="info-row"><strong>Texte:</strong> {{ questionToView.texte }}</div>
-
-      <div class="info-row"><strong>Nature:</strong> {{ questionToView.nature }}</div>
-      <div class="info-row"><strong>Type:</strong> {{ questionToView.type }}</div>
-
-
-      <hr>
-      <span>Réponses :</span>
-      <div *ngFor="let r of questionToView.reponses" class="info-row" style="border-bottom: 1px solid #eee; padding: 10px 0;">
-        <span class="value">{{ r.texte }}</span>
-        <span class="badge" [style.background]="r.score > 0 ? '#dcfce7' : '#f1f5f9'" [style.color]="r.score > 0 ? '#166534' : '#475569'">
-          Score: {{ r.score }}
-        </span>
-      </div>
-    </div>
-  </div>
-
-
-</div>
-
-<div class="modal" *ngIf="showDeleteModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>Confirmation</h2>
-    </div>
-
-    <div style="padding:20px; text-align:center;">
-      Êtes-vous sûr de vouloir supprimer cette question ?
-    </div>
-
-    <div class="modal-footer">
-      <button class="btn-cancel" (click)="closeDeleteModal()">Annuler</button>
-      <button class="btn-delete" (click)="confirmDelete()">Supprimer</button>
     </div>
   </div>
 </div>

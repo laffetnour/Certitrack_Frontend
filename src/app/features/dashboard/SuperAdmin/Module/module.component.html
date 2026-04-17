@@ -7,10 +7,19 @@
         <option value="">Toutes les catégories</option>
         <option *ngFor="let c of categories" [value]="c.id">{{ c.nom }}</option>
       </select>
+      <button class="btn-behavioral" (click)="goToBehavioralQuestions()"
+              style="background-color: #10b981; color: white; display: flex; align-items: center; gap: 5px; padding: 8px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-10.6 8.5 8.5 0 0 1 4.6 1.3L22 3l-1.5 5.5Z"></path>
+        </svg>
+        Questions Comportementales
+      </button>
+
       <input type="file" #fileInput
              (change)="onFileSelected($event)"
              accept=".csv"
              style="display: none;">
+
 
       <button class="btn-view" (click)="onImportClick()" [disabled]="loading" *ngIf="isSuperAdmin"
               style="background-color: #6366f1; color: white; display: flex; align-items: center; gap: 5px;">
@@ -135,6 +144,17 @@
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
             </svg>
           </button>
+
+          <button class="btn-list" (click)="goToQuestions(m.idModule)" title="Gérer les questions">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3.01" y2="6"></line>
+              <line x1="3" y1="12" x2="3.01" y2="12"></line>
+              <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+          </button>
         </td>
       </tr>
       </tbody>
@@ -168,11 +188,7 @@
           <input type="number" formControlName="nombreMotCle" (change)="onNombreChange()" class="form-control" min="0">
 
           <div formArrayName="motCles" class="motcle-list">
-            <!--<div *ngFor="let mcGroup of motCles.controls; let i = index" [formGroupName]="i" class="motcle-item">
-              <input formControlName="description" placeholder="Mot-clé #{{i+1}}" class="form-control">
-              <button type="button" class="btn-remove-item" (click)="removeMotCle(i)">✖</button>
-            </div>-->
-            <!--666666666666666666666666666666666666666666666666666666-->
+
             <div *ngFor="let mcGroup of motCles.controls; let i = index" [formGroupName]="i" class="motcle-item">
 
               <input formControlName="description"
@@ -195,12 +211,12 @@
           </div>
         </div>
 
-        <!--666666666666666666666666666666666666666666666666666666666666666666666-->
 
 
-            <button type="button" (click)="openCatModal()">
+
+           <!-- <button type="button" (click)="openCatModal()">
               Choisir catégories questions
-            </button>
+            </button>-->
 
 
         <div class="modal-footer">
@@ -249,7 +265,7 @@
             </span>
           </div>
         </div>
-        <!--666666666666666666666666666666666666666666666666666666666666-->
+        <!--
         <div class="info-row" style="flex-direction: column; align-items: flex-start; margin-top: 15px;">
           <span class="label">Catégories de Questions</span>
             <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;" *ngIf="moduleToView.categories && moduleToView.categories.length > 0">
@@ -260,7 +276,7 @@
           <span class="value" *ngIf="!moduleToView.categories || moduleToView.categories.length === 0" style="color: #94a3b8; font-style: italic;">
             Aucune catégorie sélectionnée
           </span>
-        </div>
+        </div>-->
 
       </div>
     </div>
@@ -285,16 +301,16 @@
   <div class="modal" *ngIf="showCatModal">
     <div class="modal-content">
 
-      <h3>Choisir catégories questions</h3>
+      <!--<h3>Choisir catégories questions</h3>
 
-      <!-- 🔍 Recherche -->
+
       <input type="text"
              [(ngModel)]="searchCat"
              placeholder="Rechercher catégorie..."
              class="form-control"
              style="margin-bottom:10px;">
 
-      <!-- ✅ Sélection en temps réel -->
+
       <div style="margin-bottom:10px;">
         <strong>Catégories sélectionnées :</strong>
 
@@ -314,13 +330,13 @@
         </div>
       </div>
 
-      <!-- 📋 Liste -->
+
       <div *ngFor="let cat of filteredCatQuestions">
         <input type="checkbox"
                [checked]="isSelectedCategory(cat)"
                (change)="toggleCategory(cat)">
         {{ cat.nom }}
-      </div>
+      </div>-->
 
       <!-- 🎯 Actions -->
       <div style="margin-top:10px;">

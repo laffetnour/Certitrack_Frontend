@@ -1283,3 +1283,19 @@ form::-webkit-scrollbar-thumb:hover {
 .btn-add-tenant:hover {
   background-color: #059669;
 }
+
+.btn-list {
+  background: #f8fafc;
+  color: #6366f1; /* Couleur indigo pour différencier de l'édition et de la vue */
+  border: 1px solid #e2e8f0;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-list:hover {
+  background: #6366f1;
+  color: white;
+  transform: translateY(-1px);
+}

@@ -1,302 +1,209 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { SuperAdminService } from '../../../../core/services/super-admin.service';
+
+import { SuperAdminService } from '../../../../core/services/super-admin.service'; // Votre service mis à jour
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 @Component({
-  selector: 'app-question',
-  standalone: true, // Vérifiez si cette ligne existe
-  imports: [CommonModule, FormsModule], // Ajoutez les imports ici
+  selector: 'app-bd-question-list',
+  standalone: true,
+    imports: [CommonModule, FormsModule],
   templateUrl: './question.component.html',
   styleUrls: ['./question.component.css']
 })
-
-
 export class QuestionComponent implements OnInit {
+  moduleId!: number;
+  // Utilisation de any[] pour éviter l'import du modèle
   questions: any[] = [];
-  filteredQuestions: any[] = [];
-  categories: any[] = [];
-  selectedFilterCat: string = '';
-  selectedQuestions: number[] = [];
-  loading = false;
-  showViewModal = false;
+  selectedIds: number[] = [];
+  loading: boolean = false;
+
+  showViewModal: boolean = false;
   questionToView: any = null;
-  showModal = false;
-  isEditMode = false;
-  currentQuestion: any = null;
-  showDeleteModal = false;
-  idToDelete: number | null = null;
 
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private superAdminService: SuperAdminService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-    constructor(private service: SuperAdminService, private cdr: ChangeDetectorRef) {}
+  /*ngOnInit(): void {
+    this.moduleId = Number(this.route.snapshot.paramMap.get('id'));
 
-   ngOnInit() {
-       this.refreshAll();
-     }
-
-     refreshAll() {
-       this.loadCategories();
-       this.loadData();
-     }
-    // 1. Charger les catégories
-    loadCategories() {
-      this.service.getCatQuestions().subscribe(data => {
-        this.categories = [...data]; // Force la nouvelle référence
-        this.cdr.detectChanges();
-      });
-    }
-
-    // 2. Charger les questions
-    loadData() {
-      this.loading = true;
-      this.service.getQuestions().subscribe({
-        next: (data) => {
-         this.questions = [...data];
-                 this.applyFilter();
-                 this.loading = false;
-
-                 // 4. Déclencher manuellement la détection de changement
-                 this.cdr.detectChanges();
-        },
-       error: (err) => {
-               this.loading = false;
-               this.cdr.detectChanges();
-             }
-           });
-    }
-
-    // 3. Appliquer le filtre (Logique de rafraîchissement de la vue)
-    applyFilter() {
-      if (!this.selectedFilterCat || this.selectedFilterCat === "") {
-        this.filteredQuestions = [...this.questions];
-      } else {
-        this.filteredQuestions = this.questions.filter(q =>
-          q.categorieQuestion && q.categorieQuestion.id == this.selectedFilterCat
-        );
-      }
-    this.cdr.detectChanges();
-    }
-
-    // 4. L'importation avec refresh garanti
-    onUploadQuestions(event: any) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      this.loading = true;
-      this.cdr.detectChanges();
-      this.service.importQuestionsCSV(file).subscribe({
-        next: (res) => {
-          console.log("Import terminé", res);
-          alert(`Succès ! ${res.successCount} questions traitées.`);
-
-          // RESET l'input pour permettre de re-sélectionner le même fichier plus tard
-          event.target.value = '';
-
-          // ON RECHARGE TOUT
-          this.refreshAll();      // Recharge les questions
-        },
-        error: (err) => {
-          this.loading = false;
-          alert("Erreur lors de l'importation");
-          event.target.value = '';
-          this.cdr.detectChanges();
+        if (this.moduleId) {
+          this.loadQuestions();
         }
-      });
+
+  }*/
+
+ /* loadQuestions(): void {
+    this.loading = true;
+    this.superAdminService.getByModule(this.moduleId).subscribe({
+      next: (data: any[]) => {
+        console.log(data);
+        //this.questions = data;
+
+        this.questions = data.filter(q => q.nature === 'technique');
+        this.cdr.detectChanges();
+        this.selectedIds = [];
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Erreur', err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }*/
+
+ngOnInit(): void {
+  // On écoute les changements d'URL en temps réel
+  this.route.paramMap.subscribe(params => {
+    const id = params.get('id');
+
+    // On gère les cas : '0', null ou undefined
+    if (id === '0' || id === null || id === undefined) {
+      this.moduleId = 0;
+    } else {
+      this.moduleId = Number(id);
     }
 
-  getDifficultyClass(diff: string) {
-    if (diff === 'facile') return 'bg-success-light';
-    if (diff === 'moyenne') return 'bg-warning-light';
-    return 'bg-danger-light';
-  }
-
-  // --- Gestion des Checkboxes ---
-  onCheckboxChange(id: number, event: any) {
-    if (event.target.checked) this.selectedQuestions.push(id);
-    else this.selectedQuestions = this.selectedQuestions.filter(i => i !== id);
-  }
-
-  isAllSelected() {
-    return this.filteredQuestions.length > 0 && this.selectedQuestions.length === this.filteredQuestions.length;
-  }
-
-  selectAll(event: any) {
-    this.selectedQuestions = event.target.checked ? this.filteredQuestions.map(q => q.idQuestion) : [];
-  }
-
-  viewQuestion(q: any) {
-    this.questionToView = q;
-    this.showViewModal = true;
-  }
-trackByQuestionId(index: number, question: any) {
-  return question.idQuestion; // Angular ne redessinera que les lignes modifiées
+    console.log("Mode détecté, Module ID :", this.moduleId);
+    this.loadQuestions(); // On recharge les données à chaque changement d'ID
+  });
 }
 
-//******
+isBehavioralMode(): boolean {
+  // On considère que c'est comportemental si l'ID est 0, null ou undefined
+  return !this.moduleId || this.moduleId === 0;
+}
+// Dans ngOnInit ou loadQuestions
+loadQuestions(): void {
+  this.loading = true;
 
-  toggleStatus(q: any) {
-    this.service.toggleQuestionStatus(q.idQuestion).subscribe({
-      next: () => {
-        this.refreshAll(); // 🔥 IMPORTANT
-      },
-      error: (err) => console.error(err)
-    });
-  }
+  if (this.isBehavioralMode()) {
+    this.loading = true;
+    this.superAdminService.getQuestions().subscribe({ // On récupère toutes les questions
+      next: (data: any[]) => {
+        // On ne garde QUE les comportementales
 
-  deleteQuestion(id: number) {
-    if (confirm("Supprimer cette question ?")) {
-      this.service.deleteQuestion(id).subscribe(() => this.refreshAll());
-    }
-  }
-
-  activateSelected() {
-    this.service.activateQuestions(this.selectedQuestions)
-      .subscribe(() => this.refreshAll());
-  }
-
-  deactivateSelected() {
-    this.service.deactivateQuestions(this.selectedQuestions)
-      .subscribe(() => this.refreshAll());
-  }
-
-  deleteSelected() {
-    if (confirm("Supprimer les questions sélectionnées ?")) {
-      this.service.deleteQuestionsBulk(this.selectedQuestions)
-        .subscribe(() => this.refreshAll());
-    }
-  }
-
-
-
-
-
-
-
-  closeModal() {
-    this.showModal = false;
-  }
-
-  addReponse() {
-    this.currentQuestion.reponses.push({ texte: '', score: 0 });
-  }
-
-  removeReponse(index: number) {
-    this.currentQuestion.reponses.splice(index, 1);
-  }
-
-
-
-
-saveQuestion() {
-  // 1. Vérification de sécurité
-  if (!this.currentQuestion.categorieQuestion || !this.currentQuestion.categorieQuestion.id) {
-    alert("Veuillez sélectionner une catégorie !");
-    return;
-  }
-
-  // 2. Construction d'un objet propre (Payload)
-  // On s'assure que les types correspondent à ce que Java attend
-  const questionToSave = {
-    texte: this.currentQuestion.texte,
-    difficultee: this.currentQuestion.difficultee, // "facile", "moyenne", etc.
-    type: this.currentQuestion.type,               // "choixUnique", etc.
-    nature: this.currentQuestion.nature,
-    image: this.currentQuestion.image,
-    desactivee: false,                             // Valeur par défaut
-    categorieQuestion: {
-      id: Number(this.currentQuestion.categorieQuestion.id) // Conversion forcée en nombre
-    },
-    reponses: this.currentQuestion.reponses.map((r: any) => ({
-      texte: r.texte,
-      score: Number(r.score) // Conversion forcée en nombre
-    }))
-  };
-
-  console.log("Tentative d'envoi :", questionToSave);
-
-  if (this.isEditMode) {
-    this.service.updateQuestion(this.currentQuestion.idQuestion, questionToSave).subscribe({
-      next: () => { this.showModal = false; this.refreshAll(); },
-      error: (err) => console.error("Erreur PUT", err)
+        this.questions = data.filter(q => q.nature === 'comportementale');
+        console.log(this.questions);
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
     });
   } else {
-    this.service.addQuestion(questionToSave).subscribe({
-      next: () => { this.showModal = false; this.refreshAll(); },
-      error: (err) => {
-        console.error("Erreur détaillée :", err);
-        alert("L'ajout a échoué. Vérifiez la console (F12).");
+    this.loading = true;
+    this.superAdminService.getByModule(this.moduleId).subscribe({
+      next: (data: any[]) => {
+        this.questions = data.filter(q => q.nature === 'technique');
+        this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
 }
 
-  openAddModal() {
-    this.isEditMode = false;
-    this.currentQuestion = {
-      texte: '',
-      difficultee: 'facile',
-      type: 'choixUnique',
-      nature: 'technique', // ✅ AJOUT
-      categorieQuestion: null,
-      image: '',
-      reponses: [
-        { texte: '', score: 0 } // 🔥 au moins une
-      ]
-    };
-    this.showModal = true;
-  }
+  // --- ACTIONS ---
 
-  openEditModal(q: any) {
-    this.isEditMode = true;
-    this.currentQuestion = JSON.parse(JSON.stringify(q)); // clone
-    this.showModal = true;
-  }
+  /*onImportCSV(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.loading = true;
+      this.superAdminService.importQuestionsCSV(file, this.moduleId).subscribe({
+        next: (res) => {
+          alert(`${res.successCount} questions importées !`);
+          this.loadQuestions();
+          this.cdr.detectChanges();
+        },
+        error: () => alert("Erreur d'import"),
+        complete: () => this.loading = false
 
-  openDeleteModal(id: number) {
-    this.idToDelete = id;
-    this.showDeleteModal = true;
-  }
-
-  closeDeleteModal() {
-    this.showDeleteModal = false;
-  }
-
-  confirmDelete() {
-    if (this.idToDelete != null) {
-      this.service.deleteQuestion(this.idToDelete)
-        .subscribe(() => {
-          this.closeDeleteModal();
-          this.refreshAll();
-        });
+      });
     }
   }
+*/
 
-  bulkToggle(desactive: boolean) {
-    if (this.selectedQuestions.length === 0) return;
+onImportCSV(event: any): void {
+  const file = event.target.files[0];
+  if (file) {
+    this.loading = true;
+    this.superAdminService.importQuestionsCSV(file, this.moduleId).subscribe({
+      next: (res) => {
+        // Construction du message d'alerte
+        let message = `${res.successCount} questions importées avec succès !`;
 
-    const request = desactive
-      ? this.service.deactivateQuestions(this.selectedQuestions)
-      : this.service.activateQuestions(this.selectedQuestions);
+        // Si il y a des lignes ignorées (erreurs)
+        if (res.ignoredLines && res.ignoredLines.length > 0) {
+          message += `\n\n⚠️ Erreur(s) détectée(s) aux lignes suivantes : ${res.ignoredLines.join(', ')}`;
+          message += `\nVérifiez le format de ces lignes (Note, Type ou Réponses).`;
+        }
 
-    request.subscribe(() => {
-      this.selectedQuestions = [];
-      this.refreshAll();
+        alert(message);
+        this.loadQuestions();
+        this.loading = false;
+      },
+      error: (err) => {
+        alert("Erreur critique : Impossible de lire le fichier.");
+        this.loading = false;
+      }
     });
   }
+}
+  deleteSingle(id: number): void {
+    if (confirm('Supprimer cette question ?')) {
+      this.superAdminService.deleteQuestion(id).subscribe(() => {
+        this.questions = this.questions.filter(q => q.idQuestion !== id);
+        this.loadQuestions();
 
-  bulkDelete() {
-    if (this.selectedQuestions.length === 0) return;
-
-    if (confirm("Supprimer les questions sélectionnées ?")) {
-      this.service.deleteQuestionsBulk(this.selectedQuestions)
-        .subscribe(() => {
-          this.selectedQuestions = [];
-          this.refreshAll();
-        });
+      });
     }
   }
 
-  compareCategories(c1: any, c2: any): boolean {
-    return c1 && c2 ? c1.id === c2.id : c1 === c2;
+  deleteMultiple(): void {
+    if (confirm(`Supprimer les ${this.selectedIds.length} questions ?`)) {
+      this.superAdminService.deleteQuestionsBulk(this.selectedIds).subscribe(() => {
+        this.loadQuestions();
+      });
+    }
   }
+
+  // --- GESTION SELECTION ---
+
+  toggleSelection(id: number, event: any): void {
+    if (event.target.checked) {
+      this.selectedIds.push(id);
+    } else {
+      this.selectedIds = this.selectedIds.filter(i => i !== id);
+    }
+  }
+
+  isAllSelected(): boolean {
+    return this.questions.length > 0 && this.selectedIds.length === this.questions.length;
+  }
+
+  selectAll(event: any): void {
+    this.selectedIds = event.target.checked ? this.questions.map(q => q.idQuestion) : [];
+  }
+
+  goBack(): void {
+    this.router.navigate(['/super-admin/modules']);
+  }
+
+  openViewModal(q: any) {
+      this.questionToView = q;
+      this.showViewModal = true;
+      this.cdr.detectChanges();
+    }
+
+    // Méthode pour fermer le modal
+    closeViewModal() {
+      this.showViewModal = false;
+      this.questionToView = null;
+      this.cdr.detectChanges();
+    }
 }
