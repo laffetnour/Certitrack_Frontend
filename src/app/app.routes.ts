@@ -38,6 +38,7 @@ import { SessionInscComponent} from './features/dashboard/adminTenant/session-in
 import { DashboardCandidatComponent } from './features/dashboard/candidat/dashboard/dashboard.component';
 import { CandidatLayoutComponent } from './features/dashboard/candidat/layout/layout.component';
 import { ModulesCandidatComponent } from './features/dashboard/candidat/modules/modules.component';
+import { MesInscriptionsComponent } from './features/dashboard/candidat/modules/mes-inscriptions.component';
 
 
 
@@ -45,33 +46,27 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
 
-
-  // Routes spécifiques d'abord
   {
     path: 'super-admin',
     component: SuperAdminComponent,
     canActivate: [authGuard],
     children: [
       { path: 'tenants', component: TenantComponent },
-      { path: 'adminTenants', component: ListeAdminsTenantComponent }, // Si vous avez un composant pour la liste des admins
+      { path: 'adminTenants', component: ListeAdminsTenantComponent },
       { path: 'categories', component: CategorieModuleComponent },
       { path: 'modules', component: ModuleComponent },
       { path: 'questions/:id', component: QuestionComponent },
-
-      //{ path: 'cat-question', component: CatQuestionComponent },
       { path: 'parametre', component: ParametreComponent }
-     // { path: '', redirectTo: 'tenants', pathMatch: 'full' } // Route par défaut
     ]
   },
-  //{ path: 'tenant', component: AdminTenantComponent, canActivate: [authGuard] },
 
-  //{ path: 'candidat', component: CandidatComponent, canActivate: [authGuard] },
   {
     path: 'candidat',
     component: CandidatLayoutComponent,
     children: [
       { path: 'dashboard', component: DashboardCandidatComponent },
       { path: 'modules', component: ModulesCandidatComponent },
+      { path: 'mes-inscriptions', component: MesInscriptionsComponent },
       //{ path: 'reservations', component: ReservationComponent },
       { path: 'parametre', component: ParametreComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }

@@ -1,88 +1,75 @@
-<!--<div class="content-area">
-
-  <input
-    type="text"
-    placeholder="🔍 Rechercher un module..."
-    [(ngModel)]="search"
-    (input)="applyFilter()"
-    class="search-input"
-  />
-
-  <p style="color: gray;">Modules trouvés : {{ displayedModules.length }}</p>
-
-  <div class="stats-grid">
-    <div class="stat-card" *ngFor="let m of displayedModules">
-      <div class="stat-icon-wrapper">
-        <i class="fas fa-book"></i>
-      </div>
-      <div>
-        <h3>{{ m.module?.nom || 'Sans nom' }}</h3>
-        <p>Catégorie : {{ m.module?.nomCategorie || 'N/A' }}</p>
-
-        <p *ngIf="m.avecTest">Score requis : {{ m.seuilScore }}%</p>
-
-        <p *ngIf="m.avecTest" style="color: green;">✅ Avec test</p>
-        <p *ngIf="!m.avecTest" style="color: orange;">ℹ️ Sans test (Accès direct)</p>
-        <button class="btn-inscrire">S'inscrire</button>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="mode.includes('ouvert')" style="margin-top: 20px;">
-    <button (click)="toggleAutres()" class="btn-autres">
-      {{ showAll ? 'Cacher les autres' : '+ Afficher tous les modules' }}
-    </button>
-  </div>
-
-</div>-->
-
 
 <div class="content-area">
+  <input type="text" placeholder="🔍 Rechercher un module..." [(ngModel)]="search" (input)="applyFilter()" class="search-input" />
 
-  <input
-    type="text"
-    placeholder="🔍 Rechercher un module..."
-    [(ngModel)]="search"
-    (input)="applyFilter()"
-    class="search-input"
-  />
+  <div class="filter-container">
+    <div class="filter-group">
+      <label>Type de module :</label>
+      <select [(ngModel)]="filterType" (change)="applyFilter()" class="filter-select">
+        <option value="all">Tous les types</option>
+        <option value="withTest">✅ Avec test</option>
+        <option value="noTest">ℹ️ Sans test</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Disponibilité :</label>
+      <select [(ngModel)]="filterStatus" (change)="applyFilter()" class="filter-select">
+        <option value="all">Tous les statuts</option>
+        <option value="open">🔓 Inscription ouverte</option>
+      </select>
+    </div>
+  </div>
 
   <h2 *ngIf="displayedModules.length > 0">Mes Modules</h2>
   <div class="stats-grid">
     <div class="stat-card" *ngFor="let m of displayedModules">
-      <div class="stat-icon-wrapper"><i class="fas fa-book"></i></div>
+      <div class="stat-icon-wrapper">
+        <i class="fas" [ngClass]="m.hasActiveSession ? 'fa-book-open' : 'fa-lock'"></i>
+      </div>
       <div>
         <h3>{{ m.module?.nom }}</h3>
-        <p>Catégorie : {{ m.module?.nomCategorie }}</p>
-        <p *ngIf="m.avecTest">Score requis : {{ m.seuilScore }}%</p>
-        <p *ngIf="m.avecTest" style="color: green;">✅ Avec test</p>
-        <p *ngIf="!m.avecTest" style="color: orange;">ℹ️ Sans test</p>
-        <button class="btn-inscrire">S'inscrire</button>
+        <p class="category">Catégorie : {{ m.module?.nomCategorie }}</p>
+        <div class="test-info">
+          <span *ngIf="m.avecTest" class="badge-test">✅ Avec test ({{ m.seuilScore }}%)</span>
+          <span *ngIf="!m.avecTest" class="badge-no-test">ℹ️ Sans test</span>
+        </div>
+        <button class="btn-inscrire" [disabled]="!m.hasActiveSession || isSubmitting" (click)="sinscrire(m)">
+          <span>{{ m.hasActiveSession ? (isSubmitting ? "Traitement..." : "S'inscrire") : "Bientôt disponible" }}</span>
+        </button>
       </div>
     </div>
   </div>
 
-  <div *ngIf="mode.includes('ouvert') && filteredOuverts.length > 0" class="actions-footer">
+  <div *ngIf="mode.includes('OUVERT')" class="actions-footer">
     <button (click)="toggleAutres()" class="btn-autres">
       {{ showAll ? '🔼 Cacher les autres' : '🔽 Afficher les autres modules disponibles' }}
     </button>
   </div>
 
-  <div *ngIf="showAll" class="others-section" style="margin-top: 20px;">
-    <h2 style="color: #666;">Autres modules disponibles</h2>
+  <div *ngIf="showAll && mode.includes('OUVERT')" class="others-section">
+
     <div class="stats-grid">
       <div class="stat-card" *ngFor="let m of filteredOuverts">
-        <div class="stat-icon-wrapper"><i class="fas fa-graduation-cap"></i></div>
+        <div class="stat-icon-wrapper">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
         <div>
-          <h3>{{ m.module?.nom }}</h3>
-          <p>Catégorie : {{ m.module?.nomCategorie }}</p>
-          <p *ngIf="m.avecTest">Score requis : {{ m.seuilScore }}%</p>
-          <p *ngIf="m.avecTest" style="color: green;">✅ Avec test</p>
-          <p *ngIf="!m.avecTest" style="color: orange;">ℹ️ Sans test</p>
-          <button class="btn-inscrire">S'inscrire</button>
+          <h3>{{ m.module?.nom || 'Module sans nom' }}</h3>
+          <p class="category">Catégorie : {{ m.module?.nomCategorie || 'Général' }}</p>
+          <div class="test-info">
+            <span *ngIf="m.avecTest" class="badge-test">✅ Avec test ({{ m.seuilScore }}%)</span>
+            <span *ngIf="!m.avecTest" class="badge-no-test">ℹ️ Sans test</span>
+          </div>
+          <button class="btn-inscrire" [disabled]="!m.hasActiveSession || isSubmitting" (click)="sinscrire(m)">
+            {{ m.hasActiveSession ? (isSubmitting ? "Traitement..." : "S'inscrire") : "Bientôt disponible" }}
+          </button>
         </div>
       </div>
     </div>
   </div>
 
+  <div *ngIf="displayedModules.length === 0 && (!showAll || filteredOuverts.length === 0)" class="no-data">
+    <p>Aucun module ne correspond à votre recherche.</p>
+  </div>
 </div>

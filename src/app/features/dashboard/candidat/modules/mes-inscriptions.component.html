@@ -1,0 +1,31 @@
+<div class="mes-inscriptions container">
+  <h3><i class="fas fa-bookmark"></i> Mes Inscriptions ({{ mesModulesInscrits.length }})</h3>
+
+  <div class="grid" *ngIf="!loading">
+    <div class="card" *ngFor="let item of mesModulesInscrits">
+
+      <div class="card-body">
+        <h4 class="module-title">{{ item.module.nom }}</h4>
+        <p class="category">{{ item.module.nomCategorie }}</p>
+
+      </div>
+
+      <div class="card-footer">
+        <button
+          *ngIf="item.avecTest"
+          class="btn-test"
+          (click)="allerAuTest(item.id)">
+          <i class="fas fa-play"></i> Démarrer le Test
+        </button>
+
+        <button
+          *ngIf="!item.avecTest"
+          class="btn-disabled"
+          disabled>
+          <i class="fas fa-lock"></i> Inscription confirmée
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

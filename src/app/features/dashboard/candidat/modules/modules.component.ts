@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ModuleTenantService } from '../../../../core/services/ModuleTenant.service';
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { ModuleCandidatService } from '../../../../core/services/module-candidat.service';
@@ -12,106 +13,24 @@ import { ModuleCandidatService } from '../../../../core/services/module-candidat
   templateUrl: './modules.component.html',
   styleUrls: ['./modules.component.css']
 })
-/*export class ModulesCandidatComponent implements OnInit {
 
-  // Données brutes venant du backend
-  modulesAffectes: any[] = [];
-  modulesOuverts: any[] = [];
-
-  // Liste filtrée réellement affichée dans le HTML
-  displayedModules: any[] = [];
-
-  mode: string = 'fixe';
-  showAll = false;
-  search: string = '';
-
-  constructor(
-    private service: ModuleCandidatService,
-    private authService: AuthService,private cdr: ChangeDetectorRef
-  ) {}
-
-  ngOnInit(): void {
-    this.loadModules();
-  }
-
-
-  loadModules(): void {
-    this.service.getModules().subscribe({
-      next: (res: any) => {
-        console.log("Données reçues du backend :", res);
-
-        // Sécurisation de la lecture du mode (ouvert / fixe)
-        this.mode = res.mode ? res.mode.toLowerCase() : 'fixe';
-
-        this.modulesAffectes = res.modulesAffectes || [];
-        this.modulesOuverts = res.modulesOuverts || [];
-
-        // Initialiser l'affichage
-        this.applyFilter();
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des modules', err);
-      }
-    });
-  }
-
-
-  applyFilter(): void {
-    // 1. On détermine la liste de base selon le mode et l'état du bouton "showAll"
-    let baseList = [...this.modulesAffectes];
-
-    // On utilise .includes pour gérer "ouvert" ou "ouverte"
-    if (this.mode.includes('ouvert') && this.showAll) {
-      baseList = [...baseList, ...this.modulesOuverts];
-    }
-
-    // 2. On applique le filtre de recherche textuelle
-    if (!this.search.trim()) {
-      this.displayedModules = baseList;
-    } else {
-      const searchLow = this.search.toLowerCase();
-
-      this.displayedModules = baseList.filter(m => {
-        // Recherche dans le nom du module
-        const matchNom = m.module?.nom?.toLowerCase().includes(searchLow);
-
-        // Recherche dans les mots-clés (description ou valeur)
-        const matchMotCle = (m.module?.motCles || []).some((mc: any) => {
-          const desc = mc.description ? mc.description.toLowerCase() : '';
-          const val = mc.valeur ? mc.valeur.toLowerCase() : '';
-          return desc.includes(searchLow) || val.includes(searchLow);
-        });
-
-        return matchNom || matchMotCle;
-      });
-    }
-
-    console.log(`Affichage mis à jour : ${this.displayedModules.length} modules affichés.`);
-    this.cdr.detectChanges();
-  }
-
-
-  toggleAutres(): void {
-    this.showAll = !this.showAll;
-    this.applyFilter();
-  }
-}*/
-
-// ... imports identiques ...
 
 export class ModulesCandidatComponent implements OnInit {
   modulesAffectes: any[] = [];
-  modulesOuverts: any[] = []; // Ceux-là restent séparés
-
-  displayedModules: any[] = []; // Liste filtrée des affectés
-  filteredOuverts: any[] = [];  // Liste filtrée des autres
-
+  modulesOuverts: any[] = [];
+  displayedModules: any[] = [];
+  filteredOuverts: any[] = [];
   mode: string = 'fixe';
   showAll = false;
   search: string = '';
+  isSubmitting = false;
+
+  filterType: string = 'all';
+  filterStatus: string = 'all';
 
   constructor(
     private service: ModuleCandidatService,
+    private moduleTenantService: ModuleTenantService,
     private authService: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -120,42 +39,113 @@ export class ModulesCandidatComponent implements OnInit {
     this.loadModules();
   }
 
-  loadModules(): void {
+showOthers: boolean = false;
+ applyFilter(): void {
+    const searchLow = this.search.toLowerCase().trim();
+
+    this.displayedModules = this.modulesAffectes.filter(m => this.checkAllFilters(m, searchLow));
+    this.filteredOuverts = this.modulesOuverts.filter(m => this.checkAllFilters(m, searchLow));
+
+    this.cdr.detectChanges();
+  }
+
+  private checkAllFilters(m: any, searchLow: string): boolean {
+
+    const matchesSearch = this.matchSearch(m, searchLow);
+
+    let matchesType = true;
+    if (this.filterType === 'withTest') matchesType = m.avecTest === true;
+    if (this.filterType === 'noTest') matchesType = m.avecTest === false;
+
+    let matchesStatus = true;
+    if (this.filterStatus === 'open') matchesStatus = m.hasActiveSession === true;
+
+    return matchesSearch && matchesType && matchesStatus;
+  }
+
+
+
+    private matchSearch(m: any, searchLow: string): boolean {
+
+      if (!searchLow) return true;
+
+      const nom = m.module?.nom?.toLowerCase() || '';
+      const categorie = m.module?.nomCategorie?.toLowerCase() || '';
+      const matchMotCle = (m.module?.motCles || []).some((mc: any) =>
+        (mc.description || mc.libelle || '').toLowerCase().includes(searchLow)
+      );
+      return nom.includes(searchLow) ||
+             categorie.includes(searchLow) ||
+             matchMotCle;
+    }
+
+    toggleAutres(): void {
+      this.showAll = !this.showAll;
+      this.cdr.detectChanges();
+    }
+
+
+  loadModules() {
     this.service.getModules().subscribe({
       next: (res: any) => {
-        this.mode = res.mode ? res.mode.toLowerCase() : 'fixe';
+        this.mode = res.mode ? res.mode.trim().toUpperCase() : 'FIXE';
         this.modulesAffectes = res.modulesAffectes || [];
-        this.modulesOuverts = res.modulesOuverts || [];
-        this.applyFilter();
+        const modulesInscritsIds = res.inscriptionsIds || [];
+
+        if (this.mode.includes('OUVERT')) {
+          const user = this.authService.getUser();
+          const userId = user?.idUtilisateur;
+
+          this.moduleTenantService.getMyModules(userId).subscribe({
+            next: (allTenantModules: any[]) => {
+              const idsSpec = (res.modulesAffectes || []).map((m: any) => m.module.idModule);
+
+              this.modulesOuverts = allTenantModules.filter((m: any) => {
+                return m.module.disponibilite === true &&
+                       !idsSpec.includes(m.module.idModule) &&
+                       !modulesInscritsIds.includes(m.module.idModule);
+              }).map((m: any) => {
+                const sessionActive = m.sessions?.find((s: any) => s.etat === 'enCours');
+                return {
+                  ...m,
+                  hasActiveSession: !!sessionActive,
+                  sessionIdValide: sessionActive ? sessionActive.id : null
+                };
+              });
+
+              this.applyFilter();
+            }
+          });
+        } else {
+          this.applyFilter();
+        }
       },
-      error: (err) => console.error('Erreur', err)
+      error: (err) => console.error('Erreur de chargement', err)
     });
   }
 
-  applyFilter(): void {
-    const searchLow = this.search.toLowerCase();
+  sinscrire(item: any): void {
 
-    // 1. Filtrer les modules affectés
-    this.displayedModules = this.modulesAffectes.filter(m => this.matchSearch(m, searchLow));
+    const sessionId = item.sessionIdValide || item.id;
 
-    // 2. Filtrer les autres modules
-    this.filteredOuverts = this.modulesOuverts.filter(m => this.matchSearch(m, searchLow));
+    if (!sessionId) {
+      alert("Aucune session active disponible.");
+      return;
+    }
 
-    this.cdr.detectChanges();
-  }
-
-  // Fonction utilitaire pour éviter de répéter le code du filtre
-  private matchSearch(m: any, searchLow: string): boolean {
-    if (!searchLow.trim()) return true;
-    const nom = m.module?.nom?.toLowerCase() || '';
-    const matchMotCle = (m.module?.motCles || []).some((mc: any) =>
-      mc.description?.toLowerCase().includes(searchLow)
-    );
-    return nom.includes(searchLow) || matchMotCle;
-  }
-
-  toggleAutres(): void {
-    this.showAll = !this.showAll;
-    this.cdr.detectChanges();
+    if (confirm(`Confirmer l'inscription à : ${item.module.nom} ?`)) {
+      this.isSubmitting = true;
+      this.service.inscrire(sessionId).subscribe({
+        next: (res) => {
+          alert("Inscription réussie !");
+          this.isSubmitting = false;
+          this.loadModules();
+        },
+        error: (err) => {
+          this.isSubmitting = false;
+          alert(err.error?.message || "Erreur lors de l'inscription.");
+        }
+      });
+    }
   }
 }

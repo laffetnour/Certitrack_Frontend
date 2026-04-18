@@ -15,20 +15,22 @@ export class ModuleCandidatService {
     private authService: AuthService
   ) {}
 
-  // 🔐 headers avec token
   private getAuthHeaders(): HttpHeaders {
-    const token = this.authService.getToken(); // ⚠️ adapte selon ton authService
+    const token = this.authService.getToken();
     return new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
   }
 
-  // 🔹 récupérer modules
-  // On retire les arguments (specialiteId, tenantId)
   getModules(): Observable<any> {
     return this.http.get<any>(this.baseUrl, {
       headers: this.getAuthHeaders()
-      // Plus de "params" ici !
     });
+  }
+
+  inscrire(sessionId: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/inscriptions/session/${sessionId}`, {}, {
+       headers: this.getAuthHeaders()
+     });
   }
 }
