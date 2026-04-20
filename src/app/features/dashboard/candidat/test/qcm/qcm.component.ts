@@ -28,7 +28,6 @@ export class QcmComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // 🔒 récupération depuis navigation OU localStorage
     this.epreuve = history.state.epreuve || JSON.parse(localStorage.getItem('epreuve') || 'null');
 
     if (!this.epreuve) {
@@ -36,12 +35,19 @@ export class QcmComponent implements OnInit {
       return;
     }
 
-    // 🔒 sauvegarde pour refresh
     localStorage.setItem('epreuve', JSON.stringify(this.epreuve));
 
-    this.questions = this.epreuve.questions;
+    //this.questions = this.epreuve.questions;
 
-    // ⏱ timer
+    this.questions = [...this.epreuve.questions].sort((a, b) => {
+        const natureA = a.question.nature;
+        const natureB = b.question.nature;
+
+        if (natureA === 'technique' && natureB !== 'technique') return -1;
+        if (natureA !== 'technique' && natureB === 'technique') return 1;
+        return 0;
+      });
+
     this.timeLeft = this.epreuve.duree * 60;
 
     this.startTimer();
@@ -51,7 +57,6 @@ export class QcmComponent implements OnInit {
     this.interval = setInterval(() => {
       this.timeLeft--;
 
-      // 🔥 FORCER UPDATE UI
       this.cdr.detectChanges();
 
       if (this.timeLeft <= 0) {
@@ -60,7 +65,6 @@ export class QcmComponent implements OnInit {
     }, 1000);
   }
 
-  // ⏱ format mm:ss
   formatTime(seconds: number): string {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
@@ -69,7 +73,14 @@ export class QcmComponent implements OnInit {
 
   get currentQuestion() {
     return this.questions[this.currentIndex].question;
-  }
+    }
+
+    get currentSectionTitle(): string {
+      const nature = this.currentQuestion?.nature;
+      return nature === 'technique'
+        ? 'Partie 1 : Validation Technique'
+        : 'Partie 2 : Engagement & Comportement';
+    }
 
   selectAnswer(repId: number, isMultiple: boolean) {
     if (!isMultiple) {
@@ -98,7 +109,7 @@ export class QcmComponent implements OnInit {
     }
   }
 
-  canGoNext(): boolean {
+  /*canGoNext(): boolean {
     const selected = this.selectedAnswers.filter(id =>
       this.isAnswerFromCurrentQuestion(id)
     );
@@ -112,22 +123,29 @@ export class QcmComponent implements OnInit {
     }
 
     return false;
+  }*/
+
+  canGoNext(): boolean {
+    if (!this.currentQuestion) return false;
+
+    const selectedForThisQuestion = this.selectedAnswers.filter(id =>
+      this.isAnswerFromCurrentQuestion(id)
+    );
+
+    if (this.currentQuestion.type === 'choixUnique') {
+      return selectedForThisQuestion.length === 1;
+    }
+    if (this.currentQuestion.type === 'choixMultiple') {
+      const nbBonnesReponsesAttendues = this.currentQuestion.reponses.filter(
+        (r: any) => r.score > 0
+      ).length;
+
+      return selectedForThisQuestion.length === nbBonnesReponsesAttendues;
+    }
+
+    return false;
   }
 
-  /*submit() {
-    clearInterval(this.interval);
-
-    // 🔒 nettoyage localStorage
-    localStorage.removeItem('epreuve');
-
-    this.service.submitTest(this.epreuve.idEpreuve, this.selectedAnswers)
-      .subscribe({
-        next: (res) => {
-          alert("Score : " + res.scoreFinal);
-        },
-        error: (err) => console.error(err)
-      });
-  }*/
   submit() {
     clearInterval(this.interval);
 
@@ -141,5 +159,9 @@ export class QcmComponent implements OnInit {
         },
         error: (err) => console.error(err)
       });
+  }
+
+  getNbAttendues(): number {
+    return this.currentQuestion?.reponses?.filter((r: any) => r.score > 0).length || 0;
   }
 }
