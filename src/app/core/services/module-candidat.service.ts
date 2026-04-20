@@ -40,4 +40,20 @@ export class ModuleCandidatService {
       { headers: this.getAuthHeaders() }
     );
   }
+
+  startTest(sessionId: number) {
+    return this.http.post<any>(
+      `http://localhost:8080/api/test/start/${sessionId}`,
+      {},
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  submitTest(epreuveId: number, reponses: number[]) {
+    return this.http.post<any>(
+      `http://localhost:8080/api/test/submit/${epreuveId}`,
+      reponses,
+      { headers: this.getAuthHeaders() }
+    );
+  }
 }

@@ -1,0 +1,62 @@
+<div class="page-container">
+
+  <!-- RESULTAT -->
+  <div *ngIf="testTermine" class="result-wrapper">
+    <div class="result-card">
+      <h2>Test terminé</h2>
+      <p>Votre score final est :</p>
+
+      <div class="score">
+        {{ scoreFinal }}
+      </div>
+    </div>
+  </div>
+
+  <!-- QCM -->
+  <div class="qcm-container" *ngIf="!testTermine">
+
+    <!-- HEADER -->
+    <div class="qcm-header">
+      <div class="timer">
+        ⏱ {{ formatTime(timeLeft) }}
+      </div>
+
+      <div class="progress">
+        Question {{ currentIndex + 1 }} / {{ questions.length }}
+      </div>
+    </div>
+
+    <!-- QUESTION CARD -->
+    <div class="question-card">
+      <h3>Question {{ currentIndex + 1 }}</h3>
+
+      <p class="question-text">
+        {{ currentQuestion.texte }}
+      </p>
+
+      <!-- REPONSES -->
+      <div class="answers">
+        <div *ngFor="let rep of currentQuestion.reponses"
+             (click)="selectAnswer(rep.idReponse, currentQuestion.type === 'choixMultiple')"
+             class="answer"
+             [class.selected]="selectedAnswers.includes(rep.idReponse)">
+
+          {{ rep.texte }}
+        </div>
+      </div>
+
+      <!-- ACTION -->
+      <div class="actions">
+        <button
+          (click)="next()"
+          [disabled]="!canGoNext()"
+        >
+          Next ➡️
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

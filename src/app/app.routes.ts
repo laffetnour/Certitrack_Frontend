@@ -40,6 +40,7 @@ import { CandidatLayoutComponent } from './features/dashboard/candidat/layout/la
 import { ModulesCandidatComponent } from './features/dashboard/candidat/modules/modules.component';
 import { MesInscriptionsComponent } from './features/dashboard/candidat/modules/mes-inscriptions.component';
 import { DemarrerTestComponent } from './features/dashboard/candidat/test/demarrer-test/demarrer-test.component';
+import { QcmComponent } from './features/dashboard/candidat/test/qcm/qcm.component';
 
 
 
@@ -71,6 +72,7 @@ export const routes: Routes = [
       //{ path: 'reservations', component: ReservationComponent },
       // ✅ NOUVELLE ROUTE
       { path: 'test/:sessionId', component: DemarrerTestComponent },
+      { path: 'qcm', component: QcmComponent },
 
       { path: 'parametre', component: ParametreComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }

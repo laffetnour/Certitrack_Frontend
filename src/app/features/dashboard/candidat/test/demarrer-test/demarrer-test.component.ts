@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ModuleCandidatService } from '../../../../../core/services/module-candidat.service';
 import { ChangeDetectorRef } from '@angular/core';
@@ -22,7 +22,7 @@ export class DemarrerTestComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private service: ModuleCandidatService, private cdr: ChangeDetectorRef
+    private service: ModuleCandidatService, private cdr: ChangeDetectorRef,private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -44,8 +44,21 @@ export class DemarrerTestComponent implements OnInit {
     });
   }
 
-  demarrer() {
+  /*demarrer() {
     console.log("Démarrage réel du test...");
     // 🔜 prochaine étape : générer épreuve + naviguer vers QCM
+  }*/
+  demarrer() {
+    this.service.startTest(this.sessionId).subscribe({
+      next: (epreuve) => {
+        console.log("EPREUVE =", epreuve);
+
+        // navigation vers composant QCM
+        this.router.navigate(['/candidat/qcm'], {
+          state: { epreuve: epreuve }
+        });
+      },
+      error: (err) => console.error(err)
+    });
   }
 }
