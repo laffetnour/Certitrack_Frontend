@@ -1,0 +1,75 @@
+.test-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f4f7f6;
+}
+
+.test-card {
+  display: flex;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  overflow: hidden;
+  max-width: 900px;
+  width: 100%;
+}
+
+/* LEFT */
+.test-info {
+  flex: 1;
+  padding: 40px;
+}
+
+.test-info h2 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.module-name {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.details p {
+  margin: 5px 0;
+}
+
+.conseils {
+  margin-top: 20px;
+}
+
+.conseils ul {
+  padding-left: 20px;
+}
+
+.btn-start {
+  margin-top: 25px;
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #28a745, #218838);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-start:hover {
+  transform: scale(1.03);
+}
+
+/* RIGHT */
+.test-image {
+  flex: 1;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.test-image img {
+  max-width: 80%;
+}

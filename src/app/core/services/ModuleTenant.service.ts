@@ -170,4 +170,16 @@ export class ModuleTenantService {
       { headers }
     );
   }
+
+  bulkDelete(ids: number[]): Observable<any> {
+    const token = JSON.parse(localStorage.getItem('user') || '{}').token || '';
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.put<any>(
+      `${this.apiUrl}/bulk-delete`,
+      ids,
+      { headers }
+    );
+  }
 }

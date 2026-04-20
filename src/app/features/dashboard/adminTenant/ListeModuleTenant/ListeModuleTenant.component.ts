@@ -121,28 +121,29 @@ export class ListeModuleTenantComponent implements OnInit {
     });
   }
 
-  /**
-   * Supprime un module du catalogue
-   * @param moduleTenantId L'ID de la liaison (la clé primaire 'id' du JSON)
-   */
- /* onRemoveModule(moduleTenantId: number): void {
+
+
+
+  /*onRemoveModule(moduleTenantId: number): void {
+    const module = this.myModules.find(m => m.id === moduleTenantId);
+
+    // Vérification préventive côté Front
+    if (module && module.sessions?.some((s: any) => s.etat !== 'cloturee')) {
+      this.showAlert('warning', 'Suppression impossible : Ce module possède des sessions actives ou planifiées.');
+      return;
+    }
+
     if (confirm('Voulez-vous vraiment retirer ce module de votre catalogue ?')) {
       this.moduleTenantService.deleteModuleTenant(moduleTenantId).subscribe({
         next: () => {
-          // Mise à jour locale de la liste pour éviter un rechargement complet
           this.myModules = this.myModules.filter(m => m.id !== moduleTenantId);
-          //alert('Module retiré avec succès.');
           this.applyFilters();
+          this.showAlert('success', '✅ Module supprimé avec succès.');
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error('Erreur suppression', err);
-
-          const msg =
-            err?.error?.message ||
-            err?.error ||
-            "Suppression impossible.";
-
+          // On récupère le message du throw new RuntimeException du Java
+          const msg = typeof err.error === 'string' ? err.error : (err.error?.message || "Erreur lors de la suppression.");
           this.showAlert('error', msg);
           this.cdr.detectChanges();
         }
@@ -151,27 +152,25 @@ export class ListeModuleTenantComponent implements OnInit {
   }*/
 
   onRemoveModule(moduleTenantId: number): void {
-    // On peut ajouter une petite vérification visuelle avant même d'appeler le serveur
     const module = this.myModules.find(m => m.id === moduleTenantId);
+
+    // Vérification stricte : si le tableau de sessions contient au moins un élément
     if (module && module.sessions && module.sessions.length > 0) {
-      this.showAlert('warning', 'Suppression impossible : Ce module possède un historique de sessions " +\n' +
-        '                            "(planifiées, en cours ou clôturées). Vous ne pouvez pas le supprimer.');
+      this.showAlert('warning', '⚠️ Suppression impossible : Ce module possède un historique de sessions(planifiée , en cours ou cloturée).');
       return;
     }
 
-    if (confirm('Voulez-vous vraiment retirer ce module vide de votre catalogue ?')) {
+    if (confirm('Voulez-vous vraiment retirer ce module de votre catalogue ?')) {
       this.moduleTenantService.deleteModuleTenant(moduleTenantId).subscribe({
         next: () => {
           this.myModules = this.myModules.filter(m => m.id !== moduleTenantId);
           this.applyFilters();
+          //this.showAlert('success', '✅ Module supprimé.');
           this.cdr.detectChanges();
-          this.showAlert('success', '✅ Module supprimé avec succès.');
         },
         error: (err) => {
-          // Affiche le message : "Suppression impossible : Ce module possède un historique..."
-          const msg = err.error || "Erreur lors de la suppression.";
+          const msg = typeof err.error === 'string' ? err.error : (err.error?.message || "Erreur serveur.");
           this.showAlert('error', msg);
-          this.cdr.detectChanges();
         }
       });
     }
@@ -196,53 +195,6 @@ export class ListeModuleTenantComponent implements OnInit {
   }
 
 
-
-
-
-  onBulkRemove(): void {
-    if (confirm(`Voulez-vous vraiment retirer ces ${this.selectedMyModulesIds.size} modules ?`)) {
-      this.loading = true;
-      const ids = Array.from(this.selectedMyModulesIds);
-
-      const requests = ids.map(id => this.moduleTenantService.deleteModuleTenant(id).toPromise());
-
-      Promise.all(requests)
-        .then(() => {
-          // 1. On met à jour la source principale
-          this.myModules = this.myModules.filter(m => !this.selectedMyModulesIds.has(m.id));
-
-          // 2. On vide le Set de sélection
-          this.selectedMyModulesIds.clear();
-
-          // 3. ICI : On appelle applyFilters pour rafraîchir l'affichage !
-          this.applyFilters();
-
-          console.log('Suppression groupée réussie');
-        })
-        .catch(err => {
-          console.error(err);
-          alert('Erreur lors de la suppression.');
-        })
-        .finally(() => {
-          this.loading = false;
-          this.cdr.detectChanges();
-        });
-    }
-  }
-
-  /*openTestForm(mt: any) {
-    this.selectedModuleForTest = mt;
-
-    this.testForm = {
-      avecTest: mt.avecTest,
-      seuilScore: mt.seuilScore,
-      capacite: mt.capacite // On initialise avec la valeur actuelle//88888888888888888888888888888888888888888888888888888
-
-    };
-  }*/
-
-
-
   openTestForm(mt: any) {
     this.selectedModuleForTest = mt;
 
@@ -258,41 +210,6 @@ export class ListeModuleTenantComponent implements OnInit {
   }
 
 
-
-
-
-
-
-  /*confirmTest() {
-    const mt = this.selectedModuleForTest;
-
-    if (this.testForm.avecTest && !this.testForm.seuilScore) {
-      alert("Veuillez remplir le seuil score");
-      return;
-    }
-
-    this.moduleTenantService.configTest(
-      mt.id,
-      this.testForm.avecTest,
-      this.testForm.seuilScore ?? null
-    ).subscribe({
-      next: (updatedMt: any) => {
-        const index = this.myModules.findIndex(m => m.id === updatedMt.id);
-        if (index !== -1) {
-          this.myModules[index] = updatedMt;
-          this.myModules = [...this.myModules];
-          this.applyFilters();
-        }
-        this.selectedModuleForTest = null;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error("Erreur de configuration", err);
-        alert("Erreur lors de la sauvegarde.");
-      }
-    });
-  }*/
-  //888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
   confirmTest() {
     // 1. On récupère une référence solide
     const mt = this.selectedModuleForTest;
@@ -332,39 +249,40 @@ export class ListeModuleTenantComponent implements OnInit {
   }
 
   toggleModule(mt: any) {
-    //8888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
-    const hasActiveSession = mt.sessions?.some((s: any) => s.etat === 'enCours');
+    if (mt.estActif) {
+      const hasBlockedSession = mt.sessions?.some((s: any) =>
+        s.etat === 'enCours' || s.etat === 'planifiee'
+      );
 
-    if (hasActiveSession) {
-      this.showAlert('warning', '⚠️ Impossible de modifier : session en cours');
-      return;
+      if (hasBlockedSession) {
+        // ✅ CHANGÉ EN WARNING
+        this.showAlert('warning', '⚠️ Désactivation impossible : ce module contient des sessions en cours ou planifiées.');
+        return;
+      }
     }
-
 
     this.moduleTenantService.toggleModule(mt.id).subscribe({
       next: (updatedMt: any) => {
         const index = this.myModules.findIndex(m => m.id === updatedMt.id);
         if (index !== -1) {
-          this.myModules[index] = updatedMt;
-          this.applyFilters();//777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
-          this.myModules = [...this.myModules];
+          this.myModules[index] = { ...updatedMt };
+          this.applyFilters();
+          //this.showAlert('success', `Le module est maintenant ${updatedMt.estActif ? 'actif' : 'inactif'}.`);
         }
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error("Erreur toggle", err);
+        let msg = "Une erreur est survenue";
+        if (typeof err.error === 'string') msg = err.error;
+        else if (err.error?.message) msg = err.error.message;
+
+        // ✅ CHANGÉ EN WARNING (Car ce sont souvent des blocages métiers : capacité, sessions...)
+        this.showAlert('warning', msg);
+        this.cdr.detectChanges();
       }
     });
   }
 
-
-
-
-
-
-
-
-// --- LOGIQUE DE SÉLECTION ---
 
   toggleMyModuleSelection(id: number): void {
     if (this.selectedMyModulesIds.has(id)) {
@@ -400,29 +318,34 @@ export class ListeModuleTenantComponent implements OnInit {
     const ids = Array.from(this.selectedMyModulesIds);
 
     this.moduleTenantService.bulkUpdateStatus(ids, status).subscribe({
-      next: () => {
-        // 1. Mettre à jour les objets dans la liste locale
+      next: (res: any) => {
+
+        // ✅ MODIFIER SEULEMENT CEUX ACCEPTÉS PAR BACKEND
         this.myModules = this.myModules.map(m => {
-          if (this.selectedMyModulesIds.has(m.id)) {
-            return { ...m, estActif: status }; // On crée une nouvelle référence d'objet
+          if (res.successIds.includes(m.id)) {
+            return { ...m, estActif: status };
           }
           return m;
         });
 
-        // 2. Vider la sélection
+        // ✅ vider sélection
         this.selectedMyModulesIds.clear();
-        this.applyFilters();//77777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
 
-        // 3. Forcer Angular à redessiner le tableau immédiatement
+        // ✅ refresh
+        this.applyFilters();
+
+        // ⚠️ afficher erreurs
+        if (res.errors && res.errors.length > 0) {
+          this.showAlert('warning', res.errors.join('\n'));
+        } else {
+          //this.showAlert('success', 'Opération réussie');
+        }
+
         this.cdr.detectChanges();
-
-        // Note: J'ai supprimé l'alert() ici pour que l'utilisateur voit le changement direct
-        console.log(status ? 'Modules activés' : 'Modules désactivés');
       },
-      error: (err) => {
-        console.error("Erreur lors de la mise à jour groupée", err);
-        // On ne met une alerte qu'en cas d'erreur réelle
-        alert("Une erreur est survenue lors de la modification.");
+
+      error: () => {
+        this.showAlert('error', 'Erreur serveur');
       }
     });
   }
@@ -445,12 +368,6 @@ export class ListeModuleTenantComponent implements OnInit {
       return matchesSearch && matchesTest && matchesStatus;
     });
   }
-
-  //88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
-
-
-
-
 
 
   openAddSessionFromConfig() {
@@ -592,6 +509,47 @@ export class ListeModuleTenantComponent implements OnInit {
     this.selectedModuleForSession = mt;
     this.sessionChoice = mt.avecTest;
     this.showSessionFormModal = true;
+  }
+
+  onBulkRemove(): void {
+
+    if (this.selectedMyModulesIds.size === 0) {
+      this.showAlert('warning', '⚠️ Aucun module sélectionné');
+      return;
+    }
+
+    if (!confirm(`Voulez-vous vraiment retirer ces ${this.selectedMyModulesIds.size} modules ?`)) {
+      return;
+    }
+
+    const ids = Array.from(this.selectedMyModulesIds);
+
+    this.moduleTenantService.bulkDelete(ids).subscribe({
+      next: (res: any) => {
+
+        // ✅ supprimer seulement les réussis
+        this.myModules = this.myModules.filter(m => !res.successIds.includes(m.id));
+
+        // ✅ vider sélection
+        this.selectedMyModulesIds.clear();
+
+        // ✅ refresh
+        this.applyFilters();
+
+        // ⚠️ erreurs partielles
+        if (res.errors && res.errors.length > 0) {
+          this.showAlert('warning', res.errors.join('\n'));
+        } else {
+          this.showAlert('success', 'Suppression réussie');
+        }
+
+        this.cdr.detectChanges();
+      },
+
+      error: () => {
+        this.showAlert('error', 'Erreur serveur');
+      }
+    });
   }
 
 

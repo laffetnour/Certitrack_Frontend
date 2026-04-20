@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ModuleCandidatService } from '../../../../core/services/module-candidat.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mes-inscriptions',
@@ -15,7 +16,7 @@ export class MesInscriptionsComponent implements OnInit {
   inscriptionsIds: number[] = [];
   loading: boolean = true;
 
-  constructor(private service: ModuleCandidatService, private cdr: ChangeDetectorRef) {}
+  constructor(private service: ModuleCandidatService, private cdr: ChangeDetectorRef,private router: Router) {}
 
   ngOnInit(): void {
     this.loadInscriptions();
@@ -42,5 +43,8 @@ export class MesInscriptionsComponent implements OnInit {
   allerAuTest(idSession: number) {
     console.log("Lancement du test pour la session ID :", idSession);
     // Logique de navigation vers le composant de test ici
+     this.router.navigate(['/candidat/test', idSession]);
   }
+
+
 }

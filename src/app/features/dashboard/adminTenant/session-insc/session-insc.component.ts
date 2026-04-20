@@ -54,6 +54,7 @@ export class SessionInscComponent implements OnInit {
 
   today: Date = new Date();
   filterType = '';
+  filterDate: string = '';
 
   constructor(
     private service: SessionInscService,
@@ -91,7 +92,9 @@ export class SessionInscComponent implements OnInit {
       this.sessions = res.map(s => ({
         ...s,
         moduleNom: s.moduleTenant?.module?.nom || '---'
-      }));
+      })).sort((a, b) =>
+        new Date(a.dateDebut).getTime() - new Date(b.dateDebut).getTime()
+      );
       this.cdr.detectChanges();
       this.applyFilters();
     });
@@ -114,7 +117,7 @@ export class SessionInscComponent implements OnInit {
   }
 
   // ================= FILTER =================
-  applyFilters() {
+  /*applyFilters() {
 
     const search = this.searchTerm.toLowerCase();
 
@@ -131,13 +134,56 @@ export class SessionInscComponent implements OnInit {
       return matchSearch && matchEtat;
     });
 
-    /*this.filteredModules = this.modules.filter(m =>
-      m.nom.toLowerCase().includes(search)
-    );*/
+
     this.filteredModules = this.modules.filter(m => {
       const matchSearch = m.nom.toLowerCase().includes(search);
 
       // Logique pour le type de test
+      let matchType = true;
+      if (this.filterType === 'avecTest') matchType = m.avecTest === true;
+      if (this.filterType === 'sansTest') matchType = m.avecTest === false;
+
+      return matchSearch && matchType;
+    });
+  }*/
+
+  applyFilters() {
+
+    const search = this.searchTerm.toLowerCase();
+
+    this.filteredSessions = this.sessions.filter(s => {
+
+      const matchSearch =
+        s.titre?.toLowerCase().includes(search) ||
+        s.moduleNom?.toLowerCase().includes(search);
+
+      const matchEtat =
+        !this.filterEtat ||
+        s.etat?.toLowerCase() === this.filterEtat.toLowerCase();
+
+      // ✅ CORRECTION ICI
+      const format = (d: any) => {
+        if (!d) return '';
+        const date = new Date(d);
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`; // ✅ PAS de toISOString()
+      };
+
+      const matchDate =
+        !this.filterDate ||
+        format(s.dateDebut) === this.filterDate ||
+        format(s.dateFin) === this.filterDate;
+
+      return matchSearch && matchEtat && matchDate;
+    });
+
+    this.filteredModules = this.modules.filter(m => {
+      const matchSearch = m.nom.toLowerCase().includes(search);
+
       let matchType = true;
       if (this.filterType === 'avecTest') matchType = m.avecTest === true;
       if (this.filterType === 'sansTest') matchType = m.avecTest === false;

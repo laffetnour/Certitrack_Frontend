@@ -1,0 +1,38 @@
+<div class="test-container">
+
+  <div class="test-card">
+
+    <!-- LEFT CONTENT -->
+    <div class="test-info">
+      <h2>📝 Préparation au Test</h2>
+
+      <p class="module-name">Module : {{ moduleNom }}</p>
+
+      <div class="details">
+        <p><strong>Durée :</strong> {{ duree }} minutes</p>
+       <!-- <p><strong>Nombre de questions :</strong> {{ nbQuestions }}</p>-->
+      </div>
+
+      <div class="conseils">
+        <h4>📌 Conseils :</h4>
+        <ul>
+          <li>Assurez-vous d’être dans un endroit calme</li>
+          <li>Vérifiez votre connexion internet</li>
+          <li>Ne rechargez pas la page pendant le test</li>
+          <li>Gérez bien votre temps</li>
+        </ul>
+      </div>
+
+      <button class="btn-start" (click)="demarrer()">
+        🚀 Démarrer maintenant
+      </button>
+    </div>
+
+    <!-- RIGHT IMAGE -->
+    <div class="test-image">
+      <img src="assets/images/encouragement.png" alt="encouragement">
+    </div>
+
+  </div>
+
+</div>

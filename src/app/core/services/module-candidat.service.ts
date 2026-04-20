@@ -33,4 +33,11 @@ export class ModuleCandidatService {
        headers: this.getAuthHeaders()
      });
   }
+
+  getTestInfos(sessionId: number) {
+    return this.http.get<any>(
+      `http://localhost:8080/api/test/session/${sessionId}`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
 }

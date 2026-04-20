@@ -32,8 +32,13 @@
               (change)="applyFilters()">
         <option value="">Tous</option>
         <option value="enCours">En cours</option>
+        <option value="planifiee">Planifiée</option>
         <option value="cloturee">Clôturée</option>
       </select>
+      <input *ngIf="viewMode==='sessions'" type="date"
+             class="status-filter-select"
+             [(ngModel)]="filterDate"
+             (change)="applyFilters()">
 
       <select *ngIf="viewMode==='modules'"
               class="status-filter-select"
