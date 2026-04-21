@@ -56,4 +56,9 @@ export class ModuleCandidatService {
       { headers: this.getAuthHeaders() }
     );
   }
+
+  getCountInscriptions(idCandidat: number): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/inscriptions/count/${idCandidat}`
+      ,{ headers: this.getAuthHeaders() });
+  }
 }

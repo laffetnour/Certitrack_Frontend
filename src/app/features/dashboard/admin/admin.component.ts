@@ -129,11 +129,10 @@ export class AdminComponent implements OnInit {
 
   onSubmit(): void {
 
-
-
     if (this.candidatForm.valid) {
       this.loading = true;
       const formData = this.candidatForm.value;
+      this.errorMessage = '';
 
       console.log("Données envoyées au service :", formData);
       if (this.isEditMode) {
@@ -144,31 +143,52 @@ export class AdminComponent implements OnInit {
 
             this.closeModal();
             this.loading = false;
-            setTimeout(() => this.successMessage = '', 3000);
+            this.cdr.detectChanges();
           },
-          error: () => {
-            this.errorMessage = 'Erreur modification';
+          error: (err) => {
+            //this.errorMessage = 'Erreur modification';
+            this.handleError(err)
             this.loading = false;
+            this.cdr.detectChanges();
           }
         });
       } else {
         this.adminService.createCandidat(formData).subscribe({
           next: () => {
-            this.successMessage = 'Candidat ajouté';
+            this.successMessage = 'Candidat ajouté avec succès';
             this.loadCandidatsParSpecialite();
 
             this.closeModal();
             this.loading = false;
-            setTimeout(() => this.successMessage = '', 3000);
+            this.cdr.detectChanges();
+            //setTimeout(() => this.successMessage = '', 3000);
           },
-          error: () => {
-            this.errorMessage = 'Erreur ajout';
+          error: (err) => {
+            this.handleError(err);
             this.loading = false;
+            this.cdr.detectChanges();
           }
         });
       }
     }
   }
+
+private handleError(err: any): void {
+  console.log("Status Code:", err.status);
+    console.log("Body d'erreur:", err.error);
+
+  if (err.status === 403 || err.status === 409) {
+      this.errorMessage = "📧 Cet email est déjà utilisé par un autre utilisateur.";
+    }
+    else if (err.status === 400) {
+      this.errorMessage = "⚠️ Données invalides. Veuillez vérifier le format de l'email.";
+    }
+    else {
+      this.errorMessage = "❌ Une erreur est survenue lors de l'enregistrement.";
+    }
+
+    this.cdr.detectChanges();
+}
 
   toggleStatus(candidat: any): void {
 

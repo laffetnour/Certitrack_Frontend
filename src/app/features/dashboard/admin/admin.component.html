@@ -180,6 +180,16 @@
         <button class="close-btn" (click)="closeModal()">&times;</button>
       </div>
 
+      <div class="alert-banner error" *ngIf="errorMessage">
+        <div class="alert-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="alert-message">
+          {{ errorMessage }}
+        </div>
+        <button class="alert-close" (click)="errorMessage = ''">&times;</button>
+      </div>
+
       <form [formGroup]="candidatForm" (ngSubmit)="onSubmit()">
         <div class="form-row">
           <div class="form-group">

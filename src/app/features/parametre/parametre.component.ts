@@ -29,7 +29,6 @@ export class ParametreComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 1. Récupérer l'utilisateur connecté
     const user = this.authService.getUser();
     this.currentUser = JSON.parse(JSON.stringify(user));
     const savedTheme = localStorage.getItem('app-theme') || this.currentUser?.theme || 'light';
@@ -43,13 +42,9 @@ export class ParametreComponent implements OnInit {
       }];
     }
 
-
-    // 2. Charger la configuration liée à cet utilisateur (pour le thème)
     this.loadUserConfiguration();
   }
 
-
-  // --- GESTION DU PROFIL ---
 
   updateFullProfile(): void {
     this.isSavingUser = true;
@@ -69,11 +64,10 @@ export class ParametreComponent implements OnInit {
   }
 
 get contactInfo() {
-  // Sécurité pour éviter les erreurs "cannot read property of undefined"
   if (this.currentUser && this.currentUser.contacts && this.currentUser.contacts[0]) {
     return this.currentUser.contacts[0].type;
   }
-  return { emailPersonnel: '', numTel: '' }; // Retourne un objet vide par défaut
+  return { emailPersonnel: '', numTel: '' };
 }
 
 
