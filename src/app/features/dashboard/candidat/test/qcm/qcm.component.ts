@@ -156,6 +156,7 @@ export class QcmComponent implements OnInit {
         next: (res) => {
           this.scoreFinal = res.scoreFinal;
           this.testTermine = true;
+          this.cdr.detectChanges();
         },
         error: (err) => console.error(err)
       });
