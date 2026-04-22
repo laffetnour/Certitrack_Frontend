@@ -1,0 +1,71 @@
+<div class="admin-container">
+
+  <div class="admin-header">
+    <h1>Résultats des Sessions d’Inscription</h1>
+
+
+  </div>
+
+  <div class="table-container">
+
+    <!-- 🔹 SELECT SESSION -->
+    <div class="filter-select-container">
+      <select class="status-filter-select" (change)="onSessionChange($event)">
+        <option value="">-- Sélectionner une session clôturée --</option>
+        <option *ngFor="let s of sessions" [value]="s.id">
+          {{ s.titre }}
+        </option>
+      </select>
+
+    </div>
+
+    <!-- 🔹 TABLE RESULTATS -->
+    <table class="modern-table" *ngIf="resultats?.length">
+
+      <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Date naissance</th>
+
+        <th *ngIf="avecTest">Âge</th>
+        <th *ngIf="avecTest">Durée</th>
+        <th *ngIf="avecTest">Score</th>
+        <th *ngIf="avecTest">Status</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let r of resultats">
+
+        <td><strong>{{ r.nom }}</strong></td>
+        <td>{{ r.prenom }}</td>
+        <td>{{ r.email }}</td>
+        <td>{{ r.dateNaissance | date:'dd/MM/yyyy' }}</td>
+
+        <td *ngIf="avecTest">{{ r.age }}</td>
+
+        <td *ngIf="avecTest">
+          {{ formatDuree(r.duree) }}
+        </td>
+
+        <td *ngIf="avecTest">
+          {{ r.score }}
+        </td>
+
+        <td *ngIf="avecTest">
+          <span class="status-badge"
+                [class.active]="r.status === 'PASSED'"
+                [class.inactive]="r.status === 'FAILED'">
+            {{ r.status }}
+          </span>
+        </td>
+
+      </tr>
+      </tbody>
+
+    </table>
+
+  </div>
+</div>

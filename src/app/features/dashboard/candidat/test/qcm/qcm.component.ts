@@ -148,10 +148,12 @@ export class QcmComponent implements OnInit {
 
   submit() {
     clearInterval(this.interval);
+    const tempsTotalInitial = this.epreuve.duree * 60;
+    const dureeConsommee = tempsTotalInitial - this.timeLeft;
 
     localStorage.removeItem('epreuve');
 
-    this.service.submitTest(this.epreuve.idEpreuve, this.selectedAnswers)
+    this.service.submitTest(this.epreuve.idEpreuve, this.selectedAnswers, dureeConsommee)
       .subscribe({
         next: (res) => {
           this.scoreFinal = res.scoreFinal;

@@ -73,4 +73,12 @@ export class AdminService {
   getCandidatCountByEtab(idEtab: number): Observable<number> {
     return this.http.get<number>(`${this.baseUrl}/candidats/count/${idEtab}`, this.getAuthHeaders());
   }
+
+  getSessionsCloturees() {
+    return this.http.get(`${this.baseUrl}/sessions/cloturees`, this.getAuthHeaders());
+  }
+
+  getResultatsSession(id: number) {
+    return this.http.get(`${this.baseUrl}/sessions/${id}/resultats`, this.getAuthHeaders());
+  }
 }

@@ -49,12 +49,10 @@ export class ModuleCandidatService {
     );
   }
 
-  submitTest(epreuveId: number, reponses: number[]) {
-    return this.http.post<any>(
-      `http://localhost:8080/api/test/submit/${epreuveId}`,
-      reponses,
-      { headers: this.getAuthHeaders() }
-    );
+  submitTest(epreuveId: number, reponseIds: number[], dureeSecondes: number): Observable<any> {
+    // On utilise les backticks `` pour construire l'URL avec le paramètre
+    return this.http.post<any>(`http://localhost:8080/api/test/submit/${epreuveId}?dureeSecondes=${dureeSecondes}`
+      , reponseIds, { headers: this.getAuthHeaders() });
   }
 
   getCountInscriptions(idCandidat: number): Observable<number> {

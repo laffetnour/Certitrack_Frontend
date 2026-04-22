@@ -41,6 +41,7 @@ import { ModulesCandidatComponent } from './features/dashboard/candidat/modules/
 import { MesInscriptionsComponent } from './features/dashboard/candidat/modules/mes-inscriptions.component';
 import { DemarrerTestComponent } from './features/dashboard/candidat/test/demarrer-test/demarrer-test.component';
 import { QcmComponent } from './features/dashboard/candidat/test/qcm/qcm.component';
+import { ResultatsSessionsComponent } from './features/dashboard/admin/resultats-sessions/resultats-sessions.component';
 
 
 
@@ -86,7 +87,8 @@ export const routes: Routes = [
     children: [
 
       { path: 'candidats', component: AdminComponent },
-       { path: 'parametre', component: ParametreComponent }
+       { path: 'parametre', component: ParametreComponent },
+      { path: 'resultats-sessions', component: ResultatsSessionsComponent }
 
     ]
   },
