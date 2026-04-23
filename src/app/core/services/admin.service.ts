@@ -13,7 +13,6 @@ export class AdminService {
 
   private getAuthHeaders(): { headers: HttpHeaders } {
     const token = localStorage.getItem('token') || '';
-    console.log("TOKEN ENVOYÉ:", token);
     return {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + token,

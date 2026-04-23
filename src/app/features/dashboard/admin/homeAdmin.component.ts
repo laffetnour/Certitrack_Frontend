@@ -1,34 +1,3 @@
-/*import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router'; // Important pour le router-outlet
-import { AuthService } from '../../../core/services/auth.service';
-
-@Component({
-  selector: 'app-dashboard-admin',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './homeAdmin.component.html',
-  styleUrls: ['./admin.component.css']
-})
-export class homeAdminComponent implements OnInit {
-  currentUser: any;
-  isParcoursOpen = false;
-
-  constructor(private authService: AuthService) {}
-
-  ngOnInit(): void {
-    // Récupère l'admin connecté pour afficher son nom dans le header
-    this.currentUser = this.authService.getUser();
-  }
-
-  toggleParcoursMenu(): void {
-    this.isParcoursOpen = !this.isParcoursOpen;
-  }
-
-  onLogout(): void {
-    this.authService.logout();
-  }
-}*/
 
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -64,8 +33,6 @@ export class homeAdminComponent implements OnInit {
 
     this.currentUser = this.authService.getUser();
 
-    console.log("ngOnInit - Utilisateur récupéré :", this.currentUser);
-
     if (this.currentUser) {
 
       this.loadStats();
@@ -78,8 +45,6 @@ export class homeAdminComponent implements OnInit {
     const etablissement = this.currentUser?.etablissements?.[0];
 
 
-    console.log("Objet établissement complet :", etablissement);
-
 
     const idToUse = etablissement?.idEtab || etablissement?.id;
 
@@ -87,7 +52,6 @@ export class homeAdminComponent implements OnInit {
       this.loading = true;
       this.adminService.getCandidatCountByEtab(idToUse).subscribe({
         next: (count: number) => {
-          console.log("Nombre de candidats reçu :", count);
           this.totalCandidats = count;
           this.loading = false;
           this.cdr.detectChanges();

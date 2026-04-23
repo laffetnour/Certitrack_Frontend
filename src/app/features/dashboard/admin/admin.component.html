@@ -2,6 +2,44 @@
 
   <div class="admin-header">
     <h1>Gestion des Candidats</h1>
+    <div class="filter-section d-flex gap-3 align-items-center">
+      <select
+        id="filterSp"
+        [(ngModel)]="selectedFilterSpecialite"
+        (change)="applyFilter()"
+        class="form-control"
+        style="width: 250px;">
+        <option value="all">Toutes les spécialités</option>
+        <option *ngFor="let sp of specialitesCandidats | keyvalue" [value]="sp.key">
+          {{ sp.key }}
+        </option>
+      </select>
+    </div>
+
+    <!--<button class="btn-add" (click)="openAddModal()">
+      <span>+</span> Nouveau Candidat
+    </button>-->
+
+    <div class="actions-header d-flex gap-2">
+
+      <input type="file" #fileInput (change)="onImportExcel($event)" accept=".xlsx, .xls" style="display: none">
+
+      <button class="btn-import" (click)="fileInput.click()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+          <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+        </svg>
+        Importer / Sync
+      </button>
+
+      <button class="btn btn-success d-flex align-items-center gap-2" (click)="exportToExcel()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM3 9h10v1h-10V9zM3 11h10v1h-10v-1zM3 13h10v1h-10v-1zM3 7h10v1h-10V7z"/>
+        </svg>
+        Exporter Excel
+      </button>
+
+    </div>
     <button class="btn-add" (click)="openAddModal()">
       <span>+</span> Nouveau Candidat
     </button>
@@ -30,13 +68,9 @@
     </div>
 
 
-    <div *ngIf="!loading && specialitesCandidats">
+    <div *ngIf="!loading && filteredCandidats.length > 0">
 
-      <div *ngFor="let sp of specialitesCandidats | keyvalue">
-
-        <h3 class="specialite-title">{{ sp.key }}</h3>
-
-        <table class="modern-table" *ngIf="sp.value.length > 0">
+        <table class="modern-table">
           <thead>
           <tr>
             <th><input type="checkbox" [checked]="isAllSelected()" (change)="selectAll($event)"></th>
@@ -44,6 +78,10 @@
             <th>Prénom</th>
             <th>Email</th>
             <th>Établissement</th>
+            <th>Spécialité</th>
+            <th *ngIf="tenantConfig && tenantConfig.typeIdentifiant !== 'EMAIL'">
+              {{ tenantConfig.labelIdentifiant }}
+            </th>
             <th>Date Naissance</th>
             <th>Statut</th>
             <th>Actions</th>
@@ -52,7 +90,7 @@
 
           <tbody>
 
-          <tr *ngFor="let candidat of sp.value">
+          <tr *ngFor="let candidat of filteredCandidats">
 
             <td>
               <input
@@ -66,6 +104,12 @@
             <td>{{ candidat.prenom }}</td>
             <td>{{ candidat.username }}</td>
             <td>{{ candidat.nomEtablissement }}</td>
+            <td>
+              <span class="specialite-badge">{{ candidat.specialite?.nom }}</span>
+            </td>
+            <td *ngIf="tenantConfig && tenantConfig.typeIdentifiant !== 'EMAIL'">
+              <span class="id-badge">{{ candidat.identifiantSpecifique|| '---' }}</span>
+            </td>
             <td>{{ candidat.dateNais | date:'yyyy-MM-dd' }}</td>
 
             <td>
@@ -155,10 +199,9 @@
           </tbody>
 
         </table>
-        <div class="no-data-alert" *ngIf="sp.value.length === 0">
-          <i class="fas fa-info-circle"></i>
-          <span>Aucun étudiant dans cette spécialité</span>
-        </div>
+      <div *ngIf="!loading && filteredCandidats.length === 0" class="empty-state">
+        <p>Aucun candidat ne correspond à ce filtre.</p>
+      </div>
 
       </div>
 
@@ -236,6 +279,50 @@
           <span class="error-text" *ngIf="candidatForm.get('dateNais')?.touched && candidatForm.get('dateNais')?.invalid">
     Date requise
   </span>
+        </div>
+
+
+        <div class="mb-3" *ngIf="tenantConfig && tenantConfig.typeIdentifiant !== 'EMAIL'">
+          <label class="form-label fw-bold">{{ tenantConfig.labelIdentifiant }}</label>
+
+          <div class="otp-container d-flex gap-2 justify-content-center">
+            <input
+              *ngFor="let digit of idDigits; let i = index"
+              type="text"
+              [id]="'digit-' + i"
+              class="otp-input form-control text-center"
+              maxlength="1"
+              autocomplete="off"
+              [value]="idDigits[i]"
+              (input)="onDigitInput($event, i)"
+              (keydown)="onKeyDown($event, i)"
+              (paste)="onDigitPaste($event)"
+              [class.is-invalid]="candidatForm.get('identifiantSpecifique')?.invalid && candidatForm.get('identifiantSpecifique')?.touched"
+            />
+          </div>
+
+          <div class="invalid-feedback d-block" *ngIf="candidatForm.get('identifiantSpecifique')?.touched && candidatForm.get('identifiantSpecifique')?.invalid">
+
+            <small *ngIf="candidatForm.get('identifiantSpecifique')?.hasError('required')">
+              ⚠️ Ce champ est obligatoire.
+            </small>
+
+            <small *ngIf="candidatForm.get('identifiantSpecifique')?.hasError('minlength') || candidatForm.get('identifiantSpecifique')?.hasError('maxlength')">
+              ⚠️ L'identifiant doit faire exactement {{ tenantConfig.longueurIdentifiant }} caractères.
+            </small>
+
+            <small *ngIf="candidatForm.get('identifiantSpecifique')?.hasError('alphanumericMix')">
+              ⚠️ Le format doit contenir à la fois des lettres et des chiffres.
+            </small>
+
+            <small *ngIf="candidatForm.get('identifiantSpecifique')?.hasError('numericOnly')">
+              ⚠️ Chiffres uniquement autorisés.
+            </small>
+
+            <small *ngIf="candidatForm.get('identifiantSpecifique')?.hasError('alphaOnly')">
+              ⚠️ Lettres uniquement autorisées.
+            </small>
+          </div>
         </div>
 
 
@@ -338,6 +425,14 @@
           <span class="value">{{ selectedCandidat.nomEtablissement }}</span>
         </div>
 
+        <div class="info-row" *ngIf="tenantConfig && tenantConfig.typeIdentifiant !== 'EMAIL'">
+  <span class="label">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+    {{ tenantConfig.labelIdentifiant }}
+  </span>
+          <span class="value">{{ selectedCandidat?.identifiantSpecifique || 'N/A' }}</span>
+        </div>
+
         <div class="info-row">
   <span class="label">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
@@ -365,6 +460,6 @@
       </div>
     </div>
   </div>
-</div>
+
 
 

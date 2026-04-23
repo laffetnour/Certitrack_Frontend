@@ -40,6 +40,7 @@
         <th>Nom du Tenant</th>
         <th>Logo</th>
         <th>Bannière</th>
+        <th>Identificateur</th>
         <th>Établissements liés</th>
         <th>Statut</th>
         <th>Actions</th>
@@ -61,6 +62,32 @@
         <td>
           <img *ngIf="tenant.banniere" [src]="tenant.banniere" width="100">
         </td>
+
+        <td>
+          <div class="id-config-badge">
+            <span class="type-label">{{ tenant.typeIdentifiant }}</span>
+
+            <small class="type-detail">
+              <ng-container *ngIf="tenant.typeIdentifiant === 'EMAIL'">
+                (Email)
+              </ng-container>
+
+              <ng-container *ngIf="tenant.typeIdentifiant === 'CIN' || tenant.typeIdentifiant === 'UNIQUE'">
+                ({{ tenant.labelIdentifiant }} - {{ tenant.longueurIdentifiant }} chiffres)
+              </ng-container>
+
+              <ng-container *ngIf="tenant.typeIdentifiant === 'AUTRE'">
+                ({{ tenant.labelIdentifiant }} - {{ tenant.longueurIdentifiant }}
+                <span [ngSwitch]="tenant.formatIdentifiant">
+          <span *ngSwitchCase="'NUMERIC'">chiffres</span>
+          <span *ngSwitchCase="'ALPHA'">lettres</span>
+          <span *ngSwitchDefault>caractères alphanumériques</span>
+        </span>)
+              </ng-container>
+            </small>
+          </div>
+        </td>
+
         <td>
           <span class="badge-count">{{ tenant.etablissements?.length || 0 }}</span>
         </td>
@@ -149,13 +176,60 @@
           </div>
 
 
+
+
+
+          <div class="form-group">
+            <label>Méthode d'identification des candidats</label>
+            <div class="radio-group">
+              <label><input type="radio" formControlName="typeIdentifiant" value="UNIQUE"> Identificateur unique (10 chiffres)</label>
+              <label><input type="radio" formControlName="typeIdentifiant" value="CIN"> CIN (8 chiffres)</label>
+              <label><input type="radio" formControlName="typeIdentifiant" value="EMAIL"> Email</label>
+              <label><input type="radio" formControlName="typeIdentifiant" value="AUTRE"> Autre (Personnalisé)</label>
+            </div>
+          </div>
+
+          <div class="custom-id-settings" *ngIf="tenantForm.get('typeIdentifiant')?.value === 'AUTRE'">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nom du champ (Label)</label>
+                <input type="text" formControlName="labelIdentifiant" class="form-control" placeholder="Ex: Code Client">
+              </div>
+              <div class="form-group">
+                <label>Longueur</label>
+                <input type="number" formControlName="longueurIdentifiant" class="form-control">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Format autorisé</label>
+              <select formControlName="formatIdentifiant" class="form-control">
+                <option value="NUMERIC">Chiffres uniquement</option>
+                <option value="ALPHA">Lettres uniquement</option>
+                <option value="ALPHANUMERIC">Chiffres et Lettres</option>
+              </select>
+            </div>
+          </div>
+
+
+
+
+
+
         </div>
 
-        <div class="modal-footer">
+        <!--<div class="modal-footer">
           <button type="button" class="btn-cancel" (click)="closeModal()">Annuler</button>
           <button type="submit" class="btn-submit" [disabled]="tenantForm.invalid || loading">
             <span *ngIf="!loading">{{ isEditMode ? 'Mettre à jour' : 'Créer' }}</span>
             <span *ngIf="loading">Action en cours...</span>
+          </button>
+        </div>-->
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="closeModal()">Annuler</button>
+          <button type="submit" class="btn-submit" [disabled]="tenantForm.invalid || loading">
+            <span>{{ isEditMode ? 'Mettre à jour' : 'Créer' }}</span>
           </button>
         </div>
       </form>

@@ -28,6 +28,7 @@ export class SignupComponent implements OnInit {
   isVerificationStep: boolean = false;
   isSuccessStep: boolean = false;
   verificationCodeInput: string = '';
+  tenantConfig: any = null;
 
 
   constructor( private fb: FormBuilder,
@@ -65,17 +66,89 @@ initSignupForm() {
       specialiteId: ['', Validators.required],
       etablissementId: ['', Validators.required],
       dateNais: ['', Validators.required],
+      identifiantSpecifique: ['']
     });
 
     this.signupForm.get('etablissementId')?.valueChanges.subscribe(id => {
           this.specialites = [];
+          this.tenantConfig = null;
           this.signupForm.get('specialiteId')?.setValue('');
 
           if (id) {
+            const etab = this.etablissements.find(e => e.idEtab == id);
+            console.log("etab : ", etab);
+            if (etab && etab.tenant) {
+              this.tenantConfig = etab.tenant;
+              console.log("this.tenantConfig : ", this.tenantConfig);
+              this.updateDynamicValidators();
+              this.cdr.detectChanges();
+            }
             this.loadSpecialites(id);
           }
     });
+
   }
+
+/*updateDynamicValidators() {
+    const ctrl = this.signupForm.get('identifiantSpecifique');
+    if (!this.tenantConfig || this.tenantConfig.typeIdentifiant === 'EMAIL') {
+      ctrl?.clearValidators();
+    } else {
+      const validators = [Validators.required];
+      if (this.tenantConfig.longueurIdentifiant) {
+        validators.push(Validators.minLength(this.tenantConfig.longueurIdentifiant));
+        validators.push(Validators.maxLength(this.tenantConfig.longueurIdentifiant));
+      }
+      ctrl?.setValidators(validators);
+    }
+    ctrl?.updateValueAndValidity();
+}*/
+
+updateDynamicValidators() {
+  const ctrl = this.signupForm.get('identifiantSpecifique');
+  if (!this.tenantConfig || this.tenantConfig.typeIdentifiant === 'EMAIL') {
+    ctrl?.clearValidators();
+  } else {
+    const validators = [Validators.required];
+    const len = this.tenantConfig.longueurIdentifiant;
+
+    if (len) {
+      validators.push(Validators.minLength(len), Validators.maxLength(len));
+    }
+
+    let pattern = '';
+    if (this.tenantConfig.formatIdentifiant === 'NUMERIC') {
+      pattern = '^[0-9]*$';
+    } else if (this.tenantConfig.formatIdentifiant === 'ALPHA') {
+
+      pattern = '^([a-zA-Z]*|[0]*)$';
+    } else if (this.tenantConfig.formatIdentifiant === 'ALPHANUMERIC') {
+            validators.push((control) => {
+              const val = control.value;
+              if (!val) return null;
+
+              const allZeros = /^0+$/.test(val);
+              const hasLetter = /[a-zA-Z]/.test(val);
+              const hasDigit = /[0-9]/.test(val);
+              const isPureAlpha = /^[a-zA-Z]+$/.test(val);
+              const isPureDigit = /^[0-9]+$/.test(val);
+
+              if (allZeros) return null;
+
+              if (hasLetter && hasDigit) return null;
+
+              return { alphanumericMix: true };
+            });
+          }
+
+    if (pattern) {
+      validators.push(Validators.pattern(pattern));
+    }
+
+    ctrl?.setValidators(validators);
+  }
+  ctrl?.updateValueAndValidity();
+}
 
 
 verifyUserToken(token: string) {
@@ -168,5 +241,40 @@ onSendVerificationLink() {
 backToForm() {
     this.isVerificationStep = false;
     this.errorMsg = '';
+  }
+
+
+  onDigitInput(event: any, index: number) {
+    const inputs = document.querySelectorAll('.otp-input');
+    const value = (event.target as HTMLInputElement).value;
+
+    if (value && index < inputs.length - 1) {
+      (inputs[index + 1] as HTMLElement).focus();
+    } else if (event.key === 'Backspace' && index > 0) {
+      (inputs[index - 1] as HTMLElement).focus();
+    }
+
+    let fullValue = '';
+    inputs.forEach((input: any) => fullValue += input.value);
+
+    this.signupForm.patchValue({
+      identifiantSpecifique: fullValue
+    });
+  }
+
+  onDigitPaste(event: ClipboardEvent) {
+    event.preventDefault();
+    const data = event.clipboardData?.getData('text').split('') || [];
+    const inputs = document.querySelectorAll('.otp-input');
+
+    data.forEach((char, i) => {
+      if (i < inputs.length) {
+        (inputs[i] as HTMLInputElement).value = char;
+      }
+    });
+
+    this.signupForm.patchValue({
+      identifiantSpecifique: data.join('').substring(0, inputs.length)
+    });
   }
 }

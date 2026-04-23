@@ -1,384 +1,4 @@
-/*.admin-container {
-  background-color: #f8fafc;
-  padding: 20px;
-}
 
-
-.admin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-  background: #ffffff;
-  padding: 20px 30px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-.btn-add {
-  background-color: #ea5357;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.btn-add:hover {
-  background-color: #d44347;
-}
-
-
-.table-container {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-}
-
-.modern-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.modern-table th {
-  padding: 14px;
-  background: #f8fafc;
-  text-align: left;
-  font-size: 12px;
-  color: #64748b;
-}
-
-.modern-table td {
-  padding: 14px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.modern-table tr:hover {
-  background: #f9fafb;
-}
-
-
-.status-badge {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 12px;
-  display: inline-block;
-  text-align: center;
-}
-
-.status-badge.active {
-  background: #e6fffa;
-  color: #319795;
-}
-
-.status-badge.inactive {
-  background: #fff5f5;
-  color: #e53e3e;
-}
-
-
-.actions {
-  display: flex;
-  gap: 8px;
-}
-
-.actions button {
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.2s;
-}
-
-.btn-view { background: #e0f2fe; color: #0284c7; }
-.btn-edit { background: #fef3c7; color: #d97706; }
-.btn-toggle { background: #f3e8ff; color: #9333ea; }
-.btn-delete { background: #fee2e2; color: #dc2626; }
-
-.actions button:hover {
-  transform: scale(1.1);
-  filter: brightness(0.95);
-}
-
-
-.alert {
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-
-.alert.success {
-  background: #e6fffa;
-  color: #065f46;
-}
-
-.alert.error {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-
-.bulk-actions {
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.bulk-actions button {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-}
-
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(48, 61, 73, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(4px);
-  z-index: 1000;
-}
-
-
-.modal-content {
-  width: 600px;
-  max-width: 90%;
-  background-color: #ffffff !important;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-
-.modal-header {
-  padding: 20px 25px;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.modal-footer {
-  padding: 20px 25px;
-  border-top: 1px solid #f1f5f9;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-
-form {
-  padding: 20px 30px;
-  background-color: #ffffff;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 50px;
-}
-
-
-.form-group {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #303D49;
-  margin-bottom: 6px;
-}
-
-.form-control {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid #303D49;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  background-color: #ffffff;
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #ea5357;
-  box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.1);
-}
-
-.form-control.error {
-  border-color: #ef4444;
-  background-color: #fef2f2;
-}
-
-.error-text {
-  color: #ef4444;
-  font-size: 12px;
-  margin-top: 4px;
-}
-
-
-.modal-footer {
-  padding-top: 20px;
-  margin-top: 10px;
-  border-top: 1px solid #f1f5f9;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-.btn-cancel {
-  background-color: #f1f5f9;
-  color: #64748b;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.btn-submit {
-  background-color: #ea5357;
-  color: white;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.btn-submit:hover:not(:disabled) {
-  background-color: #d44347;
-}
-
-.btn-submit:disabled {
-  background-color: #fca5a5;
-  cursor: not-allowed;
-}
-
-
-.profile-info {
-  padding: 20px 25px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  background-color: #ffffff;
-}
-
-.profile-avatar {
-  width: 80px;
-  height: 80px;
-  background-color: #fef2f2;
-  color: #ea5357;
-  border: 2px solid #fca5a5;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 auto 20px auto;
-}
-
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.info-row:last-child {
-  border-bottom: none;
-}
-
-.label {
-  color: #64748b;
-  font-size: 14px;
-}
-
-.value {
-  color: #1e293b;
-  font-weight: 600;
-}
-
-.loading, .empty-state {
-  text-align: center;
-  padding: 30px;
-  color: #64748b;
-}
-.filter-select-container {
-  margin-left: auto;
- display: flex;
-   position: relative;
-  width: fit-content;
-}
-
-.status-filter-select {
-
-  min-width: 100px;
-  padding: 10px 35px 10px 40px;
-  font-size: 14px;
-  font-weight: 600;
-  border: 1px solid #000;
-  border-radius: 8px;
-  appearance: none;
-  background-color: #fff;
-  cursor: pointer;
-
-
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12' viewBox='0 0 18 12'%3E%3Cpath d='M0 12h18v-2H0v2zm0-5h18V5H0v2zm0-7v2h18V0H0z' fill='%23000000'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: 12px center;
-  background-size: 16px;
-
-  transition: width 0.2s ease;
-}
-
-.filter-select-container::after {
-  content: '▼';
-  font-size: 10px;
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-.status-badge.etab-inactive {
-  background-color: #e0e0e0 !important;
-  color: #888888 !important;
-  border: 1px solid #ccc !important;
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.tenant-inactive {
-  background-color: #ccc !important;
-  color: #666 !important;
-  opacity: 0.7;
-}*/
-
-
-/* ==========================================================================
-   1. DÉFINITION DES VARIABLES DE COULEURS
-   ========================================================================== */
 :host {
   /* Mode Clair (Par défaut) */
   --bg-admin: #f8fafc;
@@ -537,7 +157,7 @@ overflow: auto;
 
 
 
-form {
+/*form {
   padding: 20px 30px;
   background-color: #ffffff;
 }
@@ -558,7 +178,6 @@ form {
 .form-group label {
   font-size: 14px;
   font-weight: 600;
-  /*color: #303D49;*/
   margin-bottom: 6px;
   color: var(--text-label);
 }
@@ -583,6 +202,115 @@ form {
 .form-control.error {
   border-color: #ef4444;
   background-color: var(--bg-card);
+}*/
+
+
+/*form {
+  padding: 30px;
+  background-color: var(--white);
+    flex: 1;
+    overflow-y: auto;
+    max-height: 60vh;
+  border-radius: var(--radius-lg);
+  transition: background-color 0.3s ease;
+  scrollbar-width: thin;
+  scrollbar-color: var(--smart-red) transparent;
+}*/
+
+form {
+  padding: 30px;
+  background-color: var(--white);
+
+  /* --- GESTION DU SCROLLER --- */
+  flex: 1;
+  max-height: 60vh;
+
+  overflow-y: auto;        /* Active le scroll vertical */
+  overflow-x: hidden;      /* INTERDIT le scroll horizontal */
+
+  /* --- SECURITÉ ANTI-DÉBORDEMENT --- */
+  width: 100%;             /* S'assure que le form prend toute la largeur */
+  box-sizing: border-box;  /* Inclut le padding dans le calcul de la largeur */
+
+  border-radius: var(--radius-lg);
+  transition: background-color 0.3s ease;
+  scrollbar-width: thin;
+  scrollbar-color: var(--smart-red) transparent;
+}
+
+form::-webkit-scrollbar-thumb {
+  background: #dbdbdb;
+  border-radius: 10px;
+}
+
+form::-webkit-scrollbar-thumb:hover {
+  background: var(--smart-red);
+}
+
+.form-row {
+  display: grid;
+  /* On utilise auto-fit pour que ça passe sur 1 colonne sur mobile automatiquement */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px; /* 50px était un peu large, 30px est plus compact et moderne */
+}
+
+.form-group {
+  margin-bottom: 25px; /* Plus d'espace entre les blocs verticaux */
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 13px; /* Légèrement plus petit pour un look plus "UI" */
+  font-weight: 700;
+  color: var(--text-muted); /* Utilise la variable muted pour un look moins agressif */
+  margin-bottom: 8px;
+  text-transform: uppercase; /* Donne un aspect professionnel/admin */
+  letter-spacing: 0.5px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 16px; /* Plus confortable pour la saisie */
+  border: 1.5px solid var(--border-color); /* Utilise ta variable de bordure */
+  border-radius: 10px; /* Coins un peu plus doux */
+  font-size: 14px;
+  background-color: var(--input-bg); /* Variable dédiée aux champs */
+  color: var(--text-main);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* ÉTAT : FOCUS (C'est ici qu'on améliore le rendu) */
+.form-control:focus {
+  outline: none;
+  border-color: var(--smart-red); /* La bordure devient rouge */
+  background-color: var(--white); /* Le champ s'illumine légèrement */
+  box-shadow: 0 0 0 4px rgba(234, 83, 87, 0.1); /* Aura rouge très douce */
+  transform: translateY(-1px); /* Petit effet de levée très premium */
+}
+
+/* ÉTAT : ERREUR */
+.form-control.error {
+  border-color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.02); /* Teinte rouge très légère */
+}
+
+.form-control.error:focus {
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+/* --- OPTIMISATION DARK MODE --- */
+.dark-mode .form-control {
+  border-color: var(--border-light); /* Bordure un peu plus visible en mode sombre */
+}
+
+.dark-mode .form-control:focus {
+  background-color: var(--smart-dark);
 }
 
 
@@ -675,7 +403,7 @@ form {
 .value { color: var(--text-main); }
 
 
-.modal {
+/*.modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -702,17 +430,73 @@ form {
 
 .modal-header {
   padding: 20px 25px;
-  /*border-bottom: 1px solid #eee;*/
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.modal-footer {
+/*.modal-footer {
   padding: 20px 25px;
-  /*border-top: 1px solid #f1f5f9;*/
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+}*/
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(48, 61, 73, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+}
+
+
+.modal-content {
+  width: 600px;
+  max-width: 90%;
+  background-color: var(--bg-card);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+
+
+
+/* 1. On limite la hauteur de la modale pour qu'elle ne dépasse jamais l'écran */
+.modal-content {
+  max-height: 90vh; /* 90% de la hauteur de l'écran maximum */
+  display: flex;
+  flex-direction: column;
+
+}
+
+.modal-footer {
+  padding: 15px 30px;
+  background-color: var(--white);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  z-index: 10;
+  /* Optionnel : petite ombre pour montrer que le contenu passe dessous */
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.03);
+}
+
+/* 4. On fixe le Header en haut */
+.modal-header {
+  padding: 20px 30px;
+  display: flex;
+    align-items: center;
+  justify-content: space-between;
+  background-color: var(--white);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 10;
 }
 
 /* ==========================================================================
@@ -828,4 +612,63 @@ form {
   background: #dc2626;
   color: white;
   transform: scale(1.1);
+}
+
+
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  text-transform: none; /* Pour éviter l'uppercase sur les radios */
+  cursor: pointer;
+}
+
+.custom-id-settings {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px dashed #dee2e6;
+  margin-top: 10px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+.id-config-badge {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.id-config-badge .type-label {
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--smart-dark);
+  text-transform: uppercase;
+}
+
+.id-config-badge .type-detail {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+
+/* Pour que la colonne ID ne soit pas trop large */
+th:nth-child(5), td:nth-child(5) {
+  min-width: 150px;
 }

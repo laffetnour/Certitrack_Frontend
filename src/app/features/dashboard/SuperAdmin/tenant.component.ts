@@ -36,8 +36,22 @@ export class TenantComponent implements OnInit {
       nom: ['', [Validators.required, Validators.minLength(3)]],
       statut: [true],
       logo: [''],
-      banniere: ['']
-    });
+      banniere: [''],
+      typeIdentifiant: ['EMAIL'], // <--- CHANGÉ : 'UNIQUE' devient 'EMAIL'
+      labelIdentifiant: ['Email'], // <--- CHANGÉ : Valeur par défaut pour l'email
+      longueurIdentifiant: [null],
+      formatIdentifiant: ['ALPHANUMERIC']
+        });
+
+        this.tenantForm.get('typeIdentifiant')?.valueChanges.subscribe(value => {
+          if (value !== 'AUTRE') {
+            this.tenantForm.patchValue({
+              labelIdentifiant: value === 'CIN' ? 'CIN' : (value === 'EMAIL' ? 'Email' : 'Identifiant Unique'),
+              longueurIdentifiant: value === 'CIN' ? 8 : (value === 'UNIQUE' ? 10 : null),
+              formatIdentifiant: (value === 'EMAIL' || value === 'AUTRE') ? 'ALPHANUMERIC' : 'NUMERIC'
+            });
+          }
+        });
   }
 
   ngOnInit(): void {
@@ -71,6 +85,7 @@ export class TenantComponent implements OnInit {
     this.selectedTenant = null;
     this.tenantForm.reset({ statut: true });
     this.showModal = true;
+    this.cdr.detectChanges();
   }
 
   openEditModal(tenant: any): void {
@@ -79,7 +94,13 @@ export class TenantComponent implements OnInit {
 
     this.tenantForm.patchValue({
       nom: tenant.nom,
-      statut: tenant.statut
+      statut: tenant.statut,
+      logo: tenant.logo,
+      banniere: tenant.banniere,
+      typeIdentifiant: tenant.typeIdentifiant || 'UNIQUE',
+      labelIdentifiant: tenant.labelIdentifiant,
+      longueurIdentifiant: tenant.longueurIdentifiant,
+      formatIdentifiant: tenant.formatIdentifiant || 'ALPHANUMERIC'
     });
 
     this.tenantForm.markAsPristine();
@@ -111,21 +132,25 @@ export class TenantComponent implements OnInit {
         this.superAdminService.updateTenant(this.selectedTenant.idTenant, formData).subscribe({
           next: () => {
             this.handleSuccess('Tenant modifié avec succès');
+            this.cdr.detectChanges();
 
           },
           error: () => {
             this.errorMessage = 'Erreur lors de la modification';
             this.loading = false;
+            this.cdr.detectChanges();
           }
         });
       } else {
         this.superAdminService.addTenant(formData).subscribe({
           next: () => {
             this.handleSuccess('Tenant ajouté avec succès');
+            this.cdr.detectChanges();
           },
           error: () => {
             this.errorMessage = 'Erreur lors de l\'ajout';
             this.loading = false;
+            this.cdr.detectChanges();
           }
         });
       }
@@ -222,9 +247,9 @@ deleteTenant(id: number): void {
 
   private handleSuccess(msg: string): void {
     this.successMessage = msg;
+    this.loading = false;
     this.closeModal();
 
-    // Très important : On recharge la liste APRES l'ajout réussi
     this.loadTenants();
 
     setTimeout(() => {

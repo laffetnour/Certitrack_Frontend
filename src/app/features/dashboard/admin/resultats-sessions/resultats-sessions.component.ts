@@ -48,12 +48,10 @@ export class ResultatsSessionsComponent implements OnInit {
   loadSessionsCloturees(): void {
     this.adminService.getSessionsCloturees().subscribe({
       next: (data: any) => {
-        console.log("SESSIONS RAW:", data);
 
         this.sessions = data;
         this.cdr.detectChanges();
 
-        console.log("SESSIONS PROCESSED:", this.sessions);
       }
     });
   }
@@ -104,7 +102,6 @@ export class ResultatsSessionsComponent implements OnInit {
 
     this.adminService.getResultatsSession(sessionId).subscribe({
       next: (data: any) => {
-        console.log("RESULTATS REÇUS:", data);
         this.resultats = data;
 
         // Détecter si le module est avec test

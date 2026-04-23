@@ -140,12 +140,18 @@ export class ListeAdminsTenantComponent implements OnInit {
       if (this.isEditMode) {
 
         this.superAdminService.updateUser(this.selectedAdmin.id, formData).subscribe({
-          next: () => this.handleSuccess('Administrateur mis à jour'),
+          next: () => {
+            this.handleSuccess('Administrateur mis à jour')
+            this.cdr.detectChanges();
+            },
           error: () => this.handleError('Erreur lors de la modification')
         });
       } else {
         this.superAdminService.addUser(formData).subscribe({
-          next: () => this.handleSuccess('Créé avec succès'),
+          next: () =>{
+            this.handleSuccess('Créé avec succès')
+            this.cdr.detectChanges();
+            },
           error: () => this.handleError('Erreur lors de l ajout')
         });
       }
