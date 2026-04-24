@@ -110,16 +110,13 @@
   gap: 10px;
 }
 
-/* ==========================================================================
-   4. TOPBAR (DYNAMIC SEARCH)
-   ========================================================================== */
 .notification-bar {
   height: 70px;
   background-color: var(--smart-dark);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2% ; /* Utilisation de % pour l'espacement latéral */
+  padding: 0 2% ;
   color: white;
   flex-shrink: 0;
 }
@@ -144,11 +141,8 @@
   outline: none;
 }
 
-/* ==========================================================================
-   5. CONTENT AREA & GRIDS
-   ========================================================================== */
 .content-area {
-  padding: 2vw; /* Padding adaptatif selon la largeur d'écran */
+  padding: 2vw;
   overflow-y: auto;
   flex: 1;
   background-color: var(--bg-page);
@@ -156,7 +150,6 @@
 
 .stats-grid {
   display: grid;
-  /* S'adapte automatiquement : 3 colonnes sur PC, 1 ou 2 sur tablette/mobile */
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
   margin-bottom: 30px;
@@ -189,33 +182,6 @@
   color: var(--text-main);
 }
 
-/* ==========================================================================
-   7. MODALS & FORMS
-   ========================================================================== */
-/*.modal {
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-  padding: 20px;
-}
-
-.modal-content, form {
-  background-color: var(--white) !important;
-  color: var(--text-main);
-  max-width: 600px;
-  width: 100%;
-}*/
-
-/*.form-control {
-  background-color: var(--input-bg);
-  border: 1.5px solid var(--border-color);
-  color: var(--text-main);
-}*/
-
-/* ==========================================================================
-   8. MEDIA QUERIES (ADAPTATION FINALE)
-   ========================================================================== */
-
-/* Écrans moyens (Tablettes) */
 @media (max-width: 1024px) {
   --sidebar-width: 80px;
 
@@ -301,12 +267,12 @@
    2. APPLICATION (STRUCTURE IDENTIQUE)
    ========================================================================== */
 
-.admin-container {
+/*.admin-container {
   background-color: var(--bg-admin);
   padding: 20px;
-}
+}*/
 
-.admin-header {
+/*.admin-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -331,24 +297,24 @@
 
 .btn-add:hover {
   background-color: var(--smart-red-dark);
-}
+}*/
 
-/* TABLE */
-.table-container {
+
+/*.table-container {
   background: var(--bg-card);
   border-radius: 12px;
   padding: 20px;
-  width: max-content;      /* Force le conteneur à prendre la largeur de son contenu */
-      min-width: 100%;         /* Optionnel : garantit qu'il prend au moins toute la largeur dispo */
-      max-width: 100%;         /* Empêche de déborder de l'écran si le tableau est trop grand */
+  width: max-content;
+      min-width: 100%;
+      max-width: 100%;
 
 }
 
 .modern-table {
-  width: auto;             /* Le tableau prend sa largeur naturelle */
+  width: auto;
     min-width: 100%;
   border-collapse: collapse;
-}
+}*/
 .modern-table th {
   padding: 14px;
   background: var(--table-th-bg);
@@ -366,25 +332,7 @@
 .modern-table tr:hover {
   background: var(--row-hover);
 }
-/*.modern-table th {
-  padding: 14px;
-  background: var(--table-th-bg);
-  text-align: left;
-  font-size: 12px;
-  color: var(--text-muted);
-}
 
-.modern-table td {
-  padding: 14px;
-  border-bottom: 1px solid var(--border-color);
-  color: var(--text-main);
-}
-
-.modern-table tr:hover {
-  background: var(--row-hover);
-}*/
-
-/* STATUS */
 .status-badge {
   padding: 4px 12px;
   border-radius: 20px;
@@ -885,10 +833,279 @@ form::-webkit-scrollbar-thumb:hover {
   gap: 12px;
 }
 
-.alert.error {
-  white-space: pre-line;
-  border-left: 5px solid #ff4d4d;
-  background-color: #ffe6e6;
-  padding: 15px;
-  margin-bottom: 20px;
+/* Conteneur pour empiler les alertes en haut à droite */
+.alerts-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 450px;
+  width: 100%;
+}
+
+.modern-alert {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px;
+  border-radius: 12px;
+  background: white;
+  border-left: 6px solid #ccc;
+  animation: slideIn 0.3s ease-out;
+}
+
+.modern-alert.success {
+  border-left-color: #2ecc71;
+  background: #f0fff4;
+}
+
+.modern-alert.error {
+  border-left-color: #e74c3c;
+  background: #fff5f5;
+}
+
+.alert-icon {
+  margin-right: 15px;
+  margin-top: 2px;
+}
+
+.success .alert-icon { color: #2ecc71; }
+.error .alert-icon { color: #e74c3c; }
+
+.alert-content {
+  flex-grow: 1;
+}
+
+.alert-title {
+  display: block;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  color: #2d3436;
+}
+
+.alert-content p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #636e72;
+}
+
+/* Gestion de la liste d'erreurs d'import */
+.error-list {
+  white-space: pre-line; /* Respecte les sauts de ligne \n */
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #c0392b;
+  padding-right: 10px;
+}
+
+/* Style de la scrollbar pour les erreurs */
+.error-list::-webkit-scrollbar {
+  width: 4px;
+}
+.error-list::-webkit-scrollbar-thumb {
+  background: #fab1a0;
+  border-radius: 10px;
+}
+
+.alert-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #b2bec3;
+  cursor: pointer;
+  padding-left: 10px;
+  transition: color 0.2s;
+}
+
+.alert-close:hover {
+  color: #2d3436;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/*.admin-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1.5rem;
+  padding: 1.5rem 2rem;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}*/
+
+/* Titre principal */
+.admin-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2d3436;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+/* Style du Select (Filtre) */
+.filter-section .form-control {
+  border-radius: 10px;
+  border: 1px solid #dfe6e9;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  color: #636e72;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.filter-section .form-control:focus {
+  border-color: #74b9ff;
+  box-shadow: 0 0 0 4px rgba(116, 185, 255, 0.1);
+  outline: none;
+}
+
+/* Groupe de boutons d'action (Import/Export) */
+.actions-header {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Boutons communs */
+.btn-import, .btn-success, .btn-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+/* Style spécifique Importer (Bleu doux) */
+.btn-import {
+  background-color: #edf2ff;
+  color: #448aff;
+}
+
+.btn-import:hover {
+  background-color: #448aff;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Style spécifique Exporter (Vert moderne) */
+.btn-success {
+  background-color: #e6fcf5;
+  color: #0ca678 !important;
+}
+
+.btn-success:hover {
+  background-color: #0ca678;
+  color: white !important;
+  transform: translateY(-2px);
+}
+
+/* Bouton Ajouter (Couleur d'accentuation - Indigo) */
+.btn-add {
+  background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+}
+
+.btn-add span {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+  filter: brightness(1.1);
+}
+
+/* Responsive : passage en colonne sur mobile */
+@media (max-width: 992px) {
+  .admin-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-section select {
+    width: 100% !important;
+  }
+
+  .actions-header {
+    justify-content: space-between;
+  }
+
+  .actions-header button {
+    flex: 1;
+  }
+}
+
+/*
+.admin-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  display: flex;
+
+  flex-direction: column;
+  gap: 1.5rem;
+}*/
+
+/* 1. Élargir le cadre global */
+.admin-container {
+  max-width: 1450px; /* Augmenté pour donner de l'espace */
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%; /* S'assure qu'il prend la place dispo */
+}
+
+/* 2. Harmoniser le Header */
+.admin-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box; /* INDISPENSABLE pour que padding + 100% = 100% */
+  gap: 1.5rem;
+  padding: 1.5rem 2rem;
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* 3. Nettoyer le Table Container (Supprimer le max-content) */
+.table-container {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 20px;
+  width: 100%; /* Changé de max-content à 100% */
+  box-sizing: border-box;
+  overflow-x: auto; /* Permet le scroll si le tableau est trop grand sans casser le layout */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* 4. Forcer la table à prendre toute la place */
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px; /* Sécurité pour garder un aspect lisible */
 }

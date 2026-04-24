@@ -10,7 +10,7 @@ import * as XLSX from 'xlsx';
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],  // Important!
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
@@ -33,6 +33,10 @@ export class AdminComponent implements OnInit {
   allCandidats: any[] = [];
   filteredCandidats: any[] = [];
   selectedFilterSpecialite: string = 'all';
+
+  showDeleteConfirm = false;
+  candidateToDeleteId: number | null = null;
+  isRelationError = false;
 
   constructor(
     private adminService: AdminService,
@@ -208,7 +212,7 @@ private handleError(err: any): void {
     });
   }
 
-  deleteCandidat(id: number): void {
+  /*deleteCandidat(id: number): void {
     if (confirm('Supprimer ce candidat?')) {
       this.adminService.deleteCandidat(id).subscribe({
         next: () => {
@@ -219,7 +223,59 @@ private handleError(err: any): void {
         }
       });
     }
+  }*/
+
+deleteCandidat(id: number): void {
+  this.candidateToDeleteId = id;
+  this.showDeleteConfirm = true; // On ouvre la modale perso
+  this.isRelationError = false;
+  this.errorMessage = '';
+}
+
+// Fonction qui exécute la suppression réelle
+executeDelete(): void {
+  if (!this.candidateToDeleteId) return;
+
+  this.showDeleteConfirm = false;
+  this.loading = true;
+
+  this.adminService.deleteCandidat(this.candidateToDeleteId).subscribe({
+    next: () => {
+      this.successMessage = '✅ Candidat supprimé avec succès.';
+      this.loadCandidatsParSpecialite();
+      this.loading = false;
+      this.candidateToDeleteId = null;
+      setTimeout(() => this.successMessage = '', 3000);
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      this.loading = false;
+      // On traite le 403 comme une erreur de relation
+      if (err.status === 403 || err.status === 409) {
+        this.errorMessage = "Impossible de supprimer : ce candidat a déjà des examens ou des données liées.";
+        this.isRelationError = true; // Affiche le bouton "Désactiver à la place"
+      } else {
+        this.errorMessage = "Une erreur est survenue lors de la suppression.";
+      }
+      this.cdr.detectChanges();
+    }
+  });
+}
+
+// Fonction pour désactiver si la suppression échoue
+handleDeactivateAfterFailedDelete(): void {
+  if (this.candidateToDeleteId) {
+    this.adminService.toggleCandidatStatus(this.candidateToDeleteId).subscribe({
+      next: () => {
+        this.successMessage = "✅ Candidat désactivé (suppression impossible).";
+        this.errorMessage = '';
+        this.isRelationError = false;
+        this.loadCandidatsParSpecialite();
+        this.cdr.detectChanges();
+      }
+    });
   }
+}
 
   onCheckboxChange(id: number, event: any): void {
     if (event.target.checked) {
@@ -237,7 +293,7 @@ private handleError(err: any): void {
     }
   }
 
-  activateSelected(): void {
+  /*activateSelected(): void {
     if (this.selectedCandidats.length > 0) {
       this.adminService.activateMultiple(this.selectedCandidats).subscribe({
         next: () => {
@@ -263,7 +319,7 @@ private handleError(err: any): void {
         }
       });
     }
-  }
+  }*/
 
   isAllSelected(): boolean {
     return this.candidats.length > 0 && this.selectedCandidats.length === this.candidats.length;
@@ -271,21 +327,6 @@ private handleError(err: any): void {
 
   specialitesCandidats: any = {};
 
-  /*loadCandidatsParSpecialite(): void {
-    this.loading = true;
-    this.adminService.getCandidatsBySpecialite().subscribe({
-      next: (data) => {
-        this.specialitesCandidats = data;
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.errorMessage = 'Erreur lors du chargement';
-        this.loading = false;
-        this.cdr.detectChanges();
-      }
-    });
-  }*/
 
 loadCandidatsParSpecialite(): void {
   this.loading = true;
@@ -293,13 +334,12 @@ loadCandidatsParSpecialite(): void {
     next: (data) => {
       this.specialitesCandidats = data;
 
-      // Aplatir l'objet en une liste unique de candidats
       this.allCandidats = [];
       Object.values(data).forEach((list: any) => {
         this.allCandidats.push(...list);
       });
 
-      this.applyFilter(); // Initialise la liste filtrée
+      this.applyFilter();
       this.loading = false;
       this.cdr.detectChanges();
     },
@@ -491,108 +531,37 @@ onDigitInput(event: any, index: number) {
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
 
-      // Conversion du fichier en JSON (Tableau d'objets)
       const excelData: any[] = XLSX.utils.sheet_to_json(worksheet);
       this.synchronizeCandidats(excelData);
     };
     reader.readAsArrayBuffer(file);
   }
 
-  /* private synchronizeCandidats(excelData: any[]) {
-     this.loading = true;
-     this.errorMessage = '';
-     this.successMessage = 'Synchronisation en cours...';
 
-     const excelEmails = excelData.map(row =>
-       (row.username || row.Email || row.email || '').toLowerCase().trim()
-     ).filter(email => email !== '');
-
-     const toDelete = this.allCandidats.filter(c =>
-       !excelEmails.includes(c.username?.toLowerCase().trim())
-     );
-
-     excelData.forEach(row => {
-       const email = (row.username || row.Email || row.email || '').toLowerCase().trim();
-       if (!email) return;
-
-       const existingCandidat = this.allCandidats.find(c =>
-         c.username?.toLowerCase().trim() === email
-       );
-
-       let rawDate = row.dateNais || row['Date Naissance'] || row['Date de Naissance'];
-       let finalDateForBackend = null;
-
-       if (rawDate) {
-           if (rawDate instanceof Date) {
-               // Cas : Objet Date pur
-               finalDateForBackend = rawDate.toISOString().substring(0, 10);
-           } else if (typeof rawDate === 'number') {
-               // Cas : Nombre Excel (ex: 38018)
-               const date = new Date(Math.round((rawDate - 25569) * 86400 * 1000));
-               finalDateForBackend = date.toISOString().substring(0, 10);
-           } else if (typeof rawDate === 'string') {
-               // Cas : String "01/01/1990" -> "1990-01-01"
-               if (rawDate.includes('/')) {
-                   const parts = rawDate.split('/');
-                   finalDateForBackend = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-               } else {
-                   finalDateForBackend = rawDate.substring(0, 10);
-               }
-           }
-       }
-
-       // --- CONSTRUCTION DU PAYLOAD ---
-       const payload: any = {
-         nom: row.nom || row.Nom || '',
-         prenom: row.prenom || row.Prénom || '',
-         username: email,
-         dateNais: finalDateForBackend,
-         identifiantSpecifique: String(row.identifiantSpecifique || row.Identifiant || row[this.tenantConfig?.labelIdentifiant] || ''),
-         specialiteId: row.specialiteId || (existingCandidat ? existingCandidat.specialite?.idSpecialite : this.specialites[0]?.idSpecialite),
-         statut: true // Forcé à true pour l'UI
-       };
-
-       if (existingCandidat) {
-         // --- CAS MISE À JOUR ---
-         // On garde le nombre d'épreuves actuel ou on met 0 si absent
-         payload.nbreEpreuve = existingCandidat.nbreEpreuve !== undefined ? existingCandidat.nbreEpreuve : 0;
-
-         // On n'envoie PAS de mot de passe pour ne pas le changer
-         this.adminService.updateCandidat(existingCandidat.id, payload).subscribe({
-           next: () => console.log(`MAJ réussie pour ${email}`),
-           error: (err) => console.error(`Erreur MAJ ${email}`, err)
-         });
-       } else {
-         // --- CAS NOUVEAU ---
-         payload.password = "Password123!"; // Mot de passe par défaut seulement ici
-         payload.nbreEpreuve = 0; // Nouveau candidat = 0 épreuves
-
-         this.adminService.createCandidat(payload).subscribe({
-           next: () => console.log(`Création réussie pour ${email}`),
-           error: (err) => console.error(`Erreur création ${email}`, err)
-         });
-       }
-     });
-
-     // Suppression des absents
-     toDelete.forEach(c => this.adminService.deleteCandidat(c.id).subscribe());
-
-     setTimeout(() => {
-       this.loadCandidatsParSpecialite();
-       this.loading = false;
-       this.cdr.detectChanges();
-     }, 3500);
-   }*/
 
   private synchronizeCandidats(excelData: any[]) {
+    this.loading = true;
     this.errorMessage = '';
     this.successMessage = '';
-    const errors: string[] = [];
-    const validatedData: any[] = [];
 
-    // 1. PRE-VALIDATION DES DONNÉES
+    const errors: string[] = [];
+    let processedCount = 0;
+
+    const emailsDansFichier = excelData
+      .map(row => (row.username || row.Email || row.email || '').toLowerCase().trim())
+      .filter(email => email !== '');
+
+    const candidatsASupprimer = this.allCandidats.filter(cBdd => {
+      const emailBdd = (cBdd.username || '').toLowerCase().trim();
+      const estDansFichier = emailsDansFichier.includes(emailBdd);
+
+      return !estDansFichier && cBdd.statut === false;
+    });
+
+    console.log(`${candidatsASupprimer.length} candidats inactifs à supprimer.`);
+
     excelData.forEach((row, index) => {
-      const lineNum = index + 2; // +2 car Excel commence à 1 et la ligne 1 est l'en-tête
+      const lineNum = index + 2;
       const email = (row.username || row.Email || row.email || '').toLowerCase().trim();
 
       if (!email) {
@@ -600,104 +569,95 @@ onDigitInput(event: any, index: number) {
         return;
       }
 
-      // --- A. CONTRÔLE DE LA SPÉCIALITÉ ---
-      // On cherche si le nom de la spécialité dans l'Excel existe dans notre liste 'specialites'
       const specialiteNom = row.specialite || row.Specialite || row['Spécialité'];
       const foundSpec = this.specialites.find(s =>
         s.nom.toLowerCase().trim() === (specialiteNom || '').toString().toLowerCase().trim()
       );
 
+      const idValue = String(row.identifiantSpecifique || row.Identifiant || row[this.tenantConfig?.labelIdentifiant] || '').trim();
+      let lineHasError = false;
+
       if (!foundSpec) {
-        errors.push(`Ligne ${lineNum}: La spécialité "${specialiteNom}" n'existe pas dans cet établissement.`);
+        errors.push(`Ligne ${lineNum}: Spécialité "${specialiteNom}" inconnue.`);
+        lineHasError = true;
       }
 
-      // --- B. CONTRÔLE DE L'IDENTIFIANT ---
-      const idValue = String(row.identifiantSpecifique || row.Identifiant || row[this.tenantConfig?.labelIdentifiant] || '').trim();
-      const config = this.tenantConfig;
-
-      if (config && config.typeIdentifiant !== 'EMAIL') {
-        // Vérification de la longueur
+      if (this.tenantConfig && this.tenantConfig.typeIdentifiant !== 'EMAIL') {
+        const config = this.tenantConfig;
         if (idValue.length !== config.longueurIdentifiant) {
-          errors.push(`Ligne ${lineNum}: L'identifiant "${idValue}" doit avoir exactement ${config.longueurIdentifiant} caractères.`);
+          errors.push(`Ligne ${lineNum}: Identifiant "${idValue}" (Longueur incorrecte).`);
+          lineHasError = true;
         }
 
-        // Vérification du format
         const isNumeric = /^\d+$/.test(idValue);
         const isAlpha = /^[a-zA-Z]+$/.test(idValue);
-        const hasAlpha = /[a-zA-Z]/.test(idValue);
-        const hasNumeric = /\d/.test(idValue);
 
         if (config.formatIdentifiant === 'NUMERIC' && !isNumeric) {
-          errors.push(`Ligne ${lineNum}: L'identifiant doit contenir uniquement des chiffres.`);
+          errors.push(`Ligne ${lineNum}: "${idValue}" n'est pas numérique.`);
+          lineHasError = true;
         } else if (config.formatIdentifiant === 'ALPHA' && !isAlpha) {
-          errors.push(`Ligne ${lineNum}: L'identifiant doit contenir uniquement des lettres.`);
+          errors.push(`Ligne ${lineNum}: "${idValue}" n'est pas alphabétique.`);
+          lineHasError = true;
         } else if (config.formatIdentifiant === 'ALPHANUMERIC') {
-          if (!hasAlpha || !hasNumeric) {
-            errors.push(`Ligne ${lineNum}: L'identifiant doit être alphanumérique (au moins une lettre et un chiffre).`);
+          if (!(/[a-zA-Z]/.test(idValue) && /\d/.test(idValue))) {
+            errors.push(`Ligne ${lineNum}: "${idValue}" doit être alphanumérique.`);
+            lineHasError = true;
           }
         }
       }
 
-      // Si pas d'erreur sur cette ligne, on prépare le payload
-      if (errors.length === 0) {
-        validatedData.push({ ...row, validatedSpecId: foundSpec?.idSpecialite, validatedEmail: email, validatedIdSpec: idValue });
+      if (!lineHasError) {
+        const existingCandidat = this.allCandidats.find(c => c.username?.toLowerCase().trim() === email);
+
+        let rawDate = row.dateNais || row['Date Naissance'] || row['Date de Naissance'];
+        let formattedDate = null;
+        if (rawDate) {
+          const d = (rawDate instanceof Date) ? rawDate : new Date(rawDate);
+          if (!isNaN(d.getTime())) formattedDate = d.toISOString().substring(0, 10);
+        }
+
+        const payload = {
+          nom: row.nom || row.Nom,
+          prenom: row.prenom || row.Prénom,
+          username: email,
+          dateNais: formattedDate,
+          identifiantSpecifique: idValue,
+          specialiteId: foundSpec?.idSpecialite,
+          statut: true, // Devient actif
+          nbreEpreuve: existingCandidat ? (existingCandidat.nbreEpreuve || 0) : 0
+        };
+
+        if (existingCandidat) {
+          this.adminService.updateCandidat(existingCandidat.id, payload).subscribe(() => processedCount++);
+        } else {
+          this.adminService.createCandidat({ ...payload, password: 'Password123!' }).subscribe(() => processedCount++);
+        }
       }
     });
 
-    // 2. AFFICHAGE DES ERREURS OU EXÉCUTION
-    if (errors.length > 0) {
-      // On affiche les 5 premières erreurs pour ne pas inonder l'écran
-      const displayErrors = errors.slice(0, 5);
-      this.errorMessage = `Import refusé (${errors.length} erreurs) : \n` + displayErrors.join('\n') + (errors.length > 5 ? '\n...' : '');
-      this.loading = false;
-      this.cdr.detectChanges();
-      return; // STOP ICI
+    if (candidatsASupprimer.length > 0) {
+      candidatsASupprimer.forEach(c => {
+        this.adminService.deleteCandidat(c.id).subscribe({
+          next: () => console.log(`Suppression réussie : ${c.username}`),
+          error: (err) => console.error(`Erreur suppression : ${c.username}`, err)
+        });
+      });
     }
-
-    // 3. SI TOUT EST OK : SYNCHRONISATION
-    this.loading = true;
-    this.successMessage = "Validation réussie. Synchronisation...";
-
-    const excelEmails = validatedData.map(d => d.validatedEmail);
-    const toDelete = this.allCandidats.filter(c => !excelEmails.includes(c.username?.toLowerCase().trim()));
-
-    validatedData.forEach(data => {
-      const existingCandidat = this.allCandidats.find(c => c.username?.toLowerCase().trim() === data.validatedEmail);
-
-      // Formatage de la date (Ta logique substring(0,10))
-      let rawDate = data.dateNais || data['Date Naissance'];
-      let formattedDate = '';
-      if (rawDate) {
-         const d = (rawDate instanceof Date) ? rawDate : new Date(rawDate);
-         if (!isNaN(d.getTime())) formattedDate = d.toISOString().substring(0, 10);
-      }
-
-      const payload = {
-        nom: data.nom || data.Nom,
-        prenom: data.prenom || data.Prénom,
-        username: data.validatedEmail,
-        dateNais: formattedDate,
-        identifiantSpecifique: data.validatedIdSpec,
-        specialiteId: data.validatedSpecId,
-        statut: true,
-        nbreEpreuve: existingCandidat ? (existingCandidat.nbreEpreuve || 0) : 0
-      };
-
-      if (existingCandidat) {
-        this.adminService.updateCandidat(existingCandidat.id, payload).subscribe();
-      } else {
-        this.adminService.createCandidat({ ...payload, password: 'Password123!' }).subscribe();
-      }
-    });
-
-    // Suppression des absents
-    toDelete.forEach(c => this.adminService.deleteCandidat(c.id).subscribe());
 
     setTimeout(() => {
       this.loadCandidatsParSpecialite();
-      this.successMessage = "Importation réussie !";
       this.loading = false;
+
+
+    if (errors.length > 0) {
+        this.errorMessage = errors.join('\n');
+        this.successMessage = '';
+      } else {
+        this.successMessage = `✅ Synchronisation réussie : ${processedCount} traités, ${candidatsASupprimer.length} supprimés.`;
+        this.errorMessage = '';
+        setTimeout(() => this.successMessage = '', 5000);
+      }
       this.cdr.detectChanges();
-    }, 3000);
+    }, 4000);
   }
 }

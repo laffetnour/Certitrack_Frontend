@@ -16,9 +16,6 @@
       </select>
     </div>
 
-    <!--<button class="btn-add" (click)="openAddModal()">
-      <span>+</span> Nouveau Candidat
-    </button>-->
 
     <div class="actions-header d-flex gap-2">
 
@@ -46,15 +43,40 @@
   </div>
 
 
-  <div *ngIf="successMessage" class="alert success">{{ successMessage }}</div>
-  <div *ngIf="errorMessage" class="alert error">{{ errorMessage }}</div>
+  <div class="alerts-container">
+
+    <div *ngIf="successMessage" class="modern-alert success shadow-sm">
+      <div class="alert-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      </div>
+      <div class="alert-content">
+        <span class="alert-title">Opération réussie</span>
+        <p>{{ successMessage }}</p>
+      </div>
+      <button class="alert-close" (click)="successMessage = ''">&times;</button>
+    </div>
+
+    <div *ngIf="errorMessage" class="modern-alert error shadow-lg">
+      <div class="alert-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      </div>
+      <div class="alert-content">
+        <span class="alert-title">Attention : Des erreurs ont été détectées</span>
+        <div class="error-list">
+          {{ errorMessage }}
+        </div>
+      </div>
+      <button class="alert-close" (click)="errorMessage = ''">&times;</button>
+    </div>
+
+  </div>
 
 
-  <div class="bulk-actions" *ngIf="selectedCandidats.length > 0">
+  <!--<div class="bulk-actions" *ngIf="selectedCandidats.length > 0">
     <span>{{ selectedCandidats.length }} sélectionné(s)</span>
     <button class="btn-activate" (click)="activateSelected()">Activer</button>
     <button class="btn-deactivate" (click)="deactivateSelected()">Désactiver</button>
-  </div>
+  </div>-->
 
 
 
@@ -73,7 +95,8 @@
         <table class="modern-table">
           <thead>
           <tr>
-            <th><input type="checkbox" [checked]="isAllSelected()" (change)="selectAll($event)"></th>
+            <!--<th><input type="checkbox" [checked]="isAllSelected()" (change)="selectAll($event)"></th>
+            -->
             <th>Nom</th>
             <th>Prénom</th>
             <th>Email</th>
@@ -92,13 +115,13 @@
 
           <tr *ngFor="let candidat of filteredCandidats">
 
-            <td>
+            <!--<td>
               <input
                 type="checkbox"
                 [checked]="selectedCandidats.includes(candidat.id)"
                 (change)="onCheckboxChange(candidat.id,$event)"
               >
-            </td>
+            </td>-->
 
             <td>{{ candidat.nom }}</td>
             <td>{{ candidat.prenom }}</td>
@@ -460,6 +483,53 @@
       </div>
     </div>
   </div>
+<div class="alerts-container">
+  <div *ngIf="successMessage" class="modern-alert success shadow-sm">
+    <div class="alert-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+    </div>
+    <div class="alert-content">
+      <span class="alert-title">Succès</span>
+      <p>{{ successMessage }}</p>
+    </div>
+    <button class="alert-close" (click)="successMessage = ''">&times;</button>
+  </div>
+
+  <div *ngIf="errorMessage" class="modern-alert error shadow-lg">
+    <div class="alert-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+    </div>
+    <div class="alert-content">
+      <span class="alert-title">Erreur</span>
+      <div class="error-list">
+        {{ errorMessage }}
+      </div>
+      <button *ngIf="isRelationError"
+              (click)="handleDeactivateAfterFailedDelete()"
+              class="btn-import"
+              style="margin-top: 10px; background: #fff; border: 1px solid #dc2626; color: #dc2626; padding: 4px 10px;">
+        Désactiver à la place
+      </button>
+    </div>
+    <button class="alert-close" (click)="errorMessage = ''; isRelationError = false;">&times;</button>
+  </div>
+</div>
+
+<div class="modal" *ngIf="showDeleteConfirm" (click)="showDeleteConfirm = false">
+  <div class="modal-content" (click)="$event.stopPropagation()" style="max-width: 400px; text-align: center;">
+    <div class="modal-header">
+      <h2 style="color: #dc2626;">Confirmer la suppression</h2>
+    </div>
+    <div style="padding: 20px;">
+      <p>Voulez-vous vraiment supprimer ce candidat ? Cette action est irréversible.</p>
+    </div>
+    <div class="modal-footer" style="justify-content: center; gap: 15px;">
+      <button class="btn-cancel" (click)="showDeleteConfirm = false">Annuler</button>
+      <button class="btn-add" style="background: #dc2626;" (click)="executeDelete()">Supprimer</button>
+    </div>
+  </div>
+</div>
+
 
 
 
