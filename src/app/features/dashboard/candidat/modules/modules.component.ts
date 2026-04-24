@@ -5,6 +5,9 @@ import { ModuleTenantService } from '../../../../core/services/ModuleTenant.serv
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { ModuleCandidatService } from '../../../../core/services/module-candidat.service';
+import { ConfigService } from '../../../../core/services/config.service';
+
+
 
 @Component({
   selector: 'app-modules-candidat',
@@ -27,12 +30,14 @@ export class ModulesCandidatComponent implements OnInit {
 
   filterType: string = 'all';
   filterStatus: string = 'all';
+  currentView: 'affectes' | 'autres' = 'affectes';
 
   constructor(
     private service: ModuleCandidatService,
     private moduleTenantService: ModuleTenantService,
     private authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public configService: ConfigService
   ) {}
 
   ngOnInit(): void {
@@ -79,10 +84,19 @@ showOthers: boolean = false;
              matchMotCle;
     }
 
-    toggleAutres(): void {
+    /*toggleAutres(): void {
       this.showAll = !this.showAll;
       this.cdr.detectChanges();
-    }
+    }*/
+  goToAutres() {
+    this.currentView = 'autres';
+    this.cdr.detectChanges();
+  }
+
+  goBack() {
+    this.currentView = 'affectes';
+    this.cdr.detectChanges();
+  }
 
 
   loadModules() {

@@ -17,7 +17,14 @@
 
   <div class="bulk-actions" *ngIf="selectedIds.length > 0">
     <span>{{ selectedIds.length }} sélectionnée(s)</span>
-    <button class="btn-bulk-delete" (click)="deleteMultiple()">🗑️ Tout supprimer</button>
+    <button class="btn-bulk-delete" (click)="openBulkDeleteModal()">🗑️ Tout supprimer</button>
+    <button class="btn-activate" (click)="activateSelected()">
+      Activer
+    </button>
+
+    <button class="btn-deactivate" (click)="deactivateSelected()">
+      Désactiver
+    </button>
   </div>
 
 
@@ -32,12 +39,16 @@
 
         <th>Difficulté</th>
         <th>Nature</th>
+        <th>Status</th>
         <th>Actions</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let q of questions">
-        <ng-container *ngIf="(isBehavioralMode() && q.nature === 'comportementale') || (!isBehavioralMode() && q.nature === 'technique')">
+      <!--<tr *ngFor="let q of questions">
+        <ng-container *ngIf="(isBehavioralMode() && q.nature === 'comportementale') || (!isBehavioralMode() && q.nature === 'technique')">-->
+
+      <tr *ngFor="let q of questions; trackBy: trackById"
+          [hidden]="(isBehavioralMode() && q.nature !== 'comportementale') || (!isBehavioralMode() && q.nature !== 'technique')">
 
         <td>
           <input type="checkbox"
@@ -48,15 +59,47 @@
         <td>{{ q.note }}</td>
         <td>{{ q.difficultee }}</td>
         <td>{{ q.nature }}</td>
+          <td>
+            <span class="status-badge"
+                    [class.active]="q.statut"
+                    [class.inactive]="!q.statut">
+
+              {{ q.statut ? 'Actif' : 'Inactif' }}
+            </span>
+          </td>
         <td class="actions">
 
 
-          <button class="btn-delete" (click)="deleteSingle(q.idQuestion)"  title="Supprimer">
+
+          <button type="button" class="btn-toggle" (click)="toggleStatus(q)"
+                  [title]="q.statut ? 'Désactiver' : 'Activer'">
+
+            <svg *ngIf="q.statut" xmlns="http://www.w3.org/2000/svg"
+                 width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+              <!-- actif -->
+            </svg>
+
+            <svg *ngIf="!q.statut" xmlns="http://www.w3.org/2000/svg"
+                 width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+              <!-- inactif -->
+            </svg>
+
+          </button>
+
+
+          <button class="btn-delete" (click)="openDeleteModal(q)"  title="Supprimer">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6"></polyline>
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
             </svg>
           </button>
+
 
 
           <button class="btn-view" (click)="openViewModal(q)" title="Voir">
@@ -66,7 +109,7 @@
             </svg>
           </button>
         </td>
-        </ng-container>
+        <!--</ng-container>-->
       </tr>
       </tbody>
     </table>
@@ -105,4 +148,81 @@
       </div>
     </div>
   </div>
+
+
+
+
+
+
+  <div class="modal" *ngIf="alertVisible" style="z-index: 9999;">
+    <div class="modal-content alert-modal" style="max-width: 400px; text-align: center;">
+
+      <div class="modal-header">
+        <h2 [style.color]="alertType === 'error' ? 'red' : alertType === 'warning' ? 'orange' : 'green'">
+          <span *ngIf="alertType==='success'">Succès</span>
+          <span *ngIf="alertType==='error'">Erreur</span>
+          <span *ngIf="alertType==='warning'">Attention</span>
+        </h2>
+        <button (click)="alertVisible=false">✖</button>
+      </div>
+
+      <div class="alert-body" style="padding: 20px;">
+        <svg *ngIf="alertType==='success'" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+
+        <svg *ngIf="alertType==='error'" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+
+        <svg *ngIf="alertType==='warning'" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="orange" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17" r="1"/>
+        </svg>
+
+        <p style="margin-top: 15px; font-size: 16px;">{{ alertMessage }}</p>
+      </div>
+
+      <div class="modal-footer" style="justify-content: center;">
+        <button class="btn-cancel" (click)="alertVisible=false">Fermer</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="modal" *ngIf="showDeleteModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Confirmer la suppression</h2>
+        <button (click)="showDeleteModal = false">✖</button>
+      </div>
+
+      <div style="padding: 20px;">
+        <p>
+          Voulez-vous vraiment supprimer la question :
+          <strong *ngIf="!isBulkDelete">
+            {{ questionToDelete?.texte }}
+          </strong>
+        </p>
+
+        <div *ngIf="isBulkDelete">
+          <p><strong>Questions sélectionnées :</strong></p>
+
+          <ul style="max-height: 150px; overflow-y: auto; text-align: left;">
+            <li *ngFor="let item of selectedQuestions">
+              • {{ item.texte }}
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="modal-footer" style="justify-content: center; gap: 10px;">
+        <button class="btn-cancel" (click)="showDeleteModal = false">Annuler</button>
+        <button class="btn-delete" (click)="confirmDelete()">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
+
 </div>

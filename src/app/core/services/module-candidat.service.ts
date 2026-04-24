@@ -59,4 +59,11 @@ export class ModuleCandidatService {
     return this.http.get<number>(`${this.baseUrl}/inscriptions/count/${idCandidat}`
       ,{ headers: this.getAuthHeaders() });
   }
+
+  getEpreuves(idCandidat: number): Observable<any> {
+    return this.http.get<any>(
+      `http://localhost:8080/api/test/candidat/epreuves/${idCandidat}`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
 }

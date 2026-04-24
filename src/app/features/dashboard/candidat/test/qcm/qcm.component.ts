@@ -156,7 +156,7 @@ export class QcmComponent implements OnInit {
     this.service.submitTest(this.epreuve.idEpreuve, this.selectedAnswers, dureeConsommee)
       .subscribe({
         next: (res) => {
-          this.scoreFinal = res.scoreFinal;
+          //this.scoreFinal = res.scoreFinal;
           this.testTermine = true;
           this.cdr.detectChanges();
         },

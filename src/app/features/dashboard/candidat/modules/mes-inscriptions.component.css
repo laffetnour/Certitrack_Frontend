@@ -1,4 +1,4 @@
-/* Container Principal */
+/*
 .mes-inscriptions {
   padding: 30px;
   background-color: #f4f7f6;
@@ -16,14 +16,14 @@
   padding-bottom: 10px;
 }
 
-/* Grille de cartes */
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 25px;
 }
 
-/* Style de la Carte */
+
 .card {
   background: #ffffff;
   border-radius: 15px;
@@ -41,7 +41,7 @@
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
-/* Corps de la carte */
+
 .card-body {
   padding: 25px;
   flex-grow: 1;
@@ -66,7 +66,7 @@
   font-weight: 500;
 }
 
-/* Badges de statut */
+
 .badge-status {
   margin-top: 15px;
 }
@@ -92,14 +92,14 @@
   border: 1px solid #ffecb3;
 }
 
-/* Footer et Boutons */
+
 .card-footer {
   padding: 20px;
   background-color: #ffffff;
   border-top: 1px solid #f0f0f0;
 }
 
-/* Bouton Passer le Test (Actif) */
+
 .btn-test {
   width: 100%;
   background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
@@ -126,7 +126,7 @@
   transform: scale(0.98);
 }
 
-/* Bouton Inscription Validée (Grisé) */
+
 .btn-disabled {
   width: 100%;
   background-color: #f8f9fa !important;
@@ -142,7 +142,7 @@
   gap: 10px;
 }
 
-/* État de chargement et vide */
+
 .no-data {
   text-align: center;
   padding: 60px;
@@ -153,10 +153,329 @@
   grid-column: 1 / -1;
 }
 
-/* Animation de chargement */
+
 .loading-spinner {
   text-align: center;
   font-weight: 500;
   color: #3498db;
   padding: 40px;
+}
+
+
+.recent-grid {
+  display: flex;
+  gap: 15px;
+  margin: 15px 0;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.recent-card {
+  min-width: 300px;
+  background: #fdfdfd;
+  border-radius: 12px;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-left: 5px solid #007bff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.badge-new {
+  background: #ffc107;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+
+.btn-start-recent {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.status-passed {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.section-divider {
+  border: 0;
+  height: 1px;
+  background: #eee;
+  margin: 25px 0;
+}*/
+
+
+
+/* ================= GLOBAL ================= */
+.mes-inscriptions {
+  padding: 40px;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+
+  background: var(--bg-admin);
+  transition: background 0.3s ease;
+}
+
+/* ================= TITRE ================= */
+.mes-inscriptions h3 {
+  color: var(--text-main);
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.mes-inscriptions h3::after {
+  content: "";
+  width: 45px;
+  height: 3px;
+  background: var(--smart-red);
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  border-radius: 10px;
+}
+
+/* ================= GRID ================= */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+/* ================= CARD ================= */
+.card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+
+  transition: all 0.3s ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right,
+  rgba(234,83,87,0.12),
+  transparent 60%);
+  opacity: 0.7;
+}
+
+.card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+  border-color: var(--smart-red);
+}
+
+/* ================= BODY ================= */
+.card-body {
+  padding: 22px;
+  position: relative;
+  z-index: 2;
+}
+
+.module-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.category {
+  font-size: 0.75rem;
+  color: var(--smart-red);
+  background: rgba(234, 83, 87, 0.08);
+  padding: 5px 12px;
+  border-radius: 30px;
+  font-weight: 600;
+}
+
+/* ================= FOOTER ================= */
+.card-footer {
+  padding: 18px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* ================= BUTTON ================= */
+.btn-test {
+  width: 100%;
+  background: #303D49;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-test:hover {
+  background: var(--smart-red);
+  transform: scale(1.02);
+}
+
+/* disabled */
+.btn-disabled {
+  width: 100%;
+  background: var(--bg-admin);
+  color: var(--text-muted);
+  border: 1px dashed var(--border-color);
+  padding: 12px;
+  border-radius: 10px;
+}
+
+/* ================= STATUS ================= */
+.status-container {
+  text-align: center;
+}
+
+.passed {
+  display: inline-block;
+  background: rgba(234, 83, 87, 0.1);
+  color: var(--smart-red);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.test-date {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ================= RECENTES ================= */
+.recent-section {
+  margin-bottom: 30px;
+}
+
+.recent-grid {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  padding: 10px 5px 20px;
+}
+
+/* CARD RECENTE */
+.recent-card {
+  min-width: 300px;
+  border-radius: 18px;
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+
+  transition: all 0.3s ease;
+}
+
+.recent-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right,
+  rgba(234,83,87,0.12),
+  transparent 60%);
+}
+
+.recent-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+  border-color: var(--smart-red);
+}
+
+.recent-content {
+  position: relative;
+  z-index: 2;
+}
+
+.recent-card h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 8px 0;
+}
+
+.cat-text {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* badge */
+.badge-new {
+  background: var(--smart-red);
+  color: white;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* bouton recent */
+.btn-start-recent {
+  background: #303D49;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-start-recent:hover {
+  background: var(--smart-red);
+}
+
+/* status recent */
+.text-passed {
+  color: var(--smart-red);
+  font-weight: 600;
+}
+
+.date-mini {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.status-confirmed {
+  font-size: 12px;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+/* ================= DIVIDER ================= */
+.section-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border-color), transparent);
+  margin: 30px 0;
+}
+
+/* ================= SCROLLBAR ================= */
+.recent-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.recent-grid::-webkit-scrollbar-thumb {
+  background: var(--smart-red);
+  border-radius: 10px;
 }

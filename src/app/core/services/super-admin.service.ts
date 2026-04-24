@@ -227,17 +227,54 @@ getByModule(id: number): Observable<any[]> {
 
 
 
-  deleteQuestion(id: number) {
+  /*deleteQuestion(id: number) {
     return this.http.delete(`${this.baseUrl}/questions/${id}`, this.getAuthHeaders());
+  }*/
+
+  deleteQuestion(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/questions/${id}`, this.getAuthHeaders());
   }
 
 
 
-  deleteQuestionsBulk(ids: number[]) {
+ /* deleteQuestionsBulk(ids: number[]) {
     return this.http.post(`${this.baseUrl}/questions/delete-bulk`, ids, this.getAuthHeaders());
+  }*/
+
+  deleteQuestionsBulk(ids: number[]): Observable<string[]> {
+    return this.http.post<string[]>(
+      `${this.baseUrl}/questions/delete-bulk`,
+      ids,
+      this.getAuthHeaders()
+    );
   }
 
 
+// ========================
+  // QUESTION STATUS (NEW)
+  // ========================
+  toggleQuestionStatus(id: number): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/questions/${id}/toggle-status`,
+      {},
+      this.getAuthHeaders()
+    );
+  }
 
+  activateQuestions(ids: number[]): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/questions/activate`,
+      ids,
+      this.getAuthHeaders()
+    );
+  }
+
+  deactivateQuestions(ids: number[]): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/questions/deactivate`,
+      ids,
+      this.getAuthHeaders()
+    );
+  }
 
 }

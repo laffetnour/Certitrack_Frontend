@@ -1,109 +1,122 @@
-/* 🔹 zone globale */
-.content-area {
-  padding: 20px;
+/*
+body {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: #f1f5f9;
+  color: #1e293b;
 }
 
-/* 🔍 recherche */
-/*.search-input {
+.content-area {
+  padding: 30px;
+
+  margin: auto;
   width: 100%;
-  padding: 12px 15px;
+}
+
+
+.search-input {
+  width: 100%;
+  padding: 14px 18px;
   border-radius: 12px;
-  border: 1px solid #ddd;
-  margin-bottom: 25px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 20px;
   font-size: 14px;
-  transition: 0.3s;
+  background: #ffffff;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 
 .search-input:focus {
-  border-color: #1976d2;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
   outline: none;
-}*/
+}
+
 
 .filter-container {
   display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
-  padding: 15px;
-  background: #f8fafc;
-  border-radius: 10px;
+  gap: 25px;
+  margin-bottom: 25px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
   border: 1px solid #e2e8f0;
   flex-wrap: wrap;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
 }
 
 .filter-group {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 
 .filter-group label {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: #64748b;
 }
 
 .filter-select {
-  padding: 8px 12px;
-  border-radius: 6px;
+  padding: 10px 14px;
+  border-radius: 10px;
   border: 1px solid #cbd5e1;
-  background-color: white;
-  color: #334155;
-  outline: none;
+  background: #fff;
+  color: #1e293b;
+  font-size: 13px;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-select:hover {
+  border-color: #4f46e5;
 }
 
 .filter-select:focus {
   border-color: #4f46e5;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+  outline: none;
 }
 
-/* Ajustement pour l'input de recherche existant */
-.search-input {
-  width: 100%;
-  margin-bottom: 15px;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #cbd5e1;
-}
 
-/* 🔹 grid */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
 }
 
-/* 🔹 card */
+
 .stat-card {
   background: #ffffff;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
   display: flex;
-  gap: 15px;
-  align-items: flex-start;
-  transition: 0.3s;
-  position: relative;
+  gap: 16px;
+  transition: all 0.3s ease;
+  border: 1px solid #f1f5f9;
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
 }
 
-/* 🔹 icon */
+
 .stat-icon-wrapper {
-  width: 55px;
-  height: 55px;
-  border-radius: 12px;
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #e3f2fd;
-  color: #1976d2;
-  font-size: 20px;
+  font-size: 22px;
+  box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3);
 }
 
-/* 🔹 contenu */
+
 .stat-card h3 {
   margin: 0;
   font-size: 18px;
@@ -113,176 +126,121 @@
 .stat-card p {
   margin: 4px 0;
   font-size: 13px;
-  color: #555;
+  color: #64748b;
 }
 
-/* 🔹 badges */
-.badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 8px;
-  font-size: 11px;
-  margin-top: 5px;
-}
 
 .badge-test {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: #dcfce7;
+  color: #166534;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .badge-no-test {
-  background: #fff3e0;
-  color: #ef6c00;
+  background: #fef3c7;
+  color: #92400e;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
-/* 🔹 bouton inscrire */
-.btn-inscrire {
-  margin-top: 10px;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 10px;
-  background: #1976d2;
-  color: white;
-  font-size: 13px;
-  cursor: pointer;
-  transition: 0.3s;
-}
 
-.btn-inscrire:hover {
-  background: #125ea7;
-}
-
-/* 🔹 bouton autres modules */
-.btn-autres {
-  margin-top: 25px;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 12px;
-  background: #f5f5f5;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.btn-autres:hover {
-  background: #e0e0e0;
-}
-
-/* 🔹 responsive */
-@media (max-width: 600px) {
-  .stat-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
 .btn-inscrire {
   width: 100%;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
-  background: #4f46e5;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
   color: white;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: all 0.25s ease;
   margin-top: 10px;
 }
 
 .btn-inscrire:hover:not(:disabled) {
-  background: #3730a3;
   transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
 }
 
-/* État désactivé */
 .btn-inscrire:disabled {
-  background: #d1d5db !important; /* Gris clair */
-  color: #9ca3af !important;      /* Texte gris foncé */
-  cursor: not-allowed;            /* Curseur "interdit" */
-  transform: none !important;
-  box-shadow: none !important;
+  background: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
 }
 
-.status-msg {
-  font-size: 0.75rem;
-  color: #ef4444;
-  margin-top: 5px;
-  text-align: center;
-  font-style: italic;
-}
 
-.badge-test {
-  color: #059669;
-  background: #ecfdf5;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-}
-
-.badge-no-test {
-  color: #d97706;
-  background: #fffbeb;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-}
-/* Conteneur pour centrer le bouton entre les deux listes */
 .actions-footer {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 40px 0;
   padding: 20px 0;
-  border-top: 1px dashed #e0e0e0; /* Ligne de séparation subtile */
-  position: relative;
+  border-top: 1px dashed #e2e8f0;
 }
 
-/* Style principal du bouton "Autres" */
+.actions-footer.column {
+  flex-direction: column;
+  gap: 15px;
+  text-align: center;
+  width: 100%;
+}
+
+
 .btn-autres {
-  background-color: #ffffff;
-  color: #2563eb; /* Un bleu moderne */
-  border: 2px solid #2563eb;
-  padding: 12px 28px;
-  font-size: 1rem;
+  background: white;
+  color: #4f46e5;
+  border: 2px solid #4f46e5;
+  padding: 12px 26px;
+  border-radius: 50px;
   font-weight: 600;
-  border-radius: 50px; /* Forme pilule */
   cursor: pointer;
   transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* Effet au survol */
 .btn-autres:hover {
-  background-color: #2563eb;
-  color: #ffffff;
-  transform: translateY(-2px); /* Petit saut vers le haut */
-  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+  background: #4f46e5;
+  color: white;
+  transform: translateY(-2px);
 }
 
-/* Effet au clic */
-.btn-autres:active {
-  transform: translateY(0);
-}
 
-/* Style de la section "Autres" qui apparaît */
 .others-section {
-  background-color: #f8fafc; /* Fond très léger pour différencier */
+  background: #ffffff;
   padding: 30px;
-  border-radius: 15px;
-  margin-top: 20px;
-  animation: fadeIn 0.5s ease-in-out;
+  border-radius: 18px;
+  margin-top: 25px;
+  animation: fadeIn 0.4s ease-in-out;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.05);
 }
+
 
 .section-title {
-  color: #1e293b;
-  font-size: 1.5rem;
-  margin-bottom: 25px;
   text-align: center;
+  font-size: 1.6rem;
   font-weight: 700;
+  margin-bottom: 25px;
+  color: #1e293b;
 }
 
-/* Animation simple pour l'apparition de la section */
+.info-text {
+  font-size: 14px;
+  color: #64748b;
+}
+
+
+.no-data {
+  text-align: center;
+  margin-top: 30px;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -294,5 +252,334 @@
   }
 }
 
+*/
 
+
+/* ================= VARIABLES (LIGHT + DARK MODE) ================= */
+:root {
+  --bg-admin: #f1f5f9;
+  --bg-card: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --smart-red: #ea5357;
+}
+
+body.dark {
+  --bg-admin: #0f172a;
+  --bg-card: #1e293b;
+  --text-main: #e2e8f2;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --smart-red: #fb7185;
+}
+
+/* ================= GLOBAL ================= */
+body {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: var(--bg-admin);
+  color: var(--text-main);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.content-area {
+  padding: 30px;
+  width: 100%;
+}
+
+/* ================= SEARCH ================= */
+.search-input {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 12px;
+
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-main);
+
+  margin-bottom: 20px;
+  font-size: 14px;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  transition: all 0.25s ease;
+}
+
+.search-input:focus {
+  border-color: var(--smart-red);
+  box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.15);
+  outline: none;
+}
+
+/* ================= FILTER ================= */
+.filter-container {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 25px;
+
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+
+  border-radius: 16px;
+  flex-wrap: wrap;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+
+.filter-container:hover {
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.filter-select {
+  padding: 10px 14px;
+  border-radius: 10px;
+
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-main);
+
+  font-size: 14px;        /* 🔥 un peu plus lisible */
+  font-weight: 500;       /* 🔥 meilleure lisibilité */
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  /* 🔥 améliore rendu texte */
+  letter-spacing: 0.2px;
+
+}
+
+.filter-select:hover {
+  border-color: var(--smart-red);
+}
+
+.filter-select:focus {
+  border-color: var(--smart-red);
+  box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.15);
+  outline: none;
+}
+
+/* ================= GRID ================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* ================= CARD ================= */
+.stat-card {
+  background: var(--bg-card);
+  padding: 22px;
+  border-radius: 18px;
+
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  display: flex;
+  gap: 16px;
+
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+/* ================= ICON ================= */
+.stat-icon-wrapper {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+
+  background: linear-gradient(135deg,
+  var(--smart-red),
+  #303D49);
+
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 22px;
+}
+
+/* ================= TEXT ================= */
+.stat-card h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.stat-card p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ================= BADGES ================= */
+.badge-test {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-no-test {
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ================= BUTTON ================= */
+.btn-inscrire {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+
+  background: var(--smart-red);
+  color: white;
+
+  font-weight: 600;
+  cursor: pointer;
+
+  margin-top: 10px;
+  transition: all 0.25s ease;
+}
+
+.btn-inscrire:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(234, 83, 87, 0.3);
+}
+
+.btn-inscrire:disabled {
+  background: var(--bg-admin);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* ================= FOOTER ACTIONS ================= */
+.actions-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 40px 0;
+  padding: 20px 0;
+
+  border-top: 1px dashed var(--border-color);
+}
+
+.actions-footer.column {
+  flex-direction: column;
+  gap: 15px;
+  text-align: center;
+}
+
+/* ================= BUTTON SECONDARY ================= */
+.btn-autres {
+  background: var(--bg-card);
+  color: var(--smart-red);
+
+  border: 2px solid var(--smart-red);
+  padding: 12px 26px;
+  border-radius: 50px;
+
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-autres:hover {
+  background: var(--smart-red);
+  color: white;
+}
+
+/* ================= SECTIONS ================= */
+.others-section {
+  background: var(--bg-card);
+  padding: 30px;
+  border-radius: 18px;
+
+  margin-top: 25px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+}
+
+/* ================= TITLE ================= */
+.section-title {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+
+  margin-bottom: 25px;
+  color: var(--text-main);
+}
+
+/* ================= INFO TEXT ================= */
+.info-text {
+  font-size: 14px;
+  color: var(--text-muted);
+  text-align: center;
+  font-style: italic;
+}
+
+/* ================= EMPTY ================= */
+.no-data {
+  text-align: center;
+  margin-top: 30px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+/* Style par défaut pour les options (Light Mode) */
+.filter-select option {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+
+/* Style pour le Dark Mode - On utilise des couleurs fixes pour éviter les bugs navigateurs */
+body.dark .filter-select option {
+  background-color: #1e293b !important; /* Couleur sombre fixe */
+  color: #e2e8f2 !important;            /* Couleur claire fixe */
+}
+
+/* Pour Chrome sur Windows, on ajoute un sélecteur spécifique */
+body.dark select.filter-select {
+  color-scheme: dark; /* Indique au système d'afficher le menu natif en mode sombre */
+}
+
+.info-text {
+  font-size: 14px;
+  color: var(--text-muted);
+  text-align: center;
+  font-style: italic;
+  margin-top: 5px;
+}
+
+/* highlight léger */
+.actions-footer.column .info-text {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border-color);
+}
 

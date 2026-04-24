@@ -1,4 +1,4 @@
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <div class="content-area">
   <input type="text" placeholder="🔍 Rechercher un module..." [(ngModel)]="search" (input)="applyFilter()" class="search-input" />
 
@@ -20,34 +20,65 @@
       </select>
     </div>
   </div>
+  <div *ngIf="currentView === 'affectes' && displayedModules.length > 0" class="others-section">
+  <!--<h2 *ngIf="displayedModules.length > 0">Mes Modules</h2>-->
+  <!--<h2 *ngIf="currentView === 'affectes' && displayedModules.length > 0">
+    Modules recommandés pour vous
+  </h2>-->
+    <h2 class="section-title"> Modules recommandés pour vous</h2>
 
-  <h2 *ngIf="displayedModules.length > 0">Mes Modules</h2>
-  <div class="stats-grid">
-    <div class="stat-card" *ngFor="let m of displayedModules">
-      <div class="stat-icon-wrapper">
-        <i class="fas" [ngClass]="m.hasActiveSession ? 'fa-book-open' : 'fa-lock'"></i>
-      </div>
-      <div>
-        <h3>{{ m.module?.nom }}</h3>
-        <p class="category">Catégorie : {{ m.module?.nomCategorie }}</p>
-        <div class="test-info">
-          <span *ngIf="m.avecTest" class="badge-test">✅ Avec test ({{ m.seuilScore }}%)</span>
-          <span *ngIf="!m.avecTest" class="badge-no-test">ℹ️ Sans test</span>
+  <!-- <div class="stats-grid">-->
+    <div *ngIf="currentView === 'affectes'" class="stats-grid">
+      <div class="stat-card" *ngFor="let m of displayedModules">
+        <div class="stat-icon-wrapper">
+          <i class="fas" [ngClass]="m.hasActiveSession ? 'fa-book-open' : 'fa-lock'"></i>
         </div>
-        <button class="btn-inscrire" [disabled]="!m.hasActiveSession || isSubmitting" (click)="sinscrire(m)">
-          <span>{{ m.hasActiveSession ? (isSubmitting ? "Traitement..." : "S'inscrire") : "Bientôt disponible" }}</span>
-        </button>
+        <div>
+          <h3>{{ m.module?.nom }}</h3>
+          <p class="category">Catégorie : {{ m.module?.nomCategorie }}</p>
+          <div class="test-info">
+            <span *ngIf="m.avecTest" class="badge-test">✅ Avec test ({{ m.seuilScore }}%)</span>
+            <span *ngIf="!m.avecTest" class="badge-no-test">ℹ️ Sans test</span>
+          </div>
+          <button class="btn-inscrire" [disabled]="!m.hasActiveSession || isSubmitting" (click)="sinscrire(m)">
+            <span>{{ m.hasActiveSession ? (isSubmitting ? "Traitement..." : "S'inscrire") : "Bientôt disponible" }}</span>
+          </button>
+        </div>
       </div>
+
+
+
+
+
     </div>
   </div>
 
-  <div *ngIf="mode.includes('OUVERT')" class="actions-footer">
+  <!--<div *ngIf="mode.includes('OUVERT')" class="actions-footer">
     <button (click)="toggleAutres()" class="btn-autres">
       {{ showAll ? '🔼 Cacher les autres' : '🔽 Afficher les autres modules disponibles' }}
     </button>
+  </div>-->
+
+  <div *ngIf="currentView === 'affectes' && mode.includes('OUVERT')" class="actions-footer column">
+    <p class="info-text">
+      Vous n'êtes pas intéressé(e) par ces modules ?
+    </p>
+
+
+    <button (click)="goToAutres()" class="btn-autres">
+      Voir les autres modules ➡️
+    </button>
   </div>
 
-  <div *ngIf="showAll && mode.includes('OUVERT')" class="others-section">
+
+
+ <!-- <div *ngIf="showAll && mode.includes('OUVERT')" class="others-section">
+
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let m of filteredOuverts">-->
+  <div *ngIf="currentView === 'autres'" class="others-section">
+
+    <h2 class="section-title">Autres modules disponibles</h2>
 
     <div class="stats-grid">
       <div class="stat-card" *ngFor="let m of filteredOuverts">
@@ -66,6 +97,13 @@
           </button>
         </div>
       </div>
+    </div>
+
+
+    <div class="actions-footer">
+      <button (click)="goBack()" class="btn-autres">
+        ⬅️ Retour
+      </button>
     </div>
   </div>
 

@@ -23,6 +23,13 @@ export class QuestionComponent implements OnInit {
   showViewModal: boolean = false;
   questionToView: any = null;
 
+  alertVisible: boolean = false;
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'warning' = 'success';
+
+  showDeleteModal: boolean = false;
+  questionToDelete: any = null;
+  isBulkDelete: boolean = false;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -154,7 +161,7 @@ onImportCSV(event: any): void {
     });
   }
 }
-  deleteSingle(id: number): void {
+  /*deleteSingle(id: number): void {
     if (confirm('Supprimer cette question ?')) {
       this.superAdminService.deleteQuestion(id).subscribe(() => {
         this.questions = this.questions.filter(q => q.idQuestion !== id);
@@ -162,15 +169,15 @@ onImportCSV(event: any): void {
 
       });
     }
-  }
+  }*/
 
-  deleteMultiple(): void {
+  /*deleteMultiple(): void {
     if (confirm(`Supprimer les ${this.selectedIds.length} questions ?`)) {
       this.superAdminService.deleteQuestionsBulk(this.selectedIds).subscribe(() => {
         this.loadQuestions();
       });
     }
-  }
+  }*/
 
   // --- GESTION SELECTION ---
 
@@ -206,4 +213,215 @@ onImportCSV(event: any): void {
       this.questionToView = null;
       this.cdr.detectChanges();
     }
+
+
+    //ajouter
+  activateSelected(): void {
+    if (this.selectedIds.length === 0) return;
+
+    this.superAdminService.activateQuestions(this.selectedIds).subscribe(() => {
+      this.selectedIds = [];
+      this.loadQuestions();
+    });
+  }
+
+  deactivateSelected(): void {
+    if (this.selectedIds.length === 0) return;
+
+    this.superAdminService.deactivateQuestions(this.selectedIds).subscribe(() => {
+      this.selectedIds = [];
+      this.loadQuestions();
+    });
+  }
+
+  toggleStatus(q: any): void {
+    this.superAdminService.toggleQuestionStatus(q.idQuestion).subscribe({
+      next: (updatedFromServer: any) => {
+        // On crée un nouveau tableau avec l'objet mis à jour
+        this.questions = this.questions.map(item => {
+          if (item.idQuestion === q.idQuestion) {
+            // On retourne une nouvelle référence d'objet avec le nouveau statut
+            return { ...item, statut: updatedFromServer.statut };
+          }
+          return item;
+        });
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error("Erreur toggle", err)
+    });
+  }
+
+  trackById(index: number, item: any) {
+    return item.idQuestion;
+  }
+
+  deleteSingle(id: number): void {
+    if (!confirm('Supprimer cette question ?')) return;
+
+    this.superAdminService.deleteQuestion(id).subscribe({
+      next: () => {
+        this.questions = this.questions.filter(q => q.idQuestion !== id);
+        this.showAlert("Question supprimée avec succès", 'success');
+        this.cdr.detectChanges();
+
+      },
+      error: () => {
+        this.showAlert("Impossible de supprimer : question liée à des épreuves", 'error');
+      }
+    });
+  }
+
+
+  deleteMultiple(): void {
+    if (!confirm(`Supprimer ${this.selectedIds.length} questions ?`)) return;
+
+    this.superAdminService.deleteQuestionsBulk(this.selectedIds).subscribe({
+      next: (messages: string[]) => {
+
+        this.questions = this.questions.filter(q =>
+          !this.selectedIds.includes(q.idQuestion)
+        );
+
+        // 🔥 Détection type message
+        const hasError = messages.some(m => m.includes("liée"));
+        const hasSuccess = messages.some(m => m.includes("succès"));
+
+        let type: 'success' | 'error' | 'warning' = 'success';
+
+        if (hasError && hasSuccess) {
+          type = 'warning';
+        } else if (hasError) {
+          type = 'error';
+        }
+
+        this.showAlert(messages.join('\n'), type);
+
+        this.selectedIds = [];
+      },
+      error: () => {
+        this.showAlert("Erreur lors de la suppression", 'error');
+      }
+    });
+  }
+
+  showAlert(message: string, type: 'success' | 'error' | 'warning') {
+    this.alertMessage = message;
+    this.alertType = type;
+    this.alertVisible = true;
+
+    setTimeout(() => {
+      this.alertVisible = false;
+    }, 3000);
+  }
+
+  openDeleteModal(q: any) {
+    this.questionToDelete = q;
+    this.showDeleteModal = true;
+  }
+
+  confirmDelete() {
+
+    // 🔥 CAS BULK DELETE
+    if (this.isBulkDelete) {
+
+      this.superAdminService.deleteQuestionsBulk(this.selectedIds).subscribe({
+        next: (messages: string[]) => {
+
+          const successIds: number[] = [];
+          const errorIds: number[] = [];
+
+          messages.forEach(msg => {
+            const idMatch = msg.match(/\d+/);
+            if (!idMatch) return;
+
+            const id = Number(idMatch[0]);
+
+            if (msg.toLowerCase().includes("succès")) {
+              successIds.push(id);
+            } else {
+              errorIds.push(id);
+            }
+          });
+
+          // 🧹 suppression des succès uniquement
+          this.questions = this.questions.filter(q =>
+            !successIds.includes(q.idQuestion)
+          );
+
+          // force refresh Angular (important)
+          this.questions = [...this.questions];
+
+          // 🧾 message propre
+          let message = "";
+
+          if (errorIds.length) {
+            message += `❌ ID(s) ${errorIds.join(', ')} liées à des épreuves\n`;
+          }
+
+          if (successIds.length) {
+            message += `✅ ID(s) ${successIds.join(', ')} supprimées avec succès`;
+          }
+
+          const type: 'success' | 'error' | 'warning' =
+            errorIds.length && successIds.length ? 'warning' :
+              errorIds.length ? 'error' : 'success';
+
+          this.showAlert(message, type);
+
+          // reset état
+          this.selectedIds = [];
+          this.isBulkDelete = false;
+          this.showDeleteModal = false;
+
+          this.cdr.detectChanges();
+        },
+
+        error: () => {
+          this.showAlert("Erreur lors de la suppression", 'error');
+          this.showDeleteModal = false;
+        }
+      });
+
+      return;
+    }
+
+    // 🔥 CAS SINGLE DELETE
+    if (!this.questionToDelete) return;
+
+    this.superAdminService.deleteQuestion(this.questionToDelete.idQuestion).subscribe({
+      next: () => {
+
+        this.questions = this.questions.filter(q =>
+          q.idQuestion !== this.questionToDelete.idQuestion
+        );
+
+        this.questions = [...this.questions]; // refresh UI
+
+        this.showDeleteModal = false;
+        this.questionToDelete = null;
+
+        this.showAlert("Question supprimée avec succès", 'success');
+
+        this.cdr.detectChanges();
+      },
+
+      error: () => {
+        this.showDeleteModal = false;
+        this.showAlert("Impossible de supprimer : question liée à des épreuves", 'error');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  openBulkDeleteModal() {
+    if (this.selectedIds.length === 0) return;
+
+    this.isBulkDelete = true;
+    this.showDeleteModal = true;
+  }
+
+  get selectedQuestions() {
+    return this.questions.filter(q => this.selectedIds.includes(q.idQuestion));
+  }
 }

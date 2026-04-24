@@ -1,4 +1,4 @@
-<div class="mes-inscriptions container">
+<!--<div class="mes-inscriptions container">
   <h3><i class="fas fa-bookmark"></i> Mes Inscriptions ({{ mesModulesInscrits.length }})</h3>
 
   <div class="grid" *ngIf="!loading">
@@ -10,22 +10,115 @@
 
       </div>
 
-      <div class="card-footer">
-        <button
-          *ngIf="item.avecTest"
-          class="btn-test"
-          (click)="allerAuTest(item.id)">
-          <i class="fas fa-play"></i> Démarrer le Test
-        </button>
 
-        <button
-          *ngIf="!item.avecTest"
-          class="btn-disabled"
-          disabled>
+
+      <div class="card-footer">
+        <div *ngIf="item.avecTest">
+
+          <div *ngIf="getEpreuve(item.id) as ep; else boutonDemarrer">
+            <div class="status-container" style="text-align: center; padding: 5px;">
+              <span class="passed" style="color: #28a745; font-weight: bold; display: block;">
+                <i class="fas fa-check-circle"></i> Test passé
+              </span>
+              <small class="test-date" style="color: #666;">
+                Le {{ ep.dhEpreuve | date:'dd/MM/yyyy HH:mm' }}
+              </small>
+            </div>
+          </div>
+
+          <ng-template #boutonDemarrer>
+            <button class="btn-test" (click)="allerAuTest(item.id)">
+              <i class="fas fa-play"></i> Démarrer le Test
+            </button>
+          </ng-template>
+
+        </div>
+
+        <button *ngIf="!item.avecTest" class="btn-disabled" disabled>
           <i class="fas fa-lock"></i> Inscription confirmée
         </button>
       </div>
 
+    </div>
+  </div>
+</div>-->
+
+<div class="mes-inscriptions container">
+
+  <div class="recent-section" *ngIf="!loading && recentesInscriptions.length > 0">
+    <h3 class="section-title">
+      <i class="fas fa-clock" style="color: #666666;"></i> Inscriptions Récentes
+    </h3>
+
+    <div class="recent-grid">
+      <div class="recent-card" *ngFor="let item of recentesInscriptions">
+        <div class="recent-content">
+          <div class="info">
+            <span class="badge-new">Nouveau</span>
+            <h4>{{ item.module.nom }}</h4>
+            <p class="cat-text">{{ item.module.nomCategorie }}</p>
+          </div>
+
+          <div class="action-zone">
+            <div *ngIf="item.avecTest">
+              <div *ngIf="getEpreuve(item.id) as ep; else boutonRecent">
+                <div class="status-mini">
+                  <span class="text-passed"><i class="fas fa-check-circle"></i> Terminé: </span>
+                  <small class="date-mini"> Le {{ ep.dhEpreuve | date:'dd/MM' }}</small>
+                </div>
+              </div>
+              <ng-template #boutonRecent>
+                <button class="btn-start-recent" (click)="allerAuTest(item.id)">
+                  Lancer <i class="fas fa-play"></i>
+                </button>
+              </ng-template>
+            </div>
+
+            <div *ngIf="!item.avecTest">
+               <span class="status-confirmed">
+                 <i class="fas fa-lock"></i> Confirmée
+               </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="section-divider">
+  </div>
+
+  <h3><i class="fas fa-bookmark"></i> Toutes mes Inscriptions ({{ mesModulesInscrits.length }})</h3>
+
+  <div class="grid" *ngIf="!loading">
+    <div class="card" *ngFor="let item of mesModulesInscrits">
+      <div class="card-body">
+        <h4 class="module-title">{{ item.module.nom }}</h4>
+        <p class="category">{{ item.module.nomCategorie }}</p>
+      </div>
+
+      <div class="card-footer">
+        <div *ngIf="item.avecTest">
+          <div *ngIf="getEpreuve(item.id) as ep; else boutonDemarrer">
+            <div class="status-container" style="text-align: center; padding: 5px;">
+              <span class="passed" style="color: #28a745; font-weight: bold; display: block;">
+                <i class="fas fa-check-circle"></i> Test passé
+              </span>
+              <small class="test-date" style="color: #666;">
+                Le {{ ep.dhEpreuve | date:'dd/MM/yyyy HH:mm' }}
+              </small>
+            </div>
+          </div>
+
+          <ng-template #boutonDemarrer>
+            <button class="btn-test" (click)="allerAuTest(item.id)">
+              <i class="fas fa-play"></i> Démarrer le Test
+            </button>
+          </ng-template>
+        </div>
+
+        <button *ngIf="!item.avecTest" class="btn-disabled" disabled>
+          <i class="fas fa-lock"></i> Inscription confirmée
+        </button>
+      </div>
     </div>
   </div>
 </div>
