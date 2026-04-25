@@ -51,24 +51,37 @@ export class SessionInscService {
     );
   }
 
-  // SessionInscService.ts
 
-  addSession(moduleId: number, userId: number, session: Session) {
+
+  /*addSession(moduleId: number, userId: number, session: Session) {
     // L'ordre dans l'URL doit correspondre au Controller : /add/{moduleId}/{userId}
     return this.http.post(
       `${this.api}/add/${moduleId}/${userId}`, // Vérifiez bien l'ordre ici
       session,
       this.getHeaders()
     );
-  }
+  }*/
 
-  updateSession(id: number, userId: number, session: Session) {
-    return this.http.put(
-      `${this.api}/update/${id}/${userId}`,
-      session,
-      this.getHeaders()
-    );
-  }
+addSession(moduleIds: number[], userId: number, session: Session): Observable<Session> {
+
+  const ids = moduleIds.join(',');
+
+  return this.http.post<Session>(
+    `${this.api}/add/${userId}?moduleIds=${ids}`,
+    session,
+    this.getHeaders()
+  );
+}
+
+
+ updateSession(id: number, userId: number, sessionData: any): Observable<any> {
+
+   return this.http.put<any>(
+     `${this.api}/update/${id}/${userId}`,
+     sessionData,
+     this.getHeaders()
+   );
+ }
 
   deleteSession(id: number, userId: number) {
     return this.http.delete(

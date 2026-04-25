@@ -38,10 +38,20 @@
           <p class="category">Catégorie : {{ m.module?.nomCategorie }}</p>
           <div class="test-info">
             <span *ngIf="m.avecTest" class="badge-test">✅ Avec test ({{ m.seuilScore }}%)</span>
-            <span *ngIf="!m.avecTest" class="badge-no-test">ℹ️ Sans test</span>
+            <span *ngIf="!m.avecTest" class="badge-no-test">ℹ️ Sans test ({{ m.seuilScore }}%)</span>
           </div>
-          <button class="btn-inscrire" [disabled]="!m.hasActiveSession || isSubmitting" (click)="sinscrire(m)">
+          <!--<button class="btn-inscrire" [disabled]="!m.hasActiveSession || isSubmitting" (click)="sinscrire(m)">
             <span>{{ m.hasActiveSession ? (isSubmitting ? "Traitement..." : "S'inscrire") : "Bientôt disponible" }}</span>
+          </button>-->
+          <button class="btn-inscrire"
+                  [disabled]="!m.hasActiveSession || m.isAlreadySubscribed || isSubmitting"
+                  (click)="sinscrire(m)">
+
+            <span *ngIf="m.isAlreadySubscribed">✅ Vous ête déja inscie à une</span>
+
+            <span *ngIf="!m.isAlreadySubscribed">
+    {{ m.hasActiveSession ?(isSubmitting ? "Traitement..." : "S'inscrire") : "Bientôt disponible" }}
+  </span>
           </button>
         </div>
       </div>
@@ -53,11 +63,6 @@
     </div>
   </div>
 
-  <!--<div *ngIf="mode.includes('OUVERT')" class="actions-footer">
-    <button (click)="toggleAutres()" class="btn-autres">
-      {{ showAll ? '🔼 Cacher les autres' : '🔽 Afficher les autres modules disponibles' }}
-    </button>
-  </div>-->
 
   <div *ngIf="currentView === 'affectes' && mode.includes('OUVERT')" class="actions-footer column">
     <p class="info-text">
@@ -76,7 +81,7 @@
 
     <div class="stats-grid">
       <div class="stat-card" *ngFor="let m of filteredOuverts">-->
-  <div *ngIf="currentView === 'autres'" class="others-section">
+  <div *ngIf="currentView === 'autres' && mode === 'OUVERTE'" class="others-section">
 
     <h2 class="section-title">Autres modules disponibles</h2>
 
@@ -92,8 +97,18 @@
             <span *ngIf="m.avecTest" class="badge-test">✅ Avec test ({{ m.seuilScore }}%)</span>
             <span *ngIf="!m.avecTest" class="badge-no-test">ℹ️ Sans test</span>
           </div>
-          <button class="btn-inscrire" [disabled]="!m.hasActiveSession || isSubmitting" (click)="sinscrire(m)">
+          <button class="btn-inscrire"
+                  [disabled]="!m.hasActiveSession || m.isAlreadySubscribed || isSubmitting"
+                  [ngClass]="{'btn-disabled': m.isAlreadySubscribed}"
+                  (click)="sinscrire(m)">
+
+          <span *ngIf="m.isAlreadySubscribed">
+            <i class="fas fa-check"></i> Inscrit (via session)
+          </span>
+
+            <span *ngIf="!m.isAlreadySubscribed">
             {{ m.hasActiveSession ? (isSubmitting ? "Traitement..." : "S'inscrire") : "Bientôt disponible" }}
+          </span>
           </button>
         </div>
       </div>
@@ -101,9 +116,10 @@
 
 
     <div class="actions-footer">
-      <button (click)="goBack()" class="btn-autres">
+      <!--<button (click)="goBack()" class="btn-autres">
         ⬅️ Retour
-      </button>
+      </button>-->
+      <button (click)="goBack()" class="btn-autres">⬅️ Retour</button>
     </div>
   </div>
 

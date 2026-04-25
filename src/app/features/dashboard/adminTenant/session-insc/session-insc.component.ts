@@ -1,3 +1,5 @@
+
+
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -19,42 +21,38 @@ import { AuthService } from '../../../../core/services/auth.service';
 })
 export class SessionInscComponent implements OnInit {
 
-  // ================= DATA =================
   sessions: any[] = [];
   filteredSessions: any[] = [];
-
   modules: any[] = [];
   filteredModules: any[] = [];
 
   selectedModule: any = null;
   selectedModuleId: number | null = null;
-
   selectedSession: any = null;
 
   viewMode: 'modules' | 'sessions' = 'modules';
 
-  // ================= UI =================
   searchTerm = '';
   filterEtat = '';
+  filterType = '';
+  filterDate = '';
+  today: Date = new Date();
 
   showAddModal = false;
   showViewModal = false;
   showDeleteModal = false;
+  showModuleSessionsModal = false;
+  moduleSessions: any[] = [];
 
-  // ================= FORM =================
   addSessionForm!: FormGroup;
+  selectedModuleIds: number[] = [];
+  selectionMode: 'all' | 'manual' = 'manual';
+  moduleSearchTerm: string = '';
+  filteredModulesForSelection: any[] = [];
 
-  // ================= ALERT =================
   alertVisible = false;
   alertMessage = '';
   alertType: 'success' | 'error' | 'warning' = 'success';
-
-  moduleSessions: any[] = [];
-  showModuleSessionsModal = false;
-
-  today: Date = new Date();
-  filterType = '';
-  filterDate: string = '';
 
   constructor(
     private service: SessionInscService,
@@ -72,22 +70,31 @@ export class SessionInscComponent implements OnInit {
     return this.auth.getUser()?.idUtilisateur;
   }
 
-  // ================= INIT FORM =================
   initForm() {
     this.addSessionForm = this.fb.group({
       titre: ['', Validators.required],
       dateDebut: ['', Validators.required],
       dateFin: ['', Validators.required],
       dureeMax: [null],
-      nbreQuestionTechnique: [null]
+      nbreQuestionTechnique: [null],
+      selectionType: ['manual']
+    });
+
+    this.addSessionForm.get('selectionType')?.valueChanges.subscribe(val => {
+      this.selectionMode = val;
+      if (val === 'all') {
+        this.selectedModuleIds = this.modules.map(m => m.id);
+        // Vérifier la disponibilité pour tous les modules
+        this.selectedModuleIds.forEach(id => this.checkModuleAvailability(id));
+      } else {
+        this.selectedModuleIds = [];
+      }
     });
   }
 
-  // ================= LOAD DATA =================
   loadData() {
     const userId = this.getUserId();
 
-    // 🔵 sessions
     this.service.getMySessions(userId).subscribe(res => {
       this.sessions = res.map(s => ({
         ...s,
@@ -95,447 +102,276 @@ export class SessionInscComponent implements OnInit {
       })).sort((a, b) =>
         new Date(a.dateDebut).getTime() - new Date(b.dateDebut).getTime()
       );
-      this.cdr.detectChanges();
       this.applyFilters();
     });
 
-    // 🟢 modules actifs
-    this.service.getModules(userId).subscribe(res => {
-      this.modules = res.map(m => ({
-        id: m.id,
-        nom: m.module?.nom || '---',
-        categorie: m.module?.nomCategorie || '---', // 🔥 CORRIGÉ ICI
-        capacite: m.capacite,
-        seuilScore: m.seuilScore,
-        avecTest: m.avecTest
-      }));
-
-      this.filteredModules = this.modules;
-
-      this.cdr.detectChanges(); // ✅ IMPORTANT
-    });
+  this.service.getModules(userId).subscribe(res => {
+    this.modules = res.map(m => ({
+      ...m,
+      avecTest: m.avecTest ?? false,
+      nom: m.module?.nom || '---',
+      categorie: m.module?.nomCategorie || '---'
+    }));
+    this.filteredModules = this.modules;
+    this.cdr.detectChanges();
+  });
   }
 
-  // ================= FILTER =================
-  /*applyFilters() {
-
-    const search = this.searchTerm.toLowerCase();
-
-    this.filteredSessions = this.sessions.filter(s => {
-
-      const matchSearch =
-        s.titre?.toLowerCase().includes(search) ||
-        s.moduleNom?.toLowerCase().includes(search);
-
-      const matchEtat =
-        !this.filterEtat ||
-        s.etat?.toLowerCase() === this.filterEtat.toLowerCase();
-
-      return matchSearch && matchEtat;
-    });
-
-
-    this.filteredModules = this.modules.filter(m => {
-      const matchSearch = m.nom.toLowerCase().includes(search);
-
-      // Logique pour le type de test
-      let matchType = true;
-      if (this.filterType === 'avecTest') matchType = m.avecTest === true;
-      if (this.filterType === 'sansTest') matchType = m.avecTest === false;
-
-      return matchSearch && matchType;
-    });
-  }*/
-
   applyFilters() {
-
     const search = this.searchTerm.toLowerCase();
-
     this.filteredSessions = this.sessions.filter(s => {
-
-      const matchSearch =
-        s.titre?.toLowerCase().includes(search) ||
-        s.moduleNom?.toLowerCase().includes(search);
-
-      const matchEtat =
-        !this.filterEtat ||
-        s.etat?.toLowerCase() === this.filterEtat.toLowerCase();
-
-      // ✅ CORRECTION ICI
+      const matchSearch = s.titre?.toLowerCase().includes(search) || s.moduleNom?.toLowerCase().includes(search);
+      const matchEtat = !this.filterEtat || s.etat?.toLowerCase() === this.filterEtat.toLowerCase();
       const format = (d: any) => {
         if (!d) return '';
         const date = new Date(d);
-
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-
-        return `${year}-${month}-${day}`; // ✅ PAS de toISOString()
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
       };
-
-      const matchDate =
-        !this.filterDate ||
-        format(s.dateDebut) === this.filterDate ||
-        format(s.dateFin) === this.filterDate;
-
+      const matchDate = !this.filterDate || format(s.dateDebut) === this.filterDate || format(s.dateFin) === this.filterDate;
       return matchSearch && matchEtat && matchDate;
     });
 
     this.filteredModules = this.modules.filter(m => {
       const matchSearch = m.nom.toLowerCase().includes(search);
-
       let matchType = true;
       if (this.filterType === 'avecTest') matchType = m.avecTest === true;
       if (this.filterType === 'sansTest') matchType = m.avecTest === false;
-
       return matchSearch && matchType;
     });
   }
 
-  // ================= MODULE ACTIONS =================
-  openAddModal(moduleId: number) {
+  filterModulesForForm() {
+    const search = this.moduleSearchTerm.toLowerCase();
+    this.filteredModulesForSelection = this.modules.filter(m =>
+      m.nom.toLowerCase().includes(search) || m.categorie.toLowerCase().includes(search)
+    );
+  }
 
+  checkModuleAvailability(moduleId: number) {
+    const activeSession = this.sessions.find(s =>
+      s.moduleTenant?.id === moduleId &&
+      (s.etat === 'enCours' || s.etat === 'planifiee')
+    );
+
+    if (activeSession) {
+      const moduleName = this.modules.find(m => m.id === moduleId)?.nom || 'Ce module';
+      this.showAlert('warning', `⚠️ ${moduleName} est déjà lié à une session (${activeSession.etat}).`);
+    }
+  }
+
+  openAddModal(moduleId?: number) {
     this.selectedSession = null;
-    this.selectedModuleId = moduleId;
+    this.moduleSearchTerm = '';
+    this.filteredModulesForSelection = [...this.modules];
 
-    this.selectedModule = this.modules.find(m => m.id === moduleId);
-
-    console.log("MODULE SELECTED =", this.selectedModule); // DEBUG
+    if (moduleId) {
+      this.selectedModuleIds = [moduleId];
+      this.selectionMode = 'manual';
+      this.checkModuleAvailability(moduleId);
+    } else {
+      this.selectedModuleIds = [];
+      this.selectionMode = 'manual';
+    }
 
     this.addSessionForm.reset({
+      selectionType: this.selectionMode,
       dureeMax: null,
       nbreQuestionTechnique: null
     });
-
     this.showAddModal = true;
   }
 
-  /*viewSessionsByModule(moduleId: number) {
 
-    this.service.getSessionsByModule(moduleId).subscribe(res => {
-
-      this.sessions = res.map(s => ({
-        ...s,
-        moduleNom: s.moduleTenant?.module?.nom || '---'
-      }));
-
-      this.viewMode = 'sessions';
-      this.applyFilters();
-    });
-  }*/
-
-  viewSessionsByModule(moduleId: number) {
-    this.selectedModule = this.modules.find(m => m.id === moduleId);
-    this.moduleSessions = []; // Reset le tableau avant l'appel
-
-    this.service.getSessionsByModule(moduleId).subscribe({
-      next: (res) => {
-        // On remplit les données
-        this.moduleSessions = res.map(s => ({
-          ...s,
-          moduleNom: s.moduleTenant?.module?.nom || '---'
-        }));
-
-        // 🔥 IMPORTANT : On ouvre le modal SEULEMENT après avoir reçu les données
-        this.showModuleSessionsModal = true;
-
-        // 🔥 FORCE la mise à jour de la vue immédiatement
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.showAlert('error', 'Erreur lors de la récupération des sessions');
-      }
-    });
+openEditModal(session: any) {
+  if (!this.canEdit(session)) {
+    this.showAlert('warning', '⚠️ Cette session ne peut plus être modifiée.');
+    return;
   }
 
-  // ================= SUBMIT =================
-  /*submitSession() {
+  this.selectedSession = session;
+  this.moduleSearchTerm = '';
+  this.filteredModulesForSelection = [...this.modules];
 
-    if (this.addSessionForm.invalid || !this.selectedModuleId) return;
+  this.addSessionForm.patchValue({
+    titre: session.titre,
+    dateDebut: this.formatDate(session.dateDebut),
+    dateFin: this.formatDate(session.dateFin),
+    dureeMax: session.dureeMax,
+    nbreQuestionTechnique: session.nbreQuestionTechnique,
+    selectionType: 'manual' // Obligatoire pour le validateur du formulaire
+  });
 
-    const form = this.addSessionForm.value;
-    const userId = this.getUserId();
+  // Extraction propre des IDs pour les checkboxes
+  if (session.modulesTenants && Array.isArray(session.modulesTenants)) {
+    this.selectedModuleIds = session.modulesTenants.map((m: any) => m.id);
+  } else if (session.moduleTenant) {
+    this.selectedModuleIds = [session.moduleTenant.id];
+  } else {
+    this.selectedModuleIds = [];
+  }
 
-    const d1 = new Date(form.dateDebut);
-    const d2 = new Date(form.dateFin);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    // ✅ DATE FIN > DATE DEBUT
-    if (d2 <= d1) {
-      this.showAlert('error', '❌ Date fin doit être après date début');
-      return;
-    }
-
-    // ✅ DATE DEBUT > AUJOURD’HUI
-    if (d1 <= today) {
-      this.showAlert('error', '❌ Date début doit être dans le futur');
-      return;
-    }
-
-    // ✅ CONFLIT
-    if (this.isDateConflict(form)) {
-      this.showAlert('warning', '⚠️ Conflit avec une session existante');
-      return;
-    }
-
-    // ✅ SI MODULE SANS TEST → vider champs
-    if (!this.selectedModule?.avecTest) {
-      form.dureeMax = null;
-      form.nbreQuestionTechnique = null;
-    }
-
-    // ================= ADD =================
-    if (!this.selectedSession) {
-
-      this.service.addSession(this.selectedModuleId, userId, form)
-        .subscribe({
-          next: () => {
-            this.closeModal();
-            this.viewMode = 'sessions';
-            this.loadData();
-            this.showAlert('success', '✅ Session ajoutée');
-          },
-          error: (err) => {
-            this.showAlert('error', err.error?.message || 'Erreur serveur');
-          }
-        });
-    }
-
-    // ================= UPDATE =================
-    else {
-
-      this.service.updateSession(this.selectedSession.id, userId, form)
-        .subscribe({
-          next: () => {
-            this.closeModal();
-            this.loadData();
-            this.showAlert('success', '✏️ Session modifiée');
-          },
-          error: (err) => {
-            this.showAlert('error', err.error?.message || 'Erreur update');
-          }
-        });
-    }
-  }*/
-
-  // DANS session-insc.component.ts
-
+  this.showAddModal = true;
+  this.addSessionForm.markAsPristine();
+  this.cdr.detectChanges();
+}
   submitSession() {
-    // 1. Vérification si le formulaire est valide
-    if (this.addSessionForm.invalid || !this.selectedModuleId) {
-      this.showAlert('error', '❌ Veuillez remplir tous les champs obligatoires.');
+    if (this.addSessionForm.invalid || this.selectedModuleIds.length === 0) {
+      this.showAlert('error', '❌ Formulaire invalide ou aucun module sélectionné.');
       return;
     }
 
-    const form = this.addSessionForm.value;
+    const formVal = this.addSessionForm.value;
     const userId = this.getUserId();
 
-    // Conversion des dates pour comparaison
-    const d1 = new Date(form.dateDebut);
-    const d2 = new Date(form.dateFin);
-    const today = new Date();
-    //today.setHours(0, 0, 0, 0); // Reset l'heure pour comparer uniquement le jour
+    // --- VALIDATION DATE DÉBUT > AUJOURD'HUI ---
+    const dateDebut = new Date(formVal.dateDebut);
+    const dateFin = new Date(formVal.dateFin);
+    const todayNow = new Date();
+    todayNow.setHours(0, 0, 0, 0); // Comparaison à minuit
 
-    // ✅ TEST 1 : DATE FIN > DATE DEBUT
-    if (d2 <= d1) {
-      console.log("Erreur: date fin <= date debut"); // Debug
-      this.showAlert('error', '❌ La date de fin doit être strictement après la date de début.');
+    if (dateDebut <= todayNow) {
+      this.showAlert('error', "❌ La date de début doit être supérieure à la date d'aujourd'hui.");
       return;
     }
 
-    // ✅ TEST 2 : DATE DEBUT >= AUJOURD'HUI
-    if (d1 < today) {
-      console.log("Erreur: date debut dans le passé"); // Debug
-      this.showAlert('error', '❌ Date début doit être supérieure à aujourd\'hui.');
+    if (dateFin <= dateDebut) {
+      this.showAlert('error', '❌ La date de fin doit être après la date de début.');
       return;
     }
 
-    // ✅ TEST 3 : CONFLIT DE DATES
-    if (this.isDateConflict(form)) {
-      this.showAlert('warning', '⚠️ Cette période chevauche une session existante pour ce module.');
+    if (this.isDateConflict(formVal)) {
+      this.showAlert('warning', '⚠️ Chevauchement temporel avec une session existante pour un module sélectionné.');
       return;
     }
 
-    // Logique d'envoi (Add ou Update)
     if (!this.selectedSession) {
-      this.service.addSession(this.selectedModuleId, userId, form).subscribe({
-        next: () => {
-          this.closeModal();
-          this.viewMode = 'sessions';
-          this.loadData();
-          this.showAlert('success', '✅ Session ajoutée avec succès !');
-        },
-        error: (err) => this.showAlert('error', 'Erreur lors de l\'ajout.')
+      this.service.addSession(this.selectedModuleIds, userId, {
+      ...formVal,
+      moduleIds: this.selectedModuleIds
+      }).subscribe({
+        next: () => this.handleSuccess('Session(s) ajoutée(s) !'),
+        error: () => this.showAlert('error', "Erreur lors de l'ajout.")
       });
     } else {
-      this.service.updateSession(this.selectedSession.id, userId, form).subscribe({
-        next: () => {
-          this.closeModal();
-          this.loadData();
-          this.showAlert('success', '✏️ Session modifiée avec succès !');
-        },
-        error: (err) => this.showAlert('error', 'Erreur lors de la modification.')
-      });
+      const rawValues = this.addSessionForm.value;
+
+        // CRÉATION DU PAYLOAD PROPRE
+        const payload = {
+            nomSession: formVal.titre, // mapping vers DTO
+            dateDebutInsc: formVal.dateDebut,
+            dateFinInsc: formVal.dateFin,
+            dureeMax: formVal.dureeMax,
+            nbreQuestionTechnique: formVal.nbreQuestionTechnique,
+            modulesTenantsIds: this.selectedModuleIds // Ex: [27, 28]
+          };
+
+      this.service.updateSession(this.selectedSession.id, userId, payload).subscribe({
+            next: () => this.handleSuccess('Session modifiée !'),
+            error: (err) => {
+              console.error("Erreur Backend :", err);
+              this.showAlert('error', 'Erreur lors de la modification.');
+            }
+          });
     }
   }
 
-  // ================= CONFLICT =================
-  isDateConflict(form: any): boolean {
+  handleSuccess(msg: string) {
+    this.closeModal();
+    this.loadData();
+    this.viewMode = 'sessions';
+    this.showAlert('success', '✅ ' + msg);
+  }
 
+  isDateConflict(form: any): boolean {
     const newStart = new Date(form.dateDebut).getTime();
     const newEnd = new Date(form.dateFin).getTime();
 
     return this.sessions.some(s => {
-
+      if (this.selectedSession && s.id === this.selectedSession.id) return false;
       const start = new Date(s.dateDebut).getTime();
       const end = new Date(s.dateFin).getTime();
 
-      if (this.selectedSession && s.id === this.selectedSession.id) {
-        return false;
-      }
-
-      return (
-        s.moduleTenant?.id === this.selectedModuleId &&
-        !(newEnd < start || newStart > end)
-      );
+      return this.selectedModuleIds.includes(s.moduleTenant?.id) && !(newEnd < start || newStart > end);
     });
   }
 
-  // ================= DELETE =================
+  // ================= SUPPRESSION / VUE =================
   openDeleteModal(s: any) {
     this.selectedSession = s;
     this.showDeleteModal = true;
   }
 
   confirmDelete() {
-
-    const userId = this.getUserId();
-
-    this.service.deleteSession(this.selectedSession.id, userId)
-      .subscribe(() => {
-        this.showDeleteModal = false;
-        this.loadData();
-        this.showAlert('success', '🗑 Session supprimée');
-      });
+    this.service.deleteSession(this.selectedSession.id, this.getUserId()).subscribe(() => {
+      this.showDeleteModal = false;
+      this.loadData();
+      this.showAlert('success', '🗑 Session supprimée');
+    });
   }
 
-  // ================= VIEW =================
   viewSession(s: any) {
     this.selectedSession = s;
     this.showViewModal = true;
   }
 
-  // ================= UTILS =================
+  viewSessionsByModule(moduleId: number) {
+    this.service.getSessionsByModule(moduleId).subscribe({
+      next: (res) => {
+        this.moduleSessions = res.map(s => ({ ...s, moduleNom: s.moduleTenant?.module?.nom || '---' }));
+        this.showModuleSessionsModal = true;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   closeModal() {
     this.showAddModal = false;
-    this.selectedModuleId = null;
     this.selectedSession = null;
+    this.selectedModuleIds = [];
   }
 
-  closeViewModal() {
-    this.showViewModal = false;
+
+toggleModuleSelection(moduleId: number) {
+  const index = this.selectedModuleIds.indexOf(moduleId);
+
+  if (index > -1) {
+    this.selectedModuleIds.splice(index, 1);
+  } else {
+    this.selectedModuleIds.push(moduleId);
+    this.checkModuleAvailability(moduleId);
   }
 
-  /*setViewMode(mode: 'modules' | 'sessions') {
-    this.viewMode = mode;
-
-    if (mode === 'sessions') {
-      this.loadData();
-    }
-  }*/
+  this.addSessionForm.markAsDirty();
+}
 
   setViewMode(mode: 'modules' | 'sessions') {
     this.viewMode = mode;
     this.searchTerm = '';
-    this.filterEtat = '';
-    this.filterType = ''; // Réinitialise le filtre type
     this.applyFilters();
-
-    if (mode === 'sessions') {
-      this.loadData();
-    }
   }
 
-  canEdit(s: any): boolean {
-    return s.etat !== 'cloturee';
-  }
-
-  /*isSubmitDisabled(): boolean {
-    return this.addSessionForm.invalid;
-  }*/
-  // Remplacez l'ancienne version par celle-ci
   isSubmitDisabled(): boolean {
-    // 1. Si les validateurs (Validators.required) ne sont pas respectés, on bloque
-    if (this.addSessionForm.invalid) {
-      return true;
-    }
-
-    // 2. Si on est en mode MODIFICATION (selectedSession existe)
-    if (this.selectedSession) {
-      // On bloque le bouton SI le formulaire n'est PAS "sale" (donc aucune modif faite)
-      return !this.addSessionForm.dirty;
-    }
-
-    // 3. En mode AJOUT, on ne bloque pas si le formulaire est valide
-    return false;
-  }
-
-  // ================= ALERT =================
-  showAlert(type: 'success' | 'error' | 'warning', msg: string) {
-    this.alertType = type;
-    this.alertMessage = msg;
-    this.alertVisible = true;
-
-    setTimeout(() => {
-      this.alertVisible = false;
-    }, 3000);
-  }
-
-  // ================= EDIT =================
-  /*openEditModal(session: any) {
-
-    this.selectedSession = session;
-    this.selectedModuleId = session.moduleTenant?.id;
-
-    this.selectedModule = this.modules.find(m => m.id === this.selectedModuleId);
-
-    // remplir le formulaire avec les données existantes
-    this.addSessionForm.patchValue({
-      titre: session.titre,
-      dateDebut: this.formatDate(session.dateDebut),
-      dateFin: this.formatDate(session.dateFin),
-      dureeMax: session.dureeMax,
-      nbreQuestionTechnique: session.nbreQuestionTechnique
-    });
-
-    this.showAddModal = true;
-  }*/
-  openEditModal(session: any) {
-    this.selectedSession = session;
-    this.selectedModuleId = session.moduleTenant?.id;
-    this.selectedModule = this.modules.find(m => m.id === this.selectedModuleId);
-
-    // On patch avec les dates corrigées
-    this.addSessionForm.patchValue({
-      titre: session.titre,
-      dateDebut: this.formatDate(session.dateDebut),
-      dateFin: this.formatDate(session.dateFin),
-      dureeMax: session.dureeMax,
-      nbreQuestionTechnique: session.nbreQuestionTechnique
-    });
-
-    this.addSessionForm.markAsPristine(); // Marque le formulaire comme "non touché"
-    this.showAddModal = true;
-    this.cdr.detectChanges(); // Force le rendu du modal avec les données
+    return this.addSessionForm.invalid || (this.selectedSession && !this.addSessionForm.dirty);
   }
 
   formatDate(dateInput: any): string {
     if (!dateInput) return '';
     const d = new Date(dateInput);
-    // On ajuste le décalage horaire local (ex: Tunisie +1h) pour éviter le -1 jour
     const offset = d.getTimezoneOffset() * 60000;
-    return new Date(d.getTime() - offset).toISOString().slice(0, 10);
+    return new Date(d.getTime() - offset).toISOString().split('T')[0];
+  }
+
+  canEdit(s: any): boolean {
+    if (!s || !s.etat) return true;
+    const etat = s.etat.toLowerCase();
+    return etat === 'planifiee';
+  }
+
+  showAlert(type: 'success' | 'error' | 'warning', msg: string) {
+    this.alertType = type;
+    this.alertMessage = msg;
+    this.alertVisible = true;
+    setTimeout(() => this.alertVisible = false, 3000);
   }
 
   closeModuleSessionsModal() {

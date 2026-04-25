@@ -54,18 +54,28 @@ showOthers: boolean = false;
     this.cdr.detectChanges();
   }
 
+  // On garde cette variable pour mémoriser le dernier module cliqué
+  lastInscribedModuleId: number | null = null;
+
   private checkAllFilters(m: any, searchLow: string): boolean {
+      // 1. CACHER le module sur lequel on vient de cliquer
+      if (this.lastInscribedModuleId && m.module?.idModule === this.lastInscribedModuleId) {
+          return false;
+      }
 
-    const matchesSearch = this.matchSearch(m, searchLow);
 
-    let matchesType = true;
-    if (this.filterType === 'withTest') matchesType = m.avecTest === true;
-    if (this.filterType === 'noTest') matchesType = m.avecTest === false;
 
-    let matchesStatus = true;
-    if (this.filterStatus === 'open') matchesStatus = m.hasActiveSession === true;
+      // 2. Filtres de recherche et de type
+      const matchesSearch = this.matchSearch(m, searchLow);
 
-    return matchesSearch && matchesType && matchesStatus;
+      let matchesType = true;
+      if (this.filterType === 'withTest') matchesType = m.avecTest === true;
+      if (this.filterType === 'noTest') matchesType = m.avecTest === false;
+
+      let matchesStatus = true;
+      if (this.filterStatus === 'open') matchesStatus = m.hasActiveSession === true;
+
+      return matchesSearch && matchesType && matchesStatus;
   }
 
 
@@ -97,69 +107,100 @@ showOthers: boolean = false;
     this.currentView = 'affectes';
     this.cdr.detectChanges();
   }
+/*
+
+loadModules() {
+  this.service.getModules().subscribe({
+    next: (res: any) => {
+      this.mode = res.mode ? res.mode.trim().toUpperCase() : 'FIXE';
+
+      this.modulesAffectes = res.modulesAffectes || [];
+      this.modulesOuverts = res.modulesOuverts || [];
+
+      this.applyFilter();
+    },
+    error: (err) => console.error('Erreur de chargement', err)
+  });
+}
 
 
-  loadModules() {
-    this.service.getModules().subscribe({
-      next: (res: any) => {
-        this.mode = res.mode ? res.mode.trim().toUpperCase() : 'FIXE';
-        this.modulesAffectes = res.modulesAffectes || [];
-        const modulesInscritsIds = res.inscriptionsIds || [];
+sinscrire(item: any): void {
+  // On utilise la clé exacte validée dans Postman
+  const sessionId = item.sessionIdValide;
 
-        if (this.mode.includes('OUVERT')) {
-          const user = this.authService.getUser();
-          const userId = user?.idUtilisateur;
+  if (!sessionId) {
+    alert("Désolé, aucune session n'est ouverte pour ce module actuellement.");
+    return;
+  }
 
-          this.moduleTenantService.getMyModules(userId).subscribe({
-            next: (allTenantModules: any[]) => {
-              const idsSpec = (res.modulesAffectes || []).map((m: any) => m.module.idModule);
-
-              this.modulesOuverts = allTenantModules.filter((m: any) => {
-                return m.module.disponibilite === true &&
-                       !idsSpec.includes(m.module.idModule) &&
-                       !modulesInscritsIds.includes(m.module.idModule);
-              }).map((m: any) => {
-                const sessionActive = m.sessions?.find((s: any) => s.etat === 'enCours');
-                return {
-                  ...m,
-                  hasActiveSession: !!sessionActive,
-                  sessionIdValide: sessionActive ? sessionActive.id : null
-                };
-              });
-
-              this.applyFilter();
-            }
-          });
-        } else {
-          this.applyFilter();
-        }
+  if (confirm(`Confirmer l'inscription au module : ${item.module?.nom} ?`)) {
+    this.isSubmitting = true;
+    this.service.inscrire(sessionId).subscribe({
+      next: (res) => {
+        alert("Inscription réussie !");
+        this.isSubmitting = false;
+        this.loadModules(); // Recharge la liste pour masquer le module inscrit
       },
-      error: (err) => console.error('Erreur de chargement', err)
+      error: (err) => {
+        this.isSubmitting = false;
+        alert(err.error?.message || "Erreur lors de l'inscription.");
+      }
     });
   }
+}*/
 
-  sinscrire(item: any): void {
+loadModules() {
+  this.service.getModules().subscribe({
+    next: (res: any) => {
+      // 1. On récupère le mode
+      this.mode = res.mode ? res.mode.trim().toUpperCase() : 'FIXE';
 
-    const sessionId = item.sessionIdValide || item.id;
+      // 2. IMPORTANT : On met à jour les listes avec les nouvelles données du serveur
+      // Le serveur exclut déjà les modules présents dans 'inscriptionsIds'
+      this.modulesAffectes = res.modulesAffectes || [];
+      this.modulesOuverts = res.modulesOuverts || [];
 
-    if (!sessionId) {
-      alert("Aucune session active disponible.");
-      return;
+      // 3. On relance le filtrage pour mettre à jour 'displayedModules' et 'filteredOuverts'
+      this.applyFilter();
+
+      // Force Angular à voir le changement si nécessaire
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error('Erreur de chargement des modules', err);
     }
+  });
+}
 
-    if (confirm(`Confirmer l'inscription à : ${item.module.nom} ?`)) {
-      this.isSubmitting = true;
-      this.service.inscrire(sessionId).subscribe({
-        next: (res) => {
-          alert("Inscription réussie !");
-          this.isSubmitting = false;
-          this.loadModules();
-        },
-        error: (err) => {
-          this.isSubmitting = false;
-          alert(err.error?.message || "Erreur lors de l'inscription.");
-        }
-      });
-    }
+
+
+// modules.component.ts
+
+sinscrire(item: any): void {
+  // 1. On récupère les deux IDs nécessaires
+  const sessionId = item.sessionIdValide;
+  const moduleTenantId = item.idModuleTenant; // Clé présente dans ton map Java
+
+  if (!sessionId || !moduleTenantId) {
+    alert("Impossible de procéder à l'inscription : données manquantes.");
+    return;
   }
+
+  if (confirm(`Confirmer l'inscription au module : ${item.module?.nom} ?`)) {
+    this.isSubmitting = true;
+
+    this.service.inscrire(sessionId, moduleTenantId).subscribe({
+      next: (res) => {
+        alert("Inscription réussie !");
+        this.isSubmitting = false;
+
+        this.loadModules();
+      },
+      error: (err) => {
+        this.isSubmitting = false;
+        alert(err.error?.message || "Erreur lors de l'inscription.");
+      }
+    });
+  }
+}
 }

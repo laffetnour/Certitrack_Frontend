@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfigService } from '../../../../core/services/config.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-mes-inscriptions',
@@ -18,13 +19,23 @@ export class MesInscriptionsComponent implements OnInit {
   loading: boolean = true;
   epreuves: any[] = [];
 
-  constructor(private service: ModuleCandidatService, private cdr: ChangeDetectorRef,private router: Router, public configService: ConfigService) {}
+  constructor(private service: ModuleCandidatService,
+    private cdr: ChangeDetectorRef,private router: Router,
+    private authService: AuthService,
+    public configService: ConfigService) {}
 
   ngOnInit(): void {
 
-    this.loadInscriptions();
-    //ajouterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
-    this.loadEpreuves();
+  const user = this.authService.getUser();
+
+      if (user && user?.idUtilisateur) {
+        this.loadInscriptions();
+        this.loadEpreuves();
+      } else {
+        this.loading = false;
+        console.warn("Utilisateur non connecté ou ID manquant");
+      }
+
 
   }
 
@@ -47,24 +58,37 @@ export class MesInscriptionsComponent implements OnInit {
    });
  }
 
-  allerAuTest(idSession: number) {
+  /*allerAuTest(idSession: number) {
     console.log("Lancement du test pour la session ID :", idSession);
     // Logique de navigation vers le composant de test ici
      this.router.navigate(['/candidat/test', idSession]);
+  }*/
+
+allerAuTest(item: any) {
+  console.log("Données reçues de l'item :", item); // 🔥 Regarde ceci dans la console F12
+
+    const sessionId = item.sessionIdValide || item.sessionId; // Ajout d'un fallback
+    const moduleTenantId = item.idModuleTenant || item.moduleTenantId;
+
+  if (sessionId && moduleTenantId) {
+    this.router.navigate(['/candidat/demarrer-test', sessionId, moduleTenantId]);
+  } else {
+    console.error("Données manquantes dans l'item :", item);
+    alert("Impossible de récupérer les informations du module.");
   }
+}
 
-//ajouterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
   loadEpreuves() {
-    const user = this.service['authService'].getUser();
-    const idCandidat = user?.idUtilisateur;
+   const user = this.authService.getUser(); // 🔥 Utilisation propre
+       if (!user?.idUtilisateur) return;
 
-    this.service.getEpreuves(idCandidat).subscribe({
+    this.service.getEpreuves(user?.idUtilisateur).subscribe({
       next: (res) => {
         console.log("Epreuves reçues du backend:", res);
         this.epreuves = res;
         console.log("📊 EPREUVES ARRAY =", this.epreuves);
 
-        this.cdr.detectChanges(); // IMPORTANT : Informe Angular que les données sont arrivées
+        this.cdr.detectChanges();
       },
       error: (err) => console.error(err)
     });

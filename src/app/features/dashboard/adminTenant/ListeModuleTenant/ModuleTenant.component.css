@@ -640,3 +640,57 @@ form::-webkit-scrollbar-thumb:hover {
 }
 
 
+.module-selector-box {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background: #f9f9f9;
+}
+
+.module-list-scroll {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  background: white;
+}
+
+.module-item-choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.module-item-choice:hover {
+  background: #f0f7ff;
+}
+
+.module-item-choice.selected {
+  background: #e7f3ff;
+}
+
+.module-info-mini {
+  display: flex;
+  flex-direction: column;
+}
+
+.m-name { font-weight: 600; font-size: 14px; }
+.m-cat { font-size: 11px; color: #666; }
+
+/* Dans votre fichier CSS */
+.module-item-choice {
+  transition: background 0.2s ease;
+}
+
+.module-item-choice:hover {
+  background-color: #f8f9fa;
+}
+
+/* Style quand le module est sélectionné */
+.selected-module {
+  background-color: #e7f5ff !important;
+  border-left: 4px solid #1971c2;
+}

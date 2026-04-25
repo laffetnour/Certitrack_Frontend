@@ -41,6 +41,14 @@
 
     <div class="bulk-actions" *ngIf="selectedMyModulesIds.size > 0">
       <span>{{ selectedMyModulesIds.size }} module(s) sélectionné(s)</span>
+      <button class="btn-submit"
+              (click)="onBulkAddSession()"
+              style="background-color: #228be6; padding: 8px 16px; display: flex; align-items: center; gap: 8px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        Ajouter Session
+      </button>
       <button class="btn-activate" (click)="activateSelected()">Activer</button>
       <button class="btn-deactivate" (click)="deactivateSelected()">Désactiver</button>
       <button class="btn-delete" (click)="onBulkRemove()" style="background-color: #e74c3c;">Supprimer</button>
@@ -242,7 +250,7 @@
 
 
 
-  <div class="modal" *ngIf="showSessionFormModal">
+  <!--<div class="modal" *ngIf="showSessionFormModal">
     <div class="modal-content">
 
       <div class="modal-header">
@@ -252,28 +260,28 @@
       <form (ngSubmit)="submitSession()">
       <div style="padding:20px; display:flex; flex-direction:column; gap:12px;">
 
-        <!-- TITRE -->
+
         <label class="form-label">Titre de la session</label>
         <input [(ngModel)]="sessionForm.titre"
                name="titre"
                class="form-control"
                placeholder="Titre de la session">
 
-        <!-- DATE DEBUT -->
+
         <label class="form-label">Date début</label>
         <input type="date"
                [(ngModel)]="sessionForm.dateDebut"
                name="dateDebut"
                class="form-control">
 
-        <!-- DATE FIN -->
+
         <label class="form-label">Date fin</label>
         <input type="date"
                [(ngModel)]="sessionForm.dateFin"
                name="dateFin"
                class="form-control">
 
-        <!-- AVEC TEST -->
+
         <ng-container *ngIf="sessionChoice">
 
           <label class="form-label">Durée (minutes)</label>
@@ -295,7 +303,7 @@
       </div>
       </form>
 
-      <!-- FOOTER -->
+
       <div class="modal-footer">
 
         <button class="btn-submit"
@@ -312,7 +320,7 @@
       </div>
 
     </div>
-  </div>
+  </div>!-->
 
 
   <div class="modal" *ngIf="alertVisible" style="z-index: 9999;">
@@ -368,7 +376,60 @@
     </div>
   </div>
 
+  <div class="modal" *ngIf="showSessionFormModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Créer Session d'Inscription</h2>
+        <button (click)="showSessionFormModal=false">✖</button>
+      </div>
 
+      <div style="padding: 10px 20px; background: #e7f5ff; color: #1971c2; font-size: 13px;">
+        ℹ️ Cette session sera appliquée à <strong>{{selectedMyModulesIds.size}}</strong> module(s) sélectionné(s).
+      </div>
 
+      <form (ngSubmit)="submitSession()">
+        <div style="padding:20px; display:flex; flex-direction:column; gap:12px;">
 
+          <label class="form-label">Titre de la session</label>
+          <input [(ngModel)]="sessionForm.titre" name="titre" class="form-control" placeholder="Ex: Inscription 2026" required>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+              <label class="form-label">Date début</label>
+              <input type="date" [(ngModel)]="sessionForm.dateDebut" name="dateDebut" class="form-control" required>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+              <label class="form-label">Date fin</label>
+              <input type="date" [(ngModel)]="sessionForm.dateFin" name="dateFin" class="form-control" required>
+            </div>
+          </div>
+
+          <ng-container *ngIf="sessionChoice">
+            <hr>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div>
+                <label class="form-label">Durée (min)</label>
+                <input type="number" [(ngModel)]="sessionForm.dureeMax" name="dureeMax" class="form-control">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div>
+                <label class="form-label">Nb Questions</label>
+                <input type="number" [(ngModel)]="sessionForm.nbreQuestionTechnique" name="nbreQuestionTechnique" class="form-control">
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn-submit" [disabled]="!sessionForm.titre || !sessionForm.dateDebut || !sessionForm.dateFin">
+            Créer les sessions
+          </button>
+          <button class="btn-cancel" type="button" (click)="showSessionFormModal=false">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

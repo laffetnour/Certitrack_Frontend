@@ -4,7 +4,10 @@ import { ModuleTenantService } from '../../../../core/services/ModuleTenant.serv
 import { AuthService } from '../../../../core/services/auth.service';
 import {ChangeDetectorRef } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { SessionInscService } from '../../../../core/services/session-insc.service';
+
 import { FormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-module-tenant',
@@ -52,13 +55,13 @@ export class ListeModuleTenantComponent implements OnInit {
   showSessionFormModal = false;
 
   // Formulaire de session
-  sessionForm = {
+  /*sessionForm = {
     titre: '',
     dateDebut: '',
     dateFin: '',
     dureeMax: null,
     nbreQuestionTechnique: null
-  };
+  };*/
 
   sessionChoice: boolean = false;
 
@@ -78,6 +81,7 @@ export class ListeModuleTenantComponent implements OnInit {
   constructor(
     private moduleTenantService: ModuleTenantService,
     private cdr: ChangeDetectorRef,
+    private service: SessionInscService,
     private authService: AuthService
   ) {}
 
@@ -386,7 +390,7 @@ export class ListeModuleTenantComponent implements OnInit {
     this.showSessionFormModal = true;
   }
 
-  submitSession() {
+  /*submitSession() {
     const mt = this.selectedModuleForSession;
 
     if (!mt) return;
@@ -445,7 +449,7 @@ export class ListeModuleTenantComponent implements OnInit {
         this.showAlert('error', err.error || 'Erreur serveur');
       }
     });
-  }
+  }*/
 
   isDateConflict(form: any): boolean {
 
@@ -552,5 +556,93 @@ export class ListeModuleTenantComponent implements OnInit {
     });
   }
 
+// Initialisez l'objet sessionForm pour éviter les erreurs undefined
+sessionForm = {
+  titre: '',
+  dateDebut: '',
+  dateFin: '',
+  dureeMax: null as number | null,
+  nbreQuestionTechnique: null as number | null
+};
 
+// Nouvelle méthode pour l'action groupée
+onBulkAddSession() {
+  if (this.selectedMyModulesIds.size === 0) {
+    this.showAlert('warning', '⚠️ Veuillez sélectionner au moins un module.');
+    return;
+  }
+
+  // Vérifier si parmi les sélectionnés il y a des modules inactifs
+  const selectedModules = this.myModules.filter(m => this.selectedMyModulesIds.has(m.id));
+  const hasInactive = selectedModules.some(m => !m.estActif);
+
+  if (hasInactive) {
+    this.showAlert('warning', '⚠️ Certains modules sélectionnés sont inactifs. Activez-les d\'abord.');
+    return;
+  }
+
+  // Réinitialiser le formulaire
+  this.sessionForm = {
+    titre: '',
+    dateDebut: '',
+    dateFin: '',
+    dureeMax: null,
+    nbreQuestionTechnique: null
+  };
+
+  // On active les champs techniques si AU MOINS un des modules sélectionnés a "avecTest"
+  this.sessionChoice = selectedModules.some(m => m.avecTest);
+
+  this.showSessionFormModal = true;
+}
+
+submitSession() {
+  const ids = Array.from(this.selectedMyModulesIds);
+  const user = this.authService.getUser();
+
+  // 1. Validations de base
+  if (!this.sessionForm.titre || !this.sessionForm.dateDebut || !this.sessionForm.dateFin) {
+    this.showAlert('error', '❌ Veuillez remplir tous les champs obligatoires.');
+    return;
+  }
+
+  const debut = new Date(this.sessionForm.dateDebut);
+  const fin = new Date(this.sessionForm.dateFin);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (debut <= today) {
+    this.showAlert('error', "❌ La date de début doit être strictement supérieure à aujourd'hui.");
+    return;
+  }
+
+  if (fin <= debut) {
+    this.showAlert('error', '❌ La date de fin doit être après la date de début.');
+    return;
+  }
+
+  // --- CORRECTION TS2345 ---
+  // On crée une copie de l'objet pour transformer les 'null' en 'undefined'
+  // pour correspondre exactement à l'interface 'Session' attendue par le service
+  const sessionPayload = {
+    ...this.sessionForm,
+    dureeMax: this.sessionForm.dureeMax ?? undefined,
+    nbreQuestionTechnique: this.sessionForm.nbreQuestionTechnique ?? undefined
+  };
+
+  // 4. Appel au service avec l'objet nettoyé
+  this.service.addSession(ids, user.idUtilisateur, sessionPayload).subscribe({
+    next: () => {
+      this.showAlert('success', '✅ Sessions créées avec succès !');
+      this.showSessionFormModal = false;
+      this.selectedMyModulesIds.clear();
+      this.loadMyCatalogue();
+      this.cdr.detectChanges();
+    },
+    error: (err: any) => {
+      const msg = typeof err.error === 'string' ? err.error : (err.error?.message || 'Erreur lors de la création');
+      this.showAlert('error', '❌ ' + msg);
+    }
+  });
+}
 }

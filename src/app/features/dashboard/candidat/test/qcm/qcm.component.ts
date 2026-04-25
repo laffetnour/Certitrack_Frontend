@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModuleCandidatService } from '../../../../../core/services/module-candidat.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-qcm',
@@ -24,9 +26,11 @@ export class QcmComponent implements OnInit {
   scoreFinal: number | null = null;
   testTermine = false;
 
-  constructor(private service: ModuleCandidatService,private cdr: ChangeDetectorRef) {}
+  constructor(private service: ModuleCandidatService,
+    private cdr: ChangeDetectorRef,
+    private router: Router) {}
 
-  ngOnInit(): void {
+  /*ngOnInit(): void {
 
     this.epreuve = history.state.epreuve || JSON.parse(localStorage.getItem('epreuve') || 'null');
 
@@ -34,6 +38,8 @@ export class QcmComponent implements OnInit {
       alert("Session expirée");
       return;
     }
+
+
 
     localStorage.setItem('epreuve', JSON.stringify(this.epreuve));
 
@@ -50,6 +56,33 @@ export class QcmComponent implements OnInit {
 
     this.timeLeft = this.epreuve.duree * 60;
 
+    this.startTimer();
+  }*/
+
+ngOnInit(): void {
+    // Récupération de l'épreuve (soit via le state, soit via le storage)
+    this.epreuve = history.state.epreuve || JSON.parse(localStorage.getItem('epreuve') || 'null');
+
+    if (!this.epreuve) {
+          alert("Session expirée");
+          this.router.navigate(['/candidat/mes-modules']); // 3. Maintenant cela fonctionnera
+          return;
+        }
+
+    // Sauvegarde pour éviter de perdre le test au rafraîchissement
+    localStorage.setItem('epreuve', JSON.stringify(this.epreuve));
+
+    // Tri des questions : Techniques d'abord, puis Comportementales
+    this.questions = [...this.epreuve.questions].sort((a, b) => {
+      const natureA = a.question.nature;
+      const natureB = b.question.nature;
+      if (natureA === 'technique' && natureB !== 'technique') return -1;
+      if (natureA !== 'technique' && natureB === 'technique') return 1;
+      return 0;
+    });
+
+    // Initialisation du timer (duree est en minutes dans le backend)
+    this.timeLeft = this.epreuve.duree * 60;
     this.startTimer();
   }
 

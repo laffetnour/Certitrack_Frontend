@@ -71,8 +71,11 @@ export const routes: Routes = [
       { path: 'modules', component: ModulesCandidatComponent },
       { path: 'mes-inscriptions', component: MesInscriptionsComponent },
       //{ path: 'reservations', component: ReservationComponent },
-      // ✅ NOUVELLE ROUTE
-      { path: 'test/:sessionId', component: DemarrerTestComponent },
+
+      {
+        path: 'demarrer-test/:sessionId/:moduleTenantId',
+        component: DemarrerTestComponent
+      },
       { path: 'qcm', component: QcmComponent },
 
       { path: 'parametre', component: ParametreComponent },
