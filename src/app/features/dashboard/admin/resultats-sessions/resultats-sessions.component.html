@@ -1,35 +1,123 @@
+
+
 <div class="admin-container">
 
   <div class="admin-header">
-    <h1>Résultats des Sessions d’Inscription</h1>
-
+    <h1>Résultats des Sessions</h1>
+    <!--<button
+      class="btn-export"
+      (click)="exportExcel()"
+      [disabled]="!selectedSessionId">
+      📥 Export Excel
+    </button>-->
+    <button class="btn btn-success d-flex align-items-center gap-2" (click)="exportExcel()"
+            [disabled]="!selectedSessionId">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM3 9h10v1h-10V9zM3 11h10v1h-10v-1zM3 13h10v1h-10v-1zM3 7h10v1h-10V7z"/>
+      </svg>
+      Exporter Excel
+    </button>
 
   </div>
+    <!-- 🔹 FILTRES -->
+   <!-- <div class="filter-section d-flex gap-3 align-items-center">
 
-  <div class="table-container">
 
-    <!-- 🔹 SELECT SESSION -->
-    <div class="filter-select-container">
-      <select class="status-filter-select" (change)="onSessionChange($event)">
-        <option value="">-- Sélectionner une session clôturée --</option>
+      <select (change)="onSessionChange($event)" class="form-control"
+              style="width: 250px;">
+        <option value="">-- Toutes les sessions --</option>
         <option *ngFor="let s of sessions" [value]="s.id">
-          {{ s.titre }}
+          {{ s.titre }} - {{ s.moduleTenant?.module?.nom }}
         </option>
       </select>
 
-    </div>
 
-    <!-- 🔹 TABLE RESULTATS -->
-    <table class="modern-table" *ngIf="resultats?.length">
+      <input
+        type="date"
+        [(ngModel)]="dateDebut"
+        (change)="loadResultats()" class="form-control"
+        style="width: 250px;"
+      />
+
+
+      <input
+        type="date"
+        [(ngModel)]="dateFin"
+        (change)="loadResultats()" class="form-control"
+        style="width: 250px;"
+      />
+
+
+      <button class="btn-cancel" (click)="loadResultats()">Filtrer</button>
+
+  </div>-->
+  <!-- 🔹 FILTRES -->
+  <div class="filter-section d-flex gap-3 align-items-center">
+
+    <!-- SESSION -->
+    <select (change)="onSessionChange($event)" class="form-control"
+            style="width: 250px;">
+      <option value="">-- Toutes les sessions --</option>
+      <option *ngFor="let s of sessions" [value]="s.id">
+        {{ s.titre }} - {{ s.moduleTenant?.module?.nom }}
+      </option>
+    </select>
+
+    <!-- DATE DEBUT -->
+    <input
+      type="date"
+      [(ngModel)]="dateDebut"
+
+      class="form-control"
+      style="width: 250px;"
+      placeholder="Date début"
+    />
+
+    <!-- DATE FIN -->
+    <input
+      type="date"
+      [(ngModel)]="dateFin"
+
+      class="form-control"
+      style="width: 250px;"
+      placeholder="Date fin"
+    />
+
+
+
+    <!-- BOUTON -->
+    <button class="btn-cancel" (click)="loadResultats()">
+      Filtrer
+    </button>
+
+  </div>
+
+  <br>
+
+  <!-- 🔹 LOADING -->
+  <div *ngIf="loading">Chargement...</div>
+
+  <!-- 🔹 TABLE -->
+  <div class="table-container" *ngIf="!loading && resultats.length">
+
+    <table class="modern-table">
 
       <thead>
       <tr>
         <th>Nom</th>
         <th>Prénom</th>
-        <th>Email</th>
         <th>Date naissance</th>
+        <th>Âge</th>
+        <th>Email</th>
+        <th>Identifiant</th>
+        <th>Spécialité</th>
+        <th>Module</th>
+        <th>Session</th>
+        <th>Date début session</th>
+        <th>Date fin session</th>
+        <th>Date inscription</th>
+        <th>Date passage épreuve</th>
 
-        <th *ngIf="avecTest">Âge</th>
         <th *ngIf="avecTest">Durée</th>
         <th *ngIf="avecTest">Score</th>
         <th *ngIf="avecTest">Status</th>
@@ -41,10 +129,28 @@
 
         <td><strong>{{ r.nom }}</strong></td>
         <td>{{ r.prenom }}</td>
-        <td>{{ r.email }}</td>
-        <td>{{ r.dateNaissance | date:'dd/MM/yyyy' }}</td>
 
-        <td *ngIf="avecTest">{{ r.age }}</td>
+        <td>{{ r.dateNaissance | date:'dd/MM/yyyy' }}</td>
+        <td>{{ r.age }}</td>
+        <td>{{ r.email }}</td>
+        <td>{{ r.identifiantSpecifique }}</td>
+        <td>{{ r.specialite }}</td>
+
+        <td>{{ r.module }}</td>
+        <td>{{ r.session }}</td>
+        <td>{{ r.dateDebutSession | date:'dd/MM/yyyy' }}</td>
+        <td>{{ r.dateFinSession | date:'dd/MM/yyyy' }}</td>
+        <td>{{ r.dateInscription | date:'dd/MM/yyyy HH:mm' }}</td>
+
+        <td>
+  <span *ngIf="r.datePassageEpreuve; else notPassed">
+    {{ r.datePassageEpreuve | date:'dd/MM/yyyy HH:mm' }}
+  </span>
+
+          <ng-template #notPassed>
+            -
+          </ng-template>
+        </td>
 
         <td *ngIf="avecTest">
           {{ formatDuree(r.duree) }}
@@ -55,11 +161,11 @@
         </td>
 
         <td *ngIf="avecTest">
-          <span class="status-badge"
-                [class.active]="r.status === 'PASSED'"
-                [class.inactive]="r.status === 'FAILED'">
-            {{ r.status }}
-          </span>
+            <span class="status-badge"
+                  [class.active]="r.status === 'PASSED'"
+                  [class.inactive]="r.status === 'FAILED'">
+              {{ r.status || '-' }}
+            </span>
         </td>
 
       </tr>
@@ -68,4 +174,10 @@
     </table>
 
   </div>
+
+  <!-- 🔹 VIDE -->
+  <div *ngIf="!loading && resultats.length === 0">
+    Aucun résultat trouvé
+  </div>
+
 </div>

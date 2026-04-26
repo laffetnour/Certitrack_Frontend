@@ -35,7 +35,11 @@
           <i class="fas fa-chevron-down arrow" [style.transform]="isParcoursOpen ? 'rotate(180deg)' : 'none'"></i>
         </div>
         <div class="sub-menu" *ngIf="isParcoursOpen">
-          <div class="nav-item sub"><span>Import GMetrix</span></div>
+          <div class="nav-item sub"
+               routerLink="/dashboard/import-gmetrix"
+               routerLinkActive="active">
+            <span>Import GMetrix</span>
+          </div>
           <div class="nav-item sub"><span>Import Certiport</span></div>
         </div>
       </div>

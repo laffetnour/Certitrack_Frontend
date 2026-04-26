@@ -42,6 +42,7 @@ import { MesInscriptionsComponent } from './features/dashboard/candidat/modules/
 import { DemarrerTestComponent } from './features/dashboard/candidat/test/demarrer-test/demarrer-test.component';
 import { QcmComponent } from './features/dashboard/candidat/test/qcm/qcm.component';
 import { ResultatsSessionsComponent } from './features/dashboard/admin/resultats-sessions/resultats-sessions.component';
+import { ImportGmetrixComponent } from './features/dashboard/admin/import-gmetrix/import-gmetrix.component';
 
 
 
@@ -91,7 +92,8 @@ export const routes: Routes = [
 
       { path: 'candidats', component: AdminComponent },
        { path: 'parametre', component: ParametreComponent },
-      { path: 'resultats-sessions', component: ResultatsSessionsComponent }
+      { path: 'resultats-sessions', component: ResultatsSessionsComponent },
+      { path: 'import-gmetrix', component: ImportGmetrixComponent }
 
     ]
   },

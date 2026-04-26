@@ -1,0 +1,131 @@
+<div class="admin-container">
+
+  <!-- HEADER -->
+  <div class="admin-header">
+    <h1>Résultats GMetrix</h1>
+
+    <div class="header-actions">
+      <input type="file" (change)="onFileSelected($event); upload()" hidden #fileInput />
+      <button class="btn btn-success" (click)="fileInput.click()">
+        Import Excel
+      </button>
+    </div>
+  </div>
+
+  <!-- 🔎 FILTRE SESSION (SEUL) -->
+  <div class="filter-section d-flex gap-3 align-items-center">
+
+    <select [(ngModel)]="sessionId"
+            (change)="loadScores()"
+            class="form-control"
+            style="width: 300px;">
+
+      <option [ngValue]="null">-- Toutes les sessions --</option>
+
+      <option *ngFor="let s of sessions" [ngValue]="s.id">
+        {{ s.titre }}
+      </option>
+
+    </select>
+
+
+  </div>
+
+  <br>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="loading-box">
+    Chargement...
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-container" *ngIf="!loading && scores.length">
+
+    <table class="modern-table">
+      <thead>
+      <tr>
+        <th>Candidat</th>
+        <th>Session</th>
+        <th>Module</th>
+        <th>Test</th>
+        <th>Score</th>
+        <th>%</th>
+        <th>Mode</th>
+        <th>Date</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let s of scores">
+
+        <td>
+          <strong>{{ s.candidatNom }}</strong>
+          {{ s.candidatPrenom }}
+        </td>
+
+        <td>
+    <span class="badge-session">
+      {{ s.session }}
+    </span>
+        </td>
+
+        <td>{{ s.module }}</td>
+
+        <td>{{ s.test }}</td>
+
+        <td>
+          <span class="badge-score">{{ s.score }}</span>
+        </td>
+
+        <td>{{ s.percent }}%</td>
+
+        <td>
+          <span class="badge-mode">{{ s.mode }}</span>
+        </td>
+
+        <td>{{ s.date | date:'dd/MM/yyyy HH:mm' }}</td>
+
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <!-- EMPTY -->
+  <div *ngIf="!loading && scores.length === 0" class="empty-box">
+    Aucun score trouvé
+  </div>
+
+
+  <!-- 🔥 MODAL IMPORT RESULT -->
+  <div class="modal-backdrop" *ngIf="showModal">
+    <div class="modal-box">
+
+      <h2>Résultat import GMetrix</h2>
+
+      <p><b>Total :</b> {{ importResult?.total }}</p>
+      <p><b>Succès :</b> {{ importResult?.success }}</p>
+      <p><b>Erreurs :</b> {{ importResult?.errors }}</p>
+
+      <hr>
+
+      <div *ngIf="importResult?.errorLines?.length">
+
+        <h4>Erreurs :</h4>
+
+        <ul>
+          <li *ngFor="let err of importResult.errorLines">
+            {{ err }}
+          </li>
+        </ul>
+
+      </div>
+
+      <button class="btn btn-primary" (click)="showModal = false">
+        Fermer
+      </button>
+
+    </div>
+  </div>
+
+</div>

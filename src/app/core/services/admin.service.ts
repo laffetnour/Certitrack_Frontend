@@ -77,7 +77,30 @@ export class AdminService {
     return this.http.get(`${this.baseUrl}/sessions/cloturees`, this.getAuthHeaders());
   }
 
-  getResultatsSession(id: number) {
-    return this.http.get(`${this.baseUrl}/sessions/${id}/resultats`, this.getAuthHeaders());
+  getResultats(filters: any) {
+    let params: any = {};
+
+    if (filters.sessionId) params.sessionId = filters.sessionId;
+    if (filters.dateDebut) params.dateDebut = filters.dateDebut;
+    if (filters.dateFin) params.dateFin = filters.dateFin;
+
+    return this.http.get(`${this.baseUrl}/resultats`, {
+      ...this.getAuthHeaders(),
+      params
+    });
+  }
+
+  exportResultats(filters: any) {
+    let params: any = {};
+
+    if (filters.sessionId) params.sessionId = filters.sessionId;
+    if (filters.dateDebut) params.dateDebut = filters.dateDebut;
+    if (filters.dateFin) params.dateFin = filters.dateFin;
+
+    return this.http.get(`${this.baseUrl}/resultats/export`, {
+      ...this.getAuthHeaders(),
+      params,
+      responseType: 'blob'
+    });
   }
 }
