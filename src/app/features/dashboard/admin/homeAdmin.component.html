@@ -62,6 +62,11 @@
         <input type="text" placeholder="Recherche....">
       </div>
 
+        <div class="logo-wrapper" *ngIf="tenantLogo">
+          <img [src]="tenantLogo" [alt]="currentUser?.tenantLogo" class="tenant-logo">
+        </div>
+
+
       <div class="user-actions">
         <div class="notification-icon">
           <i class="fas fa-bell"></i>
@@ -77,9 +82,9 @@
 
             <i *ngIf="!currentUser?.photo" class="fas fa-user"></i>
           </div>
-          <i class="fas fa-chevron-down arrow-user"></i>
         </div>
       </div>
+
     </header>
 
     <main class="content-area">

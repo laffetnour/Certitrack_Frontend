@@ -13,7 +13,7 @@
   --input-bg: #ffffff;
 
   /* Dimensions & Effets */
-  --sidebar-width: 260px;
+  --sidebar-width: 280px;
   --radius-lg: 12px;
   --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
@@ -351,7 +351,7 @@
 }
 
 .modern-table td {
-  padding: 14px;
+  padding: 10px;
   border-bottom: 1px solid var(--border-color);
   color: var(--text-main);
 }
@@ -1123,7 +1123,7 @@ form::-webkit-scrollbar-thumb:hover {
 .table-container {
   background: var(--bg-card);
   border-radius: 12px;
-  padding: 5px;
+  padding: 3px;
   width: 100%; /* Changé de max-content à 100% */
   box-sizing: border-box;
   overflow-x: auto; /* Permet le scroll si le tableau est trop grand sans casser le layout */
@@ -1286,3 +1286,22 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
+
+
+.logo-wrapper:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.tenant-logo {
+  margin-top:15%;
+  max-height: 55px;
+  max-width: 140px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+.logo-wrapper:hover .tenant-logo {
+  transform: scale(1.05);
+}

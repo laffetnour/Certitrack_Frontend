@@ -66,8 +66,10 @@ export class AdminComponent implements OnInit {
           this.idDigits = new Array(this.tenantConfig.longueurIdentifiant || 8).fill('');
           this.applyAdminValidators();
         }
+    this.loadCandidats();
     this.loadCandidatsParSpecialite();
     this.loadSpecialites();
+
 
   }
 
@@ -88,7 +90,6 @@ export class AdminComponent implements OnInit {
     this.adminService.getCandidats().subscribe({
       next: (data) => {
         this.candidats = data ;
-        console.log(data);
         this.loading = false;
         this.cdr.detectChanges();
 

@@ -4,6 +4,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { bootstrapApplication } from '@angular/platform-browser';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -96,9 +97,11 @@ onModuleToggle(moduleId: number) {
     if (!this.validateDates()) {
         return;
       }
+    const etatCalcule = this.calculerEtatAutomatique(this.sessionForm);
     this.sessionForm.etat = this.calculerEtatAutomatique(this.sessionForm);
     const payload = {
       ...this.sessionForm,
+      etat: etatCalcule,
       modulesAutorises: this.sessionForm.modulesAutorises.map((id: number) => {
         const fullModule = this.modulesDisponibles.find(m => m.id === id);
         return {
@@ -111,6 +114,8 @@ onModuleToggle(moduleId: number) {
         };
       })
     };
+
+    console.log(payload);
 
     if (!payload.dateDebutReservation) delete payload.dateDebutReservation;
     if (!payload.dateFinReservation) delete payload.dateFinReservation;
@@ -127,7 +132,12 @@ onModuleToggle(moduleId: number) {
       },
       error: (err) => {
         console.error("Détail erreur :", err);
-        alert("Erreur : " + (err.error?.message || "Vérifiez les données"));
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: err.error?.message || 'Vérifiez les données',
+          confirmButtonColor: '#3085d6'
+        });
       }
     });
   }
@@ -147,7 +157,13 @@ onModuleToggle(moduleId: number) {
 
   onDelete(session: any) {
     if (!this.canDelete(session)) {
-      alert("Suppression impossible : Seules les sessions 'PLANIFIEE' peuvent être supprimées.");
+
+     Swal.fire({
+                 icon: 'error',
+                 title: 'Suppression impossible : ',
+                 text: ' Seules les sessions PLANIFIEE peuvent être supprimées.',
+                 confirmButtonColor: '#3085d6'
+               });
       return;
     }
 
@@ -157,7 +173,12 @@ onModuleToggle(moduleId: number) {
           this.loadSessions();
         },
         error: (err) => {
-          alert("Erreur lors de la suppression : " + (err.error || "Problème serveur"));
+          Swal.fire({
+            icon: 'error',
+            title: 'Erreur lors de la suppression : ',
+            text: err.error?.message || 'Problème serveur',
+            confirmButtonColor: '#3085d6'
+          });
         }
       });
     }
@@ -195,25 +216,53 @@ canDelete(session: any): boolean {
     const examen = new Date(this.sessionForm.dateHeureExamen);
 
     if (!this.sessionForm.dateDebutReservation || !this.sessionForm.dateFinReservation || !this.sessionForm.dateHeureExamen) {
-      alert("Veuillez remplir toutes les dates.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text:'Veuillez remplir toutes les dates.',
+        confirmButtonColor: '#3085d6'
+      });
       return false;
     }
 
     if (!this.sessionForm.id && debut < maintenant) {
-      alert("La date de début de réservation doit être dans le futur.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: 'La date de début de réservation doit être dans le futur.',
+        confirmButtonColor: '#3085d6'
+      });
       return false;
     }
 
     if (fin <= debut) {
-      alert("La date de fin de réservation doit être strictement supérieure à la date de début.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: 'La date de fin de réservation doit être strictement supérieure à la date de début.',
+        confirmButtonColor: '#3085d6'
+      });
       return false;
     }
 
     if (examen <= fin) {
-      alert("La date de l'examen doit être postérieure à la clôture des réservations.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text:'La date de l examen doit être postérieure à la clôture des réservations.',
+        confirmButtonColor: '#3085d6'
+      });
       return false;
     }
 
     return true;
+  }
+
+  selectedSession: any = null;
+
+  viewDetails(session: any) {
+    this.selectedSession = session;
+    console.log(session);
+    this.selectedSession.etatCurrent = this.calculerEtatAutomatique(session);
   }
 }

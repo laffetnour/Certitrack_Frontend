@@ -44,6 +44,7 @@
 }
 
 .table tbody td {
+margin-top: 15%;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid #f1f5f9;
   vertical-align: middle;
@@ -213,3 +214,66 @@
   background-color: var(--primary-color) !important;
   border-color: var(--primary-color) !important;
 }
+
+.custom-modal {
+    border-radius: 25px;
+    border: none;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+}
+
+.info-box {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+.info-box small {
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 800;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.info-box p {
+    margin: 0;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.badge-modern {
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Couleurs des badges */
+.PLANIFIEE { background: #e2e8f0; color: #475569; }
+.EN_COURS { background: #dcfce7; color: #15803d; }
+.CLOTUREE { background: #fee2e2; color: #b91c1c; }
+
+.module-pill {
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 13px;
+    border: 1px solid #dbeafe;
+}
+
+.actions {
+display: flex; gap: 8px;
+}
+
+.actions button {
+  width: 40px; height: 40px; border-radius: 6px; border: none;
+
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: 0.2s;
+}
+.btn-view { background: rgba(2, 132, 199, 0.15); color: #0284c7; }
+.btn-edit { background: rgba(217, 119, 6, 0.15); color: #d97706; }
+.btn-delete { background: rgba(224, 36, 36, 0.15); color: #dc2626; }

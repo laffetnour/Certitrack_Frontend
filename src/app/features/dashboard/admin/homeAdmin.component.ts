@@ -39,7 +39,7 @@ export class homeAdminComponent implements OnInit {
   isParcoursOpen = false;
   totalCandidats: number = 0;
   loading: boolean = false;
-
+  tenantLogo: string | null = null;
  public barChartType: ChartType = 'bar';
 
 
@@ -153,7 +153,9 @@ export class homeAdminComponent implements OnInit {
 
     this.currentUser = this.authService.getUser();
 
+
     if (this.currentUser) {
+      this.tenantLogo = this.currentUser?.tenantLogo;
 
       this.loadStats();
       this.loadChartsData();
