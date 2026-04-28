@@ -2,9 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface StatData {
+  label: string;
+  value: number;
+}
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class AdminService {
   private baseUrl = 'http://localhost:8080/api/admin';
 
@@ -19,6 +25,14 @@ export class AdminService {
         'Content-Type': 'application/json'
       })
     };
+  }
+
+/*getStatsModules(idEtab: number): Observable<StatData[]> {
+    return this.http.get<StatData[]>(`${this.baseUrl}/stats/modules/${idEtab}`, this.getAuthHeaders());
+  }*/
+
+  getStatsSpecialites(idEtab: number): Observable<StatData[]> {
+    return this.http.get<StatData[]>(`${this.baseUrl}/stats/specialites/${idEtab}`, this.getAuthHeaders());
   }
 
 

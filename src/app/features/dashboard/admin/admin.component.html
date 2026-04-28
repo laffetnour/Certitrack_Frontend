@@ -100,12 +100,10 @@
             <th>Nom</th>
             <th>Prénom</th>
             <th>Email</th>
-            <th>Établissement</th>
             <th>Spécialité</th>
             <th *ngIf="tenantConfig && tenantConfig.typeIdentifiant !== 'EMAIL'">
               {{ tenantConfig.labelIdentifiant }}
             </th>
-            <th>Date Naissance</th>
             <th>Statut</th>
             <th>Actions</th>
           </tr>
@@ -126,14 +124,12 @@
             <td>{{ candidat.nom }}</td>
             <td>{{ candidat.prenom }}</td>
             <td>{{ candidat.username }}</td>
-            <td>{{ candidat.nomEtablissement }}</td>
             <td>
               <span class="specialite-badge">{{ candidat.specialite?.nom }}</span>
             </td>
             <td *ngIf="tenantConfig && tenantConfig.typeIdentifiant !== 'EMAIL'">
               <span class="id-badge">{{ candidat.identifiantSpecifique|| '---' }}</span>
             </td>
-            <td>{{ candidat.dateNais | date:'yyyy-MM-dd' }}</td>
 
             <td>
             <span

@@ -1,14 +1,8 @@
-/*import { Routes } from '@angular/router';
-
-export const routes: Routes = [];
-*/
 
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
 import { DirecteurLayoutComponent } from './features/dashboard/directeur/layout/directeur-layout.component';
-
-
 import { AdminComponent } from './features/dashboard/admin/admin.component';
 import { homeAdminComponent } from './features/dashboard/admin/homeAdmin.component';
 import { SuperAdminComponent } from './features/dashboard/SuperAdmin/super-admin.component';
@@ -25,7 +19,6 @@ import { CategorieModuleComponent } from './features/dashboard/SuperAdmin/catego
 import { ModuleComponent } from './features/dashboard/SuperAdmin/Module/module.component';
 import { EtablissementsComponent } from './features/dashboard/adminTenant/etablissements/etablissements.component';
 import {QuestionComponent} from './features/dashboard/SuperAdmin/Question/question.component'
-//import {CatQuestionComponent} from './features/dashboard/SuperAdmin/categorieQuestion/catQuestion.component'
 import {ParametreComponent} from './features/parametre/parametre.component'
 import {ModuleTenantComponent} from './features/dashboard/adminTenant/ListeModuleTenant/ModuleTenant.component'
 import {ListeModuleTenantComponent} from './features/dashboard/adminTenant/ListeModuleTenant/ListeModuleTenant.component'
@@ -43,6 +36,7 @@ import { DemarrerTestComponent } from './features/dashboard/candidat/test/demarr
 import { QcmComponent } from './features/dashboard/candidat/test/qcm/qcm.component';
 import { ResultatsSessionsComponent } from './features/dashboard/admin/resultats-sessions/resultats-sessions.component';
 import { ImportGmetrixComponent } from './features/dashboard/admin/import-gmetrix/import-gmetrix.component';
+import { SessionExamenComponent } from './features/dashboard/admin/SessionExamen/session-examen.component';
 
 
 
@@ -85,7 +79,7 @@ export const routes: Routes = [
   },
 
   {
-    path: 'dashboard',
+    path: 'admin',
     component: homeAdminComponent,
     canActivate: [authGuard],
     children: [
@@ -93,7 +87,8 @@ export const routes: Routes = [
       { path: 'candidats', component: AdminComponent },
        { path: 'parametre', component: ParametreComponent },
       { path: 'resultats-sessions', component: ResultatsSessionsComponent },
-      { path: 'import-gmetrix', component: ImportGmetrixComponent }
+      { path: 'import-gmetrix', component: ImportGmetrixComponent },
+       { path: 'sessionsExamen', component: SessionExamenComponent }
 
     ]
   },

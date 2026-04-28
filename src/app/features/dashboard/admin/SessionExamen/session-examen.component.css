@@ -1,0 +1,215 @@
+
+
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+:root {
+  --primary-color: #ea5357;
+  --primary-dark: #ea5357;
+  --secondary-color: #ea5357;
+  --success-color: #ea5357;
+  --bg-body: #ea5357;
+  --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --input-focus: rgba(79, 70, 229, 0.1);
+}
+
+.container {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #1e293b;
+}
+
+.title {
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.025em;
+}
+
+.card {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table thead {
+  background-color: #f1f5f9;
+}
+
+.table thead th {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #475569;
+  border: none;
+  padding: 1rem 1.5rem;
+}
+
+.table tbody td {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.badge {
+  padding: 0.5em 0.8em;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+.status-planifie { background-color: #e0e7ff; color: #4338ca; }
+.status-encours { background-color: #fef3c7; color: #92400e; }
+.status-cloture { background-color: #f1f5f9; color: #475569; }
+
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  transition: all 0.2s;
+}
+
+
+
+
+.modal-content {
+  margin-left: 20%;
+  border-radius: 24px;
+  border: none;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.modal-header {
+  background: transparent;
+  padding: 2rem 2rem 1rem 2rem;
+  border: none;
+}
+
+.modal-title {
+  font-weight: 800;
+  color: #1e293b;
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+}
+
+.modal-body {
+  padding: 0 2rem 2rem 2rem;
+}
+
+.row.g-3 > div {
+  margin-bottom: 0.5rem;
+}
+
+.form-label {
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #303D49;
+  margin-bottom: 0.6rem;
+  display: block;
+}
+
+.form-control, .form-select {
+  background-color: #f8fafc;
+  border: 2px solid #f1f5f9;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  font-weight: 500;
+  color: #334155;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: #ffffff;
+  border-color: #ea5357;
+  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.1);
+  transform: translateY(-2px);
+}
+
+.input-group-text {
+  background-color: #f8fafc;
+  border: 2px solid #f1f5f9;
+  border-right: none;
+  border-radius: 12px 0 0 12px;
+  color: #ea5357;
+}
+
+.input-group .form-control {
+  border-radius: 0 12px 12px 0;
+}
+
+.module-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: #f1f5f9;
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: none;
+}
+
+.form-check {
+  display: inline-flex;
+  align-items: center;
+  background: white;
+  border: 2px solid transparent;
+  padding: 8px 16px !important;
+  margin: 0 !important;
+  border-radius: 50px;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.form-check:has(.form-check-input:checked) {
+  border-color: #4f46e5;
+  background-color: #eef2ff;
+}
+
+.form-check-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-left: 8px;
+  color: #475569;
+}
+
+.form-check-input {
+  margin: 0;
+  float: none;
+}
+
+.modal-footer {
+  border: none;
+  padding: 1.5rem 2rem 2rem 2rem;
+  justify-content: space-between;
+}
+
+.btn-light {
+  background: #f1f5f9;
+  border: none;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.btn-primary {
+  background-color: #ea5357 !important; /* Utilise ton rouge #ea5357 */
+  border-color: #ea5357 !important;
+  padding: 0.8rem 2rem;
+  border-radius: 12px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px 0 rgba(234, 83, 87, 0.4);
+  color: white !important;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: #d4464a !important; /* Un rouge légèrement plus sombre */
+  border-color: #d4464a !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px 0 rgba(234, 83, 87, 0.5);
+}
+
+
+.form-check-input:checked {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
