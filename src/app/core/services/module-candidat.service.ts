@@ -85,4 +85,11 @@ startTest(sessionId: number, moduleTenantId: number): Observable<any> {
       { headers: this.getAuthHeaders() }
     );
   }
+
+  getInscriptionsGmetrix(idCandidat: number): Observable<any> {
+    return this.http.get<any>(
+      `http://localhost:8080/api/candidat/modules/inscriptions/candidat/${idCandidat}/inscriptions-gmetrix`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
 }

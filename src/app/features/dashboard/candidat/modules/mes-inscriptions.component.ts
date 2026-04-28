@@ -18,6 +18,7 @@ export class MesInscriptionsComponent implements OnInit {
   inscriptionsIds: number[] = [];
   loading: boolean = true;
   epreuves: any[] = [];
+  inscriptionsGmetrix: any[] = [];
 
   constructor(private service: ModuleCandidatService,
     private cdr: ChangeDetectorRef,private router: Router,
@@ -31,6 +32,7 @@ export class MesInscriptionsComponent implements OnInit {
       if (user && user?.idUtilisateur) {
         this.loadInscriptions();
         this.loadEpreuves();
+        this.loadGmetrixDecision(user.idUtilisateur); // 🔥 AJOUT
       } else {
         this.loading = false;
         console.warn("Utilisateur non connecté ou ID manquant");
@@ -95,7 +97,7 @@ allerAuTest(item: any) {
   }
 
 
-  getEpreuve(sessionId: any) {
+  /*getEpreuve(sessionId: any) {
     if (!this.epreuves || this.epreuves.length === 0 || !sessionId) {
       return null;
     }
@@ -108,6 +110,17 @@ allerAuTest(item: any) {
     }
 
     return epreuveTrouvee;
+  }*/
+
+  getEpreuve(sessionId: any, moduleTenantId: any) {
+    if (!this.epreuves || this.epreuves.length === 0) {
+      return null;
+    }
+
+    return this.epreuves.find(e =>
+      e.sessionId == sessionId &&
+      e.moduleTenantId == moduleTenantId
+    );
   }
 
   // ... dans ta classe MesInscriptionsComponent ...
@@ -121,5 +134,28 @@ allerAuTest(item: any) {
 // Getter pour le reste des inscriptions (toutes sauf les 3 récentes)
   get autresInscriptions(): any[] {
     return [...this.mesModulesInscrits].reverse().slice(3);
+  }
+
+  loadGmetrixDecision(id: number) {
+    this.service.getInscriptionsGmetrix(id).subscribe({
+      next: (res) => {
+        this.inscriptionsGmetrix = res;
+        console.log("📊 GMetrix Decision =", res);
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  getDecision(item: any) {
+    if (!this.inscriptionsGmetrix || this.inscriptionsGmetrix.length === 0) return null;
+
+    // On cherche par l'ID du module tenant qui est présent dans les deux objets
+    return this.inscriptionsGmetrix.find(x => x.moduleTenantId === item.idModuleTenant);
+  }
+
+  hasGmetrix(item: any): boolean {
+    const gm = this.getDecision(item);
+    return gm?.scoreGmetrix != null;
   }
 }

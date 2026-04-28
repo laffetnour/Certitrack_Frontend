@@ -16,28 +16,101 @@
             <p>Inscrit le : {{ item.dateInscription | date:'dd/MM/yyyy' }}</p>
           </div>
 
+
           <div class="action-zone">
+
+            <!-- 🔹 AVEC TEST -->
             <div *ngIf="item.avecTest">
-              <div *ngIf="getEpreuve(item.id) as ep; else boutonRecent">
+
+              <div *ngIf="getEpreuve(item.sessionIdValide, item.idModuleTenant) as ep; else boutonRecent">
+
                 <div class="status-mini">
-                  <span class="text-passed"><i class="fas fa-check-circle"></i> Terminé: </span>
-                  <small class="date-mini"> Le {{ ep.dhEpreuve | date:'dd/MM' }}</small>
+                  <span class="text-passed">
+                    <i class="fas fa-check-circle"></i> Test passé
+                  </span>
+
+                  <!--<small class="date-mini">
+                    📅 Inscrit le : {{ item.dateInscription | date:'dd/MM/yyyy' }}
+                  </small>-->
+
+                  <small class="date-mini">
+                    le : {{ ep.dhEpreuve | date:'dd/MM/yyyy' }}
+                  </small>
                 </div>
+
               </div>
+
               <ng-template #boutonRecent>
+                <div class="status-mini">
+                  <small>
+                    📅 Inscrit le : {{ item.dateInscription | date:'dd/MM/yyyy' }}
+                  </small>
+                </div>
+                <br>
+
                 <button class="btn-start-recent" (click)="allerAuTest(item)">
                   Lancer <i class="fas fa-play"></i>
                 </button>
               </ng-template>
+
             </div>
 
+            <!-- 🔹 SANS TEST -->
             <div *ngIf="!item.avecTest">
-               <span class="status-confirmed">
-                 <i class="fas fa-lock"></i> Confirmée
-               </span>
+              <span class="status-confirmed">
+                <i class="fas fa-lock"></i> Confirmée
+              </span>
+
+              <br>
+
+              <!--<small>
+                📅 Inscrit le : {{ item.dateInscription | date:'dd/MM/yyyy' }}
+              </small>-->
             </div>
+
           </div>
+
+         </div>
+
+
+        <!--<div class="gmetrix-box" *ngIf="getDecision(item) as gm">-->
+        <div class="gmetrix-box"
+             *ngIf="hasGmetrix(item) && getDecision(item) as gm">
+
+          <div class="gmetrix-header">
+            <span class="gmetrix-title">GMetrix</span>
+          </div>
+
+          <div class="gmetrix-body">
+
+            <div class="gmetrix-line">
+              <span>Score</span>
+              <strong>{{ gm.scoreGmetrix ?? 'N/A' }} %</strong>
+            </div>
+
+            <div class="gmetrix-line">
+              <span>Seuil</span>
+              <strong>{{ gm.seuilScore }} %</strong>
+            </div>
+
+            <div class="gmetrix-status"
+                 [class.ok]="gm.peutReserverExamen"
+                 [class.fail]="!gm.peutReserverExamen">
+
+              <i class="fas"
+                 [ngClass]="gm.peutReserverExamen ? 'fa-check-circle' : 'fa-times-circle'">
+              </i>
+
+              {{ gm.peutReserverExamen ? 'Eligible examen final' : 'Non éligible' }}
+            </div>
+
+          </div>
+
         </div>
+
+
+
+
       </div>
     </div>
     <hr class="section-divider">
@@ -52,30 +125,133 @@
         <p class="category">{{ item.module?.nomCategorie }}</p>
       </div>
 
+
+
       <div class="card-footer">
+
+        <!-- 🔹 AVEC TEST -->
         <div *ngIf="item.avecTest">
-          <div *ngIf="getEpreuve(item.id) as ep; else boutonDemarrer">
+
+          <div *ngIf="getEpreuve(item.sessionIdValide, item.idModuleTenant) as ep; else boutonDemarrer">
+
             <div class="status-container" style="text-align: center; padding: 5px;">
-              <span class="passed" style="color: #28a745; font-weight: bold; display: block;">
+
+              <span class="passed" style="color: #28a745; font-weight: bold;">
                 <i class="fas fa-check-circle"></i> Test passé
               </span>
-              <small class="test-date" style="color: #666;">
-                Le {{ ep.dhEpreuve | date:'dd/MM/yyyy HH:mm' }}
+
+              <small class="test-date" style="color: #666; display:block;">
+                📅 Inscrit le : {{ item.dateInscription | date:'dd/MM/yyyy' }}
               </small>
+
+              <small class="test-date" style="color: #666;">
+                Test le : {{ ep.dhEpreuve | date:'dd/MM/yyyy HH:mm' }}
+              </small>
+
             </div>
+
           </div>
 
           <ng-template #boutonDemarrer>
+
+            <div style="text-align:center; margin-bottom:8px;">
+              <small>
+                📅 Inscrit le : {{ item.dateInscription | date:'dd/MM/yyyy' }}
+              </small>
+            </div>
+
             <button (click)="allerAuTest(item)" class="btn-test">
               <i class="fas fa-play"></i> Démarrer le Test
             </button>
+
           </ng-template>
+
         </div>
 
-        <button *ngIf="!item.avecTest" class="btn-disabled" disabled>
-          <i class="fas fa-lock"></i> Inscription confirmée
-        </button>
+        <!-- 🔹 SANS TEST -->
+        <div *ngIf="!item.avecTest" style="text-align:center;">
+
+          <button class="btn-disabled" disabled>
+            <i class="fas fa-lock"></i> Inscription confirmée
+          </button>
+
+          <br>
+
+          <small style="color:#666;">
+            📅 Inscrit le : {{ item.dateInscription | date:'dd/MM/yyyy' }}
+          </small>
+
+        </div>
       </div>
+
+
+      <!--<div *ngIf="getDecision(item) as gm">
+        <div class="gmetrix-score">
+          <small>
+            Score GMetrix : {{ gm?.scoreGmetrix !== null ? gm.scoreGmetrix + ' %' : 'Non disponible' }}
+          </small>
+        </div>
+
+        <div class="gmetrix-seuil">
+          <small>
+            Seuil requis : {{ gm?.seuilScore }} %
+          </small>
+        </div>
+
+        <div *ngIf="gm?.peutReserverExamen; else bloque">
+          <button class="btn-success">
+             Réserver examen final
+          </button>
+        </div>
+
+        <ng-template #bloque>
+          <button class="btn-disabled" disabled title="Score insuffisant">
+             Réservation impossible
+          </button>
+        </ng-template>
+      </div>-->
+
+      <!--<div class="gmetrix-box" *ngIf="getDecision(item) as gm">-->
+      <div class="gmetrix-box"
+           *ngIf="hasGmetrix(item) && getDecision(item) as gm">
+
+
+        <div class="gmetrix-header">
+          <span class="gmetrix-title">GMetrix</span>
+        </div>
+
+        <div class="gmetrix-body">
+
+          <div class="gmetrix-line">
+            <span>Score</span>
+            <strong>{{ gm.scoreGmetrix ?? 'N/A' }} %</strong>
+          </div>
+
+          <div class="gmetrix-line">
+            <span>Seuil</span>
+            <strong>{{ gm.seuilScore }} %</strong>
+          </div>
+
+          <div class="gmetrix-status"
+               [class.ok]="gm.peutReserverExamen"
+               [class.fail]="!gm.peutReserverExamen">
+
+            <i class="fas"
+               [ngClass]="gm.peutReserverExamen ? 'fa-check-circle' : 'fa-times-circle'">
+            </i>
+
+            {{ gm.peutReserverExamen ? 'Eligible examen final' : 'Non éligible' }}
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+
     </div>
   </div>
+
+
 </div>

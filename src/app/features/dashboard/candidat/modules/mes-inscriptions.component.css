@@ -269,3 +269,89 @@
   background: var(--smart-red);
   border-radius: 10px;
 }
+
+
+/* ================= GMETRIX BOX ================= */
+.gmetrix-box {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 14px;
+
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+
+  transition: 0.3s ease;
+}
+
+.gmetrix-box:hover {
+  transform: translateY(-3px);
+}
+
+/* header */
+.gmetrix-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.gmetrix-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--smart-red);
+  letter-spacing: 0.5px;
+}
+
+/* body */
+.gmetrix-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* lignes */
+.gmetrix-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-main);
+}
+
+.gmetrix-line strong {
+  color: var(--text-main);
+}
+
+/* status */
+.gmetrix-status {
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* état OK */
+.gmetrix-status.ok {
+  background: rgba(46, 204, 113, 0.12);
+  color: #2ecc71;
+}
+
+/* état FAIL */
+.gmetrix-status.fail {
+  background: rgba(234, 83, 87, 0.12);
+  color: var(--smart-red);
+}
+
+body.dark .gmetrix-box {
+  background: #1e1e2f;
+  border-color: #2c2c3f;
+}
+
+body.dark .gmetrix-line {
+  color: #e5e7eb;
+}
