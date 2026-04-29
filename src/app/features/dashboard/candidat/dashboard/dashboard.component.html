@@ -1,6 +1,10 @@
-<div class="welcome-section">
+<!--<div class="welcome-section">
   <h1>Dashboard Candidat</h1>
   <p>Bienvenue {{ currentUser?.prenom }}</p>
+</div>-->
+<div class="welcome-section">
+  <h1>Tableau de bord</h1>
+  <p>Bonjour {{ currentUser?.prenom }}, voici un aperçu de votre activité</p>
 </div>
 
 <div class="stats-grid">
@@ -10,7 +14,7 @@
       <i class="fas fa-calendar"></i>
     </div>
     <div>
-      <p>Sessions disponibles</p>
+      <p>Sessions d'inscription disponibles</p>
       <h3>{{ stats.sessionsDisponibles }}</h3>
     </div>
   </div>
@@ -25,24 +29,35 @@
     </div>
   </div>
 
-  <!--<div class="stat-card">
-    <div class="stat-icon-wrapper">
-      <i class="fas fa-check-circle"></i>
+
+
+  <div class="chart-column">
+
+    <div class="stat-card white">
+
+      <div class="chart-card">
+
+        <div class="chart-header">
+          <h2 style="color:black;">Candidats GMetrix</h2>
+        </div>
+
+        <div class="chart-container">
+          <canvas baseChart
+                  [data]="circleChartData"
+                  [options]="circleChartOptions"
+                  [type]="'doughnut'">
+          </canvas>
+        </div>
+
+
+
+      </div>
+
     </div>
-    <div>
-      <p>Validées</p>
-      <h3>{{ stats.approuvees }}</h3>
-    </div>
+
   </div>
 
-  <div class="stat-card">
-    <div class="stat-icon-wrapper">
-      <i class="fas fa-clock"></i>
-    </div>
-    <div>
-      <p>En attente</p>
-      <h3>{{ stats.attente }}</h3>
-    </div>
-  </div>-->
+
+
 
 </div>

@@ -100,4 +100,19 @@ startTest(sessionId: number, moduleTenantId: number): Observable<any> {
       { headers: this.getAuthHeaders() }
     );
   }
+
+
+  getSessionsEnCours(): Observable<number> {
+    return this.http.get<number>(
+      `${this.baseUrl}/inscriptions/sessions-en-cours`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  getStatsGmetrix(id: number): Observable<any> {
+    return this.http.get(
+      `http://localhost:8080/api/candidat/stats-gmetrix/${id}`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
 }
