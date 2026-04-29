@@ -59,7 +59,22 @@
     <header class="notification-bar">
       <div class="search-container">
         <i class="fas fa-search"></i>
-        <input type="text" placeholder="Recherche....">
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (input)="onSearch()"
+          (focus)="onSearch()"
+          placeholder="Recherche ...">
+
+        <div class="search-dropdown" *ngIf="showResults && filteredResults.length > 0">
+          <div class="search-item" *ngFor="let result of filteredResults" (click)="selectResult(result.link)">
+            <i [class]="result.icon"></i>
+            <div class="result-info">
+              <span class="result-name">{{ result.name }}</span>
+              <span class="result-type">{{ result.type }}</span>
+            </div>
+          </div>
+        </div>
       </div>
 
         <div class="logo-wrapper" *ngIf="tenantLogo">
@@ -91,49 +106,68 @@
 
       <div class="dashboard-content" *ngIf="router.url === '/admin'">
         <div class="welcome-section">
-          <h1>Tableau de Bord - {{ currentUser?.nomEtablissement }}</h1>
-          <p>Bienvenue, {{ currentUser?.prenom }} {{ currentUser?.nom }}</p>
+          <h1>Tableau de Bord - {{ currentUser?.etablissements[0]?.nom }}</h1>
         </div>
 
-        <div class="stats-grid">
-          <div class="stat-card purple">
-            <div class="icon">🎓</div>
-            <div>
-              <h3>{{ totalCandidats }}</h3>
-              <p>Candidats inscrits</p>
+        <div class="dashboard-overview">
+
+          <div class="stats-column">
+            <div class="stat-card blue">
+              <div class="icon">🏫</div>
+              <div>
+                <h3>ISET</h3>
+                <p>Établissement</p>
+              </div>
+            </div>
+
+            <div class="stat-card blue">
+              <div class="icon">🎓</div>
+              <div>
+                <h3>{{ totalCandidats }}</h3>
+                <p>Candidats inscrits</p>
+              </div>
+            </div>
+
+            <div class="stat-card white">
+              <div class="chart-card">
+              <div class="chart-header">
+                <h2 style="color:black;">Inscriptions par modules</h2>
+              </div>
+
+              <div class="chart-container" >
+                <canvas baseChart
+                        [data]="modulesChartData"
+                        [options]="barChartOptions"
+                        [type]="barChartType">
+                </canvas>
+              </div>
+            </div>
             </div>
           </div>
 
-          <div class="stat-card blue">
-            <div class="icon">🏫</div>
-            <div>
-              <h3>ISET</h3>
-              <p>Établissement</p>
+
+          <!-- CÔTÉ DROIT : Le graphique circulaire -->
+          <div class="chart-column">
+            <div class="stat-card white">
+              <div class="chart-card">
+                <div class="chart-header">
+                  <h2 style="color:black;">Candidats par spécialités</h2>
+                </div>
+                <div class="chart-container">
+                  <canvas baseChart
+                          [data]="specialiteChartData"
+                          [options]="specialiteChartOptions"
+                          [type]="'doughnut'">
+                  </canvas>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <div class="chart-card">
-
-          <div class="chart-header">
-            <div>
-              <h2>Candidats par spécialités</h2>
-
-            </div>
-
-          </div>
-
-          <div class="chart-container">
-            <canvas baseChart
-                    [data]="specialiteChartData"
-                    [options]="barChartOptions"
-                    [type]="barChartType">
-            </canvas>
           </div>
 
         </div>
+        </div>
 
-      </div>
+
 
       <router-outlet></router-outlet>
     </main>

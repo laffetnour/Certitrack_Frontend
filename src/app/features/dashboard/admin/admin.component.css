@@ -1305,3 +1305,145 @@ body {
 .logo-wrapper:hover .tenant-logo {
   transform: scale(1.05);
 }
+
+.search-container {
+  position: relative; /* Très important pour le placement du dropdown */
+  width: 350px;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  z-index: 1000;
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #edf2f7;
+  animation: slideDown 0.2s ease-out;
+}
+
+.search-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-bottom: 1px solid #f7fafc;
+}
+
+.search-item:hover {
+  background-color: #f1f5f9;
+}
+
+.search-item i {
+  width: 35px;
+  height: 35px;
+  background: #eff6ff;
+  color: #3182ce;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+
+.result-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.result-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.9rem;
+}
+
+.result-type {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.stats-circle {
+  margin-left : 50%;
+  margin-button: 90px;
+  width : 40%;
+
+}
+
+/* Le conteneur principal */
+.dashboard-overview {
+  display: flex;
+  gap: 20px; /* Espace entre les deux colonnes */
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+/* Colonne des cartes (gauche) */
+.stats-column {
+  display: flex;
+  width : 50%;
+  flex-direction: column;
+  margin-left : 10px;
+
+  gap: 20px;
+}
+
+
+.chart-column {
+  background: white;
+  margin-left : 30px;
+  border-radius: 15px;
+}
+
+.stats-column .stat-card {
+  width: 100%;
+  margin: 0;
+}
+
+/* Responsive : sur mobile, on rempile l'un sur l'autre */
+@media (max-width: 992px) {
+  .dashboard-overview {
+    flex-direction: column;
+  }
+
+  .chart-column, .stats-column {
+    width: 100%;
+  }
+}
+
+.stat-card.blue {
+  background: #6B7280; /* Gris-Bleu profond */
+  color: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.stat-card.blue .icon {
+  background: #E5E7EB; /* Bulle légère autour de l'icône */
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 1.5rem;
+}
+
+.stat-card.blue h3 {
+  color: white;
+  font-weight: 700;
+  margin: 0;
+}
+
+.stat-card.blue p {
+  color: #cbd5e1; /* Gris clair pour le sous-titre */
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.stat-card.blue:hover {
+  transform: translateY(-5px);
+}

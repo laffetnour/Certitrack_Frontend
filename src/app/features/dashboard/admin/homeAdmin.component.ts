@@ -7,7 +7,7 @@ import { AdminService, StatData } from '../../../core/services/admin.service';
 import { ConfigService } from '../../../core/services/config.service';
 import { BaseChartDirective } from 'ng2-charts';
 import { Chart, registerables, ChartConfiguration, ChartData, ChartType } from 'chart.js';
-
+import { FormsModule } from '@angular/forms';
 Chart.register(...registerables);
 
 const barShadowPlugin = {
@@ -30,7 +30,7 @@ Chart.register(barShadowPlugin);
 @Component({
   selector: 'app-dashboard-admin',
   standalone: true,
-  imports: [CommonModule,RouterModule, BaseChartDirective],
+  imports: [CommonModule,FormsModule,RouterModule, BaseChartDirective],
   templateUrl: './homeAdmin.component.html',
   styleUrls: ['./admin.component.css']
 })
@@ -88,7 +88,7 @@ export class homeAdminComponent implements OnInit {
            font: {
              family: 'Inter, sans-serif',
              size: 12,
-             weight: 500
+             weight: 200
            }
          }
        },
@@ -99,45 +99,55 @@ export class homeAdminComponent implements OnInit {
          grid: {
            color: 'rgba(0,0,0,0.05)'
          },
+       title: {
+               display: true,
+               text: 'Nombre de candidats',
+               color: '#9ca3af',
+               },
          ticks: {
            color: '#9ca3af'
          }
        }
      }
    };
-  /* public modulesChartData: ChartData<'bar'> = {
+  public modulesChartData: ChartData<'bar'> = {
      labels: [],
      datasets: [{ data: [], label: 'Inscriptions par Module', backgroundColor: '#ea5357' }]
-   };*/
-
-   public specialiteChartData: ChartData<'bar'> = {
-     labels: [],
-    // datasets: [{ data: [], label: 'Inscriptions par Spécialité', backgroundColor: '#303D49' }]
-    datasets: [{
-      data: [],
-      label: 'Candidats',
-
-       borderRadius: 12,
-            barThickness: 28,
-
-            backgroundColor: (context) => {
-              const chart = context.chart;
-              const { ctx, chartArea } = chart;
-
-              if (!chartArea) return;
-
-              const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-
-              gradient.addColorStop(0, '#6366f1'); // bas
-              gradient.addColorStop(1, '#8b5cf6'); // haut
-
-              return gradient;
-            },
-
-            hoverBackgroundColor: '#4f46e5'
-          }
-        ]
    };
+
+public specialiteChartData: ChartConfiguration<'doughnut'>['data'] = {
+  labels: [],
+  datasets: [{
+    data: [],
+    backgroundColor: ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'],
+    hoverOffset: 15,
+    borderWidth: 2,
+    borderColor: '#ffffff'
+  }]
+};
+
+
+public specialiteChartOptions: ChartConfiguration<'doughnut'>['options'] = {
+  responsive: true,
+  maintainAspectRatio: false,
+  cutout: '0%',
+  plugins: {
+    legend: {
+      position: 'bottom',
+      labels: { usePointStyle: true, font: { weight: 100 } }
+    },
+    tooltip: {
+      callbacks: {
+        label: (context) => {
+          const total = context.dataset.data.reduce((a: any, b: any) => a + b, 0);
+          const value = context.raw as number;
+          const percentage = ((value / total) * 100).toFixed(1);
+          return ` ${context.label}: ${value} candidats (${percentage}%)`;
+        }
+      }
+    }
+  }
+};
 
   constructor(
     private authService: AuthService,
@@ -202,67 +212,114 @@ loadChartsData(): void {
   console.log(idEtab);
   if (!idEtab) return;
 
- /*
+
   this.adminService.getStatsModules(idEtab).subscribe({
     next: (data: StatData[]) => {
+      console.log(data);
       this.modulesChartData = {
         labels: data.map(item => item.label),
         datasets: [{
           data: data.map(item => item.value),
           label: 'Inscriptions par Module',
-          backgroundColor: '#ea5357',
-          hoverBackgroundColor: '#303D49',
-          borderRadius: 8
-        }]
+          borderRadius: 16,
+           barThickness: 40,
+
+
+                     backgroundColor: (context) => {
+                       const { ctx, chartArea } = context.chart;
+                       if (!chartArea) return '#6366f1';
+
+                       const gradient = ctx.createLinearGradient(
+                         0,
+                         chartArea.bottom,
+                         0,
+                         chartArea.top
+                       );
+
+                      gradient.addColorStop(1, '#22D3EE');
+                       gradient.addColorStop(0, '#1E293B');
+                       gradient.addColorStop(0.5, '#22D3EE');
+
+
+                       return gradient;
+                     },
+
+                     hoverBackgroundColor: '#4338ca'
+
+                 }
+                        ]
       };
+      this.modulesChartData.datasets[0].data =
+                    data.map(item => item.value);
       this.cdr.detectChanges();
     },
     error: (err) => console.error("Erreur stats modules", err)
-  });*/
-
- this.adminService.getStatsSpecialites(idEtab).subscribe({
-   next: (data: StatData[]) => {
+  });
 
 
+this.adminService.getStatsSpecialites(idEtab).subscribe({
+  next: (data: StatData[]) => {
+    this.specialiteChartData = {
+      labels: data.map(item => item.label),
+      datasets: [
+        {
+          data: data.map(item => item.value),
+          label: 'Candidats par spécialités',
 
-     this.specialiteChartData = {
-       labels: data.map(item => item.label),
-       datasets: [
-         {
-           data: data.map(item => item.value),
-           label: 'Candidats par spécialités',
+          backgroundColor: [
+            '#22D3EE',
+            '#6B7280',
+            '#E5E7EB',
+            '#1E293B',
 
-           borderRadius: 16,
-           barThickness: 40,
+            '#EA5357',
+            '#F3F4F6'
 
-           backgroundColor: (context) => {
-             const { ctx, chartArea } = context.chart;
-             if (!chartArea) return '#6366f1';
+          ],
 
-             const gradient = ctx.createLinearGradient(
-               0,
-               chartArea.bottom,
-               0,
-               chartArea.top
-             );
+          hoverOffset: 15,
+          borderWidth: 2,
+          borderColor: '#ffffff'
+        }
+      ]
+    };
 
-             gradient.addColorStop(0, '#4f46e5');
-             gradient.addColorStop(0.5, '#6366f1');
-             gradient.addColorStop(1, '#a78bfa');
-
-             return gradient;
-           },
-
-           hoverBackgroundColor: '#4338ca'
-         }
-       ]
-     };
-    this.specialiteChartData.datasets[0].data =
-              data.map(item => item.value);
-     this.cdr.detectChanges();
-   },
-   error: (err) => console.error("Erreur stats spécialités", err)
- });
-
+    // Indispensable pour rafraîchir la vue après l'appel API
+    this.cdr.detectChanges();
+  },
+  error: (err) => console.error("Erreur lors de la récupération des stats", err)
+});
 }
+
+searchText: string = '';
+  showResults: boolean = false;
+
+  searchDatabase = [
+    { name: 'Dashboard', link: '/admin', type: 'page', icon: 'fas fa-home' },
+    { name: 'Liste des Candidats', link: '/admin/candidats', type: 'page', icon: 'fas fa-user-graduate' },
+    { name: 'Sessions d\'Examen', link: '/admin/sessionsExamen', type: 'page', icon: 'fas fa-chart-bar' },
+    { name: 'Import GMetrix', link: '/admin/import-gmetrix', type: 'page', icon: 'fas fa-file-import' },
+    { name: 'Paramètres système', link: '/admin/parametre', type: 'page', icon: 'fas fa-cog' },
+    { name: 'Résultats Sessions Inscriptions', link: '/admin/resultats-sessions', type: 'page', icon: 'fas fa-chart-bar' },
+  ];
+
+  filteredResults: any[] = [];
+
+  onSearch() {
+    const search = this.searchText.toLowerCase().trim();
+    if (search.length > 1) {
+      this.showResults = true;
+      this.filteredResults = this.searchDatabase.filter(item =>
+        item.name.toLowerCase().includes(search)
+      );
+    } else {
+      this.showResults = false;
+    }
+  }
+
+  selectResult(link: string) {
+    this.router.navigate([link]);
+    this.searchText = '';
+    this.showResults = false;
+  }
 }

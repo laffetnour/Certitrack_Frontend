@@ -4,14 +4,8 @@
 
   <div class="admin-header">
     <h1>Résultats des Sessions</h1>
-    <!--<button
-      class="btn-export"
-      (click)="exportExcel()"
-      [disabled]="!selectedSessionId">
-      📥 Export Excel
-    </button>-->
-    <button class="btn btn-success d-flex align-items-center gap-2" (click)="exportExcel()"
-            [disabled]="!selectedSessionId">
+
+    <button class="btn btn-success d-flex align-items-center gap-2" (click)="exportExcel()">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
         <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM3 9h10v1h-10V9zM3 11h10v1h-10v-1zM3 13h10v1h-10v-1zM3 7h10v1h-10V7z"/>
       </svg>
@@ -19,42 +13,9 @@
     </button>
 
   </div>
-    <!-- 🔹 FILTRES -->
-   <!-- <div class="filter-section d-flex gap-3 align-items-center">
 
-
-      <select (change)="onSessionChange($event)" class="form-control"
-              style="width: 250px;">
-        <option value="">-- Toutes les sessions --</option>
-        <option *ngFor="let s of sessions" [value]="s.id">
-          {{ s.titre }} - {{ s.moduleTenant?.module?.nom }}
-        </option>
-      </select>
-
-
-      <input
-        type="date"
-        [(ngModel)]="dateDebut"
-        (change)="loadResultats()" class="form-control"
-        style="width: 250px;"
-      />
-
-
-      <input
-        type="date"
-        [(ngModel)]="dateFin"
-        (change)="loadResultats()" class="form-control"
-        style="width: 250px;"
-      />
-
-
-      <button class="btn-cancel" (click)="loadResultats()">Filtrer</button>
-
-  </div>-->
-  <!-- 🔹 FILTRES -->
   <div class="filter-section d-flex gap-3 align-items-center">
 
-    <!-- SESSION -->
     <select (change)="onSessionChange($event)" class="form-control"
             style="width: 250px;">
       <option value="">-- Toutes les sessions --</option>
@@ -63,7 +24,6 @@
       </option>
     </select>
 
-    <!-- DATE DEBUT -->
     <input
       type="date"
       [(ngModel)]="dateDebut"
@@ -73,7 +33,6 @@
       placeholder="Date début"
     />
 
-    <!-- DATE FIN -->
     <input
       type="date"
       [(ngModel)]="dateFin"
@@ -83,9 +42,6 @@
       placeholder="Date fin"
     />
 
-
-
-    <!-- BOUTON -->
     <button class="btn-cancel" (click)="loadResultats()">
       Filtrer
     </button>
@@ -94,10 +50,8 @@
 
   <br>
 
-  <!-- 🔹 LOADING -->
   <div *ngIf="loading">Chargement...</div>
 
-  <!-- 🔹 TABLE -->
   <div class="table-container" *ngIf="!loading && resultats.length">
 
     <table class="modern-table">
@@ -175,7 +129,6 @@
 
   </div>
 
-  <!-- 🔹 VIDE -->
   <div *ngIf="!loading && resultats.length === 0">
     Aucun résultat trouvé
   </div>

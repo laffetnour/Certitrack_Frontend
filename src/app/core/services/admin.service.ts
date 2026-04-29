@@ -27,9 +27,9 @@ export class AdminService {
     };
   }
 
-/*getStatsModules(idEtab: number): Observable<StatData[]> {
+getStatsModules(idEtab: number): Observable<StatData[]> {
     return this.http.get<StatData[]>(`${this.baseUrl}/stats/modules/${idEtab}`, this.getAuthHeaders());
-  }*/
+  }
 
   getStatsSpecialites(idEtab: number): Observable<StatData[]> {
     return this.http.get<StatData[]>(`${this.baseUrl}/stats/specialites/${idEtab}`, this.getAuthHeaders());

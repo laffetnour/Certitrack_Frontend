@@ -26,7 +26,7 @@
           <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
           <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
         </svg>
-        Importer / Sync
+        Importer
       </button>
 
       <button class="btn btn-success d-flex align-items-center gap-2" (click)="exportToExcel()">
@@ -71,16 +71,6 @@
 
   </div>
 
-
-  <!--<div class="bulk-actions" *ngIf="selectedCandidats.length > 0">
-    <span>{{ selectedCandidats.length }} sélectionné(s)</span>
-    <button class="btn-activate" (click)="activateSelected()">Activer</button>
-    <button class="btn-deactivate" (click)="deactivateSelected()">Désactiver</button>
-  </div>-->
-
-
-
-
   <div class="table-container">
 
     <div *ngIf="!loading && filteredCandidats.length > 0">
@@ -88,8 +78,6 @@
         <table class="modern-table">
           <thead>
           <tr>
-            <!--<th><input type="checkbox" [checked]="isAllSelected()" (change)="selectAll($event)"></th>
-            -->
             <th>Nom</th>
             <th>Prénom</th>
             <th>Email</th>
@@ -106,13 +94,6 @@
 
           <tr *ngFor="let candidat of filteredCandidats">
 
-            <!--<td>
-              <input
-                type="checkbox"
-                [checked]="selectedCandidats.includes(candidat.id)"
-                (change)="onCheckboxChange(candidat.id,$event)"
-              >
-            </td>-->
 
             <td>{{ candidat.nom }}</td>
             <td>{{ candidat.prenom }}</td>
