@@ -92,4 +92,12 @@ startTest(sessionId: number, moduleTenantId: number): Observable<any> {
       { headers: this.getAuthHeaders() }
     );
   }
+
+  reserverExamen(payload: any): Observable<any> {
+    return this.http.post(
+      `http://localhost:8080/api/reservations`,
+      payload,
+      { headers: this.getAuthHeaders() }
+    );
+  }
 }

@@ -109,9 +109,9 @@
 
   transition: 0.3s;
   position: relative;
-    z-index: 20; /* Force le bouton au premier plan */
-    cursor: pointer !important;
-    pointer-events: all !important; /* Assure que le clic passe */
+  z-index: 20; /* Force le bouton au premier plan */
+  cursor: pointer !important;
+  pointer-events: all !important; /* Assure que le clic passe */
 }
 
 .btn-test:hover {
@@ -354,4 +354,266 @@ body.dark .gmetrix-box {
 
 body.dark .gmetrix-line {
   color: #e5e7eb;
+}
+
+
+
+/* Ajoutez ceci à la fin de votre fichier CSS */
+.btn-start-recent {
+  position: relative !important;
+  z-index: 999 !important; /* Force le bouton au-dessus de la carte */
+  pointer-events: auto !important; /* Assure que le clic est capturé */
+  cursor: pointer !important;
+}
+
+/* Empêcher la carte de bloquer ses enfants */
+.card {
+  pointer-events: auto;
+}
+
+/* Optionnel : Si le formulaire de réservation ne s'affiche pas bien */
+.reservation-form {
+  position: relative;
+  z-index: 1000;
+  background: white;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+
+/* 🔥 BACKGROUND DARK */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+}
+
+/* 🔥 BOX */
+.modal-box {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 350px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  animation: fadeIn 0.3s ease;
+}
+
+/* INPUT */
+.modal-box input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* BUTTONS */
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.btn-success {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* ================= ALERT SYSTEM GLOBAL ================= */
+
+.alert {
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 10px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+/* SUCCESS (email envoyé, réservation OK) */
+.alert-success {
+  background: rgba(234, 83, 87, 0.08);
+  border-color: var(--smart-red);
+  color: var(--smart-red);
+}
+
+/* ERROR */
+.alert-error {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+/* INFO */
+.alert-info {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+
+body.dark .alert-success {
+  background: rgba(234, 83, 87, 0.12);
+  color: #ff6b6b;
+  border-color: var(--smart-red);
+}
+
+body.dark .alert-error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border-color: #ef4444;
+}
+
+body.dark .alert-info {
+  background: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
+  border-color: #3b82f6;
+}
+
+
+
+
+/* ================= RESERVATION MODAL ================= */
+
+.modal-box h3 {
+  color: var(--smart-red);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.modal-box label {
+  color: var(--text-main);
+  font-size: 0.85rem;
+}
+
+/* input focus clean */
+.modal-box input:focus {
+  outline: none;
+  border-color: var(--smart-red);
+  box-shadow: 0 0 0 3px rgba(234,83,87,0.15);
+}
+
+/* erreur input */
+.input-error {
+  border-color: #ef4444 !important;
+}
+
+/* message erreur */
+.error-msg {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 5px;
+}
+
+/* ================= MODAL DARK MODE ================= */
+
+body.dark .modal-box {
+  background: #1e1e2f;
+  color: #e5e7eb;
+  border: 1px solid #2c2c3f;
+}
+
+body.dark .modal-box input {
+  background: #12121a;
+  color: #e5e7eb;
+  border: 1px solid #2c2c3f;
+}
+
+body.dark .modal-box label {
+  color: #cbd5e1;
+}
+
+/* ================= EMAIL SUCCESS MODAL (UNIQUE CLEAN VERSION) ================= */
+
+.success-box {
+  background: #ffffff;
+  color: #1f2937;
+
+  border: 1px solid #e5e7eb;
+  padding: 25px;
+  border-radius: 14px;
+  width: 360px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+  animation: fadeIn 0.25s ease;
+}
+
+/* titre */
+.success-box h3 {
+  color: var(--smart-red);
+  font-weight: 700;
+}
+
+/* texte */
+.success-box p {
+  color: #6b7280;
+}
+
+/* icône */
+.icon-circle {
+  width: 70px;
+  height: 70px;
+  margin: auto;
+  border-radius: 50%;
+  background: rgba(234, 83, 87, 0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* bouton */
+.success-box .btn-success {
+  background: var(--smart-red);
+  color: white;
+}
+
+/* ================= DARK MODE ================= */
+
+body.dark .success-box {
+  background: #1e1e2f;
+  color: #e5e7eb;
+  border: 1px solid #2c2c3f;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+body.dark .success-box p {
+  color: #cbd5e1;
+}
+
+body.dark .icon-circle {
+  background: rgba(234, 83, 87, 0.15);
 }

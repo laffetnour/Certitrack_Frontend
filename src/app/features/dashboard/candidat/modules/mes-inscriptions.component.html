@@ -29,9 +29,7 @@
                     <i class="fas fa-check-circle"></i> Test passé
                   </span>
 
-                  <!--<small class="date-mini">
-                    📅 Inscrit le : {{ item.dateInscription | date:'dd/MM/yyyy' }}
-                  </small>-->
+
 
                   <small class="date-mini">
                     le : {{ ep.dhEpreuve | date:'dd/MM/yyyy' }}
@@ -63,9 +61,7 @@
 
               <br>
 
-              <!--<small>
-                📅 Inscrit le : {{ item.dateInscription | date:'dd/MM/yyyy' }}
-              </small>-->
+
             </div>
 
           </div>
@@ -73,7 +69,9 @@
          </div>
 
 
-        <!--<div class="gmetrix-box" *ngIf="getDecision(item) as gm">-->
+
+
+
         <div class="gmetrix-box"
              *ngIf="hasGmetrix(item) && getDecision(item) as gm">
 
@@ -83,35 +81,69 @@
 
           <div class="gmetrix-body">
 
+            <!-- SCORE -->
             <div class="gmetrix-line">
               <span>Score</span>
               <strong>{{ gm.scoreGmetrix ?? 'N/A' }} %</strong>
             </div>
 
+            <!-- SEUIL -->
             <div class="gmetrix-line">
               <span>Seuil</span>
               <strong>{{ gm.seuilScore }} %</strong>
             </div>
 
+            <!-- ✅ ÉLIGIBILITÉ (corrigé) -->
             <div class="gmetrix-status"
-                 [class.ok]="gm.peutReserverExamen"
-                 [class.fail]="!gm.peutReserverExamen">
+                 [class.ok]="gm.eligibleGmetrix"
+                 [class.fail]="!gm.eligibleGmetrix">
 
               <i class="fas"
-                 [ngClass]="gm.peutReserverExamen ? 'fa-check-circle' : 'fa-times-circle'">
+                 [ngClass]="gm.eligibleGmetrix ? 'fa-check-circle' : 'fa-times-circle'">
               </i>
 
-              {{ gm.peutReserverExamen ? 'Eligible examen final' : 'Non éligible' }}
+              {{ gm.eligibleGmetrix ? 'Eligible examen final' : 'Non éligible' }}
+            </div>
+            <br>
+
+            <!-- 🎯 LOGIQUE SESSION (corrigée) -->
+            <div *ngIf="gm.eligibleGmetrix">
+
+              <!-- ❌ Aucune session -->
+              <button *ngIf="!gm.sessionDisponible"
+                      class="btn-disabled" disabled>
+                Pas de session d'examen disponible
+              </button>
+
+              <!-- ⏳ Session non ouverte -->
+              <button *ngIf="gm.sessionDisponible && !gm.sessionOuverte"
+                      class="btn-disabled" disabled>
+                Bientôt disponible
+              </button>
+
+
+
+              <!-- ✅ Session ouverte -->
+              <div *ngIf="gm.sessionOuverte && !gm.dejaReserve">
+
+                <!-- bouton afficher formulaire -->
+                <button
+                  class="btn-start-recent"
+                  (click)="ouvrirFormulaire(gm)">
+                  Réserver examen
+                </button>
+
+              </div>
+
+              <!-- 📅 Déjà réservé -->
+              <div *ngIf="gm.dejaReserve" class="reserved-info">
+                Réservé le {{ gm.dateReservation | date:'dd/MM/yyyy' }}
+              </div>
+
             </div>
 
           </div>
-
         </div>
-
-
-
-
-      </div>
     </div>
     <hr class="section-divider">
   </div>
@@ -185,36 +217,12 @@
       </div>
 
 
-      <!--<div *ngIf="getDecision(item) as gm">
-        <div class="gmetrix-score">
-          <small>
-            Score GMetrix : {{ gm?.scoreGmetrix !== null ? gm.scoreGmetrix + ' %' : 'Non disponible' }}
-          </small>
-        </div>
 
-        <div class="gmetrix-seuil">
-          <small>
-            Seuil requis : {{ gm?.seuilScore }} %
-          </small>
-        </div>
 
-        <div *ngIf="gm?.peutReserverExamen; else bloque">
-          <button class="btn-success">
-             Réserver examen final
-          </button>
-        </div>
 
-        <ng-template #bloque>
-          <button class="btn-disabled" disabled title="Score insuffisant">
-             Réservation impossible
-          </button>
-        </ng-template>
-      </div>-->
 
-      <!--<div class="gmetrix-box" *ngIf="getDecision(item) as gm">-->
       <div class="gmetrix-box"
            *ngIf="hasGmetrix(item) && getDecision(item) as gm">
-
 
         <div class="gmetrix-header">
           <span class="gmetrix-title">GMetrix</span>
@@ -222,29 +230,71 @@
 
         <div class="gmetrix-body">
 
+          <!-- SCORE -->
           <div class="gmetrix-line">
             <span>Score</span>
             <strong>{{ gm.scoreGmetrix ?? 'N/A' }} %</strong>
           </div>
 
+          <!-- SEUIL -->
           <div class="gmetrix-line">
             <span>Seuil</span>
             <strong>{{ gm.seuilScore }} %</strong>
           </div>
 
+          <!-- ✅ ÉLIGIBILITÉ (corrigé) -->
           <div class="gmetrix-status"
-               [class.ok]="gm.peutReserverExamen"
-               [class.fail]="!gm.peutReserverExamen">
+               [class.ok]="gm.eligibleGmetrix"
+               [class.fail]="!gm.eligibleGmetrix">
 
             <i class="fas"
-               [ngClass]="gm.peutReserverExamen ? 'fa-check-circle' : 'fa-times-circle'">
+               [ngClass]="gm.eligibleGmetrix ? 'fa-check-circle' : 'fa-times-circle'">
             </i>
 
-            {{ gm.peutReserverExamen ? 'Eligible examen final' : 'Non éligible' }}
+            {{ gm.eligibleGmetrix ? 'Eligible examen final' : 'Non éligible' }}
+          </div>
+          <br>
+
+          <!-- 🎯 LOGIQUE SESSION (corrigée) -->
+          <div *ngIf="gm.eligibleGmetrix">
+
+            <!-- ❌ Aucune session -->
+            <button *ngIf="!gm.sessionDisponible"
+                    class="btn-disabled" disabled>
+              Pas de session d'examen disponible
+            </button>
+
+            <!-- ⏳ Session non ouverte -->
+            <button *ngIf="gm.sessionDisponible && !gm.sessionOuverte"
+                    class="btn-disabled" disabled>
+              Bientôt disponible
+            </button>
+
+
+            <div *ngIf="gm.sessionOuverte && !gm.dejaReserve">
+
+              <button
+                class="btn-start-recent"
+                (click)="ouvrirFormulaire(gm)">
+                Réserver examen
+              </button>
+
+
+
+
+
+              </div>
+
+            </div>
+
+            <!-- 📅 Déjà réservé -->
+            <div *ngIf="gm.dejaReserve" class="reserved-info">
+              Réservé le {{ gm.dateReservation | date:'dd/MM/yyyy' }}
+            </div>
+
           </div>
 
         </div>
-
       </div>
 
 
@@ -252,6 +302,63 @@
 
     </div>
   </div>
+
+  <div class="modal-overlay" *ngIf="selectedInscriptionId">
+    <div class="modal-box">
+      <h3>Réserver votre examen</h3>
+      <br>
+
+      <label>UserName Certiport</label>
+      <br>
+      <div *ngIf="usernameCertiport && !isEmailValid()" class="error-msg">
+        Vérifier la forme de votre username (email)
+      </div>
+
+      <input type="email"
+             [(ngModel)]="usernameCertiport"
+             [class.input-error]="usernameCertiport && !isEmailValid()"
+             placeholder="Entrer votre email" />
+
+      <br><br>
+
+      <small>
+        Pas de compte ?
+        <a href="https://app.certiport.com/portal/signup?defaultlang=fra" target="_blank">Créer un compte</a>
+      </small>
+      <br>
+
+      <div class="modal-actions">
+        <button class="btn-success"
+                [disabled]="!isEmailValid()"
+                (click)="confirmerReservation(selectedGm)">
+          Confirmer
+        </button>
+
+        <button class="btn-cancel" (click)="annulerFormulaire()">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showSuccessModal">
+    <div class="modal-box success-box" style="text-align: center;">
+      <div class="icon-circle">
+        <i class="fas fa-paper-plane" style="color: #28a745; font-size: 40px;"></i>
+      </div>
+
+      <h3 style="margin-top: 15px;">Email envoyé !</h3>
+
+      <p style="color: #666; margin: 15px 0;">
+        Un email a été envoyé à votre adresse mail. Il contient les informations détaillées concernant votre session d'examen.
+      </p>
+
+      <button class="btn-success" (click)="fermerSuccessModal()" style="width: 100%;">
+        J'ai compris
+      </button>
+    </div>
+  </div>
+
+
+
 
 
 </div>

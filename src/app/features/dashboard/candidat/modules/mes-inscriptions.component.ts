@@ -20,6 +20,10 @@ export class MesInscriptionsComponent implements OnInit {
   epreuves: any[] = [];
   inscriptionsGmetrix: any[] = [];
 
+  selectedGm: any = null;
+  usernameCertiport: string = '';
+  selectedInscriptionId: number | null = null;
+
   constructor(private service: ModuleCandidatService,
     private cdr: ChangeDetectorRef,private router: Router,
     private authService: AuthService,
@@ -157,5 +161,133 @@ allerAuTest(item: any) {
   hasGmetrix(item: any): boolean {
     const gm = this.getDecision(item);
     return gm?.scoreGmetrix != null;
+  }
+
+  reserverExamen(gm: any) {
+
+    const user = this.authService.getUser();
+
+    this.service.reserverExamen({
+      inscriptionId: gm.inscriptionId,
+      sessionExamenId: gm.sessionExamenId, // ⚠️ tu dois l’ajouter backend si pas encore
+      usernameCertiport: user.username
+    }).subscribe({
+      next: () => {
+        alert("Réservation confirmée");
+        this.loadGmetrixDecision(user.idUtilisateur);
+      },
+      error: (err) => {
+        alert(err.error?.message || "Erreur réservation");
+      }
+    });
+  }
+
+
+
+  /*confirmerReservation(gm: any) {
+
+    if (!this.usernameCertiport || this.usernameCertiport.trim() === '') {
+      alert("Veuillez entrer votre username Certiport");
+      return;
+    }
+
+    this.service.reserverExamen({
+      inscriptionId: gm.inscriptionId,
+      sessionExamenId: gm.sessionExamenId,
+      usernameCertiport: this.usernameCertiport
+    }).subscribe({
+      next: () => {
+        alert("Réservation confirmée ✅");
+        this.annulerFormulaire();
+
+        const user = this.authService.getUser();
+        this.loadGmetrixDecision(user.idUtilisateur);
+      },
+      error: (err) => {
+        alert(err.error?.message || "Erreur réservation");
+      }
+    });
+  }*/
+
+  // 1. Ajoutez cette variable en haut de votre classe
+  showSuccessModal: boolean = false;
+
+// 2. Modifiez la fonction confirmerReservation
+  confirmerReservation(gm: any) {
+    // On ne met pas d'alert() ici, le message s'affiche déjà dans le HTML via isEmailValid()
+    if (!this.isEmailValid()) {
+      return;
+    }
+
+    this.service.reserverExamen({
+      inscriptionId: gm.inscriptionId,
+      sessionExamenId: gm.sessionExamenId,
+      usernameCertiport: this.usernameCertiport
+    }).subscribe({
+      next: (res) => {
+        this.handleSuccess();
+      },
+      error: (err) => {
+        if (err.status === 200) {
+          this.handleSuccess();
+        } else {
+          console.error(err);
+          alert(err.error?.message || "Erreur réservation");
+        }
+      }
+    });
+  }
+
+// 3. Créez cette fonction pour gérer la réussite
+  private handleSuccess() {
+    this.annulerFormulaire(); // Ferme le modal de saisie
+    this.showSuccessModal = true; // Ouvre le modal de succès
+
+    const user = this.authService.getUser();
+    if (user) {
+      this.loadGmetrixDecision(user.idUtilisateur);
+    }
+    this.cdr.detectChanges();
+  }
+
+// 4. Fonction pour fermer le modal de succès
+  fermerSuccessModal() {
+    this.showSuccessModal = false;
+  }
+
+// Fonction utilitaire pour éviter de répéter le code de fermeture
+  private finaliserReservation() {
+    this.annulerFormulaire();
+    this.cdr.detectChanges();
+    const user = this.authService.getUser();
+    if (user) {
+      this.loadGmetrixDecision(user.idUtilisateur);
+      this.cdr.detectChanges();
+    }
+  }
+
+
+
+  /*ouvrirFormulaire(gm: any) {
+    console.log("Ouverture du formulaire pour l'inscription :", gm.inscriptionId);
+    this.selectedInscriptionId = gm.inscriptionId; // C'est cette ligne qui déclenche le *ngIf dans le HTML
+    this.usernameCertiport = ''; // Reset du champ
+    this.cdr.detectChanges();
+  }*/
+
+  ouvrirFormulaire(gm: any) {
+    this.selectedInscriptionId = gm.inscriptionId;
+    this.selectedGm = gm; // 🔥 IMPORTANT
+    this.usernameCertiport = '';
+  }
+
+  annulerFormulaire() {
+    this.selectedInscriptionId = null;
+  }
+
+  // À ajouter dans votre classe
+  isEmailValid(): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(this.usernameCertiport);
   }
 }
