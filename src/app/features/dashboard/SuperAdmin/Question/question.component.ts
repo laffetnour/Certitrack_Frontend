@@ -1,9 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 
-import { SuperAdminService } from '../../../../core/services/super-admin.service'; // Votre service mis à jour
+import { SuperAdminService } from '../../../../core/services/super-admin.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as XLSX from 'xlsx';
 
 
 @Component({
@@ -15,7 +16,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class QuestionComponent implements OnInit {
   moduleId!: number;
-  // Utilisation de any[] pour éviter l'import du modèle
   questions: any[] = [];
   selectedIds: number[] = [];
   loading: boolean = false;
@@ -30,6 +30,7 @@ export class QuestionComponent implements OnInit {
   showDeleteModal: boolean = false;
   questionToDelete: any = null;
   isBulkDelete: boolean = false;
+  @ViewChild('fileInput') fileInput!: ElementRef;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -37,41 +38,9 @@ export class QuestionComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  /*ngOnInit(): void {
-    this.moduleId = Number(this.route.snapshot.paramMap.get('id'));
-
-        if (this.moduleId) {
-          this.loadQuestions();
-        }
-
-  }*/
-
- /* loadQuestions(): void {
-    this.loading = true;
-    this.superAdminService.getByModule(this.moduleId).subscribe({
-      next: (data: any[]) => {
-        console.log(data);
-        //this.questions = data;
-
-        this.questions = data.filter(q => q.nature === 'technique');
-        this.cdr.detectChanges();
-        this.selectedIds = [];
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Erreur', err);
-        this.loading = false;
-        this.cdr.detectChanges();
-      }
-    });
-  }*/
-
 ngOnInit(): void {
-  // On écoute les changements d'URL en temps réel
   this.route.paramMap.subscribe(params => {
     const id = params.get('id');
-
-    // On gère les cas : '0', null ou undefined
     if (id === '0' || id === null || id === undefined) {
       this.moduleId = 0;
     } else {
@@ -79,23 +48,20 @@ ngOnInit(): void {
     }
 
     console.log("Mode détecté, Module ID :", this.moduleId);
-    this.loadQuestions(); // On recharge les données à chaque changement d'ID
+    this.loadQuestions();
   });
 }
 
 isBehavioralMode(): boolean {
-  // On considère que c'est comportemental si l'ID est 0, null ou undefined
   return !this.moduleId || this.moduleId === 0;
 }
-// Dans ngOnInit ou loadQuestions
 loadQuestions(): void {
   this.loading = true;
 
   if (this.isBehavioralMode()) {
     this.loading = true;
-    this.superAdminService.getQuestions().subscribe({ // On récupère toutes les questions
+    this.superAdminService.getQuestions().subscribe({
       next: (data: any[]) => {
-        // On ne garde QUE les comportementales
 
         this.questions = data.filter(q => q.nature === 'comportementale');
         console.log(this.questions);
@@ -115,71 +81,47 @@ loadQuestions(): void {
   }
 }
 
-  // --- ACTIONS ---
 
-  /*onImportCSV(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.loading = true;
-      this.superAdminService.importQuestionsCSV(file, this.moduleId).subscribe({
-        next: (res) => {
-          alert(`${res.successCount} questions importées !`);
-          this.loadQuestions();
-          this.cdr.detectChanges();
-        },
-        error: () => alert("Erreur d'import"),
-        complete: () => this.loading = false
+onFileSelected(event: any): void {
+  const file: File = event.target.files[0];
+  if (!file) return;
 
-      });
-    }
+  const extension = file.name.split('.').pop()?.toLowerCase();
+  if (extension !== 'xlsx') {
+    alert("Veuillez sélectionner un fichier Excel valide (.xlsx)");
+    return;
   }
-*/
 
-onImportCSV(event: any): void {
-  const file = event.target.files[0];
-  if (file) {
-    this.loading = true;
-    this.superAdminService.importQuestionsCSV(file, this.moduleId).subscribe({
-      next: (res) => {
-        // Construction du message d'alerte
-        let message = `${res.successCount} questions importées avec succès !`;
-
-        // Si il y a des lignes ignorées (erreurs)
-        if (res.ignoredLines && res.ignoredLines.length > 0) {
-          message += `\n\n⚠️ Erreur(s) détectée(s) aux lignes suivantes : ${res.ignoredLines.join(', ')}`;
-          message += `\nVérifiez le format de ces lignes (Note, Type ou Réponses).`;
-        }
-
-        alert(message);
-        this.loadQuestions();
-        this.loading = false;
-      },
-      error: (err) => {
-        alert("Erreur critique : Impossible de lire le fichier.");
-        this.loading = false;
-      }
-    });
-  }
+  this.uploadExcel(file);
 }
-  /*deleteSingle(id: number): void {
-    if (confirm('Supprimer cette question ?')) {
-      this.superAdminService.deleteQuestion(id).subscribe(() => {
-        this.questions = this.questions.filter(q => q.idQuestion !== id);
-        this.loadQuestions();
 
-      });
+uploadExcel(file: File): void {
+  this.loading = true;
+
+  this.superAdminService.importQuestionsExcel(file, this.moduleId).subscribe({
+    next: (res) => {
+      let message = `📊 Importation terminée :\n✅ ${res.successCount} questions réussies.`;
+
+      if (res.ignoredLines && res.ignoredLines.length > 0) {
+        message += `\n\n⚠️ Lignes ignorées (${res.ignoredLines.length}) : ${res.ignoredLines.join(', ')}`;
+        message += `\nVérifiez le format de ces lignes dans votre fichier.`;
+      }
+
+      alert(message);
+      this.loadQuestions();
+      this.loading = false;
+
+      if (this.fileInput) {
+        this.fileInput.nativeElement.value = '';
+      }
+    },
+    error: (err) => {
+      console.error("Erreur Import:", err);
+      alert("Erreur lors de l'import : Vérifiez que le fichier respecte le modèle Excel et que les colonnes sont correctes.");
+      this.loading = false;
     }
-  }*/
-
-  /*deleteMultiple(): void {
-    if (confirm(`Supprimer les ${this.selectedIds.length} questions ?`)) {
-      this.superAdminService.deleteQuestionsBulk(this.selectedIds).subscribe(() => {
-        this.loadQuestions();
-      });
-    }
-  }*/
-
-  // --- GESTION SELECTION ---
+  });
+}
 
   toggleSelection(id: number, event: any): void {
     if (event.target.checked) {
@@ -207,7 +149,6 @@ onImportCSV(event: any): void {
       this.cdr.detectChanges();
     }
 
-    // Méthode pour fermer le modal
     closeViewModal() {
       this.showViewModal = false;
       this.questionToView = null;
@@ -215,7 +156,6 @@ onImportCSV(event: any): void {
     }
 
 
-    //ajouter
   activateSelected(): void {
     if (this.selectedIds.length === 0) return;
 
@@ -237,10 +177,8 @@ onImportCSV(event: any): void {
   toggleStatus(q: any): void {
     this.superAdminService.toggleQuestionStatus(q.idQuestion).subscribe({
       next: (updatedFromServer: any) => {
-        // On crée un nouveau tableau avec l'objet mis à jour
         this.questions = this.questions.map(item => {
           if (item.idQuestion === q.idQuestion) {
-            // On retourne une nouvelle référence d'objet avec le nouveau statut
             return { ...item, statut: updatedFromServer.statut };
           }
           return item;
@@ -283,7 +221,6 @@ onImportCSV(event: any): void {
           !this.selectedIds.includes(q.idQuestion)
         );
 
-        // 🔥 Détection type message
         const hasError = messages.some(m => m.includes("liée"));
         const hasSuccess = messages.some(m => m.includes("succès"));
 
@@ -322,7 +259,6 @@ onImportCSV(event: any): void {
 
   confirmDelete() {
 
-    // 🔥 CAS BULK DELETE
     if (this.isBulkDelete) {
 
       this.superAdminService.deleteQuestionsBulk(this.selectedIds).subscribe({
@@ -344,15 +280,12 @@ onImportCSV(event: any): void {
             }
           });
 
-          // 🧹 suppression des succès uniquement
           this.questions = this.questions.filter(q =>
             !successIds.includes(q.idQuestion)
           );
 
-          // force refresh Angular (important)
           this.questions = [...this.questions];
 
-          // 🧾 message propre
           let message = "";
 
           if (errorIds.length) {
@@ -369,7 +302,6 @@ onImportCSV(event: any): void {
 
           this.showAlert(message, type);
 
-          // reset état
           this.selectedIds = [];
           this.isBulkDelete = false;
           this.showDeleteModal = false;
@@ -386,7 +318,6 @@ onImportCSV(event: any): void {
       return;
     }
 
-    // 🔥 CAS SINGLE DELETE
     if (!this.questionToDelete) return;
 
     this.superAdminService.deleteQuestion(this.questionToDelete.idQuestion).subscribe({
@@ -396,7 +327,7 @@ onImportCSV(event: any): void {
           q.idQuestion !== this.questionToDelete.idQuestion
         );
 
-        this.questions = [...this.questions]; // refresh UI
+        this.questions = [...this.questions];
 
         this.showDeleteModal = false;
         this.questionToDelete = null;
@@ -423,5 +354,16 @@ onImportCSV(event: any): void {
 
   get selectedQuestions() {
     return this.questions.filter(q => this.selectedIds.includes(q.idQuestion));
+  }
+
+downloadTemplate() {
+    const header = [
+            ['question','image', 'note', 'difficultées', 'choixUnique/choixMultiple', 'reponse']
+          ];
+
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(header);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Template_Questions');
+    XLSX.writeFile(wb, 'Modele_Import_Qustions.xlsx');
   }
 }

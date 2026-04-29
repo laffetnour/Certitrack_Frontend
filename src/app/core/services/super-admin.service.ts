@@ -35,6 +35,10 @@ private getAuthHeadersForFile() {
     return this.http.get(`${this.baseUrl}/stats`, this.getAuthHeaders());
   }
 
+  getBottomModules(): Observable<any[]> {
+      return this.http.get<any[]>(`${this.baseUrl}/bottom-modules`, this.getAuthHeaders());
+    }
+
 
   getAllAdmins(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/admins`, this.getAuthHeaders());
@@ -185,7 +189,7 @@ deleteModule(id: number): Observable<any> {
   deactivateModules(ids: number[]): Observable<any> {
     return this.http.put(`${this.baseUrl}/modules/deactivate`, ids, this.getAuthHeaders());
   }
-importModuleCSV(file: File): Observable<any> {
+importModuleExcel(file: File): Observable<any> {
   const formData = new FormData();
   formData.append('file', file);
 
@@ -203,10 +207,10 @@ importModuleCSV(file: File): Observable<any> {
 
 
 
-importQuestionsCSV(file: File, moduleId: number): Observable<any> {
+importQuestionsExcel(file: File, moduleId: number): Observable<any> {
   const formData = new FormData();
   formData.append('file', file);
-  formData.append('moduleId', moduleId.toString()); // Assurez-vous d'ajouter cette ligne
+  formData.append('moduleId', moduleId.toString());
 
   return this.http.post(`${this.baseUrl}/questions/import`, formData, this.getAuthHeadersForFile());
 }

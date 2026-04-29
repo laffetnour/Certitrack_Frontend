@@ -1,5 +1,5 @@
 
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormsModule,ReactiveFormsModule,FormBuilder,FormGroup,Validators,FormArray} from '@angular/forms';
 import { ElementRef, ViewChild } from '@angular/core';
@@ -8,6 +8,7 @@ import {AuthService} from '../../../../core/services/auth.service';
 import { ModuleTenantService } from '../../../../core/services/ModuleTenant.service';
 import { forkJoin } from 'rxjs';
 import { Router } from '@angular/router';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-module',
@@ -42,7 +43,6 @@ export class ModuleComponent implements OnInit {
   searchCat: string = '';
   tempSelectedCategories: any[] = [];
   allMotCles: any[] = [];
-  //filteredMotCles: any[] = [];
   filteredMotCles: any[][] = [];
   currentUser: any;
 
@@ -65,12 +65,9 @@ export class ModuleComponent implements OnInit {
   }
 
 goToQuestions(moduleId: number) {
-  // Cela générera l'URL : /super-admin/questions/1
   this.router.navigate(['/super-admin/questions', moduleId]);
 }
 goToBehavioralQuestions() {
-  // On utilise souvent '0' ou une route dédiée pour les questions générales/comportementales
-  // Assurez-vous que cette route existe dans votre app-routing.module.ts
   this.router.navigate(['/super-admin/questions/0']);
 }
   ngOnInit(): void {
@@ -107,8 +104,7 @@ goToBehavioralQuestions() {
     forkJoin({
       cats: this.service.getCategories(),
       mods: this.service.getModules(),
-      //catQ: this.service.getCatQuestions(), // 🔥 ajouter 666666666666666666666666666666666666666666666666666666666666666666666666
-      motCles: this.service.getMotCles()//6666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
+      motCles: this.service.getMotCles()
     }).subscribe({
       next: (result) => {
         this.categories = result.cats;
@@ -116,8 +112,7 @@ goToBehavioralQuestions() {
         this.applyFilter();
         this.loading = false;
         this.cdr.detectChanges();
-        //this.allCatQuestions = result.catQ; // 🔥ajouter 6666666666666666666666666666666666666666666666666666666666666666666666666
-        this.allMotCles = result.motCles;//666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
+        this.allMotCles = result.motCles;
       },
       error: (err) => {
         console.error("Erreur chargement :", err);
@@ -147,7 +142,7 @@ goToBehavioralQuestions() {
     });
 
     this.motCles.clear();
-    this.selectedCategories = []; // 🔥 IMPORTANT66666666666666666666666666666666666666666666666666666666666666666666666666666666
+    this.selectedCategories = [];
 
 
     this.showModal = true;
@@ -170,13 +165,11 @@ goToBehavioralQuestions() {
       });
     }
 
-    this.selectedCategories = m.categories ? [...m.categories] : [];//666666666666666666666666666666666666666666666666666666666666666666666
+    this.selectedCategories = m.categories ? [...m.categories] : [];
 
     this.showModal = true;
   }
 
-
-  //6666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
   onSubmit() {
     if (this.moduleForm.valid) {
       const formVal = this.moduleForm.value;
@@ -207,13 +200,10 @@ goToBehavioralQuestions() {
         },
         error: (err) => {
           console.error("Erreur API complète :", err);
-          // Si erreur 400, vérifiez l'onglet Network > Response pour le détail
         }
       });
     }
   }
-//66666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666
-// Méthode utilitaire pour afficher les erreurs visuellement
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();
@@ -335,8 +325,41 @@ goToBehavioralQuestions() {
     this.fileInput.nativeElement.click();
   }
 
+onFileSelected(event: any) {
+  const file: File = event.target.files[0];
+  if (!file) return;
 
-  onFileSelected(event: any) {
+  if (!file.name.endsWith('.xlsx')) {
+    alert("Veuillez sélectionner un fichier Excel (.xlsx)");
+    return;
+  }
+
+  this.loading = true;
+  this.service.importModuleExcel(file).subscribe({
+    next: (res) => {
+      let msg = `📊 Importation des modules terminée !\n`;
+      msg += `✅ Réussites/Mises à jour : ${res.successCount}\n`;
+
+      if (res.ignoredLines && res.ignoredLines.length > 0) {
+        msg += `⚠️ Lignes en erreur : ${res.ignoredLines.join(', ')}`;
+      }
+
+      alert(msg);
+      this.loadData();
+      this.loading = false;
+
+      if (this.fileInput) {
+        this.fileInput.nativeElement.value = '';
+      }
+    },
+    error: (err) => {
+      alert("Erreur lors de l'envoi du fichier Excel.");
+      this.loading = false;
+    }
+  });
+}
+
+  /*onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
       this.loading = true;
@@ -360,7 +383,7 @@ goToBehavioralQuestions() {
         }
       });
     }
-  }
+  }*/
 
 
   openCatModal() {
@@ -384,37 +407,27 @@ goToBehavioralQuestions() {
   confirmCategories() {
     this.selectedCategories = [...this.tempSelectedCategories];
     this.showCatModal = false;
-    this.cdr.detectChanges(); // 🔥 IMPORTANT
+    this.cdr.detectChanges();
   }
   cancelCategories() {
     this.showCatModal = false;
   }
 
-  /*get filteredCatQuestions() {
-    if (!this.searchCat) return this.allCatQuestions;
 
-    return this.allCatQuestions.filter(c =>
-      c.nom.toLowerCase().includes(this.searchCat.toLowerCase())
-    );
-  }*/
-
-  // 1. Ajoutez les méthodes de gestion des champs de mots-clés
   addMotCleField(id: number | null = null, desc: string = '') {
     this.motCles.push(this.fb.group({
       idMotcle: [id],
-      description: [desc, Validators.required] // Le validateur ici bloque le bouton si vide
+      description: [desc, Validators.required]
     }));
   }
 
   removeMotCle(index: number) {
     this.motCles.removeAt(index);
-    // On met à jour manuellement le compteur pour rester cohérent avec l'UI
     this.moduleForm.patchValue({
       nombreMotCle: this.motCles.length
     }, { emitEvent: false });
   }
 
-// 2. Ajoutez les méthodes de suggestion (utilisées dans votre HTML)
   suggestMotCles(query: string, index: number) {
     if (!query || query.trim() === '') {
       this.filteredMotCles[index] = [];
@@ -431,24 +444,15 @@ goToBehavioralQuestions() {
       idMotcle: mc.idMotcle,
       description: mc.description
     });
-    this.filteredMotCles[index] = []; // On vide la liste après sélection
+    this.filteredMotCles[index] = [];
   }
 
   protected readonly HTMLInputElement = HTMLInputElement;
 
-
-
-  // module.component.ts
-
-  // Méthode pour vérifier le rôle dans le template
-
-
   addToModuleTenant(): void {
-    // 1. Récupération de l'utilisateur depuis ton AuthService
     const user = this.authService.getUser();
     const userId = user?.idUtilisateur;
 
-    // 2. Vérifications de sécurité avant l'envoi
     if (!userId) {
       alert("Erreur : Impossible de récupérer votre ID utilisateur. Veuillez vous reconnecter.");
       return;
@@ -459,27 +463,23 @@ goToBehavioralQuestions() {
       return;
     }
 
-    this.loading = true; // Active l'état de chargement (pour le bouton)
+    this.loading = true;
 
-    // 3. Création de la liste des appels API (un pour chaque module sélectionné)
     const requests = this.selectedModules.map(moduleId =>
       this.moduleTenantService.addModuleToTenant(userId, moduleId)
     );
 
-    // 4. Exécution de toutes les requêtes en parallèle avec forkJoin
     import('rxjs').then(({ forkJoin }) => {
       forkJoin(requests).subscribe({
         next: (responses) => {
           console.log(`${responses.length} modules ajoutés avec succès.`);
           alert("✅ Les modules ont été ajoutés à votre catalogue avec succès !");
 
-          // 5. Nettoyage après succès
-          this.selectedModules = []; // Vide la sélection
+          this.selectedModules = [];
           this.loading = false;
 
           this.cdr.detectChanges();
-          // Optionnel : rafraîchir une liste locale si nécessaire
-          // this.loadMyModules();
+
         },
         error: (err) => {
           console.error("Erreur lors de l'ajout des modules :", err);
@@ -489,5 +489,14 @@ goToBehavioralQuestions() {
         }
       });
     });
+  }
+
+downloadTemplate() {
+    const header = [['Module' , 'catégorie','mots clés']];
+
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(header);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Template_Modules');
+    XLSX.writeFile(wb, 'Modele_Import_Modules.xlsx');
   }
 }

@@ -1,603 +1,5 @@
-/*.admin-container {
-  background-color: #f8fafc;
-  padding: 20px;
-}
-
-
-.admin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-  background: #ffffff;
-  padding: 20px 30px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-.btn-add {
-  background-color: #ea5357;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.btn-add:hover {
-  background-color: #d44347;
-}
-
-
-.table-container {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-}
-
-.modern-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.modern-table th {
-  padding: 14px;
-  background: #f8fafc;
-  text-align: left;
-  font-size: 12px;
-  color: #64748b;
-}
-
-.modern-table td {
-  padding: 14px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.modern-table tr:hover {
-  background: #f9fafb;
-}
-
-
-.status-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.status-badge.active {
-  background: #e6fffa;
-  color: #319795;
-}
-
-.status-badge.inactive {
-  background: #fff5f5;
-  color: #e53e3e;
-}
-
-
-.actions {
-  display: flex;
-  gap: 8px;
-}
-
-.actions button {
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.2s;
-}
-
-.btn-view { background: #e0f2fe; color: #0284c7; }
-.btn-edit { background: #fef3c7; color: #d97706; }
-.btn-toggle { background: #f3e8ff; color: #9333ea; }
-.btn-delete { background: #fee2e2; color: #dc2626; }
-
-.actions button:hover {
-  transform: scale(1.1);
-  filter: brightness(0.95);
-}
-
-
-.alert {
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-
-.alert.success {
-  background: #e6fffa;
-  color: #065f46;
-}
-
-.alert.error {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-
-.bulk-actions {
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.bulk-actions button {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-}
-
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(48, 61, 73, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(4px);
-  z-index: 1000;
-}
-
-
-.modal-content {
-  width: 600px;
-  max-width: 90%;
-  background-color: #ffffff !important;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-
-.modal-header {
-  padding: 20px 25px;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.modal-footer {
-  padding: 20px 25px;
-  border-top: 1px solid #f1f5f9;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-
-form {
-  padding: 20px 30px;
-  background-color: #ffffff;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 50px;
-}
-
-
-.form-group {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #303D49;
-  margin-bottom: 6px;
-}
-
-.form-control {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid #303D49;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  background-color: #ffffff;
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #ea5357;
-  box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.1);
-}
-
-.form-control.error {
-  border-color: #ef4444;
-  background-color: #fef2f2;
-}
-
-.error-text {
-  color: #ef4444;
-  font-size: 12px;
-  margin-top: 4px;
-}
-
-
-.modal-footer {
-  padding-top: 20px;
-  margin-top: 10px;
-  border-top: 1px solid #f1f5f9;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-.btn-cancel {
-  background-color: #f1f5f9;
-  color: #64748b;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.btn-submit {
-  background-color: #ea5357;
-  color: white;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.btn-submit:hover:not(:disabled) {
-  background-color: #d44347;
-}
-
-.btn-submit:disabled {
-  background-color: #fca5a5;
-  cursor: not-allowed;
-}
-
-
-.profile-info {
-  padding: 20px 25px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  background-color: #ffffff;
-}
-
-.profile-avatar {
-  width: 80px;
-  height: 80px;
-  background-color: #fef2f2;
-  color: #ea5357;
-  border: 2px solid #fca5a5;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 auto 20px auto;
-}
-
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.info-row:last-child {
-  border-bottom: none;
-}
-
-.label {
-  color: #64748b;
-  font-size: 14px;
-}
-
-.value {
-  color: #1e293b;
-  font-weight: 600;
-}
-
-
-.loading, .empty-state {
-  text-align: center;
-  padding: 30px;
-  color: #64748b;
-}
-
-.btn-view {
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn-view:hover {
-    background-color: #4f46e5 !important;
-    transform: translateY(-1px);
-}
-
-.btn-view:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-*/
-
-
-/* ==========================================================================
-   1. VARIABLES DE THÈME (GÈRE LE SWITCH CLAIR/SOMBRE)
-   ========================================================================== */
-/*:host {
-
-  --bg-page: #f8fafc;
-  --bg-card: #ffffff;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --text-label: #303D49;
-  --border-color: #f1f5f9;
-  --table-th-bg: #f8fafc;
-  --row-hover: #f9fafb;
-  --input-border: #303D49;
-  --modal-bg: rgba(48, 61, 73, 0.7);
-  --input-bg: #ffffff;
-
-
-  --smart-red: #ea5357;
-  --smart-red-dark: #d44347;
-}
-
-:host-context(.dark-mode) {
-
-  --bg-page: #0f172a;
-  --bg-card: #1e293b;
-  --text-main: #f1f5f9;
-  --text-muted: #94a3b8;
-  --text-label: #cbd5e1;
-  --border-color: #334155;
-  --table-th-bg: #1e293b;
-  --row-hover: #262f3f;
-  --input-border: #475569;
-  --modal-bg: rgba(0, 0, 0, 0.8);
-  --input-bg: #1e293b;
-}*/
-
-/* ==========================================================================
-   2. APPLICATION DES STYLES (STRUCTURE CONSERVÉE)
-   ========================================================================== */
-
-/*.admin-container {
-  background-color: var(--bg-page);
-  padding: 20px;
-}
-
-.admin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-  background: var(--bg-card);
-  padding: 20px 30px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  color: var(--text-main);
-}
-
-.btn-add {
-  background-color: var(--smart-red);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.btn-add:hover {
-  background-color: var(--smart-red-dark);
-}
-
-
-.table-container {
-  background: var(--bg-card);
-  border-radius: 12px;
-  padding: 20px;
-}
-
-.modern-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.modern-table th {
-  padding: 14px;
-  background: var(--table-th-bg);
-  text-align: left;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.modern-table td {
-  padding: 14px;
-  border-bottom: 1px solid var(--border-color);
-  color: var(--text-main);
-}
-
-.modern-table tr:hover {
-  background: var(--row-hover);
-}
-
-
-.status-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.status-badge.active {
-  background: rgba(49, 151, 149, 0.2);
-  color: #319795;
-}
-
-.status-badge.inactive {
-  background: rgba(229, 62, 62, 0.2);
-  color: #e53e3e;
-}
-
-
-.actions {
-  display: flex;
-  gap: 8px;
-}
-
-.actions button {
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.2s;
-}
-
-
-.btn-view { background: rgba(2, 132, 199, 0.2); color: #38bdf8; }
-.btn-edit { background: rgba(217, 119, 6, 0.2); color: #fbbf24; }
-.btn-toggle { background: rgba(147, 51, 234, 0.2); color: #c084fc; }
-.btn-delete { background: rgba(220, 38, 38, 0.2); color: #f87171; }
-
-.actions button:hover {
-  transform: scale(1.1);
-  filter: brightness(1.1);
-}
-
-
-.alert.success {
-  background: rgba(49, 151, 149, 0.2);
-  color: #319795;
-}
-
-.alert.error {
-  background: rgba(229, 62, 62, 0.2);
-  color: #f87171;
-}
-
-
-.bulk-actions {
-  background: var(--bg-card);
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  color: var(--text-main);
-}
-
-
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(48, 61, 73, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(4px);
-  z-index: 1000;
-}
-
-
-.modal-content {
-  width: 600px;
-  max-width: 90%;
-  background-color: var(--bg-card);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-
-.modal-header {
-  padding: 20px 25px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.modal-footer {
-  padding: 20px 25px;
-
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-.form-group label {
-  color: var(--text-label);
-}
-
-.form-control {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid var(--input-border);
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  background-color: var(--input-bg);
-  color: var(--text-main);
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: var(--smart-red);
-  box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.1);
-}
-
-
-.profile-avatar {
-  background-color: rgba(234, 83, 87, 0.1);
-  color: var(--smart-red);
-  border: 2px solid var(--smart-red);
-}
-
-.info-row {
-  border-bottom: 1px solid var(--border-color);
-}
-
-.label { color: var(--text-muted); }
-.value { color: var(--text-main); }
-
-
-.loading, .empty-state {
-  color: var(--text-muted);
-}*/
-
 
 :host {
-  /* Mode Clair (Par défaut) */
   --bg-admin: #f8fafc;
   --bg-card: #ffffff;
   --text-main: #1e293b;
@@ -609,13 +11,11 @@ form {
   --input-border: #303D49;
   --modal-bg: rgba(48, 61, 73, 0.7);
 
-  /* Couleurs Accent (Stables) */
   --smart-red: #ea5357;
   --smart-red-dark: #d44347;
 }
 
 :host-context(.dark-mode) {
-  /* Mode Sombre */
   --bg-admin: #0f172a;
   --bg-card: #1e293b;
   --text-main: #f1f5f9;
@@ -628,16 +28,14 @@ form {
   --modal-bg: rgba(0, 0, 0, 0.8);
 }
 
-/* ==========================================================================
-   2. APPLICATION (STRUCTURE IDENTIQUE)
-   ========================================================================== */
 
 .admin-container {
   background-color: var(--bg-admin);
   padding: 20px;
 }
 
-.admin-header {
+
+/*.admin-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -647,44 +45,41 @@ form {
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   color: var(--text-main);
-  width: max-content;      /* Force le conteneur à prendre la largeur de son contenu */
-      min-width: 100%;         /* Optionnel : garantit qu'il prend au moins toute la largeur dispo */
-      max-width: 100%;         /* Empêche de déborder de l'écran si le tableau est trop grand */
-
-
-}
-
+}/*
 .btn-add {
   background-color: var(--smart-red);
   color: white;
   padding: 10px 20px;
   border-radius: 8px;
   border: none;
-  font-weight: 600;
+
+
   cursor: pointer;
   transition: background 0.3s;
+
+  transform: translateY(-60px);
 }
 
 .btn-add:hover {
   background-color: var(--smart-red-dark);
-}
+}*/
 
-/* TABLE */
+
 .table-container {
   background: var(--bg-card);
   border-radius: 12px;
   padding: 20px;
-  width: max-content;      /* Force le conteneur à prendre la largeur de son contenu */
-    min-width: 100%;         /* Optionnel : garantit qu'il prend au moins toute la largeur dispo */
-    max-width: 100%;         /* Empêche de déborder de l'écran si le tableau est trop grand */
-       overflow: auto;     /* Ajoute un scroll horizontal interne si le contenu dépasse */
+  width: max-content;
+    min-width: 100%;
+    max-width: 100%;
+       overflow: auto;
     display: inline-block;
 
 }
 
 .modern-table {
 
-width: auto;             /* Le tableau prend sa largeur naturelle */
+width: auto;
   min-width: 100%;
   border-collapse: collapse;
 }
@@ -707,7 +102,6 @@ width: auto;             /* Le tableau prend sa largeur naturelle */
   background: var(--row-hover);
 }
 
-/* STATUS */
 .status-badge {
   padding: 4px 12px;
   border-radius: 20px;
@@ -727,7 +121,6 @@ width: auto;             /* Le tableau prend sa largeur naturelle */
   color: #e53e3e;
 }
 
-/* ACTIONS */
 .actions { display: flex; gap: 8px; }
 
 .actions button {
@@ -741,7 +134,6 @@ width: auto;             /* Le tableau prend sa largeur naturelle */
 .btn-toggle { background: rgba(147, 51, 234, 0.15); color: #9333ea; }
 .btn-delete { background: rgba(224, 36, 36, 0.15); color: #dc2626; }
 
-/* MODALS */
 .modal {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: var(--modal-bg);
@@ -761,11 +153,8 @@ width: auto;             /* Le tableau prend sa largeur naturelle */
 
 
 
-/* ==========================================================================
-   FORMULAIRE AMÉLIORÉ (CLEAN & ADAPTATIF)
-   ========================================================================== */
 form {
-  padding: 30px; /* Unifié pour un meilleur équilibre */
+  padding: 30px;
   background-color: var(--white);
   border-radius: var(--radius-lg);
   transition: background-color 0.3s ease;
@@ -773,33 +162,32 @@ form {
 
 .form-row {
   display: grid;
-  /* On utilise auto-fit pour que ça passe sur 1 colonne sur mobile automatiquement */
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px; /* 50px était un peu large, 30px est plus compact et moderne */
+  gap: 30px;
 }
 
 .form-group {
-  margin-bottom: 25px; /* Plus d'espace entre les blocs verticaux */
+  margin-bottom: 25px;
   display: flex;
   flex-direction: column;
 }
 
 .form-group label {
-  font-size: 13px; /* Légèrement plus petit pour un look plus "UI" */
+  font-size: 13px;
   font-weight: 700;
-  color: var(--text-muted); /* Utilise la variable muted pour un look moins agressif */
+  color: var(--text-muted);
   margin-bottom: 8px;
-  text-transform: uppercase; /* Donne un aspect professionnel/admin */
+  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .form-control {
   width: 100%;
-  padding: 12px 16px; /* Plus confortable pour la saisie */
-  border: 1.5px solid var(--border-color); /* Utilise ta variable de bordure */
-  border-radius: 10px; /* Coins un peu plus doux */
+  padding: 12px 16px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 10px;
   font-size: 14px;
-  background-color: var(--input-bg); /* Variable dédiée aux champs */
+  background-color: var(--input-bg);
   color: var(--text-main);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -809,81 +197,30 @@ form {
   opacity: 0.6;
 }
 
-/* ÉTAT : FOCUS (C'est ici qu'on améliore le rendu) */
 .form-control:focus {
   outline: none;
-  border-color: var(--smart-red); /* La bordure devient rouge */
-  background-color: var(--white); /* Le champ s'illumine légèrement */
-  box-shadow: 0 0 0 4px rgba(234, 83, 87, 0.1); /* Aura rouge très douce */
-  transform: translateY(-1px); /* Petit effet de levée très premium */
+  border-color: var(--smart-red);
+  background-color: var(--white);
+  box-shadow: 0 0 0 4px rgba(234, 83, 87, 0.1);
+  transform: translateY(-1px);
 }
 
-/* ÉTAT : ERREUR */
 .form-control.error {
   border-color: #ef4444;
-  background-color: rgba(239, 68, 68, 0.02); /* Teinte rouge très légère */
+  background-color: rgba(239, 68, 68, 0.02);
 }
 
 .form-control.error:focus {
   box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
 }
 
-/* --- OPTIMISATION DARK MODE --- */
 .dark-mode .form-control {
-  border-color: var(--border-light); /* Bordure un peu plus visible en mode sombre */
+  border-color: var(--border-light);
 }
 
 .dark-mode .form-control:focus {
   background-color: var(--smart-dark);
 }
-
-/*form {
-  padding: 20px 30px;
-  background-color: #ffffff;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 50px;
-}
-
-
-.form-group {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  font-size: 14px;
-  font-weight: 600;
-
-  margin-bottom: 6px;
-  color: var(--text-label);
-}
-
-.form-control {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid #303D49;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  background-color: var(--bg-card);
-  color: var(--text-main);
-}
-
-.form-control:focus {
-  outline: none;
-  border-color:var(--bg-card);
-  box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.1);
-}
-
-.form-control.error {
-  border-color: #ef4444;
-  background-color: var(--bg-card);
-}*/
 
 
 .btn-cancel {
@@ -914,7 +251,6 @@ form {
 }
 
 
-/* FILTRE SELECT */
 .status-filter-select {
   min-width: 100px;
   padding: 10px 35px 10px 40px;
@@ -932,7 +268,6 @@ form {
   background-size: 16px;
 }
 
-/* PROFILE VIEW INFOS */
 .info-row {
   display: flex;
   justify-content: space-between;
@@ -973,38 +308,20 @@ form {
 }
 
 
-/*.modal-header {
-  padding: 20px 25px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.modal-footer {
-  padding: 20px 25px;
-
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}*/
-
-/* 1. On limite la hauteur de la modale pour qu'elle ne dépasse jamais l'écran */
 .modal-content {
-  max-height: 90vh; /* 90% de la hauteur de l'écran maximum */
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
-  overflow: auto; /* Empêche le scroll sur toute la carte */
+  overflow: auto;
 }
 
-/* 2. On rend le formulaire SCROLLABLE */
 form {
-  flex: 1; /* Prend tout l'espace disponible entre le header et le footer */
-  overflow-y: auto; /* Active le scroll vertical uniquement ici */
+  flex: 1;
+  overflow-y: auto;
   padding: 25px 30px;
   background-color: var(--white);
 }
 
-/* 3. On fixe le Footer (boutons) en bas */
 .modal-footer {
   padding: 15px 30px;
   background-color: var(--white);
@@ -1013,11 +330,9 @@ form {
   justify-content: flex-end;
   gap: 12px;
   z-index: 10;
-  /* Optionnel : petite ombre pour montrer que le contenu passe dessous */
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.03);
 }
 
-/* 4. On fixe le Header en haut */
 .modal-header {
   padding: 20px 30px;
   display: flex;
@@ -1028,7 +343,6 @@ form {
   z-index: 10;
 }
 
-/* --- OPTIMISATION DU SCROLLBAR (Look moderne) --- */
 form::-webkit-scrollbar {
   width: 6px;
 }
@@ -1046,24 +360,20 @@ form::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
 
-/* ==========================================================================
-   BARRE D'ACTIONS GROUPÉES (BULK ACTIONS)
-   ========================================================================== */
 
 .bulk-actions {
   display: flex;
   align-items: center;
   gap: 15px;
   padding: 12px 25px;
-  background-color: var(--white); /* Utilise ta variable Midnight/White */
-  border: 1px solid var(--smart-red); /* Bordure rouge pour montrer l'importance */
+  background-color: var(--white);
+  border: 1px solid var(--smart-red);
   border-radius: var(--radius-lg);
   margin-bottom: 20px;
-  box-shadow: 0 4px 15px rgba(234, 83, 87, 0.1); /* Lueur rouge subtile */
-  animation: slideDown 0.3s ease-out; /* Animation à l'apparition */
+  box-shadow: 0 4px 15px rgba(234, 83, 87, 0.1);
+  animation: slideDown 0.3s ease-out;
 }
 
-/* Texte "X sélectionné(s)" */
 .bulk-actions span {
   font-size: 14px;
   font-weight: 600;
@@ -1073,7 +383,6 @@ form::-webkit-scrollbar-thumb:hover {
   border-right: 2px solid var(--border-color);
 }
 
-/* Style commun des boutons de la barre bulk */
 .bulk-actions button {
   padding: 8px 16px;
   border-radius: 8px;
@@ -1087,7 +396,6 @@ form::-webkit-scrollbar-thumb:hover {
   gap: 8px;
 }
 
-/* Bouton Activer (Vert) */
 .btn-activate {
   background-color: rgba(49, 151, 149, 0.1);
   color: #319795;
@@ -1098,7 +406,6 @@ form::-webkit-scrollbar-thumb:hover {
   transform: translateY(-2px);
 }
 
-/* Bouton Désactiver (Orange/Gris) */
 .btn-deactivate {
   background-color: rgba(217, 119, 6, 0.1);
   color: #d97706;
@@ -1109,7 +416,6 @@ form::-webkit-scrollbar-thumb:hover {
   transform: translateY(-2px);
 }
 
-/* Bouton Supprimer (Rouge - déjà défini dans tes actions, on l'ajuste) */
 .bulk-actions .btn-delete {
   background-color: rgba(224, 36, 36, 0.1);
   color: #dc2626;
@@ -1121,7 +427,6 @@ form::-webkit-scrollbar-thumb:hover {
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
 
-/* Animation d'entrée */
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -1133,18 +438,13 @@ form::-webkit-scrollbar-thumb:hover {
   }
 }
 
-/* --- AJUSTEMENT DARK MODE --- */
 .dark-mode .bulk-actions {
-  background-color: var(--white); /* Ton bleu nuit profond */
+  background-color: var(--white);
   border-color: rgba(234, 83, 87, 0.4);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 
-
-/* ==========================================================================
-   SECTION MOTS-CLÉS (DYNAMIQUE)
-   ========================================================================== */
 
 .keyword-section {
   background: var(--white);
@@ -1159,12 +459,11 @@ form::-webkit-scrollbar-thumb:hover {
   font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
-  color: var(--smart-red); /* On utilise le rouge pour l'intitulé principal */
+  color: var(--smart-red);
   margin-bottom: 10px;
   letter-spacing: 0.5px;
 }
 
-/* Le sélecteur de nombre */
 .keyword-section input[type="number"] {
   width: 120px;
   margin-bottom: 20px;
@@ -1173,7 +472,6 @@ form::-webkit-scrollbar-thumb:hover {
   text-align: center;
 }
 
-/* LISTE DES MOTS-CLÉS */
 .motcle-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -1186,7 +484,7 @@ form::-webkit-scrollbar-thumb:hover {
   display: flex;
   align-items: center;
   gap: 8px;
-  animation: fadeInMotCle 0.3s ease-out; /* Animation à l'ajout */
+  animation: fadeInMotCle 0.3s ease-out;
 }
 
 .motcle-item .form-control {
@@ -1202,7 +500,6 @@ form::-webkit-scrollbar-thumb:hover {
   box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.1);
 }
 
-/* BOUTON SUPPRIMER (X) */
 .btn-remove-item {
   width: 32px;
   height: 32px;
@@ -1225,7 +522,6 @@ form::-webkit-scrollbar-thumb:hover {
   transform: scale(1.1);
 }
 
-/* ANIMATION D'APPARITION */
 @keyframes fadeInMotCle {
   from {
     opacity: 0;
@@ -1237,7 +533,6 @@ form::-webkit-scrollbar-thumb:hover {
   }
 }
 
-/* --- AJUSTEMENT DARK MODE --- */
 .dark-mode .keyword-section {
   background-color: rgba(255, 255, 255, 0.02);
   border-color: var(--border-light);
@@ -1271,7 +566,7 @@ form::-webkit-scrollbar-thumb:hover {
 }
 
 .btn-add-tenant {
-  background-color: #10b981; /* Vert */
+  background-color: #10b981;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -1286,7 +581,7 @@ form::-webkit-scrollbar-thumb:hover {
 
 .btn-list {
   background: #f8fafc;
-  color: #6366f1; /* Couleur indigo pour différencier de l'édition et de la vue */
+  color: #6366f1;
   border: 1px solid #e2e8f0;
   padding: 6px;
   border-radius: 6px;
@@ -1298,4 +593,179 @@ form::-webkit-scrollbar-thumb:hover {
   background: #6366f1;
   color: white;
   transform: translateY(-1px);
+}
+
+
+.admin-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2d3436;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+/* Style du Select (Filtre) */
+.filter-section .form-control {
+  border-radius: 10px;
+  border: 1px solid #dfe6e9;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  color: #636e72;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.filter-section .form-control:focus {
+  border-color: #74b9ff;
+  box-shadow: 0 0 0 4px rgba(116, 185, 255, 0.1);
+  outline: none;
+}
+
+/* Groupe de boutons d'action (Import/Export) */
+.actions-header {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Boutons communs */
+.btn-import, .btn-success, .btn-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+/* Style spécifique Importer (Bleu doux) */
+.btn-import {
+  background-color: #edf2ff;
+  color: #448aff;
+}
+
+.btn-import:hover {
+  background-color: #448aff;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Style spécifique Exporter (Vert moderne) */
+.btn-success {
+  background-color: #e6fcf5;
+  color: #0ca678 !important;
+}
+
+.btn-success:hover {
+  background-color: #0ca678;
+  color: white !important;
+  transform: translateY(-2px);
+}
+
+/* Bouton Ajouter (Couleur d'accentuation - Indigo) */
+.btn-add {
+  background: linear-gradient(135deg, #ff5f6d, #ea5357);
+  color: white;
+  box-shadow: 0 4px 15px rgba(234, 83, 87, 0.3);
+}
+
+.btn-add span {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+  filter: brightness(1.1);
+}
+
+/* Responsive : passage en colonne sur mobile */
+@media (max-width: 992px) {
+  .admin-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-section select {
+    width: 100% !important;
+  }
+
+  .actions-header {
+    justify-content: space-between;
+  }
+
+  .actions-header button {
+    flex: 1;
+  }
+}
+.admin-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-bottom: 25px;
+  background: var(--bg-card);
+  padding: 20px 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  color: var(--text-main);
+  position: relative;
+}
+
+.admin-header h1 {
+  margin: 0;
+  align-self: flex-start;
+}
+
+
+
+.filter-section .form-control {
+
+  border-radius: 10px;
+  border: 1px solid #dfe6e9;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  background-color: #f8f9fa;
+  width: 250px;
+}
+
+.actions-header {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn-marine {
+  /* Dégradé : Bleu Marine Profond vers Gris Ardoise */
+  background: linear-gradient(135deg, #2c3e50, #4b6584);
+
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+
+  box-shadow: 0 4px 15px rgba(44, 62, 80, 0.2);
+
+  transition: all 0.3s ease;
+
+  margin-left: 0 !important;
+  transform: none !important;
+}
+
+.btn-marine:hover {
+  background: linear-gradient(135deg, #34495e, #576574);
+  box-shadow: 0 6px 20px rgba(44, 62, 80, 0.3);
+  transform: translateY(-2px) !important;
+}
+
+.btn-marine:active {
+  transform: scale(0.96) !important;
 }

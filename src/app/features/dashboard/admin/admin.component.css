@@ -290,58 +290,7 @@
   --modal-bg: rgba(0, 0, 0, 0.8);
 }
 
-/* ==========================================================================
-   2. APPLICATION (STRUCTURE IDENTIQUE)
-   ========================================================================== */
 
-/*.admin-container {
-  background-color: var(--bg-admin);
-  padding: 20px;
-}*/
-
-/*.admin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-  background: var(--bg-card);
-  padding: 20px 30px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  color: var(--text-main);
-}
-
-.btn-add {
-  background-color: var(--smart-red);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.btn-add:hover {
-  background-color: var(--smart-red-dark);
-}*/
-
-
-/*.table-container {
-  background: var(--bg-card);
-  border-radius: 12px;
-  padding: 20px;
-  width: max-content;
-      min-width: 100%;
-      max-width: 100%;
-
-}
-
-.modern-table {
-  width: auto;
-    min-width: 100%;
-  border-collapse: collapse;
-}*/
 .modern-table th {
   padding: 14px;
   background: var(--table-th-bg);
@@ -766,38 +715,6 @@ form::-webkit-scrollbar-thumb:hover {
   to { opacity: 1; transform: translateY(0); }
 }
 
-
-/*.otp-container {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-.otp-input {
-  width: 45px;
-  height: 50px;
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  border: 2px solid #ced4da;
-  border-radius: 8px;
-  transition: all 0.2s;
-}
-
-.otp-input:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-  outline: none;
-}
-
-.otp-input::-webkit-outer-spin-button,
-.otp-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}*/
-
-
 .otp-container {
   display: flex;
   gap: 10px;
@@ -806,9 +723,8 @@ form::-webkit-scrollbar-thumb:hover {
 }
 
 .otp-input {
-  /* Supprimer la transparence */
-  background-color: #ffffff !important; /* Fond blanc pur */
-  color: #1e293b; /* Texte gris très foncé */
+  background-color: #ffffff !important;
+  color: #1e293b;
 
   /* Dimensions */
   width: 55px;
@@ -959,21 +875,7 @@ form::-webkit-scrollbar-thumb:hover {
   to { transform: translateX(0); opacity: 1; }
 }
 
-/*.admin-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
 
-  gap: 1.5rem;
-  padding: 1.5rem 2rem;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  margin-bottom: 2rem;
-}*/
-
-/* Titre principal */
 .admin-header h1 {
   font-size: 1.5rem;
   font-weight: 700;

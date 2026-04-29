@@ -2,34 +2,34 @@
   <div class="admin-header">
     <h1>Catalogue des Modules</h1>
 
-    <div style="display:flex; gap:10px;">
-      <select class="form-control filter-select" [(ngModel)]="selectedFilterCat" (change)="applyFilter()">
-        <option value="">Toutes les catégories</option>
-        <option *ngFor="let c of categories" [value]="c.id">{{ c.nom }}</option>
-      </select>
-      <button class="btn-behavioral" (click)="goToBehavioralQuestions()"
-              style="background-color: #10b981; color: white; display: flex; align-items: center; gap: 5px; padding: 8px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500;">
+
+      <div class="actions-header d-flex gap-2">
+      <button class="btn-marine" (click)="goToBehavioralQuestions()"
+              >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-10.6 8.5 8.5 0 0 1 4.6 1.3L22 3l-1.5 5.5Z"></path>
         </svg>
         Questions Comportementales
       </button>
 
-      <input type="file" #fileInput
-             (change)="onFileSelected($event)"
-             accept=".csv"
-             style="display: none;">
 
+        <input type="file" #fileInput (change)="onFileSelected($event)" accept=".xlsx, .xls" style="display: none">
 
-      <button class="btn-view" (click)="onImportClick()" [disabled]="loading" *ngIf="isSuperAdmin"
-              style="background-color: #6366f1; color: white; display: flex; align-items: center; gap: 5px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-          <polyline points="17 8 12 3 7 8"></polyline>
-          <line x1="12" y1="3" x2="12" y2="15"></line>
-        </svg>
-        Importer CSV
-      </button>
+        <button class="btn-import" (click)="onImportClick()" style="padding-right:60px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+          </svg>
+          Importer
+        </button>
+
+        <button class="btn btn-success d-flex align-items-center gap-2" (click)="downloadTemplate()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM3 9h10v1h-10V9zM3 11h10v1h-10v-1zM3 13h10v1h-10v-1zM3 7h10v1h-10V7z"/>
+          </svg>
+          Exporter Modele
+        </button>
+
 
       <button class="btn-add" (click)="openAddModal()"*ngIf="isSuperAdmin">
         + Nouveau Module
@@ -37,7 +37,19 @@
     </div>
   </div>
 
+
+
   <div class="table-container">
+
+    <div class="filter-section d-flex gap-3 align-items-center">
+      <select class="form-control"
+              [(ngModel)]="selectedFilterCat"
+              style="width: 250px; "
+              (change)="applyFilter()">
+        <option value="">Toutes les catégories</option>
+        <option *ngFor="let c of categories" [value]="c.id">{{ c.nom }}</option>
+      </select>
+    </div>
 
     <div *ngIf="isSuperAdmin">
     <div class="bulk-actions" *ngIf="selectedModules.length > 0">
@@ -49,12 +61,6 @@
     </div>
     </div>
 
-    <!--<div *ngIf="!isAdmin">
-      <div class="bulk-actions" *ngIf="selectedModules.length > 0">
-        <span>{{ selectedModules.length }} sélectionné(s)</span>
-        <button class="btn-add-tenant" (click)="addToModuleTenant()">ajouter</button>
-      </div>
-    </div>-->
 
     <div *ngIf="isAdminTenant">
       <div class="bulk-actions" *ngIf="selectedModules.length > 0">
@@ -196,7 +202,6 @@
                      placeholder="Mot-clé #{{i+1}}"
                      class="form-control">
 
-              <!-- suggestions -->
               <div *ngIf="filteredMotCles[i] && filteredMotCles[i].length > 0" class="dropdown">
                 <div *ngFor="let mc of filteredMotCles[i]"
                      (click)="selectMotCle(mc, i)"
@@ -210,14 +215,6 @@
             </div>
           </div>
         </div>
-
-
-
-
-           <!-- <button type="button" (click)="openCatModal()">
-              Choisir catégories questions
-            </button>-->
-
 
         <div class="modal-footer">
           <button type="submit" class="btn-submit" [disabled]="moduleForm.invalid">
@@ -265,19 +262,6 @@
             </span>
           </div>
         </div>
-        <!--
-        <div class="info-row" style="flex-direction: column; align-items: flex-start; margin-top: 15px;">
-          <span class="label">Catégories de Questions</span>
-            <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;" *ngIf="moduleToView.categories && moduleToView.categories.length > 0">
-                <span class="badge" *ngFor="let catQ of moduleToView.categories" style="background:#e0f2fe; color:#0369a1; border: 1px solid #bae6fd;">
-                  {{ catQ.nom }}
-                </span>
-            </div>
-          <span class="value" *ngIf="!moduleToView.categories || moduleToView.categories.length === 0" style="color: #94a3b8; font-style: italic;">
-            Aucune catégorie sélectionnée
-          </span>
-        </div>-->
-
       </div>
     </div>
   </div>
@@ -297,48 +281,9 @@
     </div>
   </div>
 
-  <!--666666666666666666666666666666666666666666666666666666666666666666666666666-->
   <div class="modal" *ngIf="showCatModal">
     <div class="modal-content">
 
-      <!--<h3>Choisir catégories questions</h3>
-
-
-      <input type="text"
-             [(ngModel)]="searchCat"
-             placeholder="Rechercher catégorie..."
-             class="form-control"
-             style="margin-bottom:10px;">
-
-
-      <div style="margin-bottom:10px;">
-        <strong>Catégories sélectionnées :</strong>
-
-        <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;">
-        <span *ngFor="let cat of tempSelectedCategories"
-              style="background:#e0f2fe; padding:5px 10px; border-radius:15px;">
-
-          {{ cat.nom }}
-
-          <button type="button"
-                  (click)="toggleCategory(cat)"
-                  style="margin-left:5px; border:none; background:none; cursor:pointer;">
-            ✖
-          </button>
-
-        </span>
-        </div>
-      </div>
-
-
-      <div *ngFor="let cat of filteredCatQuestions">
-        <input type="checkbox"
-               [checked]="isSelectedCategory(cat)"
-               (change)="toggleCategory(cat)">
-        {{ cat.nom }}
-      </div>-->
-
-      <!-- 🎯 Actions -->
       <div style="margin-top:10px;">
         <button (click)="confirmCategories()">Confirmer</button>
         <button (click)="cancelCategories()">Annuler</button>

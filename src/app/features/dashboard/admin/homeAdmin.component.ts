@@ -119,7 +119,7 @@ public specialiteChartData: ChartConfiguration<'doughnut'>['data'] = {
   labels: [],
   datasets: [{
     data: [],
-    backgroundColor: ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'],
+    backgroundColor: ['#22D3EE','#6B7280','#E5E7EB','#1E293B','#EA5357','#F3F4F6'],
     hoverOffset: 15,
     borderWidth: 2,
     borderColor: '#ffffff'
@@ -225,6 +225,7 @@ loadChartsData(): void {
            barThickness: 40,
 
 
+
                      backgroundColor: (context) => {
                        const { ctx, chartArea } = context.chart;
                        if (!chartArea) return '#6366f1';
@@ -244,7 +245,7 @@ loadChartsData(): void {
                        return gradient;
                      },
 
-                     hoverBackgroundColor: '#4338ca'
+                     hoverBackgroundColor: '#22D3EE'
 
                  }
                         ]
@@ -271,7 +272,6 @@ this.adminService.getStatsSpecialites(idEtab).subscribe({
             '#6B7280',
             '#E5E7EB',
             '#1E293B',
-
             '#EA5357',
             '#F3F4F6'
 

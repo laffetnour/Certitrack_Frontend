@@ -60,29 +60,6 @@
         </div>
       </div>
 
-      <!--<div class="nav-item-group">
-        <div class="nav-item" (click)="toggleQuestionMenu()">
-          <i class="fas fa-question-circle"></i>
-          <span>Question/Réponse</span>
-          <i class="fas fa-chevron-down arrow"
-             [style.transform]="isQuestionOpen ? 'rotate(180deg)' : 'none'"></i>
-        </div>
-
-        <div class="sub-menu" *ngIf="isQuestionOpen">
-
-
-          <div class="nav-item sub" routerLink="/super-admin/questions" routerLinkActive="active">
-            <i class="fas fa-list-ul" style="font-size: 0.8rem; margin-right: 10px;"></i>
-            <span>Questions</span>
-          </div>
-
-          <div class="nav-item sub" routerLink="/super-admin/cat-question" routerLinkActive="active">
-            <span>Catégories questions</span>
-          </div>
-
-
-        </div>
-      </div>-->
 
       <div class="nav-item" routerLink="/super-admin/parametre" routerLinkActive="active">
         <i class="fas fa-cog"></i> <span>Paramètres</span>
@@ -103,9 +80,7 @@
       </div>
 
       <div class="user-actions">
-        <!--<div class="theme-toggle" (click)="themeService.toggleTheme()" [title]="themeService.getStoredTheme() === 'dark' ? 'Mode Clair' : 'Mode Sombre'">
-          <i [class]="themeService.getStoredTheme() === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"></i>
-        </div>-->
+
 
 
         <div class="notification-icon">
@@ -168,7 +143,21 @@
                 </div>
               </div>
         </div>
-
+        <div class="dashboard-chart-container">
+          <div class="chart-card">
+            <h3>Analyse de Performance : Points Faibles</h3>
+            <div style="display: block; height: 300px;">
+              <canvas baseChart
+                      [data]="barChartData"
+                      [options]="barChartOptions"
+                      [type]="'bar'">
+              </canvas>
+            </div>
+            <div class="chart-footer">
+              <small>⚠️ Ces modules nécessitent une révision ou une suppression.</small>
+            </div>
+          </div>
+        </div>
 
 
       </ng-container>

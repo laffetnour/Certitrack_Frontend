@@ -3,15 +3,27 @@
   <div class="admin-header">
     <div class="header-left">
       <button class="btn-back" (click)="goBack()">← Retour</button>
-      <!--<h1>Questions du Module #{{ moduleId }}</h1>-->
       <h1>{{ isBehavioralMode()? 'Banque de Questions Comportementales' : 'Questions Techniques du Module' }}</h1>
     </div>
 
-    <div class="header-actions">
-      <label class="btn-import">
-        <input type="file" (change)="onImportCSV($event)" accept=".csv" style="display: none;">
-        📥 Importer CSV
-      </label>
+
+      <div class="actions-header  d-flex gap-2">
+        <input type="file" (change)="onFileSelected($event)" hidden #fileInput accept=".xlsx"/>
+
+
+        <button class="btn-import" (click)="fileInput.click()" style="padding-right:60px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+          </svg>
+          Importer
+        </button>
+      <button class="btn btn-success d-flex align-items-center gap-2" (click)="downloadTemplate()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM3 9h10v1h-10V9zM3 11h10v1h-10v-1zM3 13h10v1h-10v-1zM3 7h10v1h-10V7z"/>
+        </svg>
+        Exporter Model
+      </button>
     </div>
   </div>
 
@@ -44,8 +56,6 @@
       </tr>
       </thead>
       <tbody>
-      <!--<tr *ngFor="let q of questions">
-        <ng-container *ngIf="(isBehavioralMode() && q.nature === 'comportementale') || (!isBehavioralMode() && q.nature === 'technique')">-->
 
       <tr *ngFor="let q of questions; trackBy: trackById"
           [hidden]="(isBehavioralMode() && q.nature !== 'comportementale') || (!isBehavioralMode() && q.nature !== 'technique')">
@@ -79,7 +89,7 @@
                  fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/>
               <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
-              <!-- actif -->
+
             </svg>
 
             <svg *ngIf="!q.statut" xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +97,7 @@
                  fill="none" stroke="currentColor" stroke-width="2">
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
               <polyline points="22 4 12 14.01 9 11.01"/>
-              <!-- inactif -->
+
             </svg>
 
           </button>
@@ -109,7 +119,6 @@
             </svg>
           </button>
         </td>
-        <!--</ng-container>-->
       </tr>
       </tbody>
     </table>
@@ -140,7 +149,7 @@
               <li *ngFor="let rep of questionToView.reponses" [class.correct]="rep.score > 0">
                 <span class="status-icon">{{ rep.score > 0 ? '✅' : '❌' }}</span>
                 {{ rep.texte }}
-                <span class="score-badge">({{ rep.score }}%)</span>
+                <span class="score-badge">({{ rep.score }})</span>
               </li>
             </ul>
           </div>

@@ -691,5 +691,26 @@ form::-webkit-scrollbar-thumb:hover {
 .btn-import:hover {
   background-color: #448aff;
   color: white;
+
   transform: translateY(-2px);
 }
+
+.btn-success {
+  background-color: #e6fcf5;
+  color: #0ca678 !important;
+  transform: translateY(4px);
+}
+
+.btn-success:hover {
+  background-color: #0ca678;
+  color: white !important;
+  transform: translateY(-2px);
+}
+
+.actions-header {
+    justify-content: space-between;
+  }
+
+  .actions-header button {
+    flex: 1;
+  }
