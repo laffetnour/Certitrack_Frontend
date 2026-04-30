@@ -37,12 +37,6 @@
         <span>Administrateurs</span>
       </div>
 
-      <div class="nav-item"
-           routerLink="/directeur/candidats"
-           routerLinkActive="active">
-        <i class="fas fa-user-graduate"></i>
-        <span>Candidats</span>
-      </div>
 
       <div class="nav-item"
            routerLink="/directeur/specialites"
@@ -51,22 +45,27 @@
         <span>Spécialités</span>
       </div>
 
-      <!--<div class="nav-item"
-           routerLink="/directeur/modules"
-           routerLinkActive="active">
-        <i class="fas fa-tags"></i>
-        <span>Modules</span>
-      </div>
 
       <div class="nav-item"
-           routerLink="/directeur/Listemodules"
+           routerLink="/directeur/candidats"
            routerLinkActive="active">
-        <i class="fas fa-tags"></i>
-        <span>Liste finale</span>
-      </div>-->
+        <i class="fas fa-user-graduate"></i>
+        <span>Candidats</span>
+      </div>
 
 
-      <!-- PARCOURS -->
+      <div class="nav-item"
+           routerLink="/directeur/resultats-sessions"
+           routerLinkActive="active">
+        <i class="fas fa-chart-line"></i>
+        <span>Résultats des Sessions Inscriptions</span>
+      </div>
+      <div class="nav-item"
+           routerLink="/directeur/sessionsExamen"
+           routerLinkActive="active">
+        <i class="fas fa-calendar"></i>
+        <span>Session Examen</span>
+      </div>
       <div class="nav-item-group">
         <div class="nav-item" (click)="isParcoursOpen = !isParcoursOpen">
           <i class="fas fa-route"></i>
@@ -76,19 +75,11 @@
         </div>
 
         <div class="sub-menu" *ngIf="isParcoursOpen">
-          <div class="nav-item sub">Import GMetrix</div>
+          <div class="nav-item sub"
+               routerLink="/directeur/import-gmetrix"
+               routerLinkActive="active">Import GMetrix</div>
           <div class="nav-item sub">Import Certiport</div>
         </div>
-      </div>
-
-      <div class="nav-item">
-        <i class="fas fa-chart-line"></i>
-        <span>Résultats</span>
-      </div>
-
-      <div class="nav-item">
-        <i class="fas fa-calendar"></i>
-        <span>Session</span>
       </div>
 
       <div class="nav-item">
@@ -117,36 +108,13 @@
 
     <header class="notification-bar">
 
-
+      <div class="logo-wrapper" *ngIf="tenantLogo">
+        <img [src]="tenantLogo" [alt]="currentUser?.tenantLogo" class="tenant-logo">
+      </div>
       <div class="search-container">
         <i class="fas fa-search"></i>
         <input type="text" placeholder="Recherche...">
       </div>
-
-
-      <!--<div class="user-actions">
-
-        <div class="notification-icon">
-          <i class="fas fa-bell"></i>
-          <span class="dot-notification"></span>
-        </div>
-
-        <div class="profile">
-          <span class="user-role">
-            {{ currentUser?.prenom }} {{ currentUser?.nom }}
-          </span>
-
-          <div class="avatar-circle">
-            <i class="fas fa-user"></i>
-          </div>
-
-          <i class="fas fa-chevron-down arrow-user"></i>
-        </div>
-
-      </div>
-    -->
-
-
     <div class="user-actions">
       <div class="notification-icon">
         <i class="fas fa-bell"></i>
@@ -165,6 +133,8 @@
         </div>
         <i class="fas fa-chevron-down arrow-user"></i>
       </div>
+
+
     </div>
     </header>
 

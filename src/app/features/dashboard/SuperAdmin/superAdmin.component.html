@@ -105,10 +105,10 @@
 
     <main class="content-area">
       <ng-container *ngIf="router.url === '/super-admin'">
-        <div class="welcome-section">
+        <!--<div class="welcome-section">
           <h1>Tableau de Bord - {{ currentUser?.nomEtablissement }}</h1>
           <p>Bienvenue, {{ currentUser?.prenom }} {{ currentUser?.nom }}</p>
-        </div>
+        </div>-->
 
         <div class="stats-grid">
           <div class="stat-card">
@@ -133,7 +133,7 @@
               </div>
             </div>
 
-              <div class="stat-card">
+             <!-- <div class="stat-card">
                 <div class="stat-icon bg-red">
                   <i class="fas fa-building"></i>
                 </div>
@@ -141,7 +141,7 @@
                   <h3>{{ stats?.admins || 0 }}</h3>
                   <p>Admins Ètab.</p>
                 </div>
-              </div>
+              </div>-->
         </div>
         <div class="dashboard-chart-container">
           <div class="chart-card">

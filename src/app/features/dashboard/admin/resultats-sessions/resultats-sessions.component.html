@@ -5,7 +5,7 @@
   <div class="admin-header">
     <h1>Résultats des Sessions</h1>
 
-    <button class="btn btn-success d-flex align-items-center gap-2" (click)="exportExcel()">
+    <button *ngIf="selectedSessionId" class="btn btn-success d-flex align-items-center gap-2" (click)="exportExcel()">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
         <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM3 9h10v1h-10V9zM3 11h10v1h-10v-1zM3 13h10v1h-10v-1zM3 7h10v1h-10V7z"/>
       </svg>
@@ -60,18 +60,17 @@
       <tr>
         <th>Nom</th>
         <th>Prénom</th>
-        <th>Date naissance</th>
-        <th>Âge</th>
+        <!--<th>Date naissance</th>
+        <th>Âge</th>-->
         <th>Email</th>
         <th>Identifiant</th>
-        <th>Spécialité</th>
+        <!--<th>Spécialité</th>-->
         <th>Module</th>
         <th>Session</th>
-        <th>Date début session</th>
+        <!--<th>Date début session</th>
         <th>Date fin session</th>
         <th>Date inscription</th>
-        <th>Date passage épreuve</th>
-
+        <th>Date passage épreuve</th>-->
         <th *ngIf="avecTest">Durée</th>
         <th *ngIf="avecTest">Score</th>
         <th *ngIf="avecTest">Status</th>
@@ -84,15 +83,15 @@
         <td><strong>{{ r.nom }}</strong></td>
         <td>{{ r.prenom }}</td>
 
-        <td>{{ r.dateNaissance | date:'dd/MM/yyyy' }}</td>
-        <td>{{ r.age }}</td>
+        <!--<td>{{ r.dateNaissance | date:'dd/MM/yyyy' }}</td>
+        <td>{{ r.age }}</td>-->
         <td>{{ r.email }}</td>
         <td>{{ r.identifiantSpecifique }}</td>
-        <td>{{ r.specialite }}</td>
+        <!--<td>{{ r.specialite }}</td>-->
 
         <td>{{ r.module }}</td>
         <td>{{ r.session }}</td>
-        <td>{{ r.dateDebutSession | date:'dd/MM/yyyy' }}</td>
+        <!--<td>{{ r.dateDebutSession | date:'dd/MM/yyyy' }}</td>
         <td>{{ r.dateFinSession | date:'dd/MM/yyyy' }}</td>
         <td>{{ r.dateInscription | date:'dd/MM/yyyy HH:mm' }}</td>
 
@@ -104,7 +103,7 @@
           <ng-template #notPassed>
             -
           </ng-template>
-        </td>
+        </td>-->
 
         <td *ngIf="avecTest">
           {{ formatDuree(r.duree) }}

@@ -67,14 +67,14 @@
         <td>{{ admin.nom }}</td>
         <td>{{ admin.prenom }}</td>
         <td>{{ admin.username }}</td>
-        <td><span class="badge-tenant"style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ admin.nomTenant }}</span></td>
-        <td>
+        <td>{{ admin.nomTenant }}</td>
+      <td>
             <span class="status-badge"
-                  [class.active]="admin.statut && isTenantActive(admin)"
-                  [class.inactive]="!admin.statut && isTenantActive(admin)"
-                  [class.etab-inactive]="!isTenantActive(admin)">
+                  [class.active]="admin.statut && admin.statutTenant"
+                  [class.inactive]="!admin.statut && admin.statutTenant"
+                  [class.etab-inactive]="!admin.statutTenant">
               {{ admin.statut ? 'Actif' : 'Inactif' }}
-              <small *ngIf="!isTenantActive(admin)" style="display: block; font-size: 10px;">
+              <small *ngIf="!admin.statutTenant" class="d-block">
                 (Organisation désactivée)
               </small>
             </span>
@@ -87,7 +87,7 @@
             </svg>
           </button>
 
-          <ng-container *ngIf="isTenantActive(admin)">
+          <ng-container *ngIf="admin.statutTenant">
             <button class="btn-edit" (click)="openEditModal(admin)" title="Modifier">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>

@@ -102,6 +102,10 @@ export const routes: Routes = [
       { path: 'specialites', component: SpecialiteComponent },
        { path: 'parametre', component: ParametreComponent },
        { path: 'modules', component: ListeModuleComponent },
+       { path: 'resultats-sessions', component: ResultatsSessionsComponent },
+       { path: 'candidats', component: AdminComponent },
+       { path: 'import-gmetrix', component: ImportGmetrixComponent },
+       { path: 'sessionsExamen', component: SessionExamenComponent },
        { path: 'Listemodules', component: AffichageListeComponent }
 
     ]

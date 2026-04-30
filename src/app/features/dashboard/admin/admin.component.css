@@ -1,9 +1,6 @@
 :host {
-  /* Identité */
   --smart-red: #ea5357;
   --smart-red-dark: #d44347;
-
-  /* Couleurs Mode Clair (Par défaut) */
   --smart-dark: #303D49;
   --bg-page: #f8fafc;
   --white: #ffffff;
@@ -11,15 +8,12 @@
   --text-muted: #64748b;
   --border-color: #e2e8f0;
   --input-bg: #ffffff;
-
-  /* Dimensions & Effets */
   --sidebar-width: 280px;
   --radius-lg: 12px;
   --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 :host-context(.dark-mode) {
-  /* Couleurs Mode Sombre */
   --smart-dark: #0f172a;
   --bg-page: #0f172a;
   --white: #1e293b;
@@ -30,9 +24,6 @@
   --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* ==========================================================================
-   2. LAYOUT GLOBAL (RESPONSIVE)
-   ========================================================================== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 .dashboard-container {
@@ -45,7 +36,7 @@
 
 .sidebar {
   width: var(--sidebar-width);
-  flex-shrink: 0; /* Empêche la sidebar de s'écraser */
+  flex-shrink: 0;
   background: var(--white);
   border-right: 1px solid var(--border-color);
   display: flex;
@@ -244,22 +235,7 @@
   .admin-header { flex-direction: column; gap: 15px; text-align: center;  }
 }
 
-
-
-
-
-
-
-
-/**/
-
-
-
-/* ==========================================================================
-   1. DÉFINITION DES VARIABLES DE COULEURS
-   ========================================================================== */
 :host {
-  /* Mode Clair (Par défaut) */
   --bg-admin: #f8fafc;
   --bg-card: #ffffff;
   --text-main: #1e293b;
@@ -270,14 +246,11 @@
   --row-hover: #f9fafb;
   --input-border: #303D49;
   --modal-bg: rgba(48, 61, 73, 0.7);
-
-  /* Couleurs Accent (Stables) */
   --smart-red: #ea5357;
   --smart-red-dark: #d44347;
 }
 
 :host-context(.dark-mode) {
-  /* Mode Sombre */
   --bg-admin: #0f172a;
   --bg-card: #1e293b;
   --text-main: #f1f5f9;
@@ -496,7 +469,6 @@
 form {
   padding: 30px; /* Unifié pour un meilleur équilibre */
   background-color: var(--white);
-  /* --- AJOUTS POUR LE SCROLLER --- */
     flex: 1;                /* Prend tout l'espace entre le header et le footer */
     overflow-y: auto;       /* Active le scroll vertical */
     max-height: 60vh;       /* Sécurité : limite la hauteur du formulaire lui-même */
@@ -723,8 +695,8 @@ form::-webkit-scrollbar-thumb:hover {
 }
 
 .otp-input {
-  background-color: #ffffff !important;
-  color: #1e293b;
+  background-color: var(--input-bg);
+  color: var(--text-main) !important;
 
   /* Dimensions */
   width: 55px;
@@ -747,7 +719,7 @@ form::-webkit-scrollbar-thumb:hover {
 }
 
 .otp-input:focus {
-  background-color: #ffffff;
+  background-color: var(--text-muted);
   border-color: #ea5357;
   box-shadow: 0 0 0 4px rgba(234, 83, 87, 0.15);
   transform: translateY(-2px);
@@ -879,12 +851,52 @@ form::-webkit-scrollbar-thumb:hover {
 .admin-header h1 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #2d3436;
+  color: var(--text-main);
   margin: 0;
   letter-spacing: -0.5px;
 }
 
-/* Style du Select (Filtre) */
+.filter-section .form-control {
+  border-radius: 10px;
+  border: 1px solid #dfe6e9;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  color: #2d3436;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* DARK MODE (CORRECT) */
+:host-context(.dark-mode) .filter-section .form-control {
+  background-color: transparent !important;  /* transparent */
+  color: black !important;                  /* texte noir comme tu veux */
+  border: 1px solid rgba(255,255,255,0.3) !important;
+}
+
+/* FOCUS DARK */
+:host-context(.dark-mode) .filter-section .form-control:focus {
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.1);
+  border-color: #94a3b8;
+}
+
+:host-context(.dark-mode) select {
+  background-color: transparent !important;
+  color: black !important;
+}
+
+:host-context(.dark-mode) select option {
+  background-color: #1e293b; /* fond dark */
+  color: white;              /* texte lisible */
+}
+
+
+.actions-header {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/*
 .filter-section .form-control {
   border-radius: 10px;
   border: 1px solid #dfe6e9;
@@ -902,13 +914,11 @@ form::-webkit-scrollbar-thumb:hover {
   outline: none;
 }
 
-/* Groupe de boutons d'action (Import/Export) */
 .actions-header {
   display: flex;
   gap: 0.75rem;
-}
+}*/
 
-/* Boutons communs */
 .btn-import, .btn-success, .btn-add {
   display: flex;
   align-items: center;
@@ -1088,17 +1098,12 @@ form::-webkit-scrollbar-thumb:hover {
 }
 
 .value {
-  color: #1e293b;
+  color: var(--text-main) !important;
   font-weight: 600;
   font-size: 0.95rem;
   text-align: right;
 }
 
-
-
-
-
-/* --- Support Dark Mode (si appliqué sur le body) --- */
 @media (prefers-color-scheme: dark) {
   .modal-content {
     background: #1e2227;
@@ -1341,11 +1346,33 @@ body {
 }
 
 .stat-card.blue p {
-  color: #cbd5e1; /* Gris clair pour le sous-titre */
+  color: #cbd5e1;
   margin: 0;
   font-size: 0.9rem;
 }
 
 .stat-card.blue:hover {
   transform: translateY(-5px);
+}
+
+.btn-remove-item {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(224, 36, 36, 0.1);
+  color: #dc2626;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 12px;
+}
+
+.btn-remove-item:hover {
+  background: #dc2626;
+  color: white;
+  transform: scale(1.1);
 }

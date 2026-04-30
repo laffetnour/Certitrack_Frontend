@@ -31,13 +31,10 @@
   --modal-bg: rgba(0, 0, 0, 0.8);
 }
 
-/* ==========================================================================
-   2. APPLICATION (STRUCTURE IDENTIQUE)
-   ========================================================================== */
 
 .admin-container {
   background-color: var(--bg-admin);
-  padding: 20px;
+  padding: 5px;
 }
 
 .admin-header {
@@ -67,25 +64,23 @@
   background-color: var(--smart-red-dark);
 }
 
-/* TABLE */
+
+
 .table-container {
   background: var(--bg-card);
   border-radius: 12px;
-  padding: 20px;
-   width: max-content;      /* Force le conteneur à prendre la largeur de son contenu */
-      min-width: 100%;         /* Optionnel : garantit qu'il prend au moins toute la largeur dispo */
-      max-width: 100%;         /* Empêche de déborder de l'écran si le tableau est trop grand */
-
-overflow: auto;
-
+  padding: 3px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .modern-table {
   width: 100%;
-   min-width: 100%;
   border-collapse: collapse;
-}
 
+}
 .modern-table th {
   padding: 14px;
   background: var(--table-th-bg);
@@ -95,7 +90,7 @@ overflow: auto;
 }
 
 .modern-table td {
-  padding: 14px;
+  padding: 10px;
   border-bottom: 1px solid var(--border-color);
   color: var(--text-main);
 }
@@ -103,15 +98,13 @@ overflow: auto;
 .modern-table tr:hover {
   background: var(--row-hover);
 }
-
-/* STATUS */
 .status-badge {
   padding: 4px 12px;
   border-radius: 20px;
-  font-weight: 600;
+  font-weight: 20;
   font-size: 12px;
   display: inline-block;
-  text-align: center;
+  text-align: left;
 }
 
 .status-badge.active {

@@ -213,7 +213,7 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>{{ isEditMode ? 'Modifier le candidat' : 'Nouveau candidat' }}</h2>
-        <button class="close-btn" (click)="closeModal()">&times;</button>
+        <button class="btn-remove-item" (click)="closeModal()">&times;</button>
       </div>
 
       <div class="alert-banner error" *ngIf="errorMessage">
@@ -378,7 +378,7 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>Profil du candidat</h2>
-        <button class="close-btn" (click)="closeViewModal()">&times;</button>
+        <button class="btn-remove-item" (click)="closeViewModal()">&times;</button>
       </div>
 
       <div class="profile-info" *ngIf="selectedCandidat">

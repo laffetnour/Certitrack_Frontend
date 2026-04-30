@@ -139,7 +139,7 @@
 
       <div class="modal-header">
         <h2>{{ isEdit ? 'Modifier la spécialité' : 'Nouvelle spécialité' }}</h2>
-        <button class="close-btn" (click)="closeModal()">&times;</button>
+        <button class="btn-remove-item" (click)="closeModal()">&times;</button>
       </div>
 
       <form>
@@ -184,16 +184,6 @@
                  (click)="toggleModule(mt.id)">
               <div class="module-info">
                 <span class="module-name">{{ mt.module?.nom }}</span>
-                <!--<div class="categories-tags">
-                  <small *ngFor="let cat of mt.module?.categories" class="tag-category">
-                    {{ cat.nom || cat }}
-                  </small>
-                </div>
-                <div class="module-tags">
-                  <small *ngFor="let tag of mt.module?.motCles" class="tag">
-                    {{ tag.description }}
-                  </small>
-                </div>-->
               </div>
               <input type="checkbox" [checked]="selectedModuleIds.has(mt.id)" (click)="$event.stopPropagation()">
             </div>

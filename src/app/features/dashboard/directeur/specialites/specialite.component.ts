@@ -3,7 +3,6 @@ import { DirecteurService } from '../../../../core/services/directeur.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
-/*import { ConfigService } from '../../../../core/services/config.service';*/
 import { ModuleTenantService } from '../../../../core/services/ModuleTenant.service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -32,6 +31,7 @@ originalModules: number[] = [];
   activeModules: any[] = [];
   selectedModuleIds: Set<number> = new Set();
   moduleSearchTerm: string = '';
+  isModalLoading = false;
 
 
   showModal = false;
@@ -245,7 +245,8 @@ openEdit(sp: any) {
 
   this.selectedModuleIds.clear();
   this.moduleSearchTerm = '';
-  this.loading = true;
+  this.isModalLoading = true;
+  //this.loading = true;
 
   const user = this.authService.getUser();
   if (user?.idUtilisateur) {
@@ -276,7 +277,7 @@ openEdit(sp: any) {
                   this.originalMode = 'FIXE';
                   this.originalModuleIds = [];
         }
-        this.loading = false;
+         this.isModalLoading  = false;
         this.showModal = true;
         this.cdr.detectChanges();
       }

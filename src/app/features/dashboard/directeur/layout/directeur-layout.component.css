@@ -13,7 +13,7 @@
   --input-bg: #ffffff;
 
   /* Dimensions & Effets */
-  --sidebar-width: 260px;
+  --sidebar-width: 270px;
   --radius-lg: 12px;
   --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
@@ -40,17 +40,20 @@
   height: 100vh;
   width: 100%;
 
+    overflow: hidden;
   background-color: var(--bg-page);
 }
 
 .sidebar {
   width: var(--sidebar-width);
-  flex-shrink: 0; /* Empêche la sidebar de s'écraser */
+  flex-shrink: 0;
   background: var(--white);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease;
+  height: 100%;
+    overflow: hidden;
 }
 
 .main-layout {
@@ -150,8 +153,14 @@
 .content-area {
   padding: 2vw; /* Padding adaptatif selon la largeur d'écran */
   overflow-y: auto;
+
   flex: 1;
-  background-color: var(--bg-page);
+    overflow-y: auto; /* Active le scroll interne ici */
+    background-color: var(--bg-page);
+
+    /* Pour Firefox : barre fine et couleurs variables */
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
 }
 
 .stats-grid {
@@ -285,4 +294,60 @@
 .profile:hover .arrow-user {
   transform: translateY(2px);
   color: #333;
+}
+
+.logo-wrapper:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.tenant-logo {
+  margin-top:15%;
+  max-height: 55px;
+  max-width: 140px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+.logo-wrapper:hover .tenant-logo {
+  transform: scale(1.05);
+}
+
+
+
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+
+/* Pour Chrome, Edge et Safari */
+::-webkit-scrollbar {
+  width: 8px; /* Largeur de la barre verticale */
+  height: 8px; /* Hauteur de la barre horizontale */
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-page); /* Fond de la barre (track) */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color); /* La poignée */
+  border-radius: 10px;
+  border: 2px solid var(--bg-page); /* Crée un effet de "marge" autour de la barre */
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--smart-red); /* La barre devient rouge au survol */
+}
+
+/* Cache le scroll par défaut sur toute la fenêtre du navigateur */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* Tue le scroller par défaut du navigateur */
 }

@@ -10,6 +10,9 @@
   --row-hover: #f9fafb;
   --input-border: #303D49;
   --modal-bg: rgba(48, 61, 73, 0.7);
+    --input-bg: #ffffff;
+
+
 
   --smart-red: #ea5357;
   --smart-red-dark: #d44347;
@@ -26,6 +29,7 @@
   --row-hover: #262f3f;
   --input-border: #475569;
   --modal-bg: rgba(0, 0, 0, 0.8);
+  --input-bg: #1e293b;
 }
 
 
@@ -599,13 +603,12 @@ form::-webkit-scrollbar-thumb:hover {
 .admin-header h1 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #2d3436;
+  color: var(--text-main);
   margin: 0;
   letter-spacing: -0.5px;
 }
 
-/* Style du Select (Filtre) */
-.filter-section .form-control {
+/*.filter-section .form-control {
   border-radius: 10px;
   border: 1px solid #dfe6e9;
   padding: 0.6rem 1rem;
@@ -620,9 +623,44 @@ form::-webkit-scrollbar-thumb:hover {
   border-color: #74b9ff;
   box-shadow: 0 0 0 4px rgba(116, 185, 255, 0.1);
   outline: none;
+}*/
+
+/* LIGHT (par défaut) */
+.filter-section .form-control {
+  border-radius: 10px;
+  border: 1px solid #dfe6e9;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  color: #2d3436;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
-/* Groupe de boutons d'action (Import/Export) */
+/* DARK MODE (CORRECT) */
+:host-context(.dark-mode) .filter-section .form-control {
+  background-color: transparent !important;  /* transparent */
+  color: black !important;                  /* texte noir comme tu veux */
+  border: 1px solid rgba(255,255,255,0.3) !important;
+}
+
+/* FOCUS DARK */
+:host-context(.dark-mode) .filter-section .form-control:focus {
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.1);
+  border-color: #94a3b8;
+}
+
+:host-context(.dark-mode) select {
+  background-color: transparent !important;
+  color: black !important;
+}
+
+:host-context(.dark-mode) select option {
+  background-color: #1e293b; /* fond dark */
+  color: white;              /* texte lisible */
+}
+
+
 .actions-header {
   display: flex;
   gap: 0.75rem;
@@ -769,3 +807,31 @@ form::-webkit-scrollbar-thumb:hover {
 .btn-marine:active {
   transform: scale(0.96) !important;
 }
+
+.admin-headerr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  background: var(--bg-card);
+  padding: 20px 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  color: var(--text-main);
+}
+
+.btn-addd {
+  background-color: var(--smart-red);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-addd:hover {
+  background-color: var(--smart-red-dark);
+}
+

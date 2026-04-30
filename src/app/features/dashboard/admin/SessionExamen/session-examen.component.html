@@ -12,14 +12,14 @@
   </div>
 
   <div class="card border-0 shadow-sm">
-    <table class="table align-middle mb-0">
+    <table class="table">
       <thead class="bg-light">
       <tr>
         <th>Session & Centre</th>
         <th>Date Examen</th>
         <th>État</th>
         <th>Modules</th>
-        <th class="text-end">Actions</th>
+        <th>Actions</th>
       </tr>
       </thead>
       <tbody>
@@ -37,7 +37,7 @@
             }">{{ s.etat }}</span>
         </td>
         <td>
-            <span *ngFor="let m of s.modulesAutorises" class="badge bg-light text-dark border me-1">
+            <span *ngFor="let m of s.modulesAutorises" class="badge ">
               {{ m?.module?.nom }}
             </span>
         </td>
@@ -52,7 +52,7 @@
               <circle cx="12" cy="12" r="3"/>
             </svg>
           </button>
-          <button class="btn-edit" [disabled]="!canEdit(s)" (click)="onEdit(s)" data-bs-toggle="modal" data-bs-target="#sessionModal">
+          <button class="btn-edit" *ngIf="canEdit(s)" (click)="onEdit(s)" data-bs-toggle="modal" data-bs-target="#sessionModal">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  stroke-width="2">
@@ -61,7 +61,7 @@
             </svg>
           </button>
           <button class="btn-delete"
-                  [disabled]="!canDelete(s)"
+                  *ngIf="canDelete(s)"
                   (click)="onDelete(s.id)">
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="16" height="16"

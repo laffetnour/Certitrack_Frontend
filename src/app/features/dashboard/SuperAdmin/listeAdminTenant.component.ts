@@ -198,9 +198,11 @@ export class ListeAdminsTenantComponent implements OnInit {
   onTenantStatusChange(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
 
-    if (value === 'true') this.selectedTenantStatus = true;
+    /*if (value === 'true') this.selectedTenantStatus = true;
     else if (value === 'false') this.selectedTenantStatus = false;
-    else this.selectedTenantStatus = null;
+    else this.selectedTenantStatus = null;*/
+
+    this.selectedTenantStatus = value === '' ? null : value === 'true';
 
 
     this.filteredTenants = this.selectedTenantStatus !== null
@@ -208,6 +210,7 @@ export class ListeAdminsTenantComponent implements OnInit {
       : [...this.tenants];
 
     this.selectedTenantId = null;
+    this.selectedAdminIds = [];
 
     this.filterAdmins();
   }
@@ -241,10 +244,11 @@ export class ListeAdminsTenantComponent implements OnInit {
       }
     });
   }
-  isTenantActive(admin: any): boolean {
+  /*isTenantActive(admin: any): boolean {
     const tenant = this.tenants.find(t => t.nom === admin.nomTenant);
+    console.log(admin);
     return tenant ? tenant.statut : false;
-  }
+  }*/
 
 
 
@@ -256,7 +260,7 @@ export class ListeAdminsTenantComponent implements OnInit {
       this.selectedAdminIds.includes(admin.id)
     );
 
-    const hasInactiveTenantSelected = selectedAdminsObjects.some(admin => !this.isTenantActive(admin));
+    const hasInactiveTenantSelected = selectedAdminsObjects.some(admin => !admin.statutTenant);
 
 
     return !hasInactiveTenantSelected;

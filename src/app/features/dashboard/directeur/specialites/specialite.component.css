@@ -652,11 +652,11 @@ form::-webkit-scrollbar-thumb:hover {
   transition: background 0.2s;
 }
 
-.module-item:hover { background: #f9f9f9; }
-.module-item.selected { background: #e3f2fd; border-left: 4px solid #2196f3; }
+.module-item:hover { background-color: var(--row-hover); }
+.module-item.selected { background-color: var(--text-muted); border-left: 4px solid #2196f3; }
 
 .module-info { display: flex; flex-direction: column; }
-.module-name { font-weight: bold; color: #333; }
+.module-name { font-weight: bold; color: var(--text-main) !important; }
 .module-cat { font-size: 0.8em; color: #666; font-style: italic; }
 
 .tag {
