@@ -44,31 +44,35 @@ export class CandidatLayoutComponent implements OnInit {
       name: 'Dashboard',
       link: '/candidat/dashboard',
       icon: 'fas fa-th-large',
+      type: 'Page',
       keywords: ['dashboard', 'accueil']
     },
     {
       name: 'Modules disponibles',
       link: '/candidat/modules',
       icon: 'fas fa-book',
+      type: 'Inscrire',
       keywords: ['module', 'inscription', 'inscrire', 'formation','modules disponibles']
     },
     {
       name: 'Mes inscriptions',
       link: '/candidat/mes-inscriptions',
       icon: 'fas fa-user-check',
-      keywords: ['inscription','réservation','réservation examen', 'reservation','examen', 'mes modules', 'gmetrix', 'score', 'test', 'admission','reservation examen','mes inscriptions']
+      type: 'mes inscriptions,scores GMetrix,réservation',
+      keywords: ['inscription','réservation','réservation examen', 'reservation','examen', 'mes modules', 'gmetrix', 'score','score gemetrix', 'test', 'admission','reservation examen','mes inscriptions']
     },
     {
       name: 'Paramètres',
       link: '/candidat/parametre',
       icon: 'fas fa-cog',
+      type: 'Config',
       keywords: ['parametre', 'settings', 'profil']
     }
   ];
 
   filteredResults: any[] = [];
 
-  onSearch() {
+  /*onSearch() {
     const search = this.searchText.toLowerCase().trim();
 
     if (search.length > 1) {
@@ -81,6 +85,37 @@ export class CandidatLayoutComponent implements OnInit {
 
     } else {
       this.showResults = false;
+    }
+  }*/
+
+  onSearch() {
+    const search = this.searchText.toLowerCase().trim();
+
+    if (search.length > 1) {
+      this.showResults = true;
+
+      this.filteredResults = this.searchDatabase
+        .map(item => {
+          const matchedKeyword = item.keywords.find(k =>
+            k.toLowerCase().includes(search)
+          );
+
+          const matchName = item.name.toLowerCase().includes(search);
+
+          if (matchName || matchedKeyword) {
+            return {
+              ...item,
+              matchedKeyword: matchedKeyword || null
+            };
+          }
+
+          return null;
+        })
+        .filter(Boolean);
+
+    } else {
+      this.showResults = false;
+      this.filteredResults = [];
     }
   }
 

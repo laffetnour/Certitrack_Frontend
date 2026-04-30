@@ -116,6 +116,13 @@ deactivateMultipleEtab(ids: number[]): Observable<void> {
   return this.http.post<void>(this.url('etablissements/deactivate'), ids, this.getHeaders());
 }
 
+  getLeastUsedModules(): Observable<any[]> {
+    return this.http.get<any[]>(
+      this.url('stats/modules-least'),
+      this.getHeaders()
+    );
+  }
+
 
 
 }

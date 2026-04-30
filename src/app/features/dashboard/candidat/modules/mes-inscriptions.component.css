@@ -375,9 +375,12 @@ body.dark .gmetrix-line {
 .reservation-form {
   position: relative;
   z-index: 1000;
-  background: white;
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  /*background: white;*/
   padding: 15px;
-  border: 1px solid #ddd;
+ /* border: 1px solid #ddd;*/
   border-radius: 8px;
   margin-top: 10px;
 }
@@ -390,8 +393,9 @@ body.dark .gmetrix-line {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
-
+  /*background: rgba(0,0,0,0.5);*/
+  background: var(--bg-card);
+  color: var(--text-main);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -402,7 +406,10 @@ body.dark .gmetrix-line {
 /* 🔥 BOX */
 .modal-box {
   background: #fff;
+  background: var(--bg-card);
+  color: var(--text-main);
   padding: 25px;
+  border: 1px solid var(--border-color); /* Ajout d'une bordure adaptative */
   border-radius: 12px;
   width: 350px;
 
@@ -412,12 +419,16 @@ body.dark .gmetrix-line {
 
 /* INPUT */
 .modal-box input {
+  /*background: var(--bg-card);*/
+  background: var(--bg-app);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
   width: 100%;
   padding: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
 
-  border: 1px solid #ccc;
+  /*border: 1px solid #ccc;*/
   border-radius: 6px;
 }
 
@@ -486,13 +497,13 @@ body.dark .gmetrix-line {
 }
 
 
-body.dark .alert-success {
+/*body.dark .alert-success {
   background: rgba(234, 83, 87, 0.12);
   color: #ff6b6b;
   border-color: var(--smart-red);
-}
+}*/
 
-body.dark .alert-error {
+/*body.dark .alert-error {
   background: rgba(239, 68, 68, 0.12);
   color: #f87171;
   border-color: #ef4444;
@@ -502,7 +513,7 @@ body.dark .alert-info {
   background: rgba(59, 130, 246, 0.12);
   color: #60a5fa;
   border-color: #3b82f6;
-}
+}*/
 
 
 
@@ -539,29 +550,16 @@ body.dark .alert-info {
   margin-top: 5px;
 }
 
-/* ================= MODAL DARK MODE ================= */
 
-body.dark .modal-box {
-  background: #1e1e2f;
-  color: #e5e7eb;
-  border: 1px solid #2c2c3f;
-}
-
-body.dark .modal-box input {
-  background: #12121a;
-  color: #e5e7eb;
-  border: 1px solid #2c2c3f;
-}
-
-body.dark .modal-box label {
-  color: #cbd5e1;
-}
 
 /* ================= EMAIL SUCCESS MODAL (UNIQUE CLEAN VERSION) ================= */
 
 .success-box {
-  background: #ffffff;
-  color: #1f2937;
+  /*background: #ffffff;
+  color: #1f2937;*/
+
+  background: var(--bg-card);
+  color: var(--text-main);
 
   border: 1px solid #e5e7eb;
   padding: 25px;
@@ -580,7 +578,8 @@ body.dark .modal-box label {
 
 /* texte */
 .success-box p {
-  color: #6b7280;
+  /*color: #6b7280;*/
+  color: var(--text-muted);
 }
 
 /* icône */
@@ -601,19 +600,40 @@ body.dark .modal-box label {
   color: white;
 }
 
-/* ================= DARK MODE ================= */
+/* ================= ADAPTATION HARMONISÉE (DARK & LIGHT) ================= */
 
-body.dark .success-box {
-  background: #1e1e2f;
-  color: #e5e7eb;
-  border: 1px solid #2c2c3f;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+/* 1. On utilise les variables pour que ça change tout seul */
+.modal-box, .success-box {
+  background: var(--bg-card); /* Utilise le blanc en Light, le bleu nuit en Dark */
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
 }
 
-body.dark .success-box p {
-  color: #cbd5e1;
+.modal-box input {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
 }
 
-body.dark .icon-circle {
-  background: rgba(234, 83, 87, 0.15);
+/* 2. On supprime les anciennes références à "body.dark" qui forçaient le gris foncé */
+/* Supprime ou commente les blocs qui commencent par body.dark .success-box etc. */
+
+/* 3. Section spécifique au mode sombre (uniquement pour les ajustements de contraste) */
+html.dark-mode .modal-overlay {
+  background: rgba(0, 0, 0, 0.8);
 }
+
+html.dark-mode .modal-box input {
+  background: #0b1437; /* Optionnel : fond d'input légèrement différent */
+  border-color: #2c2c3f;
+}
+
+html.dark-mode .modal-box h3,
+html.dark-mode .success-box h3 {
+  color: #ff6b6b; /* Rouge plus clair pour le mode sombre */
+}
+
+html.dark-mode .icon-circle {
+  background: rgba(255, 107, 107, 0.15);
+}
+
