@@ -14,6 +14,8 @@
   /* Couleurs Accent (Stables) */
   --smart-red: #ea5357;
   --smart-red-dark: #d44347;
+  --input-bg: #ffffff;
+  --white: #ffffff;
 }
 
 :host-context(.dark-mode) {
@@ -28,6 +30,8 @@
   --row-hover: #262f3f;
   --input-border: #475569;
   --modal-bg: rgba(0, 0, 0, 0.8);
+  --input-bg: #1e293b; /* ou #0f172a légèrement plus clair */
+  --white: #1e293b;
 }
 
 /* ==========================================================================
@@ -632,4 +636,123 @@ form::-webkit-scrollbar-thumb:hover {
 .dark-mode .keyword-section input[type="number"] {
   background-color: var(--smart-dark);
   color: white;
+}
+
+
+
+
+/* ====== FORMULAIRE ETABLISSEMENT (SANS CHANGER HTML) ====== */
+
+/* Conteneur du formulaire dans modal */
+.modal-content {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 0;
+}
+
+/* Zone centrale */
+.modal-content .form-group {
+  padding: 0 30px;
+  margin-bottom: 20px;
+}
+
+/* Labels */
+.modal-content .form-group label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  display: block;
+}
+
+/* INPUT STYLE (équivalent form-control) */
+.modal-content .custom-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 14px;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  transition: all 0.25s ease;
+}
+
+/* FOCUS */
+.modal-content .custom-input:focus {
+  outline: none;
+  border-color: var(--smart-red);
+  box-shadow: 0 0 0 4px rgba(234, 83, 87, 0.1);
+  transform: translateY(-1px);
+}
+
+/* FILE INPUT FIX */
+.modal-content input[type="file"].custom-input {
+  padding: 8px;
+  cursor: pointer;
+}
+
+
+.modal-header {
+  padding: 20px 30px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-footer {
+  padding: 20px 30px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+
+.img-modal-preview-container {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.img-modal-rect {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.modal-content {
+  animation: fadeInScale 0.25s ease;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+.modal-content .form-group:first-of-type {
+  margin-top: 60px; /* tu peux mettre 25px ou 30px si tu veux plus d’espace */
+}
+
+
+.modal-header {
+  padding: 20px 30px;
+  margin-bottom: 20px; /* espace entre header et contenu */
+}
+
+:host-context(.dark-mode) .form-group label {
+  color: #ffffff;
+}
+
+:host-context(.dark-mode) .modal-content .form-group label {
+  color: #ffffff;
 }

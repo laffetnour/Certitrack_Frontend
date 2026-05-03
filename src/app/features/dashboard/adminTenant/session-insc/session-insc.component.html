@@ -36,6 +36,7 @@
              [(ngModel)]="filterDate"
              (change)="applyFilters()">
     </div>
+    <br>
 
     <table class="modern-table">
       <thead>
@@ -80,7 +81,7 @@
         </td>
         <td>
           <span class="status-badge"
-                [class.active]="s.etat==='enCours'"
+                [class.active]="s.etat==='encours'"
                 [class.inactive]="s.etat==='cloturee'"
                 [class.planned]="s.etat==='planifiee'">
             {{ s.etat }}

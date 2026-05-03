@@ -257,7 +257,7 @@ form::-webkit-scrollbar-thumb:hover {
   font-size: 13px; /* Légèrement plus petit pour un look plus "UI" */
   font-weight: 700;
   color: var(--text-muted); /* Utilise la variable muted pour un look moins agressif */
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   text-transform: uppercase; /* Donne un aspect professionnel/admin */
   letter-spacing: 0.5px;
 }
@@ -665,3 +665,29 @@ form::-webkit-scrollbar-thumb:hover {
 th:nth-child(5), td:nth-child(5) {
   min-width: 150px;
 }
+
+
+
+
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+}
+
+.form-group {
+  margin-bottom: 2px;
+  display: flex;
+  flex-direction: column;
+}
+
+:host-context(.dark-mode) .form-group label {
+  color: #ffffff;
+}
+
+:host-context(.dark-mode) .modal-content .form-group label {
+  color: #ffffff;
+}
+
+

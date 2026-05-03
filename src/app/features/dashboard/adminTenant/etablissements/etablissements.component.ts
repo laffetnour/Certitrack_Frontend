@@ -24,8 +24,7 @@ export class EtablissementsComponent implements OnInit {
   selectedNom = '';
   selectedId: number | null = null;
   selectedAdresse = '';
-  selectedImage: string | SafeUrl = '';
-  imageRaw: string = '';
+
 
 
 
@@ -88,7 +87,6 @@ applyFilter() {
     this.isEditMode = false;
     this.selectedNom = '';
     this.selectedAdresse = '';
-    this.selectedImage = '';
     this.showModal = true;
   }
 
@@ -97,8 +95,6 @@ applyFilter() {
     this.selectedId = e.idEtab;
     this.selectedNom = e.nom;
     this.selectedAdresse = e.adresse;
-    this.imageRaw = e.image;
-    this.selectedImage = e.image ? this.sanitizer.bypassSecurityTrustUrl(e.image) : '';
     this.showModal = true;
   }
 
@@ -116,7 +112,7 @@ save() {
     const payload: any = {
       nom: this.selectedNom.trim(),
       adresse: this.selectedAdresse.trim(),
-      image: this.imageRaw ? this.imageRaw.trim() : '',
+
       statut: true
     };
 
@@ -208,8 +204,6 @@ private gererErreur(err: any) {
     this.selectedId = null;
     this.selectedNom = '';
     this.selectedAdresse = '';
-    this.selectedImage = '';
-    this.imageRaw = '';
     this.isEditMode = false;
   }
 
@@ -263,7 +257,7 @@ bulkToggle(newStatus: boolean) {
     }
   });
 }
-onFileSelected(event: any) {
+/*onFileSelected(event: any) {
   const file: File = event.target.files[0];
   if (file) {
     const reader = new FileReader();
@@ -280,15 +274,15 @@ onFileSelected(event: any) {
     };
     reader.readAsDataURL(file);
   }
-}
+}*/
 
 
-removeImage(fileInput: HTMLInputElement) {
+/*removeImage(fileInput: HTMLInputElement) {
   this.selectedImage = '';
   this.imageRaw = '';
   fileInput.value = '';
   this.cdr.detectChanges();
-}
+}*/
   closeDeleteModal() {
     this.showDeleteModal = false;
     this.selectedId = null;

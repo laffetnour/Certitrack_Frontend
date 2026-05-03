@@ -31,6 +31,7 @@
         <option value="inactif">Établissements désactivés</option>
       </select>
     </div>
+    <br>
 
     <table class="modern-table">
 
@@ -39,7 +40,6 @@
         <th style="width: 40px;">
           <input type="checkbox" (change)="toggleAll($event)" [checked]="isAllSelected()">
         </th>
-        <th></th>
         <th>Nom</th>
         <th>Adresse</th>
 
@@ -56,13 +56,6 @@
                  (change)="toggleSelection(e.idEtab)">
         </td>
 
-        <td class="img-table-container">
-          <img *ngIf="e.image" [src]="e.image" class="img-table-rect">
-
-          <div *ngIf="!e.image" class="img-table-placeholder">
-            LOGO
-          </div>
-        </td>
 
         <td>{{ e.nom }}</td>
 
@@ -133,18 +126,20 @@
       </div>
 
       <div class="form-group">
+        <label>Nom de l’établissement</label>
         <input [(ngModel)]="selectedNom"
                placeholder="Nom établissement"
                class="custom-input">
       </div>
 
       <div class="form-group">
+        <label>Adresse</label>
         <input [(ngModel)]="selectedAdresse"
                placeholder="Adresse"
                class="custom-input">
       </div>
 
-      <div  class="form-group">
+      <!--<div  class="form-group">
         <label style="display: block; margin-bottom: 5px; font-size: 12px; color: #666;">Logo Établissement</label>
         <input type="file" (change)="onFileSelected($event)" accept="image/*" class="custom-input">
 
@@ -155,7 +150,7 @@
             ✕ Supprimer l'image
           </button>
         </div>
-      </div>
+      </div>-->
 
       <div class="modal-footer">
         <button type="button" class="btn-submit" (click)="save()">

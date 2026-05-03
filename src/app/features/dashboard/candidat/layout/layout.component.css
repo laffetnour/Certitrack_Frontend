@@ -379,6 +379,13 @@
   animation: fadeIn 0.2s ease-in-out;
 }
 
+
+.search-container:focus-within {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: var(--smart-red);
+  box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.2);
+}
+
 /* ITEM */
 .search-item {
   display: flex;

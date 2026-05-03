@@ -272,6 +272,7 @@ body.dark {
   --text-muted: #94a3b8;
   --border-color: #334155;
   --smart-red: #fb7185;
+  color-scheme: dark !important;
 }
 
 /* ================= GLOBAL ================= */
@@ -346,6 +347,10 @@ body {
 .filter-select {
   padding: 10px 14px;
   border-radius: 10px;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 
   border: 1px solid var(--border-color);
   background: var(--bg-card);
@@ -551,16 +556,35 @@ body {
   font-size: 14px;
 }
 /* Style par défaut pour les options (Light Mode) */
-.filter-select option {
+/*.filter-select option {
   background-color: #ffffff !important;
   color: #1e293b !important;
+}*/
+
+.filter-select option {
+  background-color: var(--bg-card);
+  color: var(--text-main);
 }
 
 /* Style pour le Dark Mode - On utilise des couleurs fixes pour éviter les bugs navigateurs */
-body.dark .filter-select option {
-  background-color: #1e293b !important; /* Couleur sombre fixe */
-  color: #e2e8f2 !important;            /* Couleur claire fixe */
+/*body.dark .filter-select option {
+  background-color: #1e293b !important;
+  color: #e2e8f2 !important;
+}*/
+
+body.dark .filter-select {
+  background-color: #1e293b !important; /* Couleur fixe pour éviter les conflits */
+  color: #f1f5f9 !important;
+  appearance: auto !important; /* Redonne le contrôle au navigateur pour le menu */
 }
+
+/* 3. Style des Options - On utilise l'hexadécimal pur ici */
+body.dark .filter-select option {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+
 
 /* Pour Chrome sur Windows, on ajoute un sélecteur spécifique */
 body.dark select.filter-select {
@@ -581,5 +605,43 @@ body.dark select.filter-select {
   border-radius: 10px;
   background: var(--bg-card);
   border: 1px dashed var(--border-color);
+}
+
+.status-filter-select {
+  appearance: none; /* Supprime le style "Windows 95/Standard" */
+  background-color: var(--bg-card);
+}
+
+:host {
+  --bg-admin: #f8fafc;
+  --bg-card: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --text-label: #303D49;
+  --border-color: #f1f5f9;
+  --table-th-bg: #f8fafc;
+  --row-hover: #f9fafb;
+  --input-border: #303D49;
+  --modal-bg: rgba(48, 61, 73, 0.7);
+  --input-bg: #ffffff;
+
+
+
+  --smart-red: #ea5357;
+  --smart-red-dark: #d44347;
+}
+
+:host-context(.dark-mode) {
+  --bg-admin: #0f172a;
+  --bg-card: #1e293b;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-label: #cbd5e1;
+  --border-color: #334155;
+  --table-th-bg: #0f172a;
+  --row-hover: #262f3f;
+  --input-border: #475569;
+  --modal-bg: rgba(0, 0, 0, 0.8);
+  --input-bg: #1e293b;
 }
 

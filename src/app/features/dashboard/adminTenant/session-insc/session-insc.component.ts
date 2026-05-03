@@ -95,7 +95,7 @@ export class SessionInscComponent implements OnInit {
   loadData() {
     const userId = this.getUserId();
 
-    this.service.getMySessions(userId).subscribe(res => {
+    /*this.service.getMySessions(userId).subscribe(res => {
       this.sessions = res.map(s => ({
         ...s,
         moduleNom: s.moduleTenant?.module?.nom || '---'
@@ -103,6 +103,27 @@ export class SessionInscComponent implements OnInit {
         new Date(a.dateDebut).getTime() - new Date(b.dateDebut).getTime()
       );
       this.applyFilters();
+    });*/
+
+    this.service.getMySessions(userId).subscribe(res => {
+
+      this.sessions = res.map(s => ({
+        ...s,
+        moduleNom: s.moduleTenant?.module?.nom || '---',
+        etat: (s.etat || '').toString().toLowerCase().trim()
+      })).sort((a, b) =>
+        new Date(a.dateDebut).getTime() - new Date(b.dateDebut).getTime()
+      );
+
+      // 🔥 IMPORTANT : forcer affichage initial complet
+      this.filteredSessions = [...this.sessions];
+
+      // appliquer filtre ensuite (optionnel mais safe)
+      setTimeout(() => {
+        this.applyFilters();
+      });
+      this.cdr.detectChanges();
+
     });
 
   this.service.getModules(userId).subscribe(res => {

@@ -40,6 +40,7 @@
         <option value="inactif">Établissements désactivés</option>
       </select>
     </div>
+    <br>
     <table class="modern-table">
 
       <thead>
@@ -167,11 +168,21 @@
       </div>
       <form [formGroup]="directeurForm" (ngSubmit)="onSubmit()">
         <div class="form-row">
+          <label class="form-label">Nom</label>
           <input formControlName="nom" placeholder="Nom" class="form-control">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Prénom</label>
           <input formControlName="prenom" placeholder="Prénom" class="form-control">
         </div>
-        <input formControlName="username" placeholder="Email" class="form-control">
-        <input formControlName="dateNais" type="date" class="form-control">
+        <div class="form-row">
+          <label class="form-label">Email</label>
+          <input formControlName="username" placeholder="Email" class="form-control">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Date de naissance</label>
+          <input formControlName="dateNais" type="date" class="form-control">
+        </div>
 
         <!--<select formControlName="etablissementId" class="form-control">
           <option [ngValue]="null" disabled>-- Choisir établissement --</option>
@@ -180,17 +191,22 @@
             {{ e.nom }}
           </option>
         </select>-->
+        <div class="form-row">
+          <label class="form-label">Établissement</label>
+          <select formControlName="etablissementId" class="form-control">
+            <option [ngValue]="null" disabled>-- Choisir établissement --</option>
 
-        <select formControlName="etablissementId" class="form-control">
-          <option [ngValue]="null" disabled>-- Choisir établissement --</option>
-
-          <ng-container *ngFor="let e of activeEtablissements">
-            <option *ngIf="e.statut" [ngValue]="e.idEtab">
-              {{ e.nom }}
-            </option>
-          </ng-container>
-        </select>
-        <input *ngIf="!isEditMode" formControlName="password" type="password" placeholder="Mot de passe" class="form-control">
+            <ng-container *ngFor="let e of activeEtablissements">
+              <option *ngIf="e.statut" [ngValue]="e.idEtab">
+                {{ e.nom }}
+              </option>
+            </ng-container>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Mot de passe</label>
+          <input *ngIf="!isEditMode" formControlName="password" type="password" placeholder="Mot de passe" class="form-control">
+        </div>
 
 
         <div class="modal-footer">
