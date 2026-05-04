@@ -11,6 +11,7 @@
   --sidebar-width: 280px;
   --radius-lg: 12px;
   --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+  --stat: #6B7280;
 }
 
 :host-context(.dark-mode) {
@@ -21,6 +22,7 @@
   --text-muted: #94a3b8;
   --border-color: #334155;
   --input-bg: #0f172a;
+  --stat:#0f172a;
   --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -51,9 +53,6 @@
   min-width: 0; /* Important pour que le contenu ne déborde pas en flex */
 }
 
-/* ==========================================================================
-   3. NAVIGATION & SIDEBAR
-   ========================================================================== */
 .logo-section {
   padding: 20px;
   text-align: center;
@@ -1142,7 +1141,7 @@ form::-webkit-scrollbar-thumb:hover {
   }
 
 .chart-card {
-  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  background-color: var(--bg-card) !important;
   border-radius: 20px;
   padding: 24px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
@@ -1302,7 +1301,7 @@ body {
 
 
 .chart-column {
-  background: white;
+  background: var(--bg-page) !important;
   margin-left : 30px;
   border-radius: 15px;
 }
@@ -1324,7 +1323,7 @@ body {
 }
 
 .stat-card.blue {
-  background: #6B7280; /* Gris-Bleu profond */
+   background : var(--stat);
   color: white;
   border-radius: 16px;
   padding: 20px;
@@ -1333,7 +1332,7 @@ body {
 }
 
 .stat-card.blue .icon {
-  background: #E5E7EB; /* Bulle légère autour de l'icône */
+  background: #E5E7EB;
   border-radius: 12px;
   padding: 10px;
   font-size: 1.5rem;
@@ -1375,4 +1374,33 @@ body {
   background: #dc2626;
   color: white;
   transform: scale(1.1);
+}
+
+
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+
+/* Pour Chrome, Edge et Safari */
+::-webkit-scrollbar {
+  width: 8px; /* Largeur de la barre verticale */
+  height: 8px; /* Hauteur de la barre horizontale */
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-page); /* Fond de la barre (track) */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color); /* La poignée */
+  border-radius: 10px;
+  border: 2px solid var(--bg-page); /* Crée un effet de "marge" autour de la barre */
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--smart-red); /* La barre devient rouge au survol */
 }

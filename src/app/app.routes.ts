@@ -24,6 +24,7 @@ import {ModuleTenantComponent} from './features/dashboard/adminTenant/ListeModul
 import {ListeModuleTenantComponent} from './features/dashboard/adminTenant/ListeModuleTenant/ListeModuleTenant.component'
 import {ListeModuleComponent} from './features/dashboard/directeur/ListeModule/ListeModule.component'
 import {AffichageListeComponent} from './features/dashboard/directeur/ListeModule/AffichageListe.component'
+import {SeuilsManagementComponent} from './features/dashboard/directeur/ScoreModule/ScoreModule.component'
 
 
 import { SessionInscComponent} from './features/dashboard/adminTenant/session-insc/session-insc.component';
@@ -106,7 +107,8 @@ export const routes: Routes = [
        { path: 'candidats', component: AdminComponent },
        { path: 'import-gmetrix', component: ImportGmetrixComponent },
        { path: 'sessionsExamen', component: SessionExamenComponent },
-       { path: 'Listemodules', component: AffichageListeComponent }
+       { path: 'Listemodules', component: AffichageListeComponent },
+       {path: 'score', component: SeuilsManagementComponent}
 
     ]
   },

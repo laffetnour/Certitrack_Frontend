@@ -24,7 +24,6 @@ const barShadowPlugin = {
   }
 };
 
-// ✅ Enregistrement ICI aussi
 Chart.register(barShadowPlugin);
 
 @Component({
@@ -105,6 +104,8 @@ export class homeAdminComponent implements OnInit {
                color: '#9ca3af',
                },
          ticks: {
+           stepSize: 1,
+           precision: 0,
            color: '#9ca3af'
          }
        }
@@ -295,15 +296,60 @@ searchText: string = '';
   showResults: boolean = false;
 
   searchDatabase = [
-    { name: 'Dashboard', link: '/admin', type: 'page', icon: 'fas fa-home' },
-    { name: 'Liste des Candidats', link: '/admin/candidats', type: 'page', icon: 'fas fa-user-graduate' },
-    { name: 'Sessions d\'Examen', link: '/admin/sessionsExamen', type: 'page', icon: 'fas fa-chart-bar' },
-    { name: 'Import GMetrix', link: '/admin/import-gmetrix', type: 'page', icon: 'fas fa-file-import' },
-    { name: 'Paramètres système', link: '/admin/parametre', type: 'page', icon: 'fas fa-cog' },
-    { name: 'Résultats Sessions Inscriptions', link: '/admin/resultats-sessions', type: 'page', icon: 'fas fa-chart-bar' },
+    { name: 'Dashboard', link: '/admin', type: 'page', icon: 'fas fa-home',
+      keywords: ['dashboard', 'accueil','statistique', 'stat'] },
+    { name: 'Liste des Candidats', link: '/admin/candidats', type: 'page',
+      icon: 'fas fa-user-graduate',keywords: ['candidats','creer','statut','valider'] },
+    { name: 'Sessions d\'Examen', link: '/admin/sessionsExamen', type: 'page',
+      icon: 'fas fa-chart-bar',keywords: ['examen','date','certification','centre'] },
+    { name: 'Import GMetrix', link: '/admin/import-gmetrix', type: 'page',
+      icon: 'fas fa-file-import',keywords: ['resultats','score','gmetrix','import'] },
+    { name: 'Paramètres système', link: '/admin/parametre', type: 'page',
+      icon: 'fas fa-cog',keywords: ['parametre', 'settings', 'profil'] },
+    { name: 'Résultats Sessions Inscriptions', link: '/admin/resultats-sessions',
+      type: 'page', icon: 'fas fa-chart-bar',keywords: ['resultats','inscriptions','modules','test','score','durée'] },
   ];
 
   filteredResults: any[] = [];
+
+      onSearch() {
+        const search = this.searchText.toLowerCase().trim();
+
+        if (search.length > 1) {
+          this.showResults = true;
+
+          this.filteredResults = this.searchDatabase
+            .map(item => {
+              const matchedKeyword = item.keywords.find(k =>
+                k.toLowerCase().includes(search)
+              );
+
+              const matchName = item.name.toLowerCase().includes(search);
+
+              if (matchName || matchedKeyword) {
+                return {
+                  ...item,
+                  matchedKeyword: matchedKeyword || null
+                };
+              }
+
+              return null;
+            })
+            .filter(Boolean);
+
+        } else {
+          this.showResults = false;
+          this.filteredResults = [];
+        }
+      }
+
+      selectResult(link: string) {
+        window.location.href = link;
+        this.searchText = '';
+        this.showResults = false;
+      }
+
+  /*filteredResults: any[] = [];
 
   onSearch() {
     const search = this.searchText.toLowerCase().trim();
@@ -321,5 +367,5 @@ searchText: string = '';
     this.router.navigate([link]);
     this.searchText = '';
     this.showResults = false;
-  }
+  }*/
 }

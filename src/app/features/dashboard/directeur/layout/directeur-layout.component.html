@@ -82,7 +82,7 @@
         </div>
       </div>
 
-      <div class="nav-item">
+      <div class="nav-item"routerLink="/directeur/score" routerLinkActive="active">
         <i class="fas fa-percentage"></i>
         <span>Seuil score</span>
       </div>
@@ -113,8 +113,38 @@
       </div>
       <div class="search-container">
         <i class="fas fa-search"></i>
-        <input type="text" placeholder="Recherche...">
+        <!--<input type="text" placeholder="Recherche...">-->
+
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (input)="onSearch()"
+          (focus)="onSearch()"
+          placeholder="Recherche..."
+        />
+
+        <div class="search-dropdown" *ngIf="showResults && filteredResults.length > 0">
+
+          <div
+            class="search-item"
+            *ngFor="let result of filteredResults"
+            (click)="selectResult(result.link)">
+
+            <i [class]="result.icon"></i>
+
+            <div class="result-info">
+              <span class="result-name">{{ result.name }}</span>
+              <span class="result-type">{{ result.type }}</span>
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
+
+
+
     <div class="user-actions">
       <div class="notification-icon">
         <i class="fas fa-bell"></i>

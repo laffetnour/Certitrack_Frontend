@@ -57,6 +57,9 @@
 
   <div class="main-layout">
     <header class="notification-bar">
+      <div class="logo-wrapper" *ngIf="tenantLogo">
+        <img [src]="tenantLogo" [alt]="currentUser?.tenantLogo" class="tenant-logo">
+      </div>
       <div class="search-container">
         <i class="fas fa-search"></i>
         <input
@@ -77,9 +80,7 @@
         </div>
       </div>
 
-        <div class="logo-wrapper" *ngIf="tenantLogo">
-          <img [src]="tenantLogo" [alt]="currentUser?.tenantLogo" class="tenant-logo">
-        </div>
+
 
 
       <div class="user-actions">
@@ -106,7 +107,7 @@
 
       <div class="dashboard-content" *ngIf="router.url === '/admin'">
         <div class="welcome-section">
-          <h1>Tableau de Bord - {{ currentUser?.etablissements[0]?.nom }}</h1>
+          <h1 style="color: var(--text-main);">Tableau de Bord - {{ currentUser?.etablissements[0]?.nom }}</h1>
         </div>
 
         <div class="dashboard-overview">
@@ -131,7 +132,7 @@
             <div class="stat-card white">
               <div class="chart-card">
               <div class="chart-header">
-                <h2 style="color:black;">Inscriptions par modules</h2>
+                <h2 style="color: var(--text-main);">Inscriptions par modules</h2>
               </div>
 
               <div class="chart-container" >
@@ -144,14 +145,11 @@
             </div>
             </div>
           </div>
-
-
-          <!-- CÔTÉ DROIT : Le graphique circulaire -->
           <div class="chart-column">
             <div class="stat-card white">
               <div class="chart-card">
                 <div class="chart-header">
-                  <h2 style="color:black;">Candidats par spécialités</h2>
+                  <h2 style="color: var(--text-main);">Candidats par spécialités</h2>
                 </div>
                 <div class="chart-container">
                   <canvas baseChart
