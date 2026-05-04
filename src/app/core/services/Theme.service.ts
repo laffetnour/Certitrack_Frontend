@@ -1,5 +1,5 @@
 // src/app/services/theme.service.ts
-import { Injectable } from '@angular/core';
+/*import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'  // <--- TRÈS IMPORTANT
@@ -39,4 +39,32 @@ setTheme(theme: string) {
     localStorage.setItem('app-theme', 'light');
   }
 }
+}*/
+
+// src/app/services/theme.service.ts
+import { Injectable } from '@angular/core';
+
+@Injectable({ providedIn: 'root' })
+export class ThemeService {
+  private readonly THEME_KEY = 'app-theme';
+
+  constructor() {
+    // Applique le thème stocké localement dès le démarrage
+    this.applyTheme(this.getStoredTheme());
+  }
+
+  // Applique la classe sur <html> pour que le CSS global s'applique partout
+  applyTheme(theme: string): void {
+    const htmlElement = document.documentElement;
+    if (theme === 'dark') {
+      htmlElement.classList.add('dark-mode');
+    } else {
+      htmlElement.classList.remove('dark-mode');
+    }
+    localStorage.setItem(this.THEME_KEY, theme);
+  }
+
+  getStoredTheme(): string {
+    return localStorage.getItem(this.THEME_KEY) || 'light';
+  }
 }

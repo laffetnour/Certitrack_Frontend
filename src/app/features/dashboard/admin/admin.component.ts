@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminService } from '../../../core/services/admin.service';
-import { ConfigService } from '../../../core/services/config.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ChangeDetectorRef } from '@angular/core';
 import * as XLSX from 'xlsx';
@@ -42,8 +41,7 @@ export class AdminComponent implements OnInit {
     private adminService: AdminService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private auth: AuthService,
-    public configService: ConfigService
+    private auth: AuthService
   ) {
     this.candidatForm = this.fb.group({
       nom: ['', Validators.required],

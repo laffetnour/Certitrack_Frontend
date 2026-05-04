@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DirecteurService } from '../../../../core/services/directeur.service';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
-import { ConfigService } from '../../../../core/services/config.service';
 import { AdminService, StatData } from '../../../../core/services/admin.service';
 import { BaseChartDirective } from 'ng2-charts';
 import { Chart, registerables, ChartConfiguration, ChartData, ChartType } from 'chart.js';
@@ -168,8 +167,7 @@ export class DashboardComponent implements OnInit {
   constructor(
      private adminService: AdminService,
        private service: DirecteurService,
-       private cdr: ChangeDetectorRef,
-       public configService: ConfigService
+       private cdr: ChangeDetectorRef
      ) {}
 
    ngOnInit() {

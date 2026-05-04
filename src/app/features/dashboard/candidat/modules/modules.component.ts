@@ -5,7 +5,7 @@ import { ModuleTenantService } from '../../../../core/services/ModuleTenant.serv
 
 import { AuthService } from '../../../../core/services/auth.service';
 import { ModuleCandidatService } from '../../../../core/services/module-candidat.service';
-import { ConfigService } from '../../../../core/services/config.service';
+/*import { ConfigService } from '../../../../core/services/config.service';*/
 
 
 
@@ -36,8 +36,8 @@ export class ModulesCandidatComponent implements OnInit {
     private service: ModuleCandidatService,
     private moduleTenantService: ModuleTenantService,
     private authService: AuthService,
-    private cdr: ChangeDetectorRef,
-    public configService: ConfigService
+    private cdr: ChangeDetectorRef
+    /*public configService: ConfigService*/
   ) {}
 
   ngOnInit(): void {

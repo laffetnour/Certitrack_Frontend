@@ -1,8 +1,7 @@
-
-
-import { Component, OnInit } from '@angular/core'; // Ajout de OnInit
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { ConfigService } from '../../../core/services/config.service';
+import { ThemeService } from '../../../core/services/Theme.service';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -21,21 +20,19 @@ export class LoginComponent implements OnInit {
   username = '';
   password = '';
   errorMessage = '';
-
-  // Variables pour le message de validation par mail
   message: string = '';
   isError: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
-    private auth: AuthService, // Tu as nommé ton service 'auth' ici
+    private auth: AuthService,
     private router: Router,
     public configService: ConfigService,
+    private themeService: ThemeService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    // Extraction du token depuis l'URL (ex: /login?token=...)
     const token = this.route.snapshot.queryParamMap.get('token');
 
     if (token) {
@@ -44,10 +41,8 @@ export class LoginComponent implements OnInit {
   }
 
   validateAccount(token: string) {
-    // Correction : Utilisation de 'this.auth' au lieu de 'this.authService'
     this.auth.verifyAccount(token).subscribe({
       next: (res) => {
-        // L'utilisateur est maintenant enregistré en BDD côté Backend
         this.message = "✅ Votre adresse e-mail a été vérifiée. Votre compte est en attente de validation par votre établissement.";
         this.isError = false;
         this.cdr.detectChanges();
@@ -60,7 +55,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-   login() {
+  /* login() {
      this.errorMessage = '';
      this.message = '';
 
@@ -96,5 +91,62 @@ export class LoginComponent implements OnInit {
         this.cdr.detectChanges();
       }
      });
-   }
+   }*/
+
+ login() {
+   this.errorMessage = '';
+   this.message = '';
+
+   this.auth.login(this.username, this.password).subscribe({
+     next: (res: any) => {
+       // 1. Stockage des informations d'authentification
+       this.auth.saveUser(res);
+       localStorage.setItem('token', res.token);
+
+       const userId = res.idUtilisateur || res.id;
+
+       // 2. Chargement de la configuration (Thème, Logo, etc.)
+       this.configService.getConfigByUserId(userId).subscribe({
+         next: (config) => {
+           if (config && config.theme) {
+             this.themeService.applyTheme(config.theme);
+           }
+           // 3. Une fois le thème appliqué, on redirige
+           this.handleNavigation(res.role);
+         },
+         error: (err) => {
+           console.error("Erreur récup config, redirection par défaut", err);
+           // On redirige quand même pour ne pas bloquer l'utilisateur
+           this.handleNavigation(res.role);
+         }
+       });
+     },
+     error: (error: HttpErrorResponse) => {
+       const serverMessage = error.error?.message;
+       if (serverMessage === "ETABLISSEMENT_DISABLED") {
+         this.errorMessage = "⚠️ L'établissement de votre compte est désactivé.";
+       } else if (serverMessage === "TENANT_DISABLED") {
+         this.errorMessage = "🚫 Votre organisation est désactivée.";
+       } else if (serverMessage === "USER_DISABLED") {
+         this.errorMessage = "🚫 Votre compte personnel est désactivé.";
+       } else {
+         this.errorMessage = "Identifiants incorrects ou erreur de connexion.";
+       }
+       this.cdr.detectChanges();
+     }
+   });
+ }
+
+ private handleNavigation(role: string) {
+   const routes: { [key: string]: string } = {
+     'directeurEtab': '/directeur/dashboard',
+     'Candidat': '/candidat',
+     'adminEtab': '/admin',
+     'superAdmin': '/super-admin',
+     'adminTenant': '/adminTenant'
+   };
+
+   const targetRoute = routes[role] || '/';
+   this.router.navigate([targetRoute]);
+ }
 }

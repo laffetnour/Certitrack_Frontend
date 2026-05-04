@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { ConfigService, Configuration } from '../../core/services/config.service';
+import { ThemeService } from '../../core/services/Theme.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -16,7 +17,6 @@ export class ParametreComponent implements OnInit {
   currentUser: any;
   globalConfig: Configuration | null = null;
 
-  // États de chargement
   isSavingConfig: boolean = false;
   isUploadingPhoto: boolean = false;
   isSavingUser: boolean = false;
@@ -25,14 +25,17 @@ export class ParametreComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private configService: ConfigService,
+    private themeService: ThemeService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     const user = this.authService.getUser();
     this.currentUser = JSON.parse(JSON.stringify(user));
+   /* const savedTheme = localStorage.getItem('app-theme') || this.currentUser?.theme || 'light';
+    this.applyTheme(savedTheme);*/
     const savedTheme = localStorage.getItem('app-theme') || this.currentUser?.theme || 'light';
-    this.applyTheme(savedTheme);
+    this.themeService.applyTheme(savedTheme);
     if (!this.currentUser.contacts || this.currentUser.contacts.length === 0) {
       this.currentUser.contacts = [{
         type: {
@@ -41,6 +44,7 @@ export class ParametreComponent implements OnInit {
         }
       }];
     }
+
 
     this.loadUserConfiguration();
   }
@@ -99,7 +103,6 @@ get contactInfo() {
     reader.readAsDataURL(file);
   }
 
-  // --- GESTION DE LA CONFIGURATION (Thème & Admin) ---
 
   private loadUserConfiguration(): void {
       const userId = this.currentUser?.idUtilisateur || this.currentUser?.id;
@@ -112,8 +115,9 @@ get contactInfo() {
                  document.title = conf.nomPlateforme;
               }
 
-             this.currentUser.theme = conf.theme;
-             this.applyTheme(conf.theme);
+             //this.currentUser.theme = conf.theme;
+             this.themeService.applyTheme(conf.theme);
+             //this.applyTheme(conf.theme);
 
 
           this.cdr.detectChanges();
@@ -143,7 +147,7 @@ get contactInfo() {
     }
   }
 
-changePersonalTheme(theme: string): void {
+/*changePersonalTheme(theme: string): void {
   if (!this.globalConfig) return;
 
   // 1. On met à jour l'objet local immédiatement
@@ -175,7 +179,7 @@ changePersonalTheme(theme: string): void {
     },
     error: (err) => console.error("❌ Erreur sauvegarde thème", err)
   });
-}
+}*/
 
 saveGlobalSettings(): void {
   if (!this.globalConfig || !this.currentUser) return;
@@ -208,13 +212,42 @@ saveGlobalSettings(): void {
     }
   });
 }
-// config.service.ts
+/*
 applyTheme(theme: string) {
-  const htmlElement = document.documentElement; // Cible la balise <html>
+  const htmlElement = document.documentElement;
   if (theme === 'dark') {
     htmlElement.classList.add('dark-mode');
   } else {
     htmlElement.classList.remove('dark-mode');
   }
-}
+}*/
+
+changePersonalTheme(theme: string): void {
+    if (!this.globalConfig) return;
+
+    // 1. Mise à jour visuelle immédiate (DOM + LocalStorage)
+    this.themeService.applyTheme(theme);
+
+    // 2. Mise à jour de l'objet local
+    this.globalConfig.theme = theme;
+    this.currentUser.theme = theme;
+    this.authService.saveUser(this.currentUser);
+
+    // 3. Sauvegarde en Base de Données
+    const userId = this.currentUser.idUtilisateur || this.currentUser.id;
+    const payload: Configuration = {
+      ...this.globalConfig,
+      theme: theme,
+      user_id: userId
+    };
+
+    this.configService.updateConfig(payload).subscribe({
+      next: (savedConf) => {
+        this.globalConfig = savedConf;
+        console.log("✅ Thème sauvegardé en BDD");
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error("❌ Erreur BDD", err)
+    });
+  }
 }

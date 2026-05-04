@@ -3,7 +3,7 @@ import { ModuleCandidatService } from '../../../../core/services/module-candidat
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ConfigService } from '../../../../core/services/config.service';
+/*import { ConfigService } from '../../../../core/services/config.service';*/
 import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
@@ -26,8 +26,8 @@ export class MesInscriptionsComponent implements OnInit {
 
   constructor(private service: ModuleCandidatService,
     private cdr: ChangeDetectorRef,private router: Router,
-    private authService: AuthService,
-    public configService: ConfigService) {}
+    private authService: AuthService
+   /* public configService: ConfigService*/) {}
 
   ngOnInit(): void {
 

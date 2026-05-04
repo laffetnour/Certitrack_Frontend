@@ -6,7 +6,16 @@
 <div class="dashboard-container">
   <aside class="sidebar">
     <div class="logo-section">
-      <img src="LOGO-2026_VF.png" alt="Smartfuture" class="main-logo">
+      <!--<img src="LOGO-2026_VF.png" alt="Smartfuture" class="main-logo">-->
+      <ng-container *ngIf="configService.config$ | async as config; else loader">
+        <img [src]="config.logoSociete || 'LOGO-2026_VF.png'"
+             alt="Smartfuture"
+             class="main-logo">
+      </ng-container>
+
+      <ng-template #loader>
+        <img src="LOGO-2026_VF.png" alt="Smartfuture" class="main-logo loading">
+      </ng-template>
     </div>
 
     <nav class="nav-menu">
