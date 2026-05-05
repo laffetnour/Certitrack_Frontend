@@ -5,6 +5,7 @@ import { SpecialiteModuleService } from '../../../../core/services/SpecialiteMod
 import { EtablissementService } from '../../../../core/services/etablissement.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ModuleTenantService } from '../../../../core/services/ModuleTenant.service';
+import { ContextService } from '../../../../core/services/context.service';
 import { forkJoin } from 'rxjs';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -20,7 +21,8 @@ export class AffichageListeComponent implements OnInit {
   selectedSpecId: number | null = null;
   modulesAffectes: any[] = [];
   currentMode: string = 'FIXE';
-  loading: boolean = false;
+  //loading: boolean = false;
+  loading = true;
   allSpecialities: any[] = [];
   allModulesData: any[] = [];
   allModulesEtab: any[] = [];
@@ -35,23 +37,24 @@ export class AffichageListeComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private specModuleService: SpecialiteModuleService,
     private moduleTenantService: ModuleTenantService,
+    private contextService: ContextService,
     private authService: AuthService
   ) {}
 
-  ngOnInit(): void {
+  /*ngOnInit(): void {
     this.loadSpecialites();
 
     this.loading = true;
       const user = this.authService.getUser();
-      const etabId = user?.etablissements?.[0]?.idEtab;
+      const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId();
 
       if (etabId) {
-        // 1. On charge les spécialités d'abord
         this.etablissementService.getSpecialites(etabId).subscribe({
           next: (specs) => {
             this.allSpecialities = specs;
-            // 2. SEULEMENT APRÈS, on charge les modules
             this.loadAllSpecialiteModules(true);
+            this.loading = false;
+                    this.cdr.detectChanges();
           },
           error: (err) => {
             console.error("Erreur specs", err);
@@ -59,13 +62,60 @@ export class AffichageListeComponent implements OnInit {
           }
         });
       }
+  }*/
+
+ngOnInit(): void {
+  this.loading = true;
+  const user = this.authService.getUser();
+  const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId();
+
+  if (etabId) {
+    // On combine les deux appels pour n'arrêter le loading qu'à la fin des deux
+    forkJoin({
+      specs: this.etablissementService.getSpecialites(etabId),
+      modules: this.specModuleService.getAllSpecialiteModules(etabId)
+    }).subscribe({
+      next: (result) => {
+        this.allSpecialities = result.specs;
+
+        // Traitement des modules
+        const sortedData = result.modules.sort((a, b) =>
+          a.specialite?.nom.localeCompare(b.specialite?.nom)
+        );
+        this.allModulesData = sortedData;
+        this.onSpecChange(); // Initialise modulesAffectes
+
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error("Erreur chargement initial", err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  } else {
+    this.loading = false;
   }
+}
+
+getRetourRoute(): string {
+  const idEtab = this.contextService.getEtablissementId();
+  const user = this.authService.getUser();
+   const role = user?.role
+
+  if (role === 'adminTenant' && idEtab) {
+    return `/adminTenant/etablissement/${idEtab}/specialites`;
+  }
+
+  return '/directeur/specialites';
+}
 
 
   loadAllSpecialiteModules(shouldFilter: boolean = false): void {
       this.loading = true;
       const user = this.authService.getUser();
-      const etabId = user?.etablissements?.[0]?.idEtab;
+      const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId();
 
        if (etabId) {
       this.specModuleService.getAllSpecialiteModules(etabId).subscribe({
@@ -111,7 +161,7 @@ else {
     loadSpecialites(): void {
       this.loading = true;
       const user = this.authService.getUser();
-      const etabId = user?.etablissements?.[0]?.idEtab;
+      const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId();
      if (etabId) {
              this.etablissementService.getSpecialites(etabId).subscribe({
                next: (specs) => {

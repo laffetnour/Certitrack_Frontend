@@ -756,3 +756,29 @@ form::-webkit-scrollbar-thumb:hover {
 :host-context(.dark-mode) .modal-content .form-group label {
   color: #ffffff;
 }
+
+.btn-manage {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #6366f1; /* Indigo moderne */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-manage:hover {
+  background-color: #4f46e5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-manage i, .btn-manage svg {
+  font-size: 0.9rem;
+}

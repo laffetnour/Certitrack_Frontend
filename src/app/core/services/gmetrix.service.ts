@@ -20,6 +20,22 @@ export class GmetrixService {
     });
   }
 
+private getOptions(etabId?: number) {
+    const token = localStorage.getItem('token');
+    let params = new HttpParams();
+    if (etabId) {
+      params = params.set('etabId', etabId.toString());
+    }
+
+    return {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }),
+      params: params
+    };
+  }
+
   // 📥 IMPORT EXCEL
   importFile(file: File): Observable<any> {
     const formData = new FormData();
@@ -31,7 +47,7 @@ export class GmetrixService {
   }
 
   // 📊 GET SCORES AVEC FILTRES
-  getScores(filters: any): Observable<any[]> {
+  getScores(filters: any,etabId?: number): Observable<any[]> {
 
     let params = new HttpParams();
 
@@ -46,25 +62,35 @@ export class GmetrixService {
     if (filters.classroom) {
       params = params.set('classroom', filters.classroom);
     }
+    if (etabId) params = params.set('etabId', etabId.toString());
 
     return this.http.get<any[]>(`${this.apiUrl}/scores`, {
-      headers: this.getAuthHeaders(),
+      ...this.getOptions(etabId),
       params: params
     });
   }
-  getScoresBySessionName(name: string) {
+  getScoresBySessionName(name: string,etabId?: number) {
+    const queryParams: any = { sessionName: name };
+    let params = new HttpParams();
+     if (etabId) params = params.set('etabId', etabId.toString());
+
     return this.http.get<any[]>(
       `${this.apiUrl}/scores/by-session-name`,
       {
-        headers: this.getAuthHeaders(),
-        params: { sessionName: name }
+        ...this.getOptions(etabId),
+        params: queryParams
       }
     );
   }
 
-  getSessions(): Observable<any[]> {
+  getSessions(etabId?: number): Observable<any[]> {
+    let params = new HttpParams();
+      if (etabId) {
+        params = params.set('etabId', etabId.toString());
+      }
     return this.http.get<any[]>(`${this.apiUrl}/sessions`, {
-      headers: this.getAuthHeaders()
+      ...this.getOptions(etabId),
+      params: params
     });
   }
 }

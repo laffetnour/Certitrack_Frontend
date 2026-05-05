@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -22,12 +22,35 @@ private getAuthHeaders() {
   };
 }
 
-  getAdmins(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/administrateurs`, this.getAuthHeaders());
+private getOptions(etabId?: number) {
+    const token = localStorage.getItem('token');
+    let params = new HttpParams();
+    if (etabId) {
+      params = params.set('etabId', etabId.toString());
+    }
+
+    return {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }),
+      params: params
+    };
   }
 
-  createAdmin(admin: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/administrateurs`, admin, this.getAuthHeaders());
+getStats(etabId?: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/stats`, this.getOptions(etabId));
+  }
+
+  getAdmins(etabId?: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/administrateurs`, this.getOptions(etabId));
+  }
+  /*getAdmins(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/administrateurs`, this.getAuthHeaders());
+  }*/
+
+  createAdmin(admin: any, etabId?: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/administrateurs`, admin, this.getOptions(etabId));
   }
 
   updateAdmin(id: number, admin: any): Observable<any> {
@@ -53,9 +76,10 @@ private getAuthHeaders() {
   deleteMultiple(ids: number[]): Observable<any> {
     return this.http.post(`${this.baseUrl}/administrateurs/delete-multiple`, ids, this.getAuthHeaders());
   }
-  getStats(): Observable<any> {
+
+  /*getStats(): Observable<any> {
     return this.http.get(`${this.baseUrl}/stats`, this.getAuthHeaders());
-  }
+  }*/
 
 
 
@@ -64,8 +88,8 @@ private getAuthHeaders() {
     return this.http.get(`${this.baseUrl}/specialites`, this.getAuthHeaders());
   }
 
-  addSpecialite(sp: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/specialites`, sp, this.getAuthHeaders());
+  addSpecialite(sp: any, etabId?: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/specialites`, sp, this.getOptions(etabId));
   }
 
   updateSpecialite(id: number, sp: any): Observable<any> {
@@ -76,8 +100,8 @@ private getAuthHeaders() {
     return this.http.put(`${this.baseUrl}/specialites/${id}/status`, {}, this.getAuthHeaders());
   }
 
-  deleteSpecialite(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/specialites/${id}`, this.getAuthHeaders());
+  deleteSpecialite(id: number, etabId?: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/specialites/${id}`, this.getOptions(etabId));
   }
 
   activateMultipleSpecialites(ids: number[]) {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminService } from '../../../core/services/admin.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { ContextService } from '../../../core/services/context.service';
 import { ChangeDetectorRef } from '@angular/core';
 import * as XLSX from 'xlsx';
 
@@ -41,7 +42,8 @@ export class AdminComponent implements OnInit {
     private adminService: AdminService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private auth: AuthService
+    private auth: AuthService,
+    private contextService: ContextService
   ) {
     this.candidatForm = this.fb.group({
       nom: ['', Validators.required],
@@ -73,7 +75,10 @@ export class AdminComponent implements OnInit {
 
 
   loadSpecialites(): void {
-    this.adminService.getSpecialites().subscribe({
+    const currentUser = this.auth.getUser();
+    const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab
+      || this.contextService.getEtablissementId();
+    this.adminService.getSpecialites(idEtab).subscribe({
       next: (data) => {
         this.specialites = data;
       },
@@ -85,7 +90,10 @@ export class AdminComponent implements OnInit {
 
   loadCandidats(): void {
     this.loading = true;
-    this.adminService.getCandidats().subscribe({
+    const currentUser = this.auth.getUser();
+    const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab
+      || this.contextService.getEtablissementId();
+    this.adminService.getCandidats(idEtab).subscribe({
       next: (data) => {
         this.candidats = data ;
         this.loading = false;
@@ -142,7 +150,10 @@ export class AdminComponent implements OnInit {
           }
         });
       } else {
-        this.adminService.createCandidat(formData).subscribe({
+        const currentUser = this.auth.getUser();
+        const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab
+          || this.contextService.getEtablissementId();
+        this.adminService.createCandidat(formData,idEtab).subscribe({
           next: () => {
             this.successMessage = 'Candidat ajouté avec succès';
             this.loadCandidatsParSpecialite();
@@ -329,7 +340,10 @@ handleDeactivateAfterFailedDelete(): void {
 
 loadCandidatsParSpecialite(): void {
   this.loading = true;
-  this.adminService.getCandidatsBySpecialite().subscribe({
+  const currentUser = this.auth.getUser();
+const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab
+  || this.contextService.getEtablissementId();
+  this.adminService.getCandidatsBySpecialite(idEtab).subscribe({
     next: (data) => {
       this.specialitesCandidats = data;
 

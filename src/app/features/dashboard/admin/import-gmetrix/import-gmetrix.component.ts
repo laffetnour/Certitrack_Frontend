@@ -1,5 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { GmetrixService } from '../../../../core/services/gmetrix.service';
+import { ContextService } from '../../../../core/services/context.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import * as XLSX from 'xlsx';
@@ -25,7 +27,10 @@ export class ImportGmetrixComponent implements OnInit {
 
 
 
-  constructor(private gmetrixService: GmetrixService,private cdr: ChangeDetectorRef) {}
+  constructor(private gmetrixService: GmetrixService,
+    private cdr: ChangeDetectorRef,
+     private auth: AuthService,
+        private contextService: ContextService) {}
 
   ngOnInit(): void {
     this.loadSessions();
@@ -74,10 +79,13 @@ export class ImportGmetrixComponent implements OnInit {
   loadScores() {
     this.loading = true;
     console.log("SESSION ID ENVOYÉ =", this.sessionId);
+    const currentUser = this.auth.getUser();
+        const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab
+          || this.contextService.getEtablissementId();
 
     this.gmetrixService.getScores({
       sessionId: this.sessionId
-    }).subscribe({
+    },idEtab).subscribe({
       next: (data) => {
         this.scores = data;
         this.loading = false;
@@ -92,7 +100,10 @@ export class ImportGmetrixComponent implements OnInit {
   }
 
   loadSessions() {
-    this.gmetrixService.getSessions().subscribe({
+    const currentUser = this.auth.getUser();
+        const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab
+          || this.contextService.getEtablissementId();
+    this.gmetrixService.getSessions(idEtab).subscribe({
       next: (data) => {
         this.sessions = data;
         this.cdr.detectChanges();

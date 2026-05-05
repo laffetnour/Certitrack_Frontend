@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ConfigService } from '../../../../core/services/config.service';
+import { NotificationService, Notification } from '../../../../core/services/notification.service';
+
 import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-directeur-layout',
@@ -19,13 +21,19 @@ export class DirecteurLayoutComponent {
   tenantLogo: string | null = null;
   searchText: string = '';
   showResults: boolean = false;
+  notifications: Notification[] = [];
+    showNotifs = false;
 
-constructor(private router: Router,private authService: AuthService,public configService: ConfigService) {}
+constructor(private router: Router,
+  private authService: AuthService,
+  public notifService: NotificationService,
+  public configService: ConfigService) {}
   ngOnInit(): void {
     this.currentUser = this.authService.getUser();
     if (this.currentUser) {
       this.tenantLogo = this.currentUser?.tenantLogo;
       }
+    this.refreshNotifications();
   }
 
 
@@ -130,4 +138,26 @@ constructor(private router: Router,private authService: AuthService,public confi
    localStorage.clear();
    this.router.navigate(['/login']);
  }
+
+refreshNotifications() {
+   const user = this.authService.getUser();
+    const userId = user?.idUtilisateur;
+    this.notifService.getNotifications(userId).subscribe(data => {
+      this.notifications = data;
+      console.log("notifie",data);
+    });
+  }
+
+  toggleNotifs() {
+    this.showNotifs = !this.showNotifs;
+  }
+
+  onSelect(n: Notification) {
+    if (!n.lu && n.id) {
+      this.notifService.markAsRead(n.id).subscribe(() => {
+        n.lu = true;
+        this.refreshNotifications();
+      });
+    }
+  }
 }

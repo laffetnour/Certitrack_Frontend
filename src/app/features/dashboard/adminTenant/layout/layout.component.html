@@ -135,9 +135,38 @@
       </div>-->
 
       <div class="user-actions">
-        <div class="notification-icon">
+        <!--<div class="notification-icon">
           <i class="fas fa-bell"></i>
           <span class="dot-notification"></span>
+        </div>-->
+        <!-- Conteneur de l'icône (votre code adapté) -->
+        <div class="notification-container" style="position: relative;">
+
+          <div class="notification-icon" (click)="toggleNotifs()" style="cursor: pointer;">
+            <i class="fas fa-bell"></i>
+            <ng-container *ngIf="notifService.unreadCount$ | async as count">
+              <span class="dot-notification" *ngIf="count > 0"></span>
+            </ng-container>
+          </div>
+
+          <!-- Liste déroulante qui s'affiche au clic -->
+          <div class="dropdown-notif-panel shadow" *ngIf="showNotifs">
+            <div class="notif-header">Notifications</div>
+
+            <div class="notif-content">
+              <div *ngIf="notifications.length === 0" class="no-notif">Aucune notification</div>
+
+              <div *ngFor="let n of notifications"
+                   class="notif-item"
+                   [class.unread]="!n.lu"
+                   (click)="onSelect(n)">
+                <div class="notif-title">{{ n.titre }}</div>
+                <div class="notif-msg">{{ n.message }}</div>
+                <div class="notif-date">{{ n.dateCreation | date:'shortTime' }}</div>
+              </div>
+            </div>
+          </div>
+
         </div>
         <div class="profile">
           <span class="user-role">{{ currentUser?.prenom }} {{ currentUser?.nom }}</span>

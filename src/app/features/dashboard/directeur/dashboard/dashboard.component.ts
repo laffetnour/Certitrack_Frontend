@@ -3,6 +3,7 @@ import { DirecteurService } from '../../../../core/services/directeur.service';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { AdminService, StatData } from '../../../../core/services/admin.service';
+import { ContextService } from '../../../../core/services/context.service';
 import { BaseChartDirective } from 'ng2-charts';
 import { Chart, registerables, ChartConfiguration, ChartData, ChartType } from 'chart.js';
 Chart.register(...registerables);
@@ -167,7 +168,8 @@ export class DashboardComponent implements OnInit {
   constructor(
      private adminService: AdminService,
        private service: DirecteurService,
-       private cdr: ChangeDetectorRef
+       private cdr: ChangeDetectorRef,
+       private contextService: ContextService
      ) {}
 
    ngOnInit() {
@@ -178,8 +180,10 @@ export class DashboardComponent implements OnInit {
 
   loadDashboardData(): void {
     this.loading = true;
+    const idEtab = this.contextService.getEtablissementId();
 
-    this.service.getStats().subscribe({
+    //this.service.getStats().subscribe({
+      this.service.getStats(idEtab).subscribe({
       next: (res) => {
         console.log("📊 Data reçue du serveur :", res);
 
@@ -203,7 +207,8 @@ export class DashboardComponent implements OnInit {
 
 
 loadChartsData(): void {
-  const idEtab = this.currentUser?.etablissements?.[0]?.id || this.currentUser?.etablissements?.[0]?.idEtab;
+  const idEtab = this.currentUser?.etablissements?.[0]?.id || this.currentUser?.etablissements?.[0]?.idEtab
+  || this.contextService.getEtablissementId();
 
 
   console.log("etab: ",idEtab);

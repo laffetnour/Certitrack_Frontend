@@ -5,6 +5,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { EtablissementService } from '../../../../core/services/etablissement.service';
 import { SpecialiteModuleService } from '../../../../core/services/SpecialiteModule.service';
 import { FormsModule } from '@angular/forms';
+import { ContextService } from '../../../../core/services/context.service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { forkJoin } from 'rxjs'; // <--- INDISPENSABLE
 
@@ -46,6 +47,7 @@ export class ListeModuleComponent implements OnInit {
       private cdr: ChangeDetectorRef,
       private etablissementService: EtablissementService,
       private specialiteModuleService: SpecialiteModuleService,
+      private contextService: ContextService,
       private authService: AuthService
     ) {}
 
@@ -54,11 +56,23 @@ export class ListeModuleComponent implements OnInit {
       this.loadSpecialities();
     }
 
+getRetourRoute(): string {
+  const idEtab = this.contextService.getEtablissementId();
+  const user = this.authService.getUser();
+    const role = user?.role
+
+  if (role === 'adminTenant' && idEtab) {
+    return `/adminTenant/etablissement/${idEtab}/specialites`;
+  }
+
+  return '/directeur/specialites';
+}
+
 loadAllSpecModules(): void {
     this.loading = true;
         const user = this.authService.getUser();
-        const etabId = user?.etablissements?.[0]?.idEtab;
-
+        const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId();
+          console.log("all : ",etabId);
          if (etabId) {
   this.specialiteModuleService.getAllSpecialiteModules(etabId).subscribe({
     next: (data) => { this.allModulesData = data; },
@@ -70,16 +84,12 @@ loadMyCatalogue(): void {
   const user = this.authService.getUser();
  const userId = user?.idUtilisateur;
   console.log(user);
-  /*if (!userId) {
-    this.errorMessage = "Impossible de récupérer les informations du Tenant.";
-    this.loading = false;
-    return;
-  }*/
 
-const etabId = user?.etablissements?.[0]?.idEtab;
+
+const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId();
 
   if (etabId) {
-    // 1. On charge d'abord les spécialités de l'établissement
+
     this.etablissementService.getSpecialites(etabId).subscribe({
       next: (specs) => {
         this.allSpecialities = specs;
@@ -130,7 +140,7 @@ onSearch(): void {
 
 loadSpecialities(): void {
     const user = this.authService.getUser();
-    const etabId = user?.etablissements?.[0]?.idEtab;
+    const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId();
     console.log("etab: ",etabId);
     if (etabId) {
         this.etablissementService.getSpecialites(etabId).subscribe({

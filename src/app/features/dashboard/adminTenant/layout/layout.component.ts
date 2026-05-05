@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ConfigService } from '../../../../core/services/config.service';
+import { NotificationService, Notification } from '../../../../core/services/notification.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -14,18 +15,18 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./layout.component.css']
 })
 export class AdminTenantLayoutComponent {
-
-
   currentUser: any = {};
-
   searchText: string = '';
   showResults: boolean = false;
-
   filteredResults: any[] = [];
+  notifications: Notification[] = [];
+  showNotifs = false;
+
   constructor(
 
       private authService: AuthService,
-      public configService: ConfigService,private router: Router
+      public configService: ConfigService,private router: Router,
+      public notifService: NotificationService
     ) {}
 
   ngOnInit() {
@@ -33,6 +34,7 @@ export class AdminTenantLayoutComponent {
     if (user) {
       this.currentUser = JSON.parse(user);
     }
+  this.refreshNotifications();
   }
 
   onLogout(): void {
@@ -113,5 +115,27 @@ export class AdminTenantLayoutComponent {
     this.router.navigate([link]);
     this.searchText = '';
     this.showResults = false;
+  }
+
+refreshNotifications() {
+   const user = this.authService.getUser();
+    const userId = user?.idUtilisateur;
+    this.notifService.getNotifications(userId).subscribe(data => {
+      this.notifications = data;
+      console.log("notifie",data);
+    });
+  }
+
+  toggleNotifs() {
+    this.showNotifs = !this.showNotifs;
+  }
+
+  onSelect(n: Notification) {
+    if (!n.lu && n.id) {
+      this.notifService.markAsRead(n.id).subscribe(() => {
+        n.lu = true;
+        this.refreshNotifications(); // Met à jour le dot-notification
+      });
+    }
   }
 }

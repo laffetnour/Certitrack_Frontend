@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { ModuleTenantService } from '../../../../core/services/ModuleTenant.service';
+import { EtablissementService } from '../../../../core/services/etablissement.service';
+import { ContextService } from '../../../../core/services/context.service';
+
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { SpecialiteModuleService } from '../../../../core/services/SpecialiteModule.service';
@@ -46,15 +49,40 @@ originalModules: number[] = [];
               private cdr: ChangeDetectorRef,
               private moduleTenantService: ModuleTenantService,
               private specModuleService: SpecialiteModuleService,
-              private authService: AuthService
-              /*public configService: ConfigService*/) {}
+              private authService: AuthService,
+              private etablissementService: EtablissementService,
+              private contextService: ContextService ) {}
 
   ngOnInit(): void {
     this.loadSpecialites();
   }
 
 
-  loadSpecialites() {
+
+getModulesRoute(): string {
+  const idEtab = this.contextService.getEtablissementId();
+  const user = this.authService.getUser();
+  const role = user.role
+
+  if (role === 'adminTenant' && idEtab) {
+    return `/adminTenant/etablissement/${idEtab}/modules`;
+  }
+  return '/directeur/modules';
+}
+
+getListModulesRoute(): string {
+  const idEtab = this.contextService.getEtablissementId();
+   const user = this.authService.getUser();
+    const role = user.role
+
+  if (role === 'adminTenant' && idEtab) {
+    return `/adminTenant/etablissement/${idEtab}/Listemodules`;
+  }
+  return '/directeur/Listemodules';
+}
+
+
+ /* loadSpecialites() {
     this.loading = true;
 
     this.directeurService.getSpecialites().subscribe({
@@ -67,7 +95,21 @@ originalModules: number[] = [];
         this.loading = false;
       }
     });
-  }
+  }*/
+
+loadSpecialites() {
+    this.loading = true;
+    const user = this.authService.getUser();
+    const id = this.contextService.getEtablissementId() || user?.etablissements?.[0]?.idEtab ;
+    this.etablissementService.getSpecialites(id).subscribe({
+        next: (data) => {
+            this.specialites = data || [];
+            this.loading = false;
+            this.cdr.detectChanges();
+        },
+        error: () => this.loading = false
+    });
+}
 
 
   onCheckboxChange(id: number, event: any) {
@@ -200,9 +242,10 @@ save() {
   if (this.isSubmitDisabled()) return;
 
   const user = this.authService.getUser();
+  const idEtab = this.contextService.getEtablissementId();
   const specAction = this.isEdit
     ? this.directeurService.updateSpecialite(this.currentId!, this.form)
-    : this.directeurService.addSpecialite(this.form);
+    : this.directeurService.addSpecialite(this.form, idEtab);
 
   specAction.subscribe((savedSpec: any) => {
     const specId = this.isEdit ? this.currentId : savedSpec.idSpecialite;
@@ -302,8 +345,11 @@ delete(sp: any) {
           this.loadSpecialites();
           this.cdr.detectChanges();
         } else {
+          const user = this.authService.getUser();
 
-          this.directeurService.deleteSpecialite(sp.idSpecialite).subscribe({
+          const idEtab = this.contextService.getEtablissementId() || user?.etablissements?.[0]?.idEtab  ;
+
+          this.directeurService.deleteSpecialite(sp.idSpecialite,idEtab).subscribe({
             next: () => {
               this.successMessage = "Suppression réussie !";
               this.errorMessage = '';

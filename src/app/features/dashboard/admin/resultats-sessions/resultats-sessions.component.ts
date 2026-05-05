@@ -2,6 +2,9 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../../../core/services/admin.service';
+import { ContextService } from '../../../../core/services/context.service';
+import { AuthService } from '../../../../core/services/auth.service';
+
 
 @Component({
   selector: 'app-resultats-sessions',
@@ -25,18 +28,23 @@ export class ResultatsSessionsComponent implements OnInit {
   canExport: boolean = false;
 
   constructor(
+    private auth: AuthService,
     private adminService: AdminService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private contextService: ContextService
   ) {}
 
   ngOnInit(): void {
     this.loadSessionsCloturees();
-    this.loadResultats(); // charger tout au début
+    this.loadResultats();
   }
 
-  // 🔹 charger sessions clôturées
   loadSessionsCloturees(): void {
-    this.adminService.getSessionsCloturees().subscribe({
+     const currentUser = this.auth.getUser();
+          const idEtab = currentUser?.etablissements?.[0]?.id ||
+                         currentUser?.etablissements?.[0]?.idEtab ||
+                         this.contextService.getEtablissementId();
+    this.adminService.getSessionsCloturees(idEtab).subscribe({
       next: (data: any) => {
         this.sessions = data;
         this.cdr.detectChanges();
@@ -45,42 +53,13 @@ export class ResultatsSessionsComponent implements OnInit {
     });
   }
 
-  // 🔹 changement session
- /* onSessionChange(event: any): void {
-    this.selectedSessionId = Number(event.target.value) || null;
-    this.loadResultats();
-  }*/
-
-  // 🔹 chargement résultats (API principale)
-  /*loadResultats(): void {
-    this.loading = true;
-    console.log("FILTERS SENT:");
-    console.log("sessionId:", this.selectedSessionId);
-    console.log("dateDebut:", this.dateDebut);
-    console.log("dateFin:", this.dateFin);
-
-    this.adminService.getResultats({
-      sessionId: this.selectedSessionId,
-      dateDebut: this.dateDebut,
-      dateFin: this.dateFin
-    }).subscribe({
-      next: (data: any) => {
-        this.resultats = data;
-
-        // détecter si au moins un test existe
-        this.avecTest = this.resultats.some((r: any) => r.score != null);
-
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error(err);
-        this.loading = false;
-      }
-    });
-  }*/
 
   loadResultats(): void {
+
+    const currentUser = this.auth.getUser();
+      const idEtab = currentUser?.etablissements?.[0]?.id ||
+                     currentUser?.etablissements?.[0]?.idEtab ||
+                     this.contextService.getEtablissementId();
 
     const filters = {
       sessionId: this.selectedSessionId,
@@ -90,7 +69,7 @@ export class ResultatsSessionsComponent implements OnInit {
 
     this.loading = true;
 
-    this.adminService.getResultats(filters).subscribe({
+    this.adminService.getResultats(filters, idEtab).subscribe({
       next: (data: any) => {
         this.resultats = data;
 
@@ -106,7 +85,6 @@ export class ResultatsSessionsComponent implements OnInit {
     });
   }
 
-  // 🔹 format durée
   formatDuree(sec: number): string {
     if (sec == null) return '-';
 
@@ -123,37 +101,18 @@ export class ResultatsSessionsComponent implements OnInit {
     this.loadResultats();
   }
 
-  /*exportExcel(): void {
-
-    if (!this.selectedSessionId) {
-      alert("Veuillez sélectionner une session");
-      return;
-    }
-
-    this.adminService.exportResultats({
-      sessionId: this.selectedSessionId,
-      dateDebut: this.dateDebut,
-      dateFin: this.dateFin
-    }).subscribe((blob: Blob) => {
-
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-
-      a.href = url;
-      a.download = 'resultats.xlsx';
-      a.click();
-
-      window.URL.revokeObjectURL(url);
-    });
-  }*/
-
   exportExcel(): void {
+
+    const currentUser = this.auth.getUser();
+      const idEtab = currentUser?.etablissements?.[0]?.id ||
+                     currentUser?.etablissements?.[0]?.idEtab ||
+                     this.contextService.getEtablissementId();
 
     this.adminService.exportResultats({
       sessionId: this.selectedSessionId,
       dateDebut: this.dateDebut || null,
       dateFin: this.dateFin || null
-    }).subscribe((blob: Blob) => {
+    }, idEtab).subscribe((blob: Blob) => {
 
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');

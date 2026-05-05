@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DirecteurService } from '../../../../core/services/directeur.service';
+import { ContextService } from '../../../../core/services/context.service';
+
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
@@ -31,7 +33,8 @@ export class AdministrateursComponent implements OnInit {
   constructor(
     private directeurService: DirecteurService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private contextService: ContextService
   ) {
     this.adminForm = this.fb.group({
       nom: ['', Validators.required],
@@ -50,7 +53,9 @@ export class AdministrateursComponent implements OnInit {
 
   loadAdmins(): void {
     this.loading = true;
-    this.directeurService.getAdmins().subscribe({
+    const idEtab = this.contextService.getEtablissementId();
+    //this.directeurService.getAdmins().subscribe({
+    this.directeurService.getAdmins(idEtab).subscribe({
       next: (data) => {
         this.admins = data;
         this.loading = false;
@@ -285,7 +290,9 @@ export class AdministrateursComponent implements OnInit {
 
     } else {
 
-      this.directeurService.createAdmin(data).subscribe({
+      const idEtab = this.contextService.getEtablissementId();
+      //this.directeurService.createAdmin(data).subscribe({
+      this.directeurService.createAdmin(data, idEtab).subscribe({
         next: () => {
           this.successMessage = 'Admin ajouté avec succès';
           this.loadAdmins();

@@ -125,9 +125,30 @@ export const routes: Routes = [
        { path: 'modules', component: ModuleComponent },
        { path: 'moduleTenant', component: ModuleTenantComponent },
        { path: 'ListeModuleTenant', component: ListeModuleTenantComponent },
-      //{ path: 'quotas', component: QuotasComponent },
-      //{ path: 'session-test', component: SessionTestComponent },
-      { path: 'session-insc', component: SessionInscComponent }
+      { path: 'session-insc', component: SessionInscComponent },
+
+      {
+            path: 'etablissement/:idEtab',
+            children: [
+              { path: 'import-gmetrix', component: ImportGmetrixComponent }
+              /*{ path: 'resultats-sessions', component: ResultatsSessionsComponent },
+               { path: 'candidats', component: AdminComponent },
+              { path: 'specialites', component: SpecialiteComponent },
+              { path: 'Listemodules', component: AffichageListeComponent },
+              { path: 'modules', component: ListeModuleComponent }
+              { path: 'dashboard', component: DashboardComponent },
+              { path: 'administrateurs', component: AdministrateursComponent },
+
+              { path: 'parametre', component: ParametreComponent },
+
+
+
+              { path: 'import-gmetrix', component: ImportGmetrixComponent },
+              { path: 'sessionsExamen', component: SessionExamenComponent },
+              {path: 'score', component: SeuilsManagementComponent}*/
+
+            ]
+          }
     ]
   },
 

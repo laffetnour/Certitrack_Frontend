@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminTenantService } from '../../../../core/services/AdminTenantService';
+import { RouterLink } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConfigService } from '../../../../core/services/config.service';
@@ -10,7 +11,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-etablissements',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './etablissements.component.html',
   styleUrls: ['./etablissements.component.css']
 })
