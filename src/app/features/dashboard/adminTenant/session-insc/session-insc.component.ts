@@ -251,7 +251,7 @@ openEditModal(session: any) {
     todayNow.setHours(0, 0, 0, 0); // Comparaison à minuit
 
     if (dateDebut <= todayNow) {
-      this.showAlert('error', "❌ La date de début doit être supérieure à la date d'aujourd'hui.");
+      this.showAlert('error', "❌ La date de début doit être supérieure ou égale à la date d'aujourd'hui.");
       return;
     }
 

@@ -81,7 +81,7 @@
         </td>
         <td>
           <span class="status-badge"
-                [class.active]="s.etat==='encours'"
+                [class.active]="s.etat?.toLowerCase() === 'encours'"
                 [class.inactive]="s.etat==='cloturee'"
                 [class.planned]="s.etat==='planifiee'">
             {{ s.etat }}
