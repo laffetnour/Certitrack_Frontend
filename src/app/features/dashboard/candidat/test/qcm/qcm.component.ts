@@ -70,7 +70,22 @@ ngOnInit(): void {
         }
 
     // Sauvegarde pour éviter de perdre le test au rafraîchissement
-    localStorage.setItem('epreuve', JSON.stringify(this.epreuve));
+    //localStorage.setItem('epreuve', JSON.stringify(this.epreuve));
+    // SAUVEGARDE OPTIMISÉE : On ne ré-enregistre que si nécessaire
+      try {
+        const stored = localStorage.getItem('epreuve');
+        if (!stored || JSON.parse(stored).idEpreuve !== this.epreuve.idEpreuve) {
+           localStorage.setItem('epreuve', JSON.stringify(this.epreuve));
+        }
+      } catch (e) {
+        console.warn("Quota Storage dépassé, nettoyage en cours...");
+        localStorage.removeItem('epreuve'); // On nettoie les vieux tests
+        try {
+          localStorage.setItem('epreuve', JSON.stringify(this.epreuve));
+        } catch (e2) {
+          console.error("L'épreuve est trop lourde pour le navigateur.");
+        }
+      }
 
     // Tri des questions : Techniques d'abord, puis Comportementales
     this.questions = [...this.epreuve.questions].sort((a, b) => {

@@ -55,7 +55,7 @@ export class SessionExamenComponent implements OnInit {
 
 
 
-  loadSessions() {
+  /*loadSessions() {
     this.loading = true;
     this.sessionService.getAll().subscribe({
       next: (data) => {
@@ -68,7 +68,7 @@ export class SessionExamenComponent implements OnInit {
         this.loading = false;
       }
     });
-  }
+  }*/
 
   loadModulesRecents() {
     this.sessionService.getModulesLastImport().subscribe({
@@ -93,7 +93,7 @@ onModuleToggle(moduleId: number) {
     return this.sessionForm.modulesAutorises.includes(moduleId);
   }
 
-  onSave() {
+  /*onSave() {
     if (!this.validateDates()) {
         return;
       }
@@ -140,7 +140,7 @@ onModuleToggle(moduleId: number) {
         });
       }
     });
-  }
+  }*/
 
   onEdit(session: any) {
     this.sessionForm = {
@@ -264,5 +264,85 @@ canDelete(session: any): boolean {
     this.selectedSession = session;
     console.log(session);
     this.selectedSession.etatCurrent = this.calculerEtatAutomatique(session);
+  }
+
+
+private getSelectedEtabId(): number | undefined {
+    const id = localStorage.getItem('selectedEtabId');
+    return id ? Number(id) : undefined;
+  }
+
+
+loadSessions() {
+    this.loading = true;
+    // Récupération de l'ID via votre méthode getSelectedEtabId()
+    const etabId = this.getSelectedEtabId();
+
+    this.sessionService.getAll(etabId).subscribe({
+      next: (data) => {
+        this.sessions = data;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      }
+    });
+  }
+
+
+
+onSave() {
+    if (!this.validateDates()) {
+        return;
+      }
+    const etatCalcule = this.calculerEtatAutomatique(this.sessionForm);
+    this.sessionForm.etat = this.calculerEtatAutomatique(this.sessionForm);
+    const payload = {
+      ...this.sessionForm,
+      etat: etatCalcule,
+      modulesAutorises: this.sessionForm.modulesAutorises.map((id: number) => {
+        const fullModule = this.modulesDisponibles.find(m => m.id === id);
+        return {
+          id: fullModule.id,
+          avecTest: fullModule.avecTest,
+          estActif: fullModule.estActif,
+          seuilScore: fullModule.seuilScore,
+          capacite: fullModule.capacite,
+          dateAjout: fullModule.dateAjout
+        };
+      })
+    };
+
+    console.log(payload);
+
+    if (!payload.dateDebutReservation) delete payload.dateDebutReservation;
+    if (!payload.dateFinReservation) delete payload.dateFinReservation;
+    if (!payload.dateHeureExamen) delete payload.dateHeureExamen;
+    if (!payload.id) delete payload.id;
+
+    console.log("Payload envoyé :", payload);
+
+    // Récupération de l'ID de l'établissement sélectionné
+    const etabId = this.getSelectedEtabId();
+
+    // Passage du payload ET de l'etabId au service
+    this.sessionService.save(payload, etabId).subscribe({
+      next: () => {
+        this.loadSessions();
+        this.resetForm();
+        document.getElementById('closeModal')?.click();
+      },
+      error: (err) => {
+        console.error("Détail erreur :", err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: err.error?.message || 'Vérifiez les données',
+          confirmButtonColor: '#3085d6'
+        });
+      }
+    });
   }
 }
