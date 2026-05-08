@@ -5,7 +5,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { SuperAdminService } from '../../../../core/services/super-admin.service';
 import {ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive,ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-module-tenant',
@@ -16,6 +16,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class ModuleTenantComponent implements OnInit {
   // Liste des modules liés au tenant
+  idTenant: string | null = null;
   myModules: any[] = [];
   loading: boolean = false;
    errorMessage: string = '';
@@ -34,27 +35,42 @@ export class ModuleTenantComponent implements OnInit {
     private moduleTenantService: ModuleTenantService,
     private superAdminService: SuperAdminService,
     private cdr: ChangeDetectorRef,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-
-    this.loadMyCatalogue();
-
+    this.route.parent?.paramMap.subscribe(params => {
+      this.idTenant = params.get('idTenant');
+      this.loadMyCatalogue();
+    });
   }
 
-loadMyCatalogue(): void {
-    this.loading = true;
-    const user = this.authService.getUser();
-    const userId = user?.idUtilisateur; // Ici, userId sera égal à 7
+private getTargetId(): number {
+  const user = this.authService.getUser();
+  if ((user?.role === 'superAdmin' || user?.role === 'SUPER_ADMIN') && this.idTenant) {
+    return Number(this.idTenant);
+  }
+  return user?.idUtilisateur;
+}
 
-    if (!userId) {
+loadMyCatalogue(): void {
+  const targetId = this.getTargetId();
+      if (!targetId) {
+            this.errorMessage = "Impossible de récupérer l'identifiant cible.";
+            return;
+          }
+    this.loading = true;
+    //const user = this.authService.getUser();
+    //const userId = user?.idUtilisateur; // Ici, userId sera égal à 7
+
+    /*if (!userId) {
       this.errorMessage = "Impossible de récupérer votre identifiant.";
       this.loading = false;
       return;
-    }
+    }*/
 
-    this.moduleTenantService.getMyModules(userId).subscribe({
+    this.moduleTenantService.getMyModules(targetId).subscribe({
       next: (data) => {
 
         this.myModules = [...data];
@@ -147,13 +163,21 @@ onSearch(): void {
     }
 
     confirmSelection(): void {
-      const user = this.authService.getUser();
+      /*const user = this.authService.getUser();
       if (!user || this.selectedIds.size === 0) return;
 
       this.submitting = true;
       const requests = Array.from(this.selectedIds).map(id =>
         this.moduleTenantService.addModuleToTenant(user.idUtilisateur, id).toPromise()
-      );
+      );*/
+
+    const targetId = this.getTargetId();
+        if (!targetId || this.selectedIds.size === 0) return;
+
+        this.submitting = true;
+        const requests = Array.from(this.selectedIds).map(id =>
+          this.moduleTenantService.addModuleToTenant(targetId, id).toPromise()
+        );
 
       Promise.all(requests)
         .then(() => {

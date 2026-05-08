@@ -226,12 +226,6 @@
         <div class="modal-footer" style="display:flex; justify-content:space-between;">
 
 
-          <button type="button"
-                  class="btn-cancel"
-                  (click)="onAddSessionClick(selectedModuleForTest)">
-            ➕ Ajouter session
-          </button>
-
           <div>
             <button type="submit" class="btn-submit">
               Enregistrer
@@ -250,78 +244,6 @@
   </div>
 
 
-
-  <!--<div class="modal" *ngIf="showSessionFormModal">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h2>Ajouter session</h2>
-        <button (click)="showSessionFormModal=false">✖</button>
-      </div>
-      <form (ngSubmit)="submitSession()">
-      <div style="padding:20px; display:flex; flex-direction:column; gap:12px;">
-
-
-        <label class="form-label">Titre de la session</label>
-        <input [(ngModel)]="sessionForm.titre"
-               name="titre"
-               class="form-control"
-               placeholder="Titre de la session">
-
-
-        <label class="form-label">Date début</label>
-        <input type="date"
-               [(ngModel)]="sessionForm.dateDebut"
-               name="dateDebut"
-               class="form-control">
-
-
-        <label class="form-label">Date fin</label>
-        <input type="date"
-               [(ngModel)]="sessionForm.dateFin"
-               name="dateFin"
-               class="form-control">
-
-
-        <ng-container *ngIf="sessionChoice">
-
-          <label class="form-label">Durée (minutes)</label>
-          <input type="number"
-                 [(ngModel)]="sessionForm.dureeMax"
-                 name="dureeMax"
-                 class="form-control"
-                 placeholder="Durée (minutes)">
-
-          <label class="form-label">Nombre de questions techniques</label>
-          <input type="number"
-                 [(ngModel)]="sessionForm.nbreQuestionTechnique"
-                 name="nbreQuestionTechnique"
-                 class="form-control"
-                 placeholder="Nombre de questions techniques">
-
-        </ng-container>
-
-      </div>
-      </form>
-
-
-      <div class="modal-footer">
-
-        <button class="btn-submit"
-                (click)="submitSession()"
-                [disabled]="!sessionForm.titre || !sessionForm.dateDebut || !sessionForm.dateFin">
-          Enregistrer
-        </button>
-
-        <button class="btn-cancel"
-                (click)="showSessionFormModal=false">
-          Annuler
-        </button>
-
-      </div>
-
-    </div>
-  </div>!-->
 
 
   <div class="modal" *ngIf="alertVisible" style="z-index: 9999;">
@@ -377,7 +299,7 @@
     </div>
   </div>
 
-  <div class="modal" *ngIf="showSessionFormModal">
+  <!--<div class="modal" *ngIf="showSessionFormModal">
     <div class="modal-content">
       <div class="modal-header">
         <h2>Créer Session d'Inscription</h2>
@@ -432,5 +354,5 @@
         </div>
       </form>
     </div>
-  </div>
+  </div>-->
 </div>

@@ -3,6 +3,7 @@ import { AdminTenantService } from '../../../../core/services/AdminTenantService
 import { ConfigService } from '../../../../core/services/config.service';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { ActivatedRoute } from '@angular/router';
 
 interface DashboardStats {
   etablissements: number;
@@ -17,7 +18,7 @@ interface DashboardStats {
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardTenantComponent implements OnInit {
-
+  idTenant: string | null = null;
 
   stats: DashboardStats = {
     etablissements: 0,
@@ -89,18 +90,37 @@ export class DashboardTenantComponent implements OnInit {
   constructor(
       private service: AdminTenantService,
       private cdr: ChangeDetectorRef,
-      public configService: ConfigService
+      public configService: ConfigService,
+      private route: ActivatedRoute
     ) {}
 
-  ngOnInit() {
+  /*ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('user') || '{}');
     this.loadDashboardData();
-    this.loadModulesChart(); // 👈 IMPORTANT
+    this.loadModulesChart();
+  }*/
+
+  ngOnInit() {
+      this.route.parent?.paramMap.subscribe(params => {
+        this.idTenant = params.get('idTenant');
+        this.currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+        this.loadDashboardData();
+        this.loadModulesChart();
+      });
+  }
+
+  getTargetId(): number {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      if ((user?.role === 'superAdmin' || user?.role === 'SUPER_ADMIN') && this.idTenant) {
+          return Number(this.idTenant);
+      }
+      return user?.idUtilisateur;
   }
 
   loadDashboardData() {
+    const targetId = this.getTargetId();
     this.loading = true;
-    this.service.getStats().subscribe({
+    this.service.getStats(targetId).subscribe({
      next: (res) => {
        console.log("Data reçue du serveur :", res);
        this.stats = {
@@ -127,7 +147,8 @@ export class DashboardTenantComponent implements OnInit {
 
 
   loadModulesChart() {
-    this.service.getLeastUsedModules().subscribe({
+    const targetId = this.getTargetId();
+    this.service.getLeastUsedModules(targetId).subscribe({
       next: (data) => {
         console.log("Modules stats:", data);
 

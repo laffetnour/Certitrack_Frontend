@@ -64,6 +64,13 @@ getModulesRoute(): string {
   const user = this.authService.getUser();
   const role = user.role
 
+  if ((role === 'superAdmin' || role === 'SUPER_ADMIN')) {
+      const idTenant = this.contextService.getTenantId(); // Tu dois avoir l'ID du tenant parent
+      if (idTenant && idEtab) {
+        return `/super-admin/tenant/${idTenant}/etablissement/${idEtab}/modules`;
+      }
+    }
+
   if (role === 'adminTenant' && idEtab) {
     return `/adminTenant/etablissement/${idEtab}/modules`;
   }
@@ -75,6 +82,12 @@ getListModulesRoute(): string {
    const user = this.authService.getUser();
     const role = user.role
 
+    if ((role === 'superAdmin' || role === 'SUPER_ADMIN')) {
+        const idTenant = this.contextService.getTenantId();
+        if (idTenant && idEtab) {
+          return `/super-admin/tenant/${idTenant}/etablissement/${idEtab}/Listemodules`;
+        }
+      }
   if (role === 'adminTenant' && idEtab) {
     return `/adminTenant/etablissement/${idEtab}/Listemodules`;
   }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminTenantService } from '../../../../core/services/AdminTenantService';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConfigService } from '../../../../core/services/config.service';
@@ -17,6 +17,9 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 })
 export class EtablissementsComponent implements OnInit {
 
+  idTenant: number | null = null;
+
+  userRole: string = '';
   etablissements: any[] = [];
 
   showModal = false;
@@ -33,15 +36,29 @@ export class EtablissementsComponent implements OnInit {
   statusFilter: string = "";
 
   constructor(private service: AdminTenantService,private cdr: ChangeDetectorRef,
-    private sanitizer: DomSanitizer,public configService: ConfigService) {}
+    private sanitizer: DomSanitizer,
+    public configService: ConfigService,
+    private route: ActivatedRoute) {}
 
-  ngOnInit(): void {
+  /*ngOnInit(): void {
     this.loadData();
     this.loadEtablissements();
-  }
+  }*/
+
+  ngOnInit(): void {
+      // Récupération de l'ID Tenant depuis le parent (le layout)
+      this.route.parent?.paramMap.subscribe(params => {
+        const id = params.get('idTenant');
+        if (id) {
+          this.idTenant = +id;
+        }
+        this.loadData();
+      });
+    }
 
   loadData() {
-    this.service.getEtablissements().subscribe({
+    //this.service.getEtablissements().subscribe({
+      this.service.getEtablissements(this.idTenant).subscribe({
       next: (res) => {
         this.etablissements = [...res];
         this.cdr.markForCheck();
@@ -126,7 +143,7 @@ save() {
 
       console.log("Action : Modification de l'ID", this.selectedId);
 
-      this.service.updateEtablissement(this.selectedId, payload).subscribe({
+      this.service.updateEtablissement(this.selectedId, payload, this.idTenant).subscribe({
         next: (res) => {
           console.log("✅ Modification réussie :", res);
           this.finaliserAction();
@@ -140,7 +157,7 @@ save() {
     } else {
       console.log("Action : Création d'un nouvel établissement");
 
-      this.service.createEtablissement(payload).subscribe({
+      this.service.createEtablissement(payload, this.idTenant).subscribe({
         next: (res) => {
           console.log("✅ Ajout réussi :", res);
           this.finaliserAction();
@@ -177,7 +194,7 @@ private gererErreur(err: any) {
   }
 
   confirmDelete() {
-    this.service.deleteEtablissement(this.selectedId!).subscribe(() => {
+    this.service.deleteEtablissement(this.selectedId!, this.idTenant).subscribe(() => {
       this.loadData();
       this.cdr.detectChanges();
       this.closeDeleteModal();
@@ -187,7 +204,7 @@ private gererErreur(err: any) {
 
   toggle(e: any) {
 
-    this.service.toggleEtablissementStatus(e.idEtab).subscribe({
+    this.service.toggleEtablissementStatus(e.idEtab, this.idTenant).subscribe({
       next: () => {
         this.loadData();
       },
@@ -243,8 +260,8 @@ bulkToggle(newStatus: boolean) {
 
 
   const action = newStatus
-    ? this.service.activateMultipleEtab(ids)
-    : this.service.deactivateMultipleEtab(ids);
+    ? this.service.activateMultipleEtab(ids, this.idTenant)
+    : this.service.deactivateMultipleEtab(ids, this.idTenant);
 
   action.subscribe({
     next: () => {
@@ -288,4 +305,20 @@ bulkToggle(newStatus: boolean) {
     this.showDeleteModal = false;
     this.selectedId = null;
   }
+
+
+getEtablissementLink(idEtab: number): any[] {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const role = user.role;
+
+  if (role === 'superAdmin' || role === 'SUPER_ADMIN') {
+    return [
+      '/super-admin',
+      'tenant', this.idTenant,
+      'etablissement', idEtab,
+      'dashboard'
+    ];
+  }
+  return ['/adminTenant', 'etablissement', idEtab, 'dashboard'];
+}
 }

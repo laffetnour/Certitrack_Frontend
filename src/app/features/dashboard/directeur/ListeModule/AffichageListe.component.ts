@@ -104,6 +104,13 @@ getRetourRoute(): string {
   const user = this.authService.getUser();
    const role = user?.role
 
+   if (role === 'superAdmin' || role === 'SUPER_ADMIN') {
+       const idTenant = this.contextService.getTenantId(); // Récupération du tenant actuel
+       if (idTenant && idEtab) {
+         return `/super-admin/tenant/${idTenant}/etablissement/${idEtab}/specialites`;
+       }
+     }
+
   if (role === 'adminTenant' && idEtab) {
     return `/adminTenant/etablissement/${idEtab}/specialites`;
   }

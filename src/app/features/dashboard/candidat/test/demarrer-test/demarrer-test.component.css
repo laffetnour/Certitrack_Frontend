@@ -1,73 +1,148 @@
+:host {
+  /* =========================
+     LIGHT MODE (DEFAULT)
+     ========================= */
+  --bg-page: #f4f7f6;
+  --bg-card: #ffffff;
+  --bg-image: #f8f9fa;
+
+  --text-main: #2c3e50;
+  --text-secondary: #495057;
+
+  --shadow-color: rgba(0,0,0,0.1);
+
+  --btn-gradient: linear-gradient(135deg, #dc3545, #bd2130);
+}
+
+/* =========================
+   DARK MODE
+   ========================= */
+:host-context(.dark-mode) {
+  --bg-page: #0f172a;
+  --bg-card: #1e293b;
+  --bg-image: #162033;
+
+  --text-main: #f1f5f9;
+  --text-secondary: #cbd5e1;
+
+  --shadow-color: rgba(0,0,0,0.5);
+
+  --btn-gradient: linear-gradient(135deg, #ea5357, #c92d39);
+}
+
+/* =========================
+   CONTAINER
+   ========================= */
 .test-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: #f4f7f6;
+  min-height: 100vh;
+
+  background: var(--bg-page);
+
+  transition: background 0.3s ease;
 }
 
 .test-card {
   display: flex;
-  background: white;
+
+  background: var(--bg-card);
+
   border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+
+  box-shadow: 0 10px 30px var(--shadow-color);
+
   overflow: hidden;
+
   max-width: 900px;
   width: 100%;
+
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
-/* LEFT */
+/* =========================
+   LEFT
+   ========================= */
 .test-info {
   flex: 1;
   padding: 40px;
+
+  color: var(--text-main);
 }
 
 .test-info h2 {
   margin-bottom: 20px;
-  color: #2c3e50;
+  color: var(--text-main);
 }
 
 .module-name {
   font-weight: bold;
   margin-bottom: 15px;
+  color: var(--text-secondary);
 }
 
 .details p {
   margin: 5px 0;
+  color: var(--text-secondary);
 }
 
 .conseils {
   margin-top: 20px;
 }
 
-.conseils ul {
-  padding-left: 20px;
+.conseils h4 {
+  color: var(--text-main);
 }
 
+.conseils ul {
+  padding-left: 20px;
+  color: var(--text-secondary);
+}
+
+/* =========================
+   BUTTON
+   ========================= */
 .btn-start {
   margin-top: 25px;
+
   width: 100%;
+
   padding: 15px;
+
   border: none;
   border-radius: 10px;
-  background: linear-gradient(135deg, #28a745, #218838);
+
+  background: var(--btn-gradient);
+
   color: white;
+
   font-weight: bold;
+
   cursor: pointer;
-  transition: 0.3s;
+
+  transition: transform 0.3s ease;
 }
 
 .btn-start:hover {
   transform: scale(1.03);
 }
 
-/* RIGHT */
+/* =========================
+   RIGHT IMAGE
+   ========================= */
 .test-image {
   flex: 1;
-  background: #f8f9fa;
+
+  background: var(--bg-image);
+
   display: flex;
   justify-content: center;
   align-items: center;
+
+  transition: background 0.3s ease;
 }
 
 .test-image img {

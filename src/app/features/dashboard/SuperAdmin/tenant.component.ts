@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SuperAdminService } from '../../../core/services/super-admin.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tenant',
@@ -30,7 +31,8 @@ export class TenantComponent implements OnInit {
   constructor(
     private superAdminService: SuperAdminService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {
     this.tenantForm = this.fb.group({
       nom: ['', [Validators.required, Validators.minLength(3)]],
@@ -403,4 +405,11 @@ deleteSelected() {
     reader.readAsDataURL(file);
   }
 
+
+
+accederAuTenant(tenantId: number) {
+  console.log("Accès au dashboard Admin pour le tenant :", tenantId);
+
+  this.router.navigate(['/super-admin/tenant', tenantId, 'dashboard']);
+}
 }

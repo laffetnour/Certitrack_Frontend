@@ -17,9 +17,9 @@ export class DemarrerTestComponent implements OnInit {
   sessionId!: number;
   moduleTenantId!: number;
 
-  moduleNom = "Nom du module";
-  duree = 30;
-  nbQuestions = 20;
+  moduleNom = "";
+  duree = 0;
+  nbQuestions = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,19 +27,22 @@ export class DemarrerTestComponent implements OnInit {
     private cdr: ChangeDetectorRef,private router: Router
   ) {}
 
+  // demarrer-test.component.ts
   ngOnInit(): void {
-    console.log("COMPONENT DEMARRER TEST CHARGÉ ✅");
-    this.sessionId = +this.route.snapshot.params['sessionId'];
-    this.moduleTenantId = +this.route.snapshot.params['moduleTenantId'];
+      this.sessionId = +this.route.snapshot.params['sessionId'];
+      this.moduleTenantId = +this.route.snapshot.params['moduleTenantId'];
 
-    console.log("SESSION ID =", this.sessionId); // 👈 IMPORTANT
+      console.log("IDs récupérés :", this.sessionId, this.moduleTenantId);
 
-    this.service.getTestInfos(this.sessionId).subscribe({
-        next: (res) => {
-          this.moduleNom = res.moduleNom;
-          this.duree = res.duree; // Récupère la durée de la session (ex: 30)
-          this.cdr.detectChanges();
-        }
+      // 2. Appel au service avec les DEUX IDs
+      this.service.getTestInfos(this.sessionId, this.moduleTenantId).subscribe({
+          next: (res) => {
+            this.moduleNom = res.moduleNom;
+            this.duree = res.duree;
+            this.nbQuestions = res.nbQuestions;
+            this.cdr.detectChanges();
+          },
+          error: (err) => console.error("Erreur 404 : Vérifiez la route API", err)
       });
   }
 

@@ -20,6 +20,9 @@ import { ModuleComponent } from './features/dashboard/SuperAdmin/Module/module.c
 import { EtablissementsComponent } from './features/dashboard/adminTenant/etablissements/etablissements.component';
 import { EtablissementLayoutComponent } from './features/dashboard/adminTenant/etablissements/EtablissementLayout.component';
 import {QuestionComponent} from './features/dashboard/SuperAdmin/Question/question.component'
+import {TenantLayoutComponent} from './features/dashboard/SuperAdmin/TenantLayout/TenantLayout.component'
+import {EtablissementTenantLayoutComponent} from './features/dashboard/SuperAdmin/TenantLayout/EtablissementLayout.component';
+
 import {ParametreComponent} from './features/parametre/parametre.component'
 import {ModuleTenantComponent} from './features/dashboard/adminTenant/ListeModuleTenant/ModuleTenant.component'
 import {ListeModuleTenantComponent} from './features/dashboard/adminTenant/ListeModuleTenant/ListeModuleTenant.component'
@@ -56,7 +59,38 @@ export const routes: Routes = [
       { path: 'categories', component: CategorieModuleComponent },
       { path: 'modules', component: ModuleComponent },
       { path: 'questions/:id', component: QuestionComponent },
-      { path: 'parametre', component: ParametreComponent }
+      { path: 'parametre', component: ParametreComponent },
+       {
+                  path: 'tenant/:idTenant',
+                  component: TenantLayoutComponent,
+                   children: [
+                     { path: 'dashboard', component: DashboardTenantComponent },
+                     { path: 'directeurs', component: DirecteursComponent },
+                     { path: 'etablissements', component: EtablissementsComponent },
+
+                      { path: 'moduleTenant', component: ModuleTenantComponent },
+                      { path: 'ListeModuleTenant', component: ListeModuleTenantComponent },
+                     { path: 'session-insc', component: SessionInscComponent },
+                      {
+                                 path: 'etablissement/:idEtab',
+                                 component: EtablissementTenantLayoutComponent,
+                                 children: [
+                                   { path: 'import-gmetrix', component: ImportGmetrixComponent },
+                                   { path: 'resultats-sessions', component: ResultatsSessionsComponent },
+                                    { path: 'candidats', component: AdminComponent },
+                                   { path: 'specialites', component: SpecialiteComponent },
+                                   { path: 'Listemodules', component: AffichageListeComponent },
+                                   { path: 'modules', component: ListeModuleComponent },
+                                   { path: 'dashboard', component: DashboardComponent },
+                                   { path: 'administrateurs', component: AdministrateursComponent },
+                                   { path: 'import-gmetrix', component: ImportGmetrixComponent },
+                                   { path: 'sessionsExamen', component: SessionExamenComponent },
+                                   {path: 'score', component: SeuilsManagementComponent}
+
+                                 ]
+                               }
+                   ]
+                 }
     ]
   },
 

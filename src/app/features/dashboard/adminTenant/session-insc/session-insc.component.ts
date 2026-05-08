@@ -3,7 +3,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { ActivatedRoute } from '@angular/router';
 import { SessionInscService } from '../../../../core/services/session-insc.service';
 import { AuthService } from '../../../../core/services/auth.service';
 
@@ -20,7 +20,7 @@ import { AuthService } from '../../../../core/services/auth.service';
   styleUrls: ['../ListeModuleTenant/ModuleTenant.component.css']
 })
 export class SessionInscComponent implements OnInit {
-
+  idTenant: string | null = null;
   sessions: any[] = [];
   filteredSessions: any[] = [];
   modules: any[] = [];
@@ -58,16 +58,28 @@ export class SessionInscComponent implements OnInit {
     private service: SessionInscService,
     private auth: AuthService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.initForm();
-    this.loadData();
+    this.route.parent?.paramMap.subscribe(params => {
+          this.idTenant = params.get('idTenant');
+          this.initForm();
+          this.loadData();
+        });
   }
 
-  getUserId(): number {
+  /*getUserId(): number {
     return this.auth.getUser()?.idUtilisateur;
+  }*/
+
+  getTargetId(): number {
+    const user = this.auth.getUser();
+    if ((user?.role === 'superAdmin' || user?.role === 'SUPER_ADMIN') && this.idTenant) {
+      return Number(this.idTenant);
+    }
+    return user?.idUtilisateur;
   }
 
   initForm() {
@@ -93,19 +105,10 @@ export class SessionInscComponent implements OnInit {
   }
 
   loadData() {
-    const userId = this.getUserId();
+    //const userId = this.getUserId();
+    const targetId = this.getTargetId();
 
-    /*this.service.getMySessions(userId).subscribe(res => {
-      this.sessions = res.map(s => ({
-        ...s,
-        moduleNom: s.moduleTenant?.module?.nom || '---'
-      })).sort((a, b) =>
-        new Date(a.dateDebut).getTime() - new Date(b.dateDebut).getTime()
-      );
-      this.applyFilters();
-    });*/
-
-    this.service.getMySessions(userId).subscribe(res => {
+    this.service.getMySessions(targetId).subscribe(res => {
 
       this.sessions = res.map(s => ({
         ...s,
@@ -126,7 +129,7 @@ export class SessionInscComponent implements OnInit {
 
     });
 
-  this.service.getModules(userId).subscribe(res => {
+  this.service.getModules(targetId).subscribe(res => {
     this.modules = res.map(m => ({
       ...m,
       avecTest: m.avecTest ?? false,
@@ -242,7 +245,8 @@ openEditModal(session: any) {
     }
 
     const formVal = this.addSessionForm.value;
-    const userId = this.getUserId();
+    //const userId = this.getUserId();
+    const targetId = this.getTargetId();
 
     // --- VALIDATION DATE DÉBUT > AUJOURD'HUI ---
     const dateDebut = new Date(formVal.dateDebut);
@@ -266,7 +270,7 @@ openEditModal(session: any) {
     }
 
     if (!this.selectedSession) {
-      this.service.addSession(this.selectedModuleIds, userId, {
+      this.service.addSession(this.selectedModuleIds, targetId, {
       ...formVal,
       moduleIds: this.selectedModuleIds
       }).subscribe({
@@ -286,7 +290,7 @@ openEditModal(session: any) {
             modulesTenantsIds: this.selectedModuleIds // Ex: [27, 28]
           };
 
-      this.service.updateSession(this.selectedSession.id, userId, payload).subscribe({
+      this.service.updateSession(this.selectedSession.id, targetId, payload).subscribe({
             next: () => this.handleSuccess('Session modifiée !'),
             error: (err) => {
               console.error("Erreur Backend :", err);
@@ -323,7 +327,8 @@ openEditModal(session: any) {
   }
 
   confirmDelete() {
-    this.service.deleteSession(this.selectedSession.id, this.getUserId()).subscribe(() => {
+    const targetId = this.getTargetId();
+    this.service.deleteSession(this.selectedSession.id, targetId).subscribe(() => {
       this.showDeleteModal = false;
       this.loadData();
       this.showAlert('success', '🗑 Session supprimée');

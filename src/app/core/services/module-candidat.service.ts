@@ -47,11 +47,9 @@ inscrire(sessionId: number, moduleTenantId: number): Observable<any> {
    });
 }
 
-  getTestInfos(sessionId: number) {
-    return this.http.get<any>(
-      `http://localhost:8080/api/test/session/${sessionId}`,
-      { headers: this.getAuthHeaders() }
-    );
+  getTestInfos(sessionId: number, moduleTenantId: number): Observable<any> {
+    return this.http.get(`http://localhost:8080/api/test/session/${sessionId}/module/${moduleTenantId}`,
+      {headers: this.getAuthHeaders()});
   }
 
   /*startTest(sessionId: number) {

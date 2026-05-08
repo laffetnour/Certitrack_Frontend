@@ -1,0 +1,51 @@
+<nav class="navbar navbar-expand-lg shadow-none py-0">
+  <div class="container-fluid px-0">
+    <div class="collapse navbar-collapse show" id="navbarNav">
+      <ul class="navbar-nav w-100 justify-content-start overflow-auto custom-scroll flex-nowrap">
+
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['./dashboard']" routerLinkActive="active">
+            <i class="bi bi-grid-1x2 me-2"></i> Dashboard
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/super-admin/tenant', idTenant, 'directeurs']" routerLinkActive="active">
+            <i class="bi bi-person-workspace me-2"></i> Directeurs
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/super-admin/tenant', idTenant, 'etablissements']" routerLinkActive="active">
+            <i class="bi bi-building me-2"></i> Établissements
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/super-admin/tenant', idTenant, 'moduleTenant']" routerLinkActive="active">
+            <i class="bi bi-box-seam me-2"></i> Catalogue général
+          </a>
+        </li>
+
+
+
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/super-admin/tenant', idTenant, 'ListeModuleTenant']" routerLinkActive="active">
+            <i class="bi bi-list-check me-2"></i> Modules du Tenant
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/super-admin/tenant', idTenant, 'session-insc']" routerLinkActive="active">
+            <i class="bi bi-calendar-event me-2"></i> Sessions Inscriptions
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid mt-0">
+  <router-outlet></router-outlet>
+</div>

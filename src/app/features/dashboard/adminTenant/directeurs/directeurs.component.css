@@ -691,3 +691,26 @@ th:nth-child(5), td:nth-child(5) {
 }
 
 
+.btn-access {
+  background-color: #6c5ce7; /* Une couleur violette ou bleue pour signifier l'accès */
+  color: white;
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-right: 5px;
+}
+
+.btn-access:hover {
+  background-color: #a29bfe;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .btn-access {
+    background-color: #5849c4;
+  }
+}

@@ -1,9 +1,9 @@
-
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminTenantService } from '../../../../core/services/AdminTenantService';
 import { ConfigService } from '../../../../core/services/config.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-directeurs',
@@ -13,6 +13,7 @@ import { ConfigService } from '../../../../core/services/config.service';
   styleUrls: ['./directeurs.component.css']
 })
 export class DirecteursComponent implements OnInit {
+  idTenant: number | null = null;
   directeurs: any[] = [];
   allDirecteurs: any[] = [];
   etablissements: any[] = [];
@@ -36,24 +37,36 @@ export class DirecteursComponent implements OnInit {
     private service: AdminTenantService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    public configService: ConfigService
+    public configService: ConfigService,
+    private route: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {
+  /*ngOnInit(): void {
     this.initForm();
     this.loadData();
-  }
+  }*/
+
+  ngOnInit(): void {
+      this.route.parent?.paramMap.subscribe(params => {
+        const id = params.get('idTenant');
+        if (id) {
+          this.idTenant = +id;
+        }
+        this.initForm();
+        this.loadData();
+      });
+    }
 
 loadData() {
   this.loading = true;
-  this.service.getEtablissements().subscribe({
+  this.service.getEtablissements(this.idTenant).subscribe({
     next: (etabs) => {
     this.etablissements = etabs;
 
 
     this.activeEtablissements = etabs.filter((e: any) => e.statut === true);
 
-      this.service.getDirecteurs().subscribe({
+      this.service.getDirecteurs(this.idTenant).subscribe({
         next: (res) => {
           console.log("Données reçues :", res);
           this.allDirecteurs = res || [];
@@ -184,16 +197,31 @@ openEditModal(d: any) {
   onSubmit() {
     if (this.directeurForm.invalid) return;
     const val = this.directeurForm.value;
-    const obs = this.isEditMode
+    const payload = { ...val, tenantId: this.idTenant };
+    /*const obs = this.isEditMode
       ? this.service.updateDirecteur(this.selectedDirecteur.id, val)
-      : this.service.createDirecteur(val);
+      : this.service.createDirecteur(val);*/
 
-    obs.subscribe(() => {
+      const obs = this.isEditMode
+            ? this.service.updateDirecteur(this.selectedDirecteur.id, payload, this.idTenant)
+            : this.service.createDirecteur(payload, this.idTenant);
+
+    /*obs.subscribe(() => {
       this.loadData();
       this.closeModal();
       this.cdr.detectChanges();
-    });
+    });*/
+    obs.subscribe({
+          next: () => {
+            this.loadData();
+            this.closeModal();
+            this.cdr.detectChanges();
+          },
+          error: (err) => console.error("Erreur lors de l'enregistrement", err)
+        });
   }
+
+
 
   deleteDirecteur(id: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer ce directeur ?')) {
@@ -238,15 +266,24 @@ openEditModal(d: any) {
   }
 
   deleteSelected() {
+      if (confirm('Supprimer les directeurs sélectionnés ?')) {
+        this.service.deleteMultiple(this.selectedDirecteurs, this.idTenant).subscribe(() => {
+          this.selectedDirecteurs = [];
+          this.loadData();
+        });
+      }
+    }
+
+  /*deleteSelected() {
     this.service.deleteMultiple(this.selectedDirecteurs)
       .subscribe(() => {
         this.selectedDirecteurs = [];
         this.loadData();
         this.cdr.detectChanges();
       });
-  }
+  }*/
 
-  activateSelected() {
+  /*activateSelected() {
     this.service.activateMultiple(this.selectedDirecteurs)
       .subscribe(() => {
         this.allDirecteurs = this.allDirecteurs.map(dir =>
@@ -271,9 +308,21 @@ openEditModal(d: any) {
   }
   trackById(index: number, item: any) {
     return item.id;
-  }
+  }*/
 
+  activateSelected() {
+      this.service.activateMultiple(this.selectedDirecteurs, this.idTenant).subscribe(() => {
+        this.selectedDirecteurs = [];
+        this.loadData();
+      });
+    }
 
+    deactivateSelected() {
+      this.service.deactivateMultiple(this.selectedDirecteurs, this.idTenant).subscribe(() => {
+        this.selectedDirecteurs = [];
+        this.loadData();
+      });
+    }
 
 
   viewDirecteur(d: any) {
@@ -285,7 +334,7 @@ openEditModal(d: any) {
     this.showViewModal = false;
   }
 
-  toggleStatus(d: any) {
+  /*toggleStatus(d: any) {
     this.service.toggleDirecteurStatus(d.id).subscribe({
       next: (updated) => {
         this.directeurs = this.directeurs.map(dir =>
@@ -301,13 +350,22 @@ openEditModal(d: any) {
       },
       error: (err) => console.error(err)
     });
-  }
+  }*/
 
+  toggleStatus(d: any) {
+      this.service.toggleDirecteurStatus(d.id, this.idTenant).subscribe({
+        next: (updated) => {
+          this.loadData(); // Plus simple pour rafraîchir proprement
+        },
+        error: (err) => console.error(err)
+      });
+    }
 
   confirmDelete(): void {
     if (!this.directeurToDeleteId) return;
 
-    this.service.deleteDirecteur(this.directeurToDeleteId).subscribe({
+    //this.service.deleteDirecteur(this.directeurToDeleteId).subscribe({
+      this.service.deleteDirecteur(this.directeurToDeleteId, this.idTenant).subscribe({
       next: () => {
         this.showDeleteModal = false;
         this.loadData();
@@ -332,6 +390,9 @@ openEditModal(d: any) {
     this.showDeleteModal = true;
   }
 
+  trackById(index: number, item: any): number {
+    return item.id;
+  }
 }
 
 

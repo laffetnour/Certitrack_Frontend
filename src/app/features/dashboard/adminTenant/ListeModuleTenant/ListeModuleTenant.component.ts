@@ -3,7 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { ModuleTenantService } from '../../../../core/services/ModuleTenant.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import {ChangeDetectorRef } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive,ActivatedRoute } from '@angular/router';
 import { SessionInscService } from '../../../../core/services/session-insc.service';
 
 import { FormsModule } from '@angular/forms';
@@ -18,6 +18,7 @@ import { forkJoin } from 'rxjs';
 })
 export class ListeModuleTenantComponent implements OnInit {
   // Liste des modules liés au tenant
+  idTenant: string | null = null;
   myModules: any[] = [];
   loading: boolean = false;
   errorMessage: string = '';
@@ -82,11 +83,16 @@ export class ListeModuleTenantComponent implements OnInit {
     private moduleTenantService: ModuleTenantService,
     private cdr: ChangeDetectorRef,
     private service: SessionInscService,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
 
+    this.route.parent?.paramMap.subscribe(params => {
+          this.idTenant = params.get('idTenant');
+
+        })
     this.loadMyCatalogue();
 
   }
@@ -98,15 +104,29 @@ export class ListeModuleTenantComponent implements OnInit {
     this.loading = true;
     const user = this.authService.getUser();
     console.log(user);
-    const userId = user?.idUtilisateur; // Ici, userId sera égal à 7
+    /*const userId = user?.idUtilisateur; // Ici, userId sera égal à 7
 
     if (!userId) {
       this.errorMessage = "Impossible de récupérer votre identifiant.";
       this.loading = false;
       return;
-    }
+    }*/
 
-    this.moduleTenantService.getMyModules(userId).subscribe({
+    let targetId: number;
+        if ((user.role === 'superAdmin' || user.role === 'SUPER_ADMIN') && this.idTenant) {
+          targetId = Number(this.idTenant);
+        } else {
+          targetId = user?.idUtilisateur;
+        }
+
+        if (!targetId) {
+          this.errorMessage = "Identifiant introuvable.";
+          this.loading = false;
+          return;
+        }
+
+    //this.moduleTenantService.getMyModules(userId).subscribe({
+      this.moduleTenantService.getMyModules(targetId).subscribe({
       next: (data) => {
 
         this.myModules = [...data];
