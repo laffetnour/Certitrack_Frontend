@@ -34,6 +34,7 @@ export class ParametreComponent implements OnInit {
     this.currentUser = JSON.parse(JSON.stringify(user));
    /* const savedTheme = localStorage.getItem('app-theme') || this.currentUser?.theme || 'light';
     this.applyTheme(savedTheme);*/
+      this.currentUser.newPassword = '';
     const savedTheme = localStorage.getItem('app-theme') || this.currentUser?.theme || 'light';
     this.themeService.applyTheme(savedTheme);
     if (!this.currentUser.contacts || this.currentUser.contacts.length === 0) {
@@ -52,17 +53,41 @@ export class ParametreComponent implements OnInit {
 
   updateFullProfile(): void {
     this.isSavingUser = true;
-    this.authService.updateUserOnServer(this.currentUser).subscribe({
+
+    const payload: any = {
+      idUtilisateur: this.currentUser.idUtilisateur || this.currentUser.id,
+      nom: this.currentUser.nom,
+      prenom: this.currentUser.prenom,
+      photo: this.currentUser.photo,
+
+      // ON AJOUTE LE STATUT ICI POUR ÉVITER L'ERREUR 400
+      statut: this.currentUser.statut ?? false
+    };
+
+    // On ajoute le mot de passe s'il a été saisi
+    if (this.currentUser.newPassword && this.currentUser.newPassword.trim() !== '') {
+      payload.motDePasse = this.currentUser.newPassword;
+    }
+
+    // On garde les contacts (très important pour ton @PutMapping)
+    if (this.currentUser.contacts && this.currentUser.contacts[0]) {
+      payload.contacts = [{
+        idContact: this.currentUser.contacts[0].idContact,
+        type: this.currentUser.contacts[0].type
+      }];
+    }
+
+    this.authService.updateUserOnServer(payload).subscribe({
       next: (updatedUser) => {
+        this.currentUser.newPassword = '';
         this.authService.saveUser(updatedUser);
-        window.dispatchEvent(new Event('userUpdated'));
         this.isSavingUser = false;
-        alert("✅ Profil mis à jour !");
+        alert("✅ Profil et mot de passe mis à jour !");
       },
       error: (err) => {
         this.isSavingUser = false;
         console.error(err);
-        alert("❌ Erreur lors de la mise à jour");
+        alert("❌ Erreur persistante. Vérifie que le champ 'statut' est bien envoyé.");
       }
     });
   }

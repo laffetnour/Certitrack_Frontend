@@ -18,6 +18,7 @@ import { AdminTenantLayoutComponent } from './features/dashboard/adminTenant/lay
 import { CategorieModuleComponent } from './features/dashboard/SuperAdmin/categorieModule/categorie-module.component';
 import { ModuleComponent } from './features/dashboard/SuperAdmin/Module/module.component';
 import { EtablissementsComponent } from './features/dashboard/adminTenant/etablissements/etablissements.component';
+import { EtablissementLayoutComponent } from './features/dashboard/adminTenant/etablissements/EtablissementLayout.component';
 import {QuestionComponent} from './features/dashboard/SuperAdmin/Question/question.component'
 import {ParametreComponent} from './features/parametre/parametre.component'
 import {ModuleTenantComponent} from './features/dashboard/adminTenant/ListeModuleTenant/ModuleTenant.component'
@@ -129,23 +130,19 @@ export const routes: Routes = [
 
       {
             path: 'etablissement/:idEtab',
+            component: EtablissementLayoutComponent,
             children: [
-              { path: 'import-gmetrix', component: ImportGmetrixComponent }
-              /*{ path: 'resultats-sessions', component: ResultatsSessionsComponent },
+              { path: 'import-gmetrix', component: ImportGmetrixComponent },
+              { path: 'resultats-sessions', component: ResultatsSessionsComponent },
                { path: 'candidats', component: AdminComponent },
               { path: 'specialites', component: SpecialiteComponent },
               { path: 'Listemodules', component: AffichageListeComponent },
-              { path: 'modules', component: ListeModuleComponent }
+              { path: 'modules', component: ListeModuleComponent },
               { path: 'dashboard', component: DashboardComponent },
               { path: 'administrateurs', component: AdministrateursComponent },
-
-              { path: 'parametre', component: ParametreComponent },
-
-
-
               { path: 'import-gmetrix', component: ImportGmetrixComponent },
               { path: 'sessionsExamen', component: SessionExamenComponent },
-              {path: 'score', component: SeuilsManagementComponent}*/
+              {path: 'score', component: SeuilsManagementComponent}
 
             ]
           }

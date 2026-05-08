@@ -1,3 +1,5 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css");
+
 :host {
   /* Mode Clair (Par défaut) */
   --bg-admin: #f8fafc;
@@ -758,27 +760,63 @@ form::-webkit-scrollbar-thumb:hover {
 }
 
 .btn-manage {
+  /* Mise en page */
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background-color: #6366f1; /* Indigo moderne */
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  justify-content: center;
+  gap: 10px;
+
+  /* Dimensions et espacement */
+  padding: 10px 45px;
+  border-radius: 5px; /* Coins arrondis modernes */
+
+  /* Couleurs */
+  background-color: #ffffff;
+  color: #1f2937; /* Gris très foncé presque noir */
+  border: 1px solid #e5e7eb; /* Bordure fine et discrète */
+
+  /* Typographie */
+  font-size: 0.875rem;
+  font-weight: 600;
   text-decoration: none;
+  cursor: pointer;
+
+  /* Transition pour la fluidité */
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
+
+/* Style de l'icône SVG */
+.btn-manage svg {
+  transition: transform 0.3s ease, color 0.3s ease;
+  color: #6b7280; /* Gris plus clair pour l'icône par défaut */
+}
+
+/* --- EFFETS AU SURVOL (HOVER) --- */
 
 .btn-manage:hover {
-  background-color: #4f46e5;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  color: #2563eb; /* Le texte passe au bleu moderne */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Effet d'élévation */
+  transform: translateY(-2px); /* Soulève légèrement le bouton */
 }
 
-.btn-manage i, .btn-manage svg {
-  font-size: 0.9rem;
+.btn-manage:hover svg {
+  color: #2563eb; /* L'icône passe aussi au bleu */
+  transform: scale(1.1) rotate(5deg); /* Petit effet de zoom/rotation sur l'icône */
+}
+
+/* --- EFFET AU CLIC (ACTIVE) --- */
+
+.btn-manage:active {
+  transform: translateY(0); /* Le bouton s'enfonce au clic */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background-color: #f3f4f6;
+}
+
+/* Suppression du contour de focus pour un look propre */
+.btn-manage:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
 }

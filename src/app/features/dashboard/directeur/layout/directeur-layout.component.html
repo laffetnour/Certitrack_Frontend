@@ -82,10 +82,6 @@
         </div>
       </div>
 
-      <div class="nav-item"routerLink="/directeur/score" routerLinkActive="active">
-        <i class="fas fa-percentage"></i>
-        <span>Seuil score</span>
-      </div>
 
       <div class="nav-item" routerLink="/directeur/parametre" routerLinkActive="active">
         <i class="fas fa-cog"></i> <span>Paramètres</span>
@@ -166,6 +162,9 @@
                  class="notif-item"
                  [class.unread]="!n.lu"
                  (click)="onSelect(n)">
+              <button class="btn-delete-notif" (click)="onDelete(n.id); $event.stopPropagation()" title="Supprimer">
+                <i class="fas fa-times"></i>
+              </button>
               <div class="notif-title">{{ n.titre }}</div>
               <div class="notif-msg">{{ n.message }}</div>
               <div class="notif-date">{{ n.dateCreation | date:'shortTime' }}</div>

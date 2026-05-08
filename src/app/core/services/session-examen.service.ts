@@ -27,9 +27,9 @@ export class SessionExamenService {
     return this.http.get<any[]>(this.apiUrl, this.getHeaders());
   }*/
 
-  getModulesLastImport(): Observable<any[]> {
+  /*getModulesLastImport(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/modules-last-import`, this.getHeaders());
-  }
+  }*/
 
   /*save(session: any): Observable<any> {
     if (session.id) {
@@ -56,12 +56,19 @@ save(session: any, etabId?: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/${session.id}`, session, this.getHeaders());
   }
 
-  // Pour la création, on ajoute l'etabId en paramètre d'URL
   let params = new HttpParams();
   if (etabId) {
     params = params.set('etabId', etabId.toString());
   }
   return this.http.post(this.apiUrl, session, { ...this.getHeaders(), params });
+}
+
+getModulesLastImport(etabId?: number): Observable<any[]> {
+  let params = new HttpParams();
+  if (etabId) {
+    params = params.set('etabId', etabId.toString());
+  }
+  return this.http.get<any[]>(`${this.apiUrl}/modules-last-import`, { ...this.getHeaders(), params });
 }
 
 }

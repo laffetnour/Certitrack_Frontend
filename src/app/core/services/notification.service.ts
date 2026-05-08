@@ -31,4 +31,8 @@ export class NotificationService {
   markAsRead(id: number): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/${id}/read`, {});
   }
+
+  deleteNotification(id: number): Observable<void> {
+      return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    }
 }

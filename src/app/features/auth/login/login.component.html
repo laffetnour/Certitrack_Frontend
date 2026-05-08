@@ -1,41 +1,3 @@
-
-<!--
-<div class="auth-wrapper">
-
-  <div class="auth-bg"></div>
-
-  <div class="auth-card">
-    <div class="brand">
-      <h2>Connexion</h2>
-      <p>Plateforme de Certification</p>
-    </div>
-
-    <form (ngSubmit)="login()">
-      <div class="input-group">
-        <label>Email professionnel</label>
-        <input [(ngModel)]="username" name="username" type="text" placeholder="Email ou identifiant" required>
-      </div>
-
-      <div class="input-group">
-        <label>Mot de passe</label>
-        <input [(ngModel)]="password" name="password" type="password" placeholder="••••••••" required>
-      </div>
-
-      <div *ngIf="errorMessage" class="error-msg">
-        {{ errorMessage }}
-      </div>
-
-      <button type="submit" class="btn-primary">Se connecter</button>
-    </form>
-
-    <div class="auth-footer">
-      <p>Pas encore de compte ?</p>
-      <a routerLink="/signup" class="btn-secondary">Créer un compte</a>
-    </div>
-  </div>
-</div>-->
-
-
 <div class="auth-wrapper">
 
   <div class="auth-bg-overlay"></div>
@@ -54,17 +16,27 @@
         </div>
 
         <div class="brand-details">
-          <div class="logo-wrapper">
+          <div class="brand-block">
             <ng-container *ngIf="configService.config$ | async as config; else loader">
+              <div class="logo-wrapper">
               <img [src]="config.logoSociete || 'LOGO-2026_VF.png'"
                    alt="Smartfuture"
-                   class="main-logo">
+                   class="app-logo-login">
+              </div>
+              <h1 class="app-name-login">
+                {{ config.nomPlateforme || 'CertiTrack' }}
+              </h1>
             </ng-container>
+
             <ng-template #loader>
-              <img src="LOGO-2026_VF.png" alt="Smartfuture" class="main-logo loading">
+              <img src="LOGO-2026_VF.png" alt="Smartfuture" class="app-logo-login loading-pulse">
+              <h1 class="app-name-login">Certi<span>Track</span></h1>
             </ng-template>
           </div>
-          <h1>Certi<span>Track</span></h1>
+
+
+
+
           <p class="description">
             Certitrack est votre solution centralisée pour le recensement et le pilotage des parcours de certification.
             Suivez votre progression, validez vos acquis et accélérez votre réussite professionnelle sur une plateforme intuitive.

@@ -623,3 +623,63 @@
   opacity: 0.5;
   filter: grayscale(1);
 }
+
+/* Bloc regroupant Logo + Nom */
+.brand-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 15px; /* Espace entre le logo et le texte */
+}
+
+/* Style du Logo dynamique */
+.app-logo-login {
+  max-width: 140px; /* Un peu plus grand pour la page de login */
+  height: auto;
+  max-height: 80px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  animation: slideInDown 0.8s ease-out;
+}
+
+/* Style du Nom dynamique */
+.app-name-login {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--white);
+  margin: 0;
+  letter-spacing: -1px;
+  text-transform: none; /* Garde la casse saisie par l'admin */
+}
+
+/* Si tu veux quand même un accent de couleur sur le texte dynamique */
+.app-name-login::first-letter {
+  color: var(--primary-color);
+}
+
+/* Animation pour le logo en chargement */
+.loading-pulse {
+  animation: pulse 2s infinite ease-in-out;
+  opacity: 0.6;
+}
+
+/* Ajustement de la description pour qu'elle respire */
+.brand-details .description {
+  max-width: 380px;
+  margin: 0 auto 40px;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+/* Nouvelle animation pour l'entrée du logo */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

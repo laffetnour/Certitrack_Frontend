@@ -51,7 +51,7 @@ export class ImportGmetrixComponent implements OnInit {
   }
 
 
-  upload() {
+  /*upload() {
     if (!this.selectedFile) return;
 
     this.gmetrixService.importFile(this.selectedFile).subscribe({
@@ -74,7 +74,44 @@ export class ImportGmetrixComponent implements OnInit {
         this.fileInput.nativeElement.value = '';
       }
     });
-  }
+  }*/
+
+// --- import-gmetrix.component.ts ---
+
+upload() {
+  if (!this.selectedFile) return;
+
+  this.loading = true;
+  const currentUser = this.auth.getUser();
+  const idEtab = currentUser?.etablissements?.[0]?.id ||
+                 currentUser?.etablissements?.[0]?.idEtab ||
+                 this.contextService.getEtablissementId();
+
+  this.gmetrixService.importFile(this.selectedFile, idEtab).subscribe({
+    next: (res) => {
+      this.importResult = res;
+      this.showModal = true;
+      this.loadScores();
+      this.selectedFile = null as any;
+      if (this.fileInput) this.fileInput.nativeElement.value = '';
+      this.loading = false;
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error("Erreur import:", err);
+      this.importResult = {
+        success: 0,
+        errors: 1,
+        errorLines: [err.error?.message || "Erreur lors de l'importation"]
+      };
+      this.showModal = true;
+      this.loading = false;
+       this.selectedFile = null as any;
+       this.fileInput.nativeElement.value = '';
+      this.cdr.detectChanges();
+    }
+  });
+}
 
   loadScores() {
     this.loading = true;
