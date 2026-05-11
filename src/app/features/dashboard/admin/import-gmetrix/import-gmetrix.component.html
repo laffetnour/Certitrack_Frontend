@@ -24,7 +24,7 @@
     </div>
   </div>
 
-  <div class="filter-section d-flex gap-3 align-items-center">
+  <!--<div class="filter-section d-flex gap-3 align-items-center">
 
     <select [(ngModel)]="sessionId"
             (change)="loadScores()"
@@ -42,7 +42,7 @@
 
   </div>
 
-  <br>
+  <br>-->
 
   <div *ngIf="loading" class="loading-box">
     Chargement...
@@ -54,7 +54,6 @@
       <thead>
       <tr>
         <th>Candidat</th>
-        <th>Session</th>
         <th>Module</th>
         <th>Test</th>
         <th>Score</th>
@@ -72,11 +71,6 @@
           {{ s.candidatPrenom }}
         </td>
 
-        <td>
-    <span class="badge-session">
-      {{ s.session }}
-    </span>
-        </td>
 
         <td>{{ s.module }}</td>
 

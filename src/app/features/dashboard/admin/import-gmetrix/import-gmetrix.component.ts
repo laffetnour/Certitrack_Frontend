@@ -20,8 +20,8 @@ export class ImportGmetrixComponent implements OnInit {
   scores: any[] = [];
   sessionName: string = '';
   loading = false;
-  sessions: any[] = [];
-  sessionId: number | null = null;
+  //sessions: any[] = [];
+  //sessionId: number | null = null;
   importResult: any = null;
   showModal = false;
 
@@ -33,7 +33,7 @@ export class ImportGmetrixComponent implements OnInit {
         private contextService: ContextService) {}
 
   ngOnInit(): void {
-    this.loadSessions();
+    //this.loadSessions();
     this.loadScores();
 
   }
@@ -115,14 +115,12 @@ upload() {
 
   loadScores() {
     this.loading = true;
-    console.log("SESSION ID ENVOYÉ =", this.sessionId);
+
     const currentUser = this.auth.getUser();
         const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab
           || this.contextService.getEtablissementId();
 
-    this.gmetrixService.getScores({
-      sessionId: this.sessionId
-    },idEtab).subscribe({
+    this.gmetrixService.getScores({},idEtab).subscribe({
       next: (data) => {
         this.scores = data;
         this.loading = false;
@@ -136,7 +134,7 @@ upload() {
     this.loadScores();
   }
 
-  loadSessions() {
+  /*loadSessions() {
     const currentUser = this.auth.getUser();
         const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab
           || this.contextService.getEtablissementId();
@@ -147,7 +145,7 @@ upload() {
 
       }
     });
-  }
+  }*/
 
 downloadTemplate() {
     const header = [

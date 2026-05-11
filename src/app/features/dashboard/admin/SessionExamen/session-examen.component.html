@@ -18,7 +18,7 @@
         <th>Session & Centre</th>
         <th>Date Examen</th>
         <th>État</th>
-        <th>Modules</th>
+        <th>Module</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -31,7 +31,6 @@
         <td>{{ s.dateHeureExamen | date:'dd/MM/yyyy HH:mm' }}</td>
         <td>
             <span class="badge" [ngClass]="{
-              'status-planifie': s.etat === 'PLANIFIEE',
               'status-encours': s.etat === 'EN_COURS',
               'status-cloture': s.etat === 'CLOTUREE'
             }">{{ s.etat }}</span>
@@ -43,11 +42,18 @@
         </td>-->
 
 
-        <td>
+        <!--<td>
             <span class="badge bg-info text-dark" *ngIf="s.moduleAutorise">
               {{ s.moduleAutorise.module?.nom }}
             </span>
           <span class="text-muted" *ngIf="!s.moduleAutorise">Aucun module</span>
+        </td>-->
+
+        <td>
+          <span class="badge bg-info text-dark" *ngIf="s.module">
+            {{ s.module.nom }}
+          </span>
+          <span class="text-muted" *ngIf="!s.module">Aucun module</span>
         </td>
 
 
@@ -62,7 +68,8 @@
               <circle cx="12" cy="12" r="3"/>
             </svg>
           </button>
-          <button class="btn-edit" *ngIf="canEdit(s)" (click)="onEdit(s)" data-bs-toggle="modal" data-bs-target="#sessionModal">
+          <!--<button class="btn-edit" *ngIf="canEdit(s)" (click)="onEdit(s)" data-bs-toggle="modal" data-bs-target="#sessionModal">-->
+          <button class="btn-edit" *ngIf="s.etat !== 'CLOTUREE'" (click)="onEdit(s)" data-bs-toggle="modal" data-bs-target="#sessionModal">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  stroke-width="2">
@@ -70,10 +77,7 @@
               <path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
             </svg>
           </button>
-          <!--<button class="btn-delete"
-                  *ngIf="canDelete(s)"
-                  (click)="onDelete(s.id)">-->
-          <button class="btn-delete" *ngIf="canDelete(s)" (click)="onDelete(s)">
+          <!--<button class="btn-delete" *ngIf="canDelete(s)" (click)="onDelete(s)">
             <svg xmlns="http://www.w3.org/2000/svg"
                  width="16" height="16"
                  viewBox="0 0 24 24"
@@ -81,7 +85,7 @@
               <polyline points="3 6 5 6 21 6"/>
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
             </svg>
-          </button>
+          </button>-->
         </td>
       </tr>
       </tbody>
@@ -108,7 +112,7 @@
             <input type="number" class="form-control" [(ngModel)]="sessionForm.capacite" name="cap" required>
           </div>
           <div class="row g-3 mt-2">
-            <div class="col-md-6">
+            <!--<div class="col-md-6">
               <label class="form-label">Début des réservations</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-calendar-plus"></i></span>
@@ -119,9 +123,9 @@
                        name="dateDebRes">
 
               </div>
-            </div>
+            </div>-->
 
-            <div class="col-md-6">
+            <!--<div class="col-md-6">
               <label class="form-label">Fin des réservations</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-calendar-x"></i></span>
@@ -131,6 +135,20 @@
                        [min]="minDate"
                        name="dateFinRes">
               </div>
+            </div>-->
+
+
+            <div class="col-md-6">
+              <label class="form-label">Délai de clôture (Heures)</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-clock-history"></i></span>
+                <input type="number"
+                       class="form-control"
+                       [(ngModel)]="sessionForm.heuresAvantFermeture"
+                       name="heuresAvantFermeture"
+                       placeholder="Ex: 48">
+              </div>
+              <small class="text-muted">Nombre d'heures avant l'examen pour fermer les inscriptions.</small>
             </div>
           </div>
           <div class="col-md-6">
@@ -139,6 +157,7 @@
                    [(ngModel)]="sessionForm.dateHeureExamen"
                    [min]="minDate"
                    name="dateEx" required>
+            <small class="text-muted">La date d'examen doit être programmée au moins pour demain.</small>
           </div>
           <div class="col-md-6">
             <label class="form-label">Centre d'examen</label>
@@ -169,28 +188,7 @@
             </div>
           </div>
 
-          <!--<div class="col-12 mt-3">
-            <label class="form-label fw-bold text-primary">Modules du dernier import GMetrix :</label>
-            <div class="module-selector p-3 border rounded">
-              <div *ngFor="let m of modulesDisponibles" class="form-check mb-2">
-                <input class="form-check-input" type="checkbox"
-                       [id]="'m'+m.id"
-                       [checked]="isModuleSelected(m.id)"
-                       (change)="onModuleToggle(m.id)">
-                <label class="form-check-label" [for]="'m'+m.id">
-                  {{ m?.module?.nom }} <span class="text-muted small">({{ m?.tenant?.nom }})</span>
-                </label>
-              </div>
-              <div *ngIf="modulesDisponibles.length === 0" class="text-muted italic">
-                Aucun module trouvé dans le dernier import.
-              </div>
-            </div>
-          </div>-->
-
-
-
-
-          <div *ngFor="let m of modulesDisponibles" class="form-check mb-2">
+          <!--<div *ngFor="let m of modulesDisponibles" class="form-check mb-2">
             <input class="form-check-input"
                    type="radio"
                    [name]="'moduleGroup_' + m.id" [id]="'m'+m.id"
@@ -198,23 +196,58 @@
                    [(ngModel)]="sessionForm.moduleAutoriseId"
                    [disabled]="isModuleDesactive(m.id)">
 
-            <label class="form-check-label"
-                   [for]="'m'+m.id"
-                   [style.opacity]="isModuleDesactive(m.id) ? '0.5' : '1'"
-                   [style.cursor]="isModuleDesactive(m.id) ? 'not-allowed' : 'pointer'"
-                   [style.color]="isModuleDesactive(m.id) ? '#adb5bd' : 'inherit'">
+                      <label class="form-check-label"
+                             [for]="'m'+m.id"
+                             [style.opacity]="isModuleDesactive(m.id) ? '0.5' : '1'"
+                             [style.cursor]="isModuleDesactive(m.id) ? 'not-allowed' : 'pointer'"
+                             [style.color]="isModuleDesactive(m.id) ? '#adb5bd' : 'inherit'">
 
-              {{ m?.module?.nom }}
+                        {{ m?.module?.nom }}
 
-              <span *ngIf="isModuleDesactive(m.id)" class="badge bg-warning text-dark ms-2">
-       Session en cours
-    </span>
-            </label>
-          </div>
+                        <span *ngIf="isModuleDesactive(m.id)" class="badge bg-warning text-dark ms-2">
+                           Session en cours
+                        </span>
+                      </label>
+                    </div>
 
               <div *ngIf="modulesDisponibles.length === 0" class="text-muted italic">
                 Aucun module trouvé dans le dernier import.
+          </div>-->
+
+          <div class="col-md-12 mt-3">
+            <div class="row">
+              <div class="col-md-6">
+                <label class="form-label fw-bold"><i class="bi bi-tag"></i> Catégorie</label>
+                <select class="form-select"
+                        [(ngModel)]="selectedCategorie"
+                        name="catSelect"
+                        (change)="onCategorieChange()">
+                  <option value="">-- Choisir une catégorie --</option>
+                  <option *ngFor="let cat of modulesParCategorie" [value]="cat.nom">
+                    {{ cat.nom }}
+                  </option>
+                </select>
               </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold"><i class="bi bi-box-seam"></i> Module</label>
+                <select class="form-select"
+                        [(ngModel)]="sessionForm.module.idModule"
+                        name="modSelect"
+                        [disabled]="!selectedCategorie">
+                  <option [ngValue]="null">-- Choisir un module --</option>
+                  <option *ngFor="let m of modulesFiltres" [ngValue]="m.idModule">
+                    {{ m.nom }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div *ngIf="modulesParCategorie.length === 0" class="text-danger small mt-1">
+              Aucun module chargé.
+            </div>
+          </div>
+
 
 
 
@@ -223,20 +256,19 @@
 
         </form>
       </div>
-      <!--<div class="modal-footer">
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-        <button type="button" class="btn btn-primary" (click)="onSave()" [disabled]="!f.valid || sessionForm.modulesAutorises.length === 0">
-          Enregistrer
-        </button>
-      </div>-->
-
       <!-- Modifier le bouton Enregistrer pour vérifier un seul module -->
       <div class="modal-footer">
         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-        <button type="button"
+        <!--<button type="button"
                 class="btn btn-primary"
                 (click)="onSave()"
                 [disabled]="!f.valid || !sessionForm.moduleAutoriseId">
+          Enregistrer
+        </button>-->
+        <button type="button"
+                class="btn btn-primary"
+                (click)="onSave()"
+                [disabled]="!f.valid || !sessionForm.module.idModule">
           Enregistrer
         </button>
       </div>
@@ -285,11 +317,11 @@
                 <small>👥 CAPACITÉ</small>
                 <p>{{ selectedSession.capacite }} places</p>
               </div>
-              <div class="info-box">
+              <!--<div class="info-box">
                 <small>⏳ PÉRIODE DE RÉSERVATION</small>
                 <p>Du : {{ selectedSession.dateDebutReservation | date:'dd/MM/yyyy HH:mm' }}</p>
                 <p>Au : {{ selectedSession.dateFinReservation | date:'dd/MM/yyyy HH:mm' }}</p>
-              </div>
+              </div>-->
             </div>
           </div>
 
@@ -298,8 +330,9 @@
             <div class="d-flex flex-wrap gap-2">
               <!--<span class="module-pill" *ngFor="let mod of selectedSession.modulesAutorises">
                 {{ mod?.module?.nom }} </span>-->
-              <span class="module-pill" *ngIf="selectedSession.moduleAutorise">
-                  {{ selectedSession.moduleAutorise.module?.nom }}
+
+              <span class="module-pill" *ngIf="selectedSession.module">
+                  {{ selectedSession.module?.nom }}
               </span>
             </div>
           </div>

@@ -51,7 +51,7 @@ getAll(etabId?: number): Observable<any[]> {
   return this.http.get<any[]>(this.apiUrl, { ...this.getHeaders(), params });
 }
 
-save(session: any, etabId?: number): Observable<any> {
+/*save(session: any, etabId?: number): Observable<any> {
   if (session.id) {
     return this.http.put(`${this.apiUrl}/${session.id}`, session, this.getHeaders());
   }
@@ -61,6 +61,17 @@ save(session: any, etabId?: number): Observable<any> {
     params = params.set('etabId', etabId.toString());
   }
   return this.http.post(this.apiUrl, session, { ...this.getHeaders(), params });
+}*/
+
+save(session: any, etabId?: number): Observable<any> {
+  const url = session.id ? `${this.apiUrl}/${session.id}` : this.apiUrl;
+  let params = new HttpParams();
+  if (etabId) params = params.set('etabId', etabId.toString());
+
+  if (session.id) {
+    return this.http.put(url, session, this.getHeaders());
+  }
+  return this.http.post(url, session, { ...this.getHeaders(), params });
 }
 
 getModulesLastImport(etabId?: number): Observable<any[]> {
@@ -69,6 +80,10 @@ getModulesLastImport(etabId?: number): Observable<any[]> {
     params = params.set('etabId', etabId.toString());
   }
   return this.http.get<any[]>(`${this.apiUrl}/modules-last-import`, { ...this.getHeaders(), params });
+}
+
+getModulesDisponibles(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/modules-disponibles`, this.getHeaders());
 }
 
 }

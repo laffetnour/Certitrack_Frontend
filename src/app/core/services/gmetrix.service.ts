@@ -76,9 +76,6 @@ private getOptions(etabId?: number) {
 
     let params = new HttpParams();
 
-    if (filters.sessionId !== null && filters.sessionId !== undefined) {
-      params = params.set('sessionId', filters.sessionId);
-    }
 
     if (filters.candidatId) {
       params = params.set('candidatId', filters.candidatId);

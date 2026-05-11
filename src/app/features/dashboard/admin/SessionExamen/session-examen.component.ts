@@ -23,10 +23,15 @@ export class SessionExamenComponent implements OnInit {
   sessions: any[] = [];
   modulesDisponibles: any[] = [];
   loading = false;
-  minDate: string = new Date().toISOString().slice(0, 16);
+  //minDate: string = new Date().toISOString().slice(0, 16);
 
 
   sessionForm: any = this.getEmptyForm();
+  modulesParCategorie: any[] = [];
+  minDate: string = this.getTomorrowDateString();
+  selectedCategorie: string = '';
+    modulesFiltres: any[] = [];
+
 
   constructor(
     private sessionService: SessionExamenService,
@@ -37,53 +42,44 @@ export class SessionExamenComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadSessions();
-    this.loadModulesRecents();
+    this.loadModulesDisponibles(); // Changé ici
   }
+
+
+
+
+getTomorrowDateString(): string {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    return tomorrow.toISOString().slice(0, 16);
+  }
+
+
+onCategorieChange() {
+    const categorieFound = this.modulesParCategorie.find(c => c.nom === this.selectedCategorie);
+    this.modulesFiltres = categorieFound ? categorieFound.modules : [];
+    // Réinitialiser le module choisi si on change de catégorie
+    this.sessionForm.module.idModule = null;
+  }
+
 
   getEmptyForm() {
     return {
       id: null,
       nomExamen: '',
       dateHeureExamen: '',
-      dateDebutReservation: '',
-      dateFinReservation: '',
+      heuresAvantFermeture: 0,
       capacite: 0,
       centreExamen: '',
       langue: 'Français',
       codeAcces: '',
-      //modulesAutorises: []
-      moduleAutoriseId: null // Modifié ici
+      //moduleAutoriseId: null // Modifié ici
+      module: { idModule: null }
     };
   }
 
-
-
-  /*loadSessions() {
-    this.loading = true;
-    this.sessionService.getAll().subscribe({
-      next: (data) => {
-        this.sessions = data;
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error(err);
-        this.loading = false;
-      }
-    });
-  }*/
-
-  /*loadModulesRecents() {
-    this.sessionService.getModulesLastImport().subscribe({
-      next: (data) => {
-        console.log("rrrrr",data);
-        this.modulesDisponibles = data || [];
-        this.cdr.detectChanges();
-      }
-    });
-  }*/
-
-loadModulesRecents() {
+/*loadModulesRecents() {
   const etabId = this.getSelectedEtabId()||  this.contextService.getEtablissementId();
   this.sessionService.getModulesLastImport(etabId).subscribe({
     next: (data) => {
@@ -93,114 +89,67 @@ loadModulesRecents() {
     },
     error: (err) => console.error("Erreur chargement modules", err)
   });
+}*/
+
+
+loadModulesDisponibles() {
+  const etabId = this.getSelectedEtabId()||  this.contextService.getEtablissementId();
+  this.sessionService.getModulesDisponibles().subscribe({
+    next: (data: any[]) => {
+      // On groupe les modules par nom de catégorie pour l'affichage
+      const groups = data.reduce((acc: any, obj: any) => {
+        const key = obj.nomCategorie || 'Autres';
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(obj);
+        return acc;
+      }, {});
+
+      this.modulesParCategorie = Object.keys(groups).map(name => ({
+        nom: name,
+        modules: groups[name]
+      }));
+      this.cdr.detectChanges();
+    },
+    error: (err) => console.error("Erreur chargement modules", err)
+  });
 }
 
 
-/*onModuleToggle(moduleId: number) {
-    const index = this.sessionForm.modulesAutorises.indexOf(moduleId);
-    if (index > -1) {
-      this.sessionForm.modulesAutorises.splice(index, 1);
-    } else {
-      this.sessionForm.modulesAutorises.push(moduleId);
-    }
-  }*/
+validateForm(): boolean {
+     if (!this.sessionForm.nomExamen || !this.sessionForm.dateHeureExamen || !this.sessionForm.module.idModule) {
+       Swal.fire('Erreur', 'Veuillez remplir les champs obligatoires.', 'error');
+       return false;
+     }
+
+     const maintenant = new Date();
+     const examen = new Date(this.sessionForm.dateHeureExamen);
+     const demain = new Date();
+     demain.setDate(maintenant.getDate() + 1);
+     demain.setHours(0, 0, 0, 0);
+
+     if (examen < demain) {
+       Swal.fire({
+         icon: 'warning',
+         title: 'Date invalide',
+         text: "Tu dois mettre la date d'examen à partir de demain",
+         confirmButtonColor: '#3085d6'
+       });
+       return false;
+     }
+     return true;
+   }
+
 
   isModuleSelected(moduleId: number): boolean {
     return this.sessionForm.modulesAutorises.includes(moduleId);
   }
 
-  /*onSave() {
-    if (!this.validateDates()) {
-        return;
-      }
-    const etatCalcule = this.calculerEtatAutomatique(this.sessionForm);
-    this.sessionForm.etat = this.calculerEtatAutomatique(this.sessionForm);
-    const payload = {
-      ...this.sessionForm,
-      etat: etatCalcule,
-      modulesAutorises: this.sessionForm.modulesAutorises.map((id: number) => {
-        const fullModule = this.modulesDisponibles.find(m => m.id === id);
-        return {
-          id: fullModule.id,
-          avecTest: fullModule.avecTest,
-          estActif: fullModule.estActif,
-          seuilScore: fullModule.seuilScore,
-          capacite: fullModule.capacite,
-          dateAjout: fullModule.dateAjout
-        };
-      })
-    };
-
-    console.log(payload);
-
-    if (!payload.dateDebutReservation) delete payload.dateDebutReservation;
-    if (!payload.dateFinReservation) delete payload.dateFinReservation;
-    if (!payload.dateHeureExamen) delete payload.dateHeureExamen;
-    if (!payload.id) delete payload.id;
-
-    console.log("Payload envoyé :", payload);
-
-    this.sessionService.save(payload).subscribe({
-      next: () => {
-        this.loadSessions();
-        this.resetForm();
-        document.getElementById('closeModal')?.click();
-      },
-      error: (err) => {
-        console.error("Détail erreur :", err);
-        Swal.fire({
-          icon: 'error',
-          title: 'Erreur',
-          text: err.error?.message || 'Vérifiez les données',
-          confirmButtonColor: '#3085d6'
-        });
-      }
-    });
-  }*/
-
-  /*onEdit(session: any) {
-    this.sessionForm = {
-      ...session,
-      modulesAutorises: session.modulesAutorises.map((m: any) => m.id)
-    };
-    this.cdr.detectChanges();
-  }*/
-
-
-
   resetForm() {
     this.sessionForm = this.getEmptyForm();
+    this.selectedCategorie = '';
+        this.modulesFiltres = [];
     this.cdr.detectChanges();
   }
-
-  /*onDelete(session: any) {
-    if (!this.canDelete(session)) {
-
-     Swal.fire({
-                 icon: 'error',
-                 title: 'Suppression impossible : ',
-                 text: ' Seules les sessions PLANIFIEE peuvent être supprimées.',
-                 confirmButtonColor: '#3085d6'
-               });
-      return;
-    }
-
-    if (confirm(`Voulez-vous vraiment supprimer la session "${session.nomExamen}" ?`)) {
-      this.sessionService.delete(session.id).subscribe({
-        next: () => {
-          this.loadSessions();
-        },
-        error: (err) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Erreur lors de la suppression : ',
-            text: err.error?.message || 'Problème serveur',
-            confirmButtonColor: '#3085d6'
-          });
-        }
-      });
-    }
-  }*/
 
 calculerEtatAutomatique(session: any): string {
   const maintenant = new Date();
@@ -218,16 +167,15 @@ calculerEtatAutomatique(session: any): string {
   }
 }
 
-
-  canEdit(session: any): boolean {
+  /*canEdit(session: any): boolean {
     return session.etat === 'PLANIFIEE';
-  }
+  }*/
 
-canDelete(session: any): boolean {
+/*canDelete(session: any): boolean {
   return session.etat === 'PLANIFIEE';
-}
+}*/
 
-  validateDates(): boolean {
+  /*validateDates(): boolean {
     const maintenant = new Date();
     const debut = new Date(this.sessionForm.dateDebutReservation);
     const fin = new Date(this.sessionForm.dateFinReservation);
@@ -274,7 +222,7 @@ canDelete(session: any): boolean {
     }
 
     return true;
-  }
+  }*/
 
   selectedSession: any = null;
 
@@ -309,72 +257,16 @@ loadSessions() {
     });
   }
 
-
-
-/*onSave() {
-    if (!this.validateDates()) {
-        return;
-      }
-    const etatCalcule = this.calculerEtatAutomatique(this.sessionForm);
-    this.sessionForm.etat = this.calculerEtatAutomatique(this.sessionForm);
-    const payload = {
-      ...this.sessionForm,
-      etat: etatCalcule,
-      modulesAutorises: this.sessionForm.modulesAutorises.map((id: number) => {
-        const fullModule = this.modulesDisponibles.find(m => m.id === id);
-        return {
-          id: fullModule.id,
-          avecTest: fullModule.avecTest,
-          estActif: fullModule.estActif,
-          seuilScore: fullModule.seuilScore,
-          capacite: fullModule.capacite,
-          dateAjout: fullModule.dateAjout
-        };
-      })
-    };
-
-    console.log(payload);
-
-    if (!payload.dateDebutReservation) delete payload.dateDebutReservation;
-    if (!payload.dateFinReservation) delete payload.dateFinReservation;
-    if (!payload.dateHeureExamen) delete payload.dateHeureExamen;
-    if (!payload.id) delete payload.id;
-
-    console.log("Payload envoyé :", payload);
-
-    // Récupération de l'ID de l'établissement sélectionné
-    const etabId = this.getSelectedEtabId();
-
-    // Passage du payload ET de l'etabId au service
-    this.sessionService.save(payload, etabId).subscribe({
-      next: () => {
-        this.loadSessions();
-        this.resetForm();
-        document.getElementById('closeModal')?.click();
-      },
-      error: (err) => {
-        console.error("Détail erreur :", err);
-        Swal.fire({
-          icon: 'error',
-          title: 'Erreur',
-          text: err.error?.message || 'Vérifiez les données',
-          confirmButtonColor: '#3085d6'
-        });
-      }
-    });
-  }*/
-
-
 onSave() {
-  if (!this.validateDates()) return;
+  if (!this.validateForm()) return;
 
-  const etatCalcule = this.calculerEtatAutomatique(this.sessionForm);
+  //const etatCalcule = this.calculerEtatAutomatique(this.sessionForm);
 
   // Recherche du module sélectionné pour construire l'objet moduleAutorise
-  const selectedMod = this.modulesDisponibles.find(m => m.id === this.sessionForm.moduleAutoriseId);
+  //const selectedMod = this.modulesDisponibles.find(m => m.id === this.sessionForm.moduleAutoriseId);
 
   // Construction du payload
-  const payload = {
+  /*const payload = {
     ...this.sessionForm,
     etat: etatCalcule,
     moduleAutorise: selectedMod ? {
@@ -385,11 +277,12 @@ onSave() {
       capacite: selectedMod.capacite,
       dateAjout: selectedMod.dateAjout
     } : null
-  };
+  };*/
+  const payload = { ...this.sessionForm };
 
-  // --- CORRECTION ERREUR 403 : NETTOYAGE ---
-  // On retire les objets complexes et IDs temporaires pour que le backend accepte la modif
-  delete payload.moduleAutoriseId;
+
+
+  //delete payload.moduleAutoriseId;
   delete payload.etablissement;    // Ne pas renvoyer l'objet Etablissement complet
   delete payload.reservations;     // Ne pas renvoyer la liste des réservations
   // -----------------------------------------
@@ -421,73 +314,26 @@ onEdit(session: any) {
   this.sessionForm = {
     ...session,
     // On récupère l'ID du module unique au lieu d'un tableau
-    moduleAutoriseId: session.moduleAutorise ? session.moduleAutorise.id : null
+    //moduleAutoriseId: session.moduleAutorise ? session.moduleAutorise.id : null
+    module: { idModule: session.module ? session.module.idModule : null }
   };
+
+  // Retrouver la catégorie du module pour l'afficher dans le select
+      if (session.module) {
+        // On cherche dans quelle catégorie se trouve ce module
+        const cat = this.modulesParCategorie.find(c =>
+          c.modules.some((m: any) => m.idModule === session.module.idModule)
+        );
+        if (cat) {
+          this.selectedCategorie = cat.nom;
+          this.modulesFiltres = cat.modules;
+        }
+      }
   this.cdr.detectChanges();
 }
 
 
-/*isModuleDesactive(moduleId: number): boolean {
-  const moduleDeLImport = this.modulesDisponibles.find(m => m.value === moduleId);
 
-  if (!moduleDeLImport) return false;
-
-  const sessionsDuLotActuel = this.sessions.filter(session => {
-    return session.moduleAutorise &&
-           this.modulesDisponibles.some(m => Number(m.value) === Number(session.moduleAutorise.id));
-  });
-
-  const sessionBloquante = sessionsDuLotActuel.find(session => {
-    const idModuleSession = session.moduleAutorise.module ? session.moduleAutorise.module.id : session.moduleAutorise.id;
-
-    const estLeMemeModule = Number(idModuleSession) === Number(moduleId);
-    const estUneAutreSession = session.id !== this.sessionForm.id;
-
-    return estLeMemeModule && estUneAutreSession;
-  });
-
-  if (sessionBloquante) {
-    console.warn(`🚫 BLOQUÉ : "${moduleDeLImport.label}" est déjà utilisé dans la session "${sessionBloquante.nomExamen}" du DERNIER IMPORT.`);
-    return true;
-  }
-
-  return false;
-}
-*/
-
-isModuleDesactive(moduleId: number): boolean {
-  if (!moduleId || !this.sessions || this.sessions.length === 0) return false;
-
-  if (moduleId === 29) console.log("--- Début vérification Java Avancé (29) ---");
-
-  // On cherche la session qui possède EXACTEMENT ce moduleId
-  const sessionBloquante = this.sessions.find(s => {
-    const isSameId = s.moduleAutorise && Number(s.moduleAutorise.id) === Number(moduleId);
-
-    // Log uniquement pour le module qui pose problème
-    if (isSameId && moduleId === 29) {
-      console.log(`  > Java (29) trouvé dans session: ${s.nomExamen} (ID: ${s.id}), Etat: ${s.etat}`);
-    }
-
-    return isSameId;
-  });
-
-  // Si aucune session n'existe pour ce module précis
-  if (!sessionBloquante) {
-    if (moduleId === 29) console.log("  > Résultat : LIBRE (Aucune session trouvée)");
-    return false;
-  }
-
-  // On vérifie si c'est la session qu'on est en train d'éditer
-  const estSessionEnEdition = sessionBloquante.id === this.sessionForm.id;
-
-  // On ne grise QUE si (Ce n'est pas la session en édition) ET (L'état n'est pas CLOTUREE)
-  const resultat = !estSessionEnEdition && sessionBloquante.etat !== 'CLOTUREE';
-
-  if (moduleId === 29) console.log("  > Résultat final :", resultat ? "GRISÉ" : "LIBRE");
-
-  return resultat;
-}
 aEteUtilise(moduleId: number): boolean {
   return this.sessions.some(session =>
     session.moduleAutorise &&
@@ -497,7 +343,7 @@ aEteUtilise(moduleId: number): boolean {
 }
 
 
-onDelete(session: any) {
+/*onDelete(session: any) {
   // 1. Vérification de sécurité locale
   if (!this.canDelete(session)) {
     Swal.fire({
@@ -542,5 +388,5 @@ onDelete(session: any) {
       });
     }
   });
-}
+}*/
 }
