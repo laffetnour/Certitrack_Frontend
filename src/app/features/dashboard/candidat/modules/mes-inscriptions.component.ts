@@ -184,30 +184,7 @@ allerAuTest(item: any) {
 
 
 
-  /*confirmerReservation(gm: any) {
 
-    if (!this.usernameCertiport || this.usernameCertiport.trim() === '') {
-      alert("Veuillez entrer votre username Certiport");
-      return;
-    }
-
-    this.service.reserverExamen({
-      inscriptionId: gm.inscriptionId,
-      sessionExamenId: gm.sessionExamenId,
-      usernameCertiport: this.usernameCertiport
-    }).subscribe({
-      next: () => {
-        alert("Réservation confirmée ✅");
-        this.annulerFormulaire();
-
-        const user = this.authService.getUser();
-        this.loadGmetrixDecision(user.idUtilisateur);
-      },
-      error: (err) => {
-        alert(err.error?.message || "Erreur réservation");
-      }
-    });
-  }*/
 
   // 1. Ajoutez cette variable en haut de votre classe
   showSuccessModal: boolean = false;
@@ -218,6 +195,8 @@ allerAuTest(item: any) {
     if (!this.isEmailValid()) {
       return;
     }
+
+
 
     this.service.reserverExamen({
       inscriptionId: gm.inscriptionId,
