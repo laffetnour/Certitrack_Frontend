@@ -55,68 +55,26 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  /* login() {
-     this.errorMessage = '';
-     this.message = '';
-
-     this.auth.login(this.username, this.password).subscribe({
-       next: (res: any) => {
-         this.auth.saveUser(res);
-         localStorage.setItem('token', res.token);
-
-         const role = res.role;
-
-         if (role === 'directeurEtab') this.router.navigate(['/directeur/dashboard']);
-         if (role === 'Candidat') this.router.navigate(['/candidat']);
-         if (role === 'adminEtab') this.router.navigate(['/admin']);
-         if (role === 'superAdmin') this.router.navigate(['/super-admin']);
-         if (role === 'adminTenant') this.router.navigate(['/adminTenant']);
-       },
-      error: (error: HttpErrorResponse) => {
-
-        const serverMessage = error.error?.message;
-        console.log("Message reçu enfin :", serverMessage);
-
-        if (serverMessage === "ETABLISSEMENT_DISABLED") {
-          this.errorMessage = "⚠️ L'établissement de votre compte est désactivé.";
-        }
-        else if(serverMessage === "TENANT_DISABLED") {
-          this.errorMessage = "🚫 Votre organisation est désactivée.";
-        }
-        else if (serverMessage === "USER_DISABLED") {
-          this.errorMessage = "🚫 Votre compte personnel est désactivé.";
-        } else {
-          this.errorMessage = "Identifiants incorrects ou erreur de connexion.";
-        }
-        this.cdr.detectChanges();
-      }
-     });
-   }*/
-
  login() {
    this.errorMessage = '';
    this.message = '';
 
    this.auth.login(this.username, this.password).subscribe({
      next: (res: any) => {
-       // 1. Stockage des informations d'authentification
        this.auth.saveUser(res);
        localStorage.setItem('token', res.token);
 
        const userId = res.idUtilisateur || res.id;
 
-       // 2. Chargement de la configuration (Thème, Logo, etc.)
        this.configService.getConfigByUserId(userId).subscribe({
          next: (config) => {
            if (config && config.theme) {
              this.themeService.applyTheme(config.theme);
            }
-           // 3. Une fois le thème appliqué, on redirige
            this.handleNavigation(res.role);
          },
          error: (err) => {
            console.error("Erreur récup config, redirection par défaut", err);
-           // On redirige quand même pour ne pas bloquer l'utilisateur
            this.handleNavigation(res.role);
          }
        });

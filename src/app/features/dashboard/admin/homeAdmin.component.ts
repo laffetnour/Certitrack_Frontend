@@ -176,7 +176,7 @@ public specialiteChartOptions: ChartConfiguration<'doughnut'>['options'] = {
     }
   }
   loadStats(): void {
-    const etablissement = this.currentUser?.etablissements?.[0];
+    const etablissement = this.currentUser?.etablissement;
 
 
 
@@ -208,7 +208,8 @@ public specialiteChartOptions: ChartConfiguration<'doughnut'>['options'] = {
   }
 
 loadChartsData(): void {
-  const idEtab = this.currentUser?.etablissements?.[0]?.id || this.currentUser?.etablissements?.[0]?.idEtab;
+  const idEtab =
+    this.currentUser?.etablissement?.idEtab;
 
   console.log(idEtab);
   if (!idEtab) return;

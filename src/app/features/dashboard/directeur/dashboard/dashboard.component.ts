@@ -207,7 +207,7 @@ export class DashboardComponent implements OnInit {
 
 
 loadChartsData(): void {
-  const idEtab = this.currentUser?.etablissements?.[0]?.id || this.currentUser?.etablissements?.[0]?.idEtab
+  const idEtab = this.currentUser?.etablissements?.[0]?.id || this.currentUser?.etablissements?.[0]?.idEtab ||  this.currentUser?.etablissement?.idEtab
   || this.contextService.getEtablissementId();
 
 

@@ -78,7 +78,7 @@ getRetourRoute(): string {
 loadAllSpecModules(): void {
     this.loading = true;
         const user = this.authService.getUser();
-        const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId();
+        const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId() ||  user?.etablissement?.idEtab;
           console.log("all : ",etabId);
          if (etabId) {
   this.specialiteModuleService.getAllSpecialiteModules(etabId).subscribe({
@@ -93,7 +93,7 @@ loadMyCatalogue(): void {
   console.log(user);
 
 
-const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId();
+const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId() ||  user?.etablissement?.idEtab;
 
   if (etabId) {
 
@@ -147,7 +147,7 @@ onSearch(): void {
 
 loadSpecialities(): void {
     const user = this.authService.getUser();
-    const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId();
+    const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId() ||  user?.etablissement?.idEtab;
     console.log("etab: ",etabId);
     if (etabId) {
         this.etablissementService.getSpecialites(etabId).subscribe({

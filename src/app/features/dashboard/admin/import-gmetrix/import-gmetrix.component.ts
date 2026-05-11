@@ -85,6 +85,7 @@ upload() {
   const currentUser = this.auth.getUser();
   const idEtab = currentUser?.etablissements?.[0]?.id ||
                  currentUser?.etablissements?.[0]?.idEtab ||
+    currentUser?.etablissement?.idEtab ||
                  this.contextService.getEtablissementId();
 
   this.gmetrixService.importFile(this.selectedFile, idEtab).subscribe({
@@ -118,7 +119,7 @@ upload() {
 
     const currentUser = this.auth.getUser();
         const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab
-          || this.contextService.getEtablissementId();
+          || this.contextService.getEtablissementId() ||  currentUser?.etablissement?.idEtab;
 
     this.gmetrixService.getScores({},idEtab).subscribe({
       next: (data) => {

@@ -113,7 +113,7 @@ getListModulesRoute(): string {
 loadSpecialites() {
     this.loading = true;
     const user = this.authService.getUser();
-    const id = this.contextService.getEtablissementId() || user?.etablissements?.[0]?.idEtab ;
+    const id = this.contextService.getEtablissementId() || user?.etablissements?.[0]?.idEtab || user?.etablissement?.idEtab;
     this.etablissementService.getSpecialites(id).subscribe({
         next: (data) => {
             this.specialites = data || [];
@@ -360,7 +360,7 @@ delete(sp: any) {
         } else {
           const user = this.authService.getUser();
 
-          const idEtab = this.contextService.getEtablissementId() || user?.etablissements?.[0]?.idEtab  ;
+          const idEtab = this.contextService.getEtablissementId() || user?.etablissements?.[0]?.idEtab ||  user?.etablissement?.idEtab  ;
 
           this.directeurService.deleteSpecialite(sp.idSpecialite,idEtab).subscribe({
             next: () => {

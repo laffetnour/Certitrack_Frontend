@@ -67,7 +67,7 @@ export class AffichageListeComponent implements OnInit {
 ngOnInit(): void {
   this.loading = true;
   const user = this.authService.getUser();
-  const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId();
+  const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId() ||  user?.etablissement?.idEtab;
 
   if (etabId) {
     // On combine les deux appels pour n'arrêter le loading qu'à la fin des deux
@@ -122,7 +122,7 @@ getRetourRoute(): string {
   loadAllSpecialiteModules(shouldFilter: boolean = false): void {
       this.loading = true;
       const user = this.authService.getUser();
-      const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId();
+      const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId() ||  user?.etablissement?.idEtab;
 
        if (etabId) {
       this.specModuleService.getAllSpecialiteModules(etabId).subscribe({
@@ -168,7 +168,7 @@ else {
     loadSpecialites(): void {
       this.loading = true;
       const user = this.authService.getUser();
-      const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId();
+      const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId()||  user?.etablissement?.idEtab ;
      if (etabId) {
              this.etablissementService.getSpecialites(etabId).subscribe({
                next: (specs) => {

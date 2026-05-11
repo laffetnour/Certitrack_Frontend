@@ -43,6 +43,7 @@ export class ResultatsSessionsComponent implements OnInit {
      const currentUser = this.auth.getUser();
           const idEtab = currentUser?.etablissements?.[0]?.id ||
                          currentUser?.etablissements?.[0]?.idEtab ||
+                          currentUser?.etablissement?.idEtab ||
                          this.contextService.getEtablissementId();
     this.adminService.getSessionsCloturees(idEtab).subscribe({
       next: (data: any) => {
@@ -59,6 +60,7 @@ export class ResultatsSessionsComponent implements OnInit {
     const currentUser = this.auth.getUser();
       const idEtab = currentUser?.etablissements?.[0]?.id ||
                      currentUser?.etablissements?.[0]?.idEtab ||
+        currentUser?.etablissement?.idEtab ||
                      this.contextService.getEtablissementId();
 
     const filters = {
@@ -106,6 +108,7 @@ export class ResultatsSessionsComponent implements OnInit {
     const currentUser = this.auth.getUser();
       const idEtab = currentUser?.etablissements?.[0]?.id ||
                      currentUser?.etablissements?.[0]?.idEtab ||
+        currentUser?.etablissement?.idEtab ||
                      this.contextService.getEtablissementId();
 
     this.adminService.exportResultats({

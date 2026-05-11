@@ -61,8 +61,8 @@ export class AdminComponent implements OnInit {
 
 
     const user = this.auth.getUser();
-        if (user && user.etablissements && user.etablissements[0]?.tenant) {
-          this.tenantConfig = user.etablissements[0].tenant;
+        if (user && user.etablissement && user.etablissement.tenant) {
+          this.tenantConfig = user.etablissement.tenant;
           this.idDigits = new Array(this.tenantConfig.longueurIdentifiant || 8).fill('');
           this.applyAdminValidators();
         }
@@ -76,7 +76,7 @@ export class AdminComponent implements OnInit {
 
   loadSpecialites(): void {
     const currentUser = this.auth.getUser();
-    const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab
+    const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab || currentUser?.etablissement?.idEtab
       || this.contextService.getEtablissementId();
     this.adminService.getSpecialites(idEtab).subscribe({
       next: (data) => {
@@ -91,7 +91,7 @@ export class AdminComponent implements OnInit {
   loadCandidats(): void {
     this.loading = true;
     const currentUser = this.auth.getUser();
-    const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab
+    const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab || currentUser?.etablissement?.idEtab
       || this.contextService.getEtablissementId();
     this.adminService.getCandidats(idEtab).subscribe({
       next: (data) => {
@@ -151,7 +151,7 @@ export class AdminComponent implements OnInit {
         });
       } else {
         const currentUser = this.auth.getUser();
-        const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab
+        const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab ||  currentUser?.etablissement?.idEtab
           || this.contextService.getEtablissementId();
         this.adminService.createCandidat(formData,idEtab).subscribe({
           next: () => {
@@ -341,7 +341,7 @@ handleDeactivateAfterFailedDelete(): void {
 loadCandidatsParSpecialite(): void {
   this.loading = true;
   const currentUser = this.auth.getUser();
-const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab
+const idEtab = currentUser?.etablissements?.[0]?.id || currentUser?.etablissements?.[0]?.idEtab ||  currentUser?.etablissement?.idEtab
   || this.contextService.getEtablissementId();
   this.adminService.getCandidatsBySpecialite(idEtab).subscribe({
     next: (data) => {
@@ -468,6 +468,7 @@ onDigitInput(event: any, index: number) {
     this.candidatForm.reset({ specialiteId: '' });
 
     const longueur = this.tenantConfig?.longueurIdentifiant || 8;
+    console.log(this.tenantConfig);
     this.idDigits = new Array(longueur).fill('');
 
     this.showModal = true;
