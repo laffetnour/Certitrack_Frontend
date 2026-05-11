@@ -416,6 +416,13 @@ display: flex; gap: 8px;
 .status-encours { background-color: #fef3c7; color: #92400e; }
 .status-cloture { background-color: var(--table-th-bg); color: var(--text-muted); }
 
+
+.badge.status-cloture {
+  background-color: #fee2e2 !important; /* Rouge clair */
+  color: #b91c1 !important;           /* Rouge foncé */
+  border: 1px solid #f87171;
+}
+
 .btn {
   border-radius: 8px;
   font-weight: 500;
