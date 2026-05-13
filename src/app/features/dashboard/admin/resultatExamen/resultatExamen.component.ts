@@ -5,6 +5,7 @@ import { SessionExamenService } from '../../../../core/services/session-examen.s
 import { ResultatExamenService } from '../../../../core/services/resultatExamen.service';
 import { ContextService } from '../../../../core/services/context.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { ViewChild, ElementRef } from '@angular/core';
 
 import Swal from 'sweetalert2';
 
@@ -21,6 +22,7 @@ export class ResultatExamenComponent implements OnInit {
   selectedFile: File | null = null;
   uploading: boolean = false;
   resultats: any[] = [];
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
   constructor(
     private sessionService: SessionExamenService,
@@ -128,6 +130,11 @@ onUpload() {
   this.resultatService.importExcel(this.selectedFile, this.selectedSessionId).subscribe({
     next: (errors: any) => {
       this.uploading = false;
+
+      this.selectedFile = null;
+      if (this.fileInput) {
+        this.fileInput.nativeElement.value = '';
+      }
 
       const errorList = typeof errors === 'string' ? JSON.parse(errors) : errors;
 

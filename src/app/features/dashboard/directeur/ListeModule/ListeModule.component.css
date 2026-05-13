@@ -555,12 +555,22 @@ form::-webkit-scrollbar-thumb:hover {
   outline: none;
 }
 
-.spec-list {
+/*.spec-list {
   max-height: 200px;
   overflow-y: auto;
   background: white;
   border: 1px solid #eee;
   border-radius: 4px;
+}*/
+
+.spec-list {
+  width: 100%;
+  max-height: 220px;   /* ajuste si tu veux plus grand */
+  /*overflow-y: auto;*/
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin-top: 10px;
+  border-radius: 6px;
 }
 
 .spec-item {
@@ -1074,4 +1084,54 @@ input[type="checkbox"] {
   display: flex;
   gap: 10px;
   align-items: center;
+}
+
+:host-context(.dark-mode) .modal-card {
+  background: var(--bg-card);
+  color: var(--text-main);
+}
+
+:host-context(.dark-mode) .spec-selection-box {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+:host-context(.dark-mode) .spec-list {
+  background: var(--bg-page);
+  border-color: var(--border-color);
+}
+
+:host-context(.dark-mode) .spec-item:hover {
+  background: var(--row-hover);
+}
+
+:host-context(.dark-mode) .spec-search {
+  background: var(--bg-page);
+  color: var(--text-main);
+  border-color: var(--border-color);
+}
+
+
+.search-wrapper {
+  width: 100%;
+}
+
+.spec-search {
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+}
+
+
+.spec-selection-box {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+.modal-body {
+  flex: 1;
+  overflow-y: scroll;   /* scroll toujours visible */
+  overflow-x: hidden;
+  padding: 15px;
 }

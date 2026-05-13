@@ -70,9 +70,39 @@
 
   <div class="main-layout">
     <header class="notification-bar">
-      <div class="search-container">
+      <!--<div class="search-container">
         <i class="fas fa-search"></i>
         <input type="text" placeholder="Recherche....">
+      </div>-->
+
+
+      <div class="search-container">
+        <i class="fas fa-search"></i>
+
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (input)="onSearch()"
+          (focus)="onSearch()"
+          placeholder="Recherche...."
+        />
+
+        <div class="search-dropdown"
+             *ngIf="showResults && filteredResults.length > 0">
+
+          <div class="search-item"
+               *ngFor="let result of filteredResults"
+               (click)="goTo(result.link)">
+
+            <i [class]="result.icon"></i>
+
+            <div class="result-info">
+              <span class="result-name">{{ result.name }}</span>
+              <span class="result-type">{{ result.type }}</span>
+            </div>
+
+          </div>
+        </div>
       </div>
 
       <div class="user-actions">

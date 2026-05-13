@@ -17,7 +17,7 @@ import { AuthService } from '../../../../core/services/auth.service';
     DatePipe
   ],
   templateUrl: './session-insc.component.html',
-  styleUrls: ['../ListeModuleTenant/ModuleTenant.component.css']
+  styleUrls: ['./session-insc.component.css']
 })
 export class SessionInscComponent implements OnInit {
   idTenant: string | null = null;

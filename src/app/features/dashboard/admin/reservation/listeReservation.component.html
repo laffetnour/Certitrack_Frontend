@@ -1,4 +1,4 @@
-<div class="container mt-4">
+<!--<div class="container mt-4">
   <div class="card p-3 shadow-sm border-0">
     <div class="row align-items-center">
       <div class="col-md-4">
@@ -85,4 +85,136 @@
       <i class="bi bi-file-earmark-excel"></i> Exporter Excel
     </button>
   </div>
+</div>-->
+
+
+
+<div class="admin-container">
+
+  <!-- HEADER -->
+  <div class="admin-header">
+
+    <div>
+      <h1>Liste des Réservations</h1>
+      <p class="subtitle">
+        Gestion et consultation des réservations des candidats
+      </p>
+    </div>
+
+    <button
+      *ngIf="reservations.length > 0"
+      class="btn btn-success d-flex align-items-center gap-2"
+      (click)="exportExcel()"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="16"
+           height="16"
+           fill="currentColor"
+           viewBox="0 0 16 16">
+        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM3 9h10v1h-10V9zM3 11h10v1h-10v-1zM3 13h10v1h-10v-1zM3 7h10v1h-10V7z"/>
+      </svg>
+
+      Exporter Excel
+    </button>
+
+  </div>
+
+  <!-- FILTER -->
+  <div class="filter-section d-flex gap-3 align-items-center">
+
+      <select
+        class="form-control"
+        [(ngModel)]="selectedSessionId"
+        (change)="onFilterChange()"
+      >
+        <option [ngValue]="null">Toutes les sessions d'examen</option>
+
+        <option *ngFor="let s of sessions" [value]="s.id">
+          {{ s.nomExamen }}
+        </option>
+      </select>
+
+
+  </div>
+
+  <br>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="loading-state">
+    Chargement des données...
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-container" *ngIf="!loading && reservations.length">
+
+    <table class="modern-table">
+
+      <thead>
+      <tr>
+        <th>Candidat</th>
+        <th>Module</th>
+        <th>Session</th>
+        <th>Date Examen</th>
+        <th>Date Réservation</th>
+        <th>Certiport User</th>
+      </tr>
+      </thead>
+
+      <tbody>
+
+      <tr *ngFor="let res of reservations">
+
+        <td>
+          <div class="candidate-info">
+            <strong>
+              {{ res.nomCandidat }}
+              {{ res.prenomCandidat }}
+            </strong>
+
+            <small>
+              {{ res.emailCandidat }}
+            </small>
+          </div>
+        </td>
+
+        <td>
+          <span class="module-badge">
+            {{ res.nomModule }}
+          </span>
+        </td>
+
+        <td>
+          {{ res.nomSession }}
+        </td>
+
+        <td>
+          <div class="date-block">
+            <span>{{ res.dateExamen | date:'dd/MM/yyyy' }}</span>
+            <small>{{ res.dateExamen | date:'HH:mm' }}</small>
+          </div>
+        </td>
+
+        <td>
+          {{ res.dateReservation | date:'dd/MM/yyyy' }}
+        </td>
+
+        <td>
+          <span class="status-badge active">
+            {{ res.usernameCertiport }}
+          </span>
+        </td>
+
+      </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <!-- EMPTY -->
+  <div *ngIf="!loading && reservations.length === 0" class="empty-state">
+    Aucune réservation trouvée pour cette sélection.
+  </div>
+
 </div>

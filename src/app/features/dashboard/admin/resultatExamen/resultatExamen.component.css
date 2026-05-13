@@ -1,23 +1,254 @@
-.card {
-  border-radius: 15px;
+:host {
+  /* Mode Clair */
+  --bg-admin: #f8fafc;
+  --bg-card: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --border-color: #f1f5f9;
+  --table-th-bg: #f8fafc;
+  --row-hover: #f9fafb;
+  --input-border: #303D49;
+
+  --smart-blue: #448aff;
+  --smart-green: #0ca678;
+  --smart-green-light: #e6fcf5;
 }
 
-.card-header {
-  background: linear-gradient(45deg, #ea5357, #d44347) !important;
+:host-context(.dark-mode) {
+  --bg-admin: #0f172a;
+  --bg-card: #1e293b;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --table-th-bg: #0f172a;
+  --row-hover: #262f3f;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+.admin-container {
+  background: var(--bg-admin);
+  padding: 20px;
+}
+
+/* =========================
+   HEADER
+========================= */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-card);
+  padding: 20px 30px;
+  border-radius: 16px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  color: var(--text-main);
+}
+
+.admin-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* =========================
+   FILTER (IMPORTANT FIX WIDTH)
+========================= */
+.filter-section {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* 👉 FIX IMPORTANT : largeur du select */
+.filter-section .form-control {
+  width: auto;        /* ne prend plus 100% */
+  min-width: 220px;   /* largeur confortable */
+  max-width: 320px;   /* empêche d'être trop large */
+  display: inline-block;
+}
+
+/* =========================
+   IMPORT SECTION
+========================= */
+.import-section {
+  margin-top: 20px;
+}
+
+.import-card {
+  background: var(--bg-card);
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.btn-import, .btn-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
   border: none;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.btn-primary {
-  background-color: #ea5357;
-  border-color: #ea5357;
+/* Import */
+.btn-import {
+  background: #edf2ff;
+  color: var(--smart-blue);
+  margin-bottom: 3px;
 }
 
-.btn-primary:hover {
-  background-color: #d44347;
-  border-color: #d44347;
+.btn-import, .btn-success{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.form-select:focus, .form-control:focus {
-  border-color: #ea5357;
-  box-shadow: 0 0 0 0.25rem rgba(234, 83, 87, 0.25);
+.btn-import:hover {
+  background: var(--smart-blue);
+  color: white;
+  transform: translateY(-2px);
 }
+
+/* Success */
+.btn-success {
+  background: var(--smart-green-light);
+  color: var(--smart-green);
+}
+
+.btn-success:hover {
+  background: var(--smart-green);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* =========================
+   TABLE
+========================= */
+.table-container {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.modern-table th {
+  padding: 14px;
+  background: var(--table-th-bg);
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: left;
+}
+
+.modern-table td {
+  padding: 14px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
+.modern-table tr:hover {
+  background: var(--row-hover);
+}
+
+/* =========================
+   BADGES
+========================= */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(68, 138, 255, 0.1);
+  color: var(--smart-blue);
+}
+
+.module-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  background: rgba(12, 166, 120, 0.1);
+  color: var(--smart-green);
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+.empty-box {
+  margin-top: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  padding: 30px;
+  background: var(--bg-card);
+  border-radius: 12px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .filter-section .form-control {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .import-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+.status-filter-select {
+  min-width: 100px;
+  padding: 10px 35px 10px 40px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  appearance: none;
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12' viewBox='0 0 18 12'%3E%3Cpath d='M0 12h18v-2H0v2zm0-5h18V5H0v2zm0-7v2h18V0H0z' fill='%23888888'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  background-size: 16px;
+}
+

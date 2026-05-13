@@ -1,4 +1,4 @@
-<div class="container mt-4">
+<!--<div class="container mt-4">
   <div class="row">
     <div class="col-md-8 mx-auto">
       <div class="card shadow border-0 overflow-hidden">
@@ -102,4 +102,163 @@
       </table>
     </div>
   </div>
+</div>-->
+
+<div class="admin-container">
+
+  <!-- HEADER -->
+  <div class="admin-header">
+
+    <div>
+      <h1>Importation des Résultats Certiport</h1>
+    </div>
+
+    <div class="actions-header d-flex gap-2" *ngIf="selectedSessionId">
+
+      <input
+        type="file"
+        hidden
+        #fileInput
+        (change)="onFileSelected($event); onUpload()"
+        accept=".xlsx, .xls"
+      />
+
+      <button class="btn-import" (click)="fileInput.click()"
+              style="padding-right:60px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+          <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+        </svg>
+        Importer
+      </button>
+
+
+      <button class="btn btn-success" (click)="onDownloadTemplate()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM3 9h10v1h-10V9zM3 11h10v1h-10v-1zM3 13h10v1h-10v-1zM3 7h10v1h-10V7z"/>
+        </svg>
+        Exporter Modele
+      </button>
+
+    </div>
+  </div>
+
+  <!-- FILTER (session) -->
+  <div class="filter-section d-flex gap-3 align-items-center">
+
+    <select
+      class="form-control status-filter-select"
+      [(ngModel)]="selectedSessionId"
+      (change)="onSessionChange()"
+    >
+      <option [ngValue]="null" disabled>
+        -- Choisir une session --
+      </option>
+
+      <option *ngFor="let s of sessionsCloturees" [value]="s.id">
+        {{ s.nomExamen }} | {{ s.module?.nom }}
+      </option>
+
+    </select>
+
+  </div>
+
+  <br>
+
+  <!-- IMPORT AREA -->
+  <!--<div class="table-container" *ngIf="selectedSessionId">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+      <div>
+        <h5 class="m-0">Importer les résultats</h5>
+        <small class="text-muted">
+          Sélectionnez un fichier Excel contenant les scores
+        </small>
+      </div>
+
+      <div class="actions-header d-flex gap-2">
+
+        <button class="btn-import" (click)="fileInput.click()">
+          Choisir fichier
+        </button>
+
+        <button
+          class="btn btn-success"
+          [disabled]="!selectedFile"
+          (click)="onUpload()"
+        >
+          Importer
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>-->
+
+  <!-- EMPTY SESSION -->
+  <div class="empty-box" *ngIf="sessionsCloturees.length === 0">
+    Aucune session clôturée disponible
+  </div>
+
+  <!-- TABLE RESULTATS -->
+  <div class="table-container" *ngIf="resultats.length">
+
+    <table class="modern-table">
+
+      <thead>
+      <tr>
+        <th>Candidat</th>
+        <th>Username</th>
+        <th>Examen</th>
+        <th>Score</th>
+        <th>Résultat</th>
+        <th>Proctor</th>
+        <th>Date</th>
+      </tr>
+      </thead>
+
+      <tbody>
+
+      <tr *ngFor="let r of resultats">
+
+        <td><strong>{{ r.nomCompletCandidat }}</strong></td>
+
+        <td>
+            <span class="status-badge active">
+              {{ r.usernameCertiport }}
+            </span>
+        </td>
+
+        <td>{{ r.nomExamen }}</td>
+
+        <td>
+          <span class="badge-score">{{ r.score }}</span>
+        </td>
+
+        <td>
+            <span class="result-badge"
+                  [ngClass]="r.resultat === 'PASS' ? 'success' : 'danger'">
+              {{ r.resultat }}
+            </span>
+        </td>
+
+        <td>{{ r.proctorName }}</td>
+
+        <td>{{ r.dateExamen | date:'dd/MM/yyyy' }}</td>
+
+      </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <!-- EMPTY RESULTATS -->
+  <div class="empty-box" *ngIf="resultats.length === 0">
+    Aucun résultat importé pour cette session
+  </div>
+
 </div>

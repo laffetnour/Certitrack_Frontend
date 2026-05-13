@@ -9,12 +9,14 @@ import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { forkJoin } from 'rxjs';
 import {RouterLink, RouterLinkActive} from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-super-admin',
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet,
-  RouterModule,BaseChartDirective
+  RouterModule,BaseChartDirective,
+    FormsModule
   ],
   providers: [
     provideCharts(withDefaultRegisterables())
@@ -33,6 +35,10 @@ export class SuperAdminComponent implements OnInit {
   isQuestionOpen: boolean = false;
 
   lowPerfModules: any[] = [];
+
+  searchText: string = '';
+  showResults: boolean = false;
+  filteredResults: any[] = [];
 
     /*public barChartOptions: ChartConfiguration['options'] = {
       responsive: true,
@@ -244,6 +250,75 @@ toggleCatalogue(): void {
 
   onLogout(): void {
     this.authService.logout();
+  }
+
+
+  searchDatabase = [
+    {
+      name: 'Dashboard',
+      link: '/super-admin',
+      icon: 'fas fa-th-large',
+      type: 'Page',
+      keywords: ['dashboard', 'accueil','statistique']
+    },
+    {
+      name: 'Tenants',
+      link: '/super-admin/tenants',
+      icon: 'fas fa-layer-group',
+      type: 'Gestion',
+      keywords: ['tenant', 'entreprise', 'organisation']
+    },
+    {
+      name: 'Admins Tenants',
+      link: '/super-admin/adminTenants',
+      icon: 'fas fa-user-shield',
+      type: 'Gestion',
+      keywords: ['admin', 'tenant admin', 'adminTenant']
+    },
+    {
+      name: 'Catégories',
+      link: '/super-admin/categories',
+      icon: 'fas fa-tags',
+      type: 'Catalogue',
+      keywords: ['categorie','catégorie module']
+    },
+    {
+      name: 'Modules',
+      link: '/super-admin/modules',
+      icon: 'fas fa-cubes',
+      type: 'Catalogue',
+      keywords: ['module', 'formation' , 'question comportementale','question technique','questions réponse' ]
+    },
+    {
+      name: 'Paramètres',
+      link: '/super-admin/parametre',
+      icon: 'fas fa-cog',
+      type: 'Config',
+      keywords: ['parametre', 'settings']
+    }
+  ];
+
+
+  onSearch() {
+    const search = this.searchText.toLowerCase().trim();
+
+    if (search.length > 1) {
+      this.showResults = true;
+
+      this.filteredResults = this.searchDatabase.filter(item =>
+        item.name.toLowerCase().includes(search) ||
+        item.keywords.some(k => k.includes(search))
+      );
+    } else {
+      this.showResults = false;
+      this.filteredResults = [];
+    }
+  }
+
+  goTo(link: string) {
+    this.router.navigate([link]);
+    this.searchText = '';
+    this.showResults = false;
   }
 
 
