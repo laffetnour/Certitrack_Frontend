@@ -29,13 +29,6 @@
         <i class="fas fa-user-tie"></i> Directeurs
       </div>
 
-      <!--<div class="nav-item">
-        <i class="fas fa-user-shield"></i> Administrateurs
-      </div>
-
-      <div class="nav-item">
-        <i class="fas fa-user-graduate"></i> Candidats
-      </div>-->
 
 
 
@@ -46,17 +39,11 @@
        <i class="fas fa-book"></i> Mes Modules
      </div>
 
-      <!--<div class="nav-item" routerLink="/adminTenant/quotas" routerLinkActive="active">
-        <i class="fas fa-percentage"></i> Quotas
-      </div>-->
 
       <div class="nav-item" routerLink="/adminTenant/session-insc" routerLinkActive="active">
         <i class="fas fa-calendar"></i> Sessions Inscription
       </div>
 
-      <!--<div class="nav-item" routerLink="/adminTenant/session-test" routerLinkActive="active">
-        <i class="fas fa-calendar"></i> Sessions Test
-      </div>-->
 
       <div class="nav-item" routerLink="/adminTenant/parametre" routerLinkActive="active">
         <i class="fas fa-cog"></i> <span>Paramètres</span>
@@ -72,14 +59,8 @@
 
   <div class="main-layout">
 
-    <!-- HEADER -->
     <header class="notification-bar">
 
-      <!-- SEARCH -->
-      <!--<div class="search-container">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Recherche...">
-      </div>-->
 
 
       <div class="search-container">
@@ -112,44 +93,20 @@
         </div>
       </div>
 
-      <!-- USER -->
-     <!-- <div class="user-actions">
-
-        <div class="notification-icon">
-          <i class="fas fa-bell"></i>
-          <span class="dot-notification"></span>
-        </div>
-
-        <div class="profile">
-          <span class="user-role">
-            {{ currentUser?.prenom }} {{ currentUser?.nom }}
-          </span>
-
-          <div class="avatar-circle">
-            <i class="fas fa-user"></i>
-          </div>
-
-          <i class="fas fa-chevron-down arrow-user"></i>
-        </div>
-
-      </div>-->
 
       <div class="user-actions">
-        <!--<div class="notification-icon">
-          <i class="fas fa-bell"></i>
-          <span class="dot-notification"></span>
-        </div>-->
-        <!-- Conteneur de l'icône (votre code adapté) -->
+
         <div class="notification-container" style="position: relative;">
 
           <div class="notification-icon" (click)="toggleNotifs()" style="cursor: pointer;">
             <i class="fas fa-bell"></i>
             <ng-container *ngIf="notifService.unreadCount$ | async as count">
-              <span class="dot-notification" *ngIf="count > 0"></span>
+              <span class="dot-notification" *ngIf="count > 0">
+                {{count}}
+              </span>
             </ng-container>
           </div>
 
-          <!-- Liste déroulante qui s'affiche au clic -->
           <div class="dropdown-notif-panel shadow" *ngIf="showNotifs">
             <div class="notif-header">Notifications</div>
 
@@ -192,7 +149,6 @@
 
     </header>
 
-    <!-- CONTENU DYNAMIQUE -->
     <main class="content-area">
       <router-outlet></router-outlet>
     </main>

@@ -39,22 +39,41 @@
           </a>
         </li>
 
-        <li class="nav-item">
+        <!--<li class="nav-item">
           <a class="nav-link" [routerLink]="['/super-admin/tenant', idTenant, 'etablissement', idEtab, 'import-gmetrix']" routerLinkActive="active">
             <i class="bi bi-cloud-arrow-up me-2"></i> Import
           </a>
-        </li>
+        </li>-->
+
+        <div class="nav-item-group">
+          <div class="nav-item" (click)="isParcoursOpen = !isParcoursOpen">
+            <i class="fas fa-route"></i>
+            <span>Parcours</span>
+            <i class="fas fa-chevron-down arrow"
+               [style.transform]="isParcoursOpen ? 'rotate(180deg)' : 'none'"></i>
+          </div>
+          <div class="sub-menu" *ngIf="isParcoursOpen">
+            <div class="nav-item sub"
+                 [routerLink]="['/super-admin/tenant', idTenant, 'etablissement', idEtab, 'import-gmetrix']"
+                 routerLinkActive="active"
+                 (click)="closeParcours()"><i class="bi bi-cloud-arrow-up me-2"></i>Import GMetrix</div>
+            <div class="nav-item sub"
+                 [routerLink]="['/super-admin/tenant', idTenant, 'etablissement', idEtab, 'resultatsExamen']"
+                 routerLinkActive="active"
+                 (click)="closeParcours()"><i class="bi bi-cloud-arrow-up me-2"></i>Import Certiport</div>
+          </div>
+        </div>
 
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/super-admin/tenant', idTenant, 'etablissement', idEtab, 'listeReservation']" routerLinkActive="active">
             <i class="bi bi-cloud-arrow-up me-2"></i> Résultat réservation
           </a>
         </li>
-        <li class="nav-item">
+        <!--<li class="nav-item">
           <a class="nav-link" [routerLink]="['/super-admin/tenant', idTenant, 'etablissement', idEtab, 'resultatsExamen']" routerLinkActive="active">
             <i class="bi bi-cloud-arrow-up me-2"></i> Résultat examen
           </a>
-        </li>
+        </li>-->
 
       </ul>
     </div>

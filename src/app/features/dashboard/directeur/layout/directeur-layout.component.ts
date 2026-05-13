@@ -180,4 +180,8 @@ refreshNotifications() {
           }
         });
       }
+
+    closeParcours() {
+      this.isParcoursOpen = false;
+    }
 }

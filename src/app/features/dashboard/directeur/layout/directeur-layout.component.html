@@ -77,17 +77,21 @@
         <div class="sub-menu" *ngIf="isParcoursOpen">
           <div class="nav-item sub"
                routerLink="/directeur/import-gmetrix"
-               routerLinkActive="active">Import GMetrix</div>
-          <div class="nav-item sub">Import Certiport</div>
+               routerLinkActive="active"
+               (click)="closeParcours()">Import GMetrix</div>
+          <div class="nav-item sub"
+               routerLink="/directeur/resultatsExamen"
+               routerLinkActive="active"
+               (click)="closeParcours()">Import Certiport</div>
         </div>
       </div>
       <div class="nav-item" routerLink="/directeur/listeReservation" routerLinkActive="active">
         <i class="fas fa-cog"></i> <span>Résultat réservation</span>
       </div>
 
-      <div class="nav-item" routerLink="/directeur/resultatsExamen" routerLinkActive="active">
+      <!--<div class="nav-item" routerLink="/directeur/resultatsExamen" routerLinkActive="active">
         <i class="fas fa-cog"></i> <span>Résultat examen</span>
-      </div>
+      </div>-->
 
       <div class="nav-item" routerLink="/directeur/parametre" routerLinkActive="active">
         <i class="fas fa-cog"></i> <span>Paramètres</span>
@@ -153,7 +157,9 @@
         <div class="notification-icon" (click)="toggleNotifs()" style="cursor: pointer;">
           <i class="fas fa-bell"></i>
           <ng-container *ngIf="notifService.unreadCount$ | async as count">
-            <span class="dot-notification" *ngIf="count > 0"></span>
+            <span class="dot-notification" *ngIf="count > 0">
+              {{count}}
+            </span>
           </ng-container>
         </div>
 

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ConfigService } from '../../../../core/services/config.service';
+import { NotificationService, Notification } from '../../../../core/services/notification.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -17,9 +18,12 @@ export class CandidatLayoutComponent implements OnInit {
   currentUser: any = {};
   searchText: string = '';
   showResults: boolean = false;
+  notifications: Notification[] = [];
+  showNotifs = false;
 
   constructor(
     private authService: AuthService,
+    public notifService: NotificationService,
     public configService: ConfigService
   ) {}
 
@@ -29,6 +33,7 @@ export class CandidatLayoutComponent implements OnInit {
     if (user) {
       this.currentUser = JSON.parse(user);
     }
+  this.refreshNotifications();
   }
 
   logout(): void {
@@ -124,4 +129,47 @@ export class CandidatLayoutComponent implements OnInit {
     this.searchText = '';
     this.showResults = false;
   }
+
+refreshNotifications() {
+   const user = this.authService.getUser();
+    const userId = user?.idUtilisateur;
+    this.notifService.getNotifications(userId).subscribe(data => {
+      this.notifications = data;
+      console.log("notifie",data);
+    });
+  }
+
+  toggleNotifs() {
+    this.showNotifs = !this.showNotifs;
+  }
+
+  onSelect(n: Notification) {
+    if (!n.lu && n.id) {
+      this.notifService.markAsRead(n.id).subscribe(() => {
+        n.lu = true;
+        this.refreshNotifications();
+      });
+    }
+  }
+
+  onDelete(id: number | undefined) {
+        if (!id) return;
+
+        // 1. Suppression optimiste (UI instantanée)
+        this.notifications = this.notifications.filter(n => n.id !== id);
+
+        // 2. Appel Backend
+        this.notifService.deleteNotification(id).subscribe({
+          next: () => {
+            console.log('Notification supprimée avec succès');
+            // Optionnel : on ne rappelle refresh que si on veut être sûr de la synchro
+          },
+          error: (err) => {
+            console.error('Erreur lors de la suppression', err);
+            // On utilise refreshNotifications() car loadNotifications n'existe pas chez toi
+            this.refreshNotifications();
+          }
+        });
+      }
+
 }

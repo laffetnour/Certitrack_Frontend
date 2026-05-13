@@ -35,4 +35,10 @@ export class NotificationService {
   deleteNotification(id: number): Observable<void> {
       return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }
+
+  updateUnreadCount(userId: number): void {
+      this.http.get<number>(`${this.apiUrl}/user/${userId}/unread-count`).subscribe(
+        count => this.unreadCountSubject.next(count)
+      );
+    }
 }

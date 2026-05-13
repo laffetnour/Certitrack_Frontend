@@ -41,9 +41,9 @@
         <i class="fas fa-cog"></i> <span>Résultat réservation</span>
       </div>
 
-      <div class="nav-item" routerLink="/admin/resultatsExamen" routerLinkActive="active">
+      <!--<div class="nav-item" routerLink="/admin/resultatsExamen" routerLinkActive="active">
         <i class="fas fa-cog"></i> <span>Résultat examen</span>
-      </div>
+      </div>-->
 
       <div class="nav-item-group">
         <div class="nav-item" (click)="isParcoursOpen = !isParcoursOpen">
@@ -56,7 +56,7 @@
                routerLinkActive="active">
             <span>Import GMetrix</span>
           </div>
-          <div class="nav-item sub"><span>Import Certiport</span></div>
+          <div class="nav-item sub" routerLink="/admin/resultatsExamen" routerLinkActive="active" ><span>Import Certiport</span></div>
         </div>
       </div>
 

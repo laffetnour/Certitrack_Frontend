@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 })
 export class EtablissementLayoutComponent implements OnInit {
   idEtab: string | null = null;
+  isParcoursOpen: boolean = false;
 
   constructor(private route: ActivatedRoute,
     private contextService: ContextService,
@@ -34,5 +35,9 @@ export class EtablissementLayoutComponent implements OnInit {
             }, 0);
     });
 
+  }
+
+  closeParcours() {
+    this.isParcoursOpen = false;
   }
 }
