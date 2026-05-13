@@ -1,0 +1,23 @@
+.card {
+  border-radius: 15px;
+}
+
+.card-header {
+  background: linear-gradient(45deg, #ea5357, #d44347) !important;
+  border: none;
+}
+
+.btn-primary {
+  background-color: #ea5357;
+  border-color: #ea5357;
+}
+
+.btn-primary:hover {
+  background-color: #d44347;
+  border-color: #d44347;
+}
+
+.form-select:focus, .form-control:focus {
+  border-color: #ea5357;
+  box-shadow: 0 0 0 0.25rem rgba(234, 83, 87, 0.25);
+}

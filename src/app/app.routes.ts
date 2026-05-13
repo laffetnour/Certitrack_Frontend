@@ -42,6 +42,8 @@ import { QcmComponent } from './features/dashboard/candidat/test/qcm/qcm.compone
 import { ResultatsSessionsComponent } from './features/dashboard/admin/resultats-sessions/resultats-sessions.component';
 import { ImportGmetrixComponent } from './features/dashboard/admin/import-gmetrix/import-gmetrix.component';
 import { SessionExamenComponent } from './features/dashboard/admin/SessionExamen/session-examen.component';
+import { ReservationListComponent } from './features/dashboard/admin/reservation/listeReservation.component';
+import { ResultatExamenComponent } from './features/dashboard/admin/resultatExamen/resultatExamen.component';
 
 
 
@@ -85,7 +87,8 @@ export const routes: Routes = [
                                    { path: 'administrateurs', component: AdministrateursComponent },
                                    { path: 'import-gmetrix', component: ImportGmetrixComponent },
                                    { path: 'sessionsExamen', component: SessionExamenComponent },
-                                   {path: 'score', component: SeuilsManagementComponent}
+                                   { path: 'listeReservation', component: ReservationListComponent },
+                                   { path: 'resultatsExamen', component: ResultatExamenComponent }
 
                                  ]
                                }
@@ -124,7 +127,9 @@ export const routes: Routes = [
        { path: 'parametre', component: ParametreComponent },
       { path: 'resultats-sessions', component: ResultatsSessionsComponent },
       { path: 'import-gmetrix', component: ImportGmetrixComponent },
-       { path: 'sessionsExamen', component: SessionExamenComponent }
+       { path: 'sessionsExamen', component: SessionExamenComponent },
+       { path: 'listeReservation', component: ReservationListComponent },
+       { path: 'resultatsExamen', component: ResultatExamenComponent }
 
     ]
   },
@@ -143,7 +148,8 @@ export const routes: Routes = [
        { path: 'import-gmetrix', component: ImportGmetrixComponent },
        { path: 'sessionsExamen', component: SessionExamenComponent },
        { path: 'Listemodules', component: AffichageListeComponent },
-       {path: 'score', component: SeuilsManagementComponent}
+       { path: 'listeReservation', component: ReservationListComponent },
+       { path: 'resultatsExamen', component: ResultatExamenComponent }
 
     ]
   },
@@ -176,7 +182,8 @@ export const routes: Routes = [
               { path: 'administrateurs', component: AdministrateursComponent },
               { path: 'import-gmetrix', component: ImportGmetrixComponent },
               { path: 'sessionsExamen', component: SessionExamenComponent },
-              {path: 'score', component: SeuilsManagementComponent}
+             { path: 'listeReservation', component: ReservationListComponent },
+             { path: 'resultatsExamen', component: ResultatExamenComponent }
 
             ]
           }

@@ -45,6 +45,17 @@
           </a>
         </li>
 
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/super-admin/tenant', idTenant, 'etablissement', idEtab, 'listeReservation']" routerLinkActive="active">
+            <i class="bi bi-cloud-arrow-up me-2"></i> Résultat réservation
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/super-admin/tenant', idTenant, 'etablissement', idEtab, 'resultatsExamen']" routerLinkActive="active">
+            <i class="bi bi-cloud-arrow-up me-2"></i> Résultat examen
+          </a>
+        </li>
+
       </ul>
     </div>
   </div>

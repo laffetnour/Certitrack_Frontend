@@ -1,0 +1,88 @@
+<div class="container mt-4">
+  <div class="card p-3 shadow-sm border-0">
+    <div class="row align-items-center">
+      <div class="col-md-4">
+        <h4 class="m-0 text-primary">
+          <i class="bi bi-people-fill"></i> Liste des Réservations
+        </h4>
+      </div>
+
+      <div class="col-md-4 offset-md-4">
+        <label class="form-label small fw-bold text-muted">Filtrer par Session</label>
+        <div class="input-group">
+          <span class="input-group-text bg-white"><i class="bi bi-filter"></i></span>
+          <select class="form-select" [(ngModel)]="selectedSessionId" (change)="onFilterChange()">
+            <option [ngValue]="null">Toutes les sessions</option>
+            <option *ngFor="let s of sessions" [value]="s.id">{{ s.nomExamen }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive mt-4 card shadow-sm border-0">
+    <div *ngIf="loading" class="progress" style="height: 3px;">
+      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+    </div>
+
+    <table class="table table-hover align-middle m-0">
+      <thead class="table-light">
+      <tr>
+        <th class="ps-3">Candidat</th>
+        <th>Module</th>
+        <th>Session</th>
+        <th>Date Examen</th>
+        <th>Date Réservation</th>
+        <th class="text-center">Certiport User</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngIf="loading && reservations.length === 0">
+        <td colspan="6" class="text-center py-5">
+          <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+          <span class="ms-2">Chargement des données...</span>
+        </td>
+      </tr>
+
+      <tr *ngIf="!loading && reservations.length === 0">
+        <td colspan="6" class="text-center py-5 text-muted">
+          <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+          Aucune réservation trouvée pour cette sélection.
+        </td>
+      </tr>
+
+      <tr *ngFor="let res of reservations">
+        <td class="ps-3">
+          <div class="fw-bold">{{ res.nomCandidat | uppercase }} {{ res.prenomCandidat }}</div>
+          <small class="text-muted"><i class="bi bi-envelope-at"></i> {{ res.emailCandidat }}</small>
+        </td>
+        <td>
+            <span class="badge rounded-pill bg-info-subtle text-info-emphasis border border-info">
+              {{ res.nomModule }}
+            </span>
+        </td>
+        <td>
+          <div class="small fw-semibold">{{ res.nomSession }}</div>
+        </td>
+        <td>
+          <div class="small"><i class="bi bi-calendar-event"></i> {{ res.dateExamen | date:'dd/MM/yyyy' }}</div>
+          <div class="small text-muted"><i class="bi bi-clock"></i> {{ res.dateExamen | date:'HH:mm' }}</div>
+        </td>
+        <td>
+          <span class="text-muted small">{{ res.dateReservation | date:'dd/MM/yyyy' }}</span>
+        </td>
+        <td class="text-center">
+          <span class="badge bg-light text-dark border font-monospace">{{ res.usernameCertiport }}</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-3 text-end" *ngIf="reservations.length > 0">
+    <button class="btn btn-success btn-sm" (click)="exportExcel()">
+      <i class="bi bi-file-earmark-excel"></i> Exporter Excel
+    </button>
+  </div>
+</div>
