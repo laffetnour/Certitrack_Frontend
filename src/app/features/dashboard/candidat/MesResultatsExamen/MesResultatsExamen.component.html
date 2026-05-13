@@ -1,57 +1,117 @@
-<div class="container mt-5">
-  <div class="d-flex align-items-center mb-4">
-    <div class="bg-primary text-white rounded-circle p-3 me-3">
-      <i class="bi bi-mortarboard-fill fs-3"></i>
+<!--<div class="card shadow-sm border-0">
+  <div class="card-body">
+    <h4 class="card-title mb-4">Mon Historique de Certifications</h4>
+
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead class="table-light">
+        <tr>
+          <th>Module / Examen</th>
+          <th>Date</th>
+          <th>Score</th>
+          <th>Résultat</th>
+          <th>Surveillant</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let r of mesResultats">
+          <td>
+            <span class="fw-bold text-primary">{{ r.nomExamen }}</span>
+          </td>
+          <td>{{ r.dateExamen | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="me-2">{{ r.score }}</span>
+              <div class="progress w-100" style="height: 6px;">
+                <div class="progress-bar"
+                     [ngClass]="getResultClass(r.resultat)"
+                     [style.width]="(r.score / 10) + '%'">
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+              <span class="badge" [ngClass]="getResultClass(r.resultat)">
+              {{ r.resultat | uppercase }}
+          </span>
+          </td>
+          <td><small class="text-muted">{{ r.proctorName }}</small></td>
+        </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
+</div>-->
+
+
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-end mb-5">
     <div>
-      <h2 class="mb-0">Mes Résultats d'Examens</h2>
-      <p class="text-muted">Historique de vos performances par module</p>
+      <h2 class="fw-bold mb-1 text-body">Mes résultats des certifications</h2>
+      <p class="text-secondary mb-0">Retrouvez l'historique de vos performances</p>
+    </div>
+    <div class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-3">
+      {{ mesResultats.length }} Examen(s) au total
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-6 col-lg-4 mb-4" *ngFor="let r of mesResultats">
-      <div class="card h-100 border-0 shadow-sm transition-hover">
-        <div class="card-header bg-white border-0 pt-4 pb-0">
-          <div class="d-flex justify-content-between align-items-start">
-            <span class="badge" [ngClass]="r.resultat === 'PASS' ? 'bg-success' : 'bg-danger'">
-              {{ r.resultat }}
+  <div *ngIf="loading" class="row g-4">
+    <div class="col-md-4" *ngFor="let i of [1,2,3]">
+      <div class="card shadow-sm border-0 placeholder-glow h-100 p-4">
+        <span class="placeholder col-7 mb-3"></span>
+        <span class="placeholder col-4 mb-4"></span>
+        <span class="placeholder col-12"></span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && mesResultats.length === 0" class="text-center py-5 rounded-4 bg-body-tertiary border border-dashed">
+    <div class="mb-3 display-6 text-secondary"><i class="fas fa-folder-open"></i></div>
+    <h5 class="text-body">Aucun résultat trouvé</h5>
+    <p class="text-secondary">Vos résultats d'examens apparaîtront ici dès qu'ils seront validés.</p>
+  </div>
+
+  <div class="row g-4" *ngIf="!loading && mesResultats.length > 0">
+    <div class="col-12 col-md-6 col-xl-4" *ngFor="let r of mesResultats">
+      <div class="card h-100 border-0 shadow-sm custom-card bg-body">
+        <div class="card-body p-4 d-flex flex-column">
+
+          <div class="d-flex justify-content-between align-items-start mb-4">
+            <div class="icon-box rounded-3" [ngClass]="getResultClass(r.resultat)">
+              <i class="fas" [ngClass]="r.resultat.toUpperCase() === 'PASS' ? 'fa-check-circle' : 'fa-times-circle'"></i>
+            </div>
+            <span class="status-badge" [ngClass]="getResultClass(r.resultat)">
+              {{ r.resultat | uppercase }}
             </span>
-            <small class="text-muted">{{ r.dateExamen | date:'dd MMM yyyy' }}</small>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <h5 class="card-title fw-bold text-primary">{{ r.nomExamen }}</h5>
-          <p class="small text-muted mb-3">ID Certiport : <code>{{ r.usernameCertiport }}</code></p>
-
-          <div class="mb-2 d-flex justify-content-between align-items-center">
-            <span class="small fw-bold">Score obtenu :</span>
-            <span class="h4 mb-0" [ngClass]="r.resultat === 'PASS' ? 'text-success' : 'text-danger'">
-              {{ r.score }}
-            </span>
           </div>
 
-          <div class="progress" style="height: 8px;">
-            <div class="progress-bar"
-                 [ngClass]="r.resultat === 'PASS' ? 'bg-success' : 'bg-danger'"
-                 [style.width]="(r.score / 10) + '%'"></div>
+          <h5 class="fw-bold text-body mb-2 lh-base">{{ r.nomExamen }}</h5>
+          <div class="d-flex align-items-center text-secondary small mb-4">
+            <i class="far fa-calendar me-2"></i>
+            {{ r.dateExamen | date:'longDate' }}
           </div>
-        </div>
 
-        <div class="card-footer bg-light border-0 py-3">
-          <div class="d-flex align-items-center">
-            <i class="bi bi-person-check me-2"></i>
-            <small>Surveillant : {{ r.proctorName }}</small>
+          <div class="mt-auto">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-secondary small uppercase fw-semibold tracking-wider">Score Final</span>
+              <span class="fw-bold" [ngClass]="r.resultat.toUpperCase() === 'PASS' ? 'text-success' : 'text-danger'">
+                {{ r.score }}%
+              </span>
+            </div>
+            <div class="progress rounded-pill bg-body-secondary" style="height: 10px;">
+              <div class="progress-bar rounded-pill shadow-none"
+                   [ngClass]="getResultClass(r.resultat)"
+                   [style.width]="r.score + '%'">
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-top border-light-subtle d-flex align-items-center justify-content-between text-secondary small">
+            <span>Proctor</span>
+            <span class="text-body fw-medium">{{ r.proctorName }}</span>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="col-12 text-center py-5" *ngIf="mesResultats.length === 0">
-      <img src="assets/images/no-results.svg" alt="Vide" style="width: 150px;" class="mb-3 opacity-50">
-      <h4 class="text-muted">Aucun examen passé pour le moment.</h4>
-      <p>Vos résultats apparaîtront ici dès qu'ils seront validés par l'administration.</p>
     </div>
   </div>
 </div>

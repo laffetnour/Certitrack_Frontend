@@ -22,24 +22,24 @@ export class MesResultatsExamenComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const user = this.authService.getUser();
-    if (user) {
-      this.userName = user.prenom;
-    }
 
     this.loadMyResults();
   }
 
   loadMyResults(): void {
+    const user = this.authService.getUser();
+    if (!user || !user.idUtilisateur) return;
+
     this.loading = true;
-    this.resultatService.getMyResults().subscribe({
+    console.log("user id ",user.idUtilisateur);
+    this.resultatService.getMyResults(user.idUtilisateur).subscribe({
       next: (data) => {
+        console.log("data: ",data);
         this.mesResultats = data;
         this.loading = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error("Erreur lors de la récupération de vos résultats", err);
         this.loading = false;
         this.cdr.detectChanges();
       }
@@ -47,7 +47,8 @@ export class MesResultatsExamenComponent implements OnInit {
   }
 
   getResultClass(resultat: string): string {
-    return resultat === 'PASS' ? 'bg-success' : 'bg-danger';
+      if (!resultat) return 'bg-secondary';
+      return resultat.toUpperCase() === 'PASS' ? 'bg-success' : 'bg-danger';
   }
 
   getScorePercentage(score: number): number {

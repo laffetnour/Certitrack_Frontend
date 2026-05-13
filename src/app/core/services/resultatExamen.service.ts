@@ -41,14 +41,6 @@ export class ResultatExamenService {
     });
   }
 
-  /*importExcel(file: File, sessionId: number): Observable<any> {
-    const formData = new FormData();
-    formData.append('file', file);
-    return this.http.post(`${this.apiUrl}/import/${sessionId}`, formData, {
-      ...this.getHeaders(),
-      responseType: 'text'
-    });
-  }*/
 
 importExcel(file: File, sessionId: number): Observable<any> {
   const formData = new FormData();
@@ -61,7 +53,12 @@ importExcel(file: File, sessionId: number): Observable<any> {
   }
 
 
-  getMyResults(): Observable<ResultatExamenDisplayDTO[]> {
-    return this.http.get<ResultatExamenDisplayDTO[]>(`${this.apiUrl}/mes-resultats`,this.getHeaders());
+  getMyResults(candidatId: number): Observable<ResultatExamenDisplayDTO[]> {
+    return this.http.get<ResultatExamenDisplayDTO[]>(
+      `${this.apiUrl}/mes-resultats/${candidatId}`,
+      { ...this.getHeaders() }
+    );
   }
+
+
 }
