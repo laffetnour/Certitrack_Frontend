@@ -62,6 +62,7 @@
         <tr>
           <th>Candidat</th>
           <th>Username Certiport</th>
+          <th>Examen</th>
           <th class="text-center">Score</th>
           <th class="text-center">Résultat</th>
           <th>Proctored By</th>
@@ -72,6 +73,7 @@
         <tr *ngFor="let r of resultats">
           <td><span class="fw-bold">{{ r.nomCompletCandidat }}</span></td>
           <td><code>{{ r.usernameCertiport }}</code></td>
+          <td><span class="badge bg-light text-dark border">{{ r.nomExamen }}</span></td>
           <td class="text-center">
             <div class="progress" style="height: 20px;">
               <div class="progress-bar"

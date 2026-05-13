@@ -1,0 +1,26 @@
+.transition-hover {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: default;
+}
+
+.transition-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.progress {
+  background-color: #f0f0f0;
+  border-radius: 10px;
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 0.5em 1em;
+}
+
+.font-monospace {
+  font-family: 'Courier New', Courier, monospace;
+  background: #f8f9fa;
+  padding: 2px 5px;
+  border-radius: 4px;
+}

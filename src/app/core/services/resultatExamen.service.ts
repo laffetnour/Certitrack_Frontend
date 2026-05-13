@@ -59,4 +59,9 @@ importExcel(file: File, sessionId: number): Observable<any> {
   getResultatsBySession(sessionId: number): Observable<ResultatExamenDisplayDTO[]> {
     return this.http.get<ResultatExamenDisplayDTO[]>(`${this.apiUrl}/session/${sessionId}`, {...this.getHeaders()});
   }
+
+
+  getMyResults(): Observable<ResultatExamenDisplayDTO[]> {
+    return this.http.get<ResultatExamenDisplayDTO[]>(`${this.apiUrl}/mes-resultats`,this.getHeaders());
+  }
 }

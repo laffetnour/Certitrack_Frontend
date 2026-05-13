@@ -39,6 +39,9 @@ import { ModulesCandidatComponent } from './features/dashboard/candidat/modules/
 import { MesInscriptionsComponent } from './features/dashboard/candidat/modules/mes-inscriptions.component';
 import { DemarrerTestComponent } from './features/dashboard/candidat/test/demarrer-test/demarrer-test.component';
 import { QcmComponent } from './features/dashboard/candidat/test/qcm/qcm.component';
+import { MesResultatsExamenComponent } from './features/dashboard/candidat/MesResultatsExamen/MesResultatsExamen.component';
+
+
 import { ResultatsSessionsComponent } from './features/dashboard/admin/resultats-sessions/resultats-sessions.component';
 import { ImportGmetrixComponent } from './features/dashboard/admin/import-gmetrix/import-gmetrix.component';
 import { SessionExamenComponent } from './features/dashboard/admin/SessionExamen/session-examen.component';
@@ -104,7 +107,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardCandidatComponent },
       { path: 'modules', component: ModulesCandidatComponent },
       { path: 'mes-inscriptions', component: MesInscriptionsComponent },
-      //{ path: 'reservations', component: ReservationComponent },
+       { path: 'MesResultatsExamen', component: MesResultatsExamenComponent },
 
       {
         path: 'demarrer-test/:sessionId/:moduleTenantId',

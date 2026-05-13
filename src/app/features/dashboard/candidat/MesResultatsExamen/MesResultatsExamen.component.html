@@ -1,0 +1,57 @@
+<div class="container mt-5">
+  <div class="d-flex align-items-center mb-4">
+    <div class="bg-primary text-white rounded-circle p-3 me-3">
+      <i class="bi bi-mortarboard-fill fs-3"></i>
+    </div>
+    <div>
+      <h2 class="mb-0">Mes Résultats d'Examens</h2>
+      <p class="text-muted">Historique de vos performances par module</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-lg-4 mb-4" *ngFor="let r of mesResultats">
+      <div class="card h-100 border-0 shadow-sm transition-hover">
+        <div class="card-header bg-white border-0 pt-4 pb-0">
+          <div class="d-flex justify-content-between align-items-start">
+            <span class="badge" [ngClass]="r.resultat === 'PASS' ? 'bg-success' : 'bg-danger'">
+              {{ r.resultat }}
+            </span>
+            <small class="text-muted">{{ r.dateExamen | date:'dd MMM yyyy' }}</small>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <h5 class="card-title fw-bold text-primary">{{ r.nomExamen }}</h5>
+          <p class="small text-muted mb-3">ID Certiport : <code>{{ r.usernameCertiport }}</code></p>
+
+          <div class="mb-2 d-flex justify-content-between align-items-center">
+            <span class="small fw-bold">Score obtenu :</span>
+            <span class="h4 mb-0" [ngClass]="r.resultat === 'PASS' ? 'text-success' : 'text-danger'">
+              {{ r.score }}
+            </span>
+          </div>
+
+          <div class="progress" style="height: 8px;">
+            <div class="progress-bar"
+                 [ngClass]="r.resultat === 'PASS' ? 'bg-success' : 'bg-danger'"
+                 [style.width]="(r.score / 10) + '%'"></div>
+          </div>
+        </div>
+
+        <div class="card-footer bg-light border-0 py-3">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-person-check me-2"></i>
+            <small>Surveillant : {{ r.proctorName }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 text-center py-5" *ngIf="mesResultats.length === 0">
+      <img src="assets/images/no-results.svg" alt="Vide" style="width: 150px;" class="mb-3 opacity-50">
+      <h4 class="text-muted">Aucun examen passé pour le moment.</h4>
+      <p>Vos résultats apparaîtront ici dès qu'ils seront validés par l'administration.</p>
+    </div>
+  </div>
+</div>
