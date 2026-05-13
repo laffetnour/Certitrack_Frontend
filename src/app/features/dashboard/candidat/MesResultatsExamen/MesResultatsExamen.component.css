@@ -4,6 +4,8 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
+
+
 :host {
   --smart-red: #ea5357;
 
@@ -28,7 +30,7 @@
   --glass-blur: blur(18px);
 }
 
-[data-bs-theme="dark"] {
+:host-context([data-bs-theme="dark"]) {
   --bg-page: #020617;
 
   --card-bg: rgba(15, 23, 42, 0.45);
@@ -69,10 +71,16 @@ h6,
 
 .text-secondary,
 .text-muted,
-.small,
-p,
-span {
+.small {
   color: var(--text-muted) !important;
+}
+
+p {
+  color: var(--text-main);
+}
+
+span {
+  color: inherit;
 }
 
 h2 {
@@ -341,3 +349,27 @@ h5 {
     font-size: 1.7rem;
   }
 }
+
+
+.theme-text {
+  color: var(--text-main) !important;
+}
+
+.theme-text-muted {
+  color: var(--text-muted) !important;
+}
+
+.theme-badge {
+  background: var(--card-bg);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 0.7rem 1rem;
+  border-radius: 14px;
+  font-weight: 700;
+}
+
+
+
+
+
+

@@ -309,6 +309,37 @@ searchText: string = '';
       icon: 'fas fa-cog',keywords: ['parametre', 'settings', 'profil'] },
     { name: 'Résultats Sessions Inscriptions', link: '/admin/resultats-sessions',
       type: 'page', icon: 'fas fa-chart-bar',keywords: ['resultats','inscriptions','modules','test','score','durée'] },
+    {
+      name: 'Résultat réservation',
+      link: '/admin/listeReservation',
+      type: 'page',
+      icon: 'fas fa-calendar-check',
+      keywords: [
+        'reservation',
+        'réservation',
+        'resultat reservation',
+        'résultat réservation',
+        'candidat',
+        'reservation session examen '
+      ]
+    },
+
+    {
+      name: 'Import Certiport',
+      link: '/admin/resultatsExamen',
+      type: 'page',
+      icon: 'fas fa-file-import',
+      keywords: [
+        'certiport',
+        'import certiport',
+        'resultat examen',
+        'résultat examen',
+        'score',
+        'certification',
+        'exam',
+        'import'
+      ]
+    }
   ];
 
   filteredResults: any[] = [];

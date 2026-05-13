@@ -83,6 +83,7 @@ constructor(private router: Router,
       {
           name: 'Import GMetrix',
           link: '/directeur/import-gmetrix',
+          icon: 'fas fa-file-import',
           type: 'page',
           keywords: ['resultats','score','gmetrix','import']
       },
@@ -92,7 +93,36 @@ constructor(private router: Router,
           icon: 'fas fa-cog',
           type: 'Config',
           keywords: ['parametre', 'settings', 'profil']
-        }
+        },
+     {
+       name: 'Résultat réservation',
+       link: '/directeur/listeReservation',
+       icon: 'fas fa-calendar-check',
+       type: 'page',
+       keywords: [
+         'reservation',
+         'réservation',
+         'resultat reservation',
+         'résultat réservation',
+         'réservation session examen '
+       ]
+     },
+     {
+       name: 'Import Certiport',
+       link: '/directeur/resultatsExamen',
+       icon: 'fas fa-file-import',
+       type: 'page',
+       keywords: [
+         'certiport',
+         'import certiport',
+         'resultat examen',
+         'résultat examen',
+         'score',
+         'certification',
+         'exam',
+         'import'
+       ]
+     }
 
     ];
 
