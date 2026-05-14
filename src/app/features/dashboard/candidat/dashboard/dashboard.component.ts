@@ -19,7 +19,13 @@ export class DashboardCandidatComponent implements OnInit {
   currentUser: any;
   stats = {
     sessionsDisponibles: 0,
-    inscriptions: 0
+    inscriptions: 0,
+
+
+
+    totalCertifications: 0,
+    passedCertifications: 0,
+    failedCertifications: 0
   };
 
   statsCircle = {
@@ -39,6 +45,7 @@ export class DashboardCandidatComponent implements OnInit {
     this.currentUser = JSON.parse(localStorage.getItem('user') || '{}');
     this.loadStats();
     this.loadCircle();
+    this.loadCertificationStats();
   }
 
   loadStats() {
@@ -189,6 +196,88 @@ export class DashboardCandidatComponent implements OnInit {
         padding: 12,
         cornerRadius: 10,
         displayColors: false
+      }
+    }
+  };
+
+
+
+  loadCertificationStats() {
+
+    this.inscriptionService.getCertificationStats().subscribe({
+      next: (res) => {
+
+        this.stats.totalCertifications = res.total;
+        this.stats.passedCertifications = res.passed;
+        this.stats.failedCertifications = res.failed;
+
+        this.barChartData = {
+          labels: ['Total', 'PASS', 'FAIL'],
+          datasets: [
+            {
+              data: [
+                res.total,
+                res.passed,
+                res.failed
+              ],
+
+              backgroundColor: [
+                '#7e9cdd', // bleu plus foncé
+                '#91e4b2', // vert plus foncé
+                '#d88e8e'  // rouge plus foncé
+              ],
+
+              borderRadius: 8,
+              borderSkipped: false
+            }
+          ]
+        };
+
+        this.cdr.detectChanges();
+      },
+
+      error: (err) => {
+        console.error('Erreur stats certifications', err);
+      }
+    });
+
+  }
+
+  public barChartData: ChartData<'bar'> = {
+    labels: ['Total', 'PASS', 'FAIL'],
+    datasets: [
+      {
+        data: [0, 0, 0]
+      }
+    ]
+  };
+
+  public barChartOptions: ChartConfiguration<'bar'>['options'] = {
+
+    responsive: true,
+    maintainAspectRatio: false,
+
+    plugins: {
+
+      legend: {
+        display: false
+      },
+
+      tooltip: {
+        backgroundColor: '#111827',
+        titleColor: '#fff',
+        bodyColor: '#d1d5db',
+        cornerRadius: 10
+      }
+    },
+
+    scales: {
+
+      y: {
+        beginAtZero: true,
+        ticks: {
+          precision: 0
+        }
       }
     }
   };

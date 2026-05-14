@@ -274,3 +274,356 @@
   height: 10px;
   border-radius: 50%;
 }
+
+
+
+
+
+/* ===============================
+   CHARTS WRAPPER
+================================ */
+.charts-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+
+/* ===============================
+   MODERN CHART CARD
+================================ */
+.chart-column {
+  position: relative;
+  overflow: hidden;
+
+  background: rgba(255,255,255,0.92);
+
+  border-radius: 18px;
+  padding: 18px;
+
+  border: 1px solid rgba(255,255,255,0.4);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 10px 30px rgba(15,23,42,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+
+  transition: 0.35s ease;
+}
+
+.chart-column:hover {
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 18px 40px rgba(15,23,42,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+
+/* ===============================
+   LIGHT EFFECT
+================================ */
+.chart-column::before {
+  content: "";
+
+  position: absolute;
+  top: -120px;
+  right: -120px;
+
+  width: 240px;
+  height: 240px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(234,83,87,0.15),
+      transparent 70%
+    );
+
+  pointer-events: none;
+}
+
+
+/* ===============================
+   CHART HEADER
+================================ */
+.chart-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 16px;
+}
+
+.chart-top h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: #030507;
+}
+
+.chart-top p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #64748b;
+}
+
+
+/* ===============================
+   ICON BADGE
+================================ */
+.chart-badge {
+  width: 46px;
+  height: 46px;
+
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    135deg,
+    #ea5357,
+    #303D49
+  );
+
+  color: white;
+  font-size: 17px;
+
+  box-shadow:
+    0 10px 18px rgba(234,83,87,0.25);
+}
+
+
+/* ===============================
+   MINI STATS
+================================ */
+.mini-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+
+  margin-bottom: 18px;
+}
+
+.mini-stat {
+  position: relative;
+  overflow: hidden;
+
+  padding: 14px;
+  border-radius: 14px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+
+  transition: 0.3s ease;
+}
+
+.mini-stat:hover {
+  transform: translateY(-2px);
+}
+
+.mini-stat span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+
+  color: #64748b;
+}
+
+.mini-stat h3 {
+  margin-top: 6px;
+
+  font-size: 24px;
+  font-weight: 800;
+
+  color: #0f172a;
+}
+
+
+/* COLORS */
+.mini-stat.total {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(59,130,246,0.10),
+      rgba(59,130,246,0.03)
+    );
+}
+
+.mini-stat.success {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(34,197,94,0.10),
+      rgba(34,197,94,0.03)
+    );
+}
+
+.mini-stat.fail {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(239,68,68,0.10),
+      rgba(239,68,68,0.03)
+    );
+}
+
+
+/* ===============================
+   BAR CHART
+================================ */
+.bar-chart {
+  height: 260px;
+}
+
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 1100px) {
+
+  .charts-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .mini-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+
+/*hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh*/
+
+
+/* ===============================
+   MAIN GRID
+================================ */
+.stats-grid {
+  display: grid;
+
+  /* gauche = stats + chart1
+     droite = chart2 */
+  grid-template-columns: 1.1fr 1fr ;
+
+  gap: 16px;
+  align-items: start;
+}
+
+
+/* ===============================
+   STATS SIDE BY SIDE
+================================ */
+.stats-grid > .stat-card:nth-child(1) {
+  grid-column: 1;
+  grid-row: 1;
+
+  width: calc(45% - 8px);
+  display: inline-flex;
+  margin-right: 12px;
+}
+
+.stats-grid > .stat-card:nth-child(2) {
+  grid-column: 1;
+  grid-row: 1;
+  margin-left: 50%;
+  width: calc(45% - 8px);
+  display: inline-flex;
+}
+
+
+/* ===============================
+   CHART 1 UNDER STATS
+================================ */
+.stats-grid > .chart-column:nth-child(3) {
+  grid-column: 1;
+  grid-row: 2;
+
+  margin-top: -10px;
+
+  transform: scale(0.96);
+  transform-origin: top center;
+}
+
+
+/* ===============================
+   CHART 2 RIGHT SIDE
+================================ */
+.stats-grid > .chart-column:nth-child(4) {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+
+  height: 90%;
+}
+
+
+/* ===============================
+   STAT CARDS
+================================ */
+.stat-card {
+  min-height: 84px;
+  padding: 12px 14px;
+}
+
+
+/* ===============================
+   CHART BLOCKS
+================================ */
+.chart-column {
+  padding: 16px;
+  border-radius: 18px;
+}
+
+
+/* ===============================
+   CHART SIZES
+================================ */
+.chart-container {
+  height: 190px;
+}
+
+.bar-chart {
+  height: 230px;
+}
+
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 1100px) {
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid > .stat-card:nth-child(1),
+  .stats-grid > .stat-card:nth-child(2),
+  .stats-grid > .chart-column:nth-child(3),
+  .stats-grid > .chart-column:nth-child(4) {
+
+    grid-column: auto;
+    grid-row: auto;
+    width: 100%;
+    margin: 0;
+    transform: none;
+  }
+
+  .stats-grid > .stat-card:nth-child(1) {
+    margin-bottom: 12px;
+  }
+
+}

@@ -113,4 +113,12 @@ startTest(sessionId: number, moduleTenantId: number): Observable<any> {
       { headers: this.getAuthHeaders() }
     );
   }
+
+
+  getCertificationStats(): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/stats`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
 }

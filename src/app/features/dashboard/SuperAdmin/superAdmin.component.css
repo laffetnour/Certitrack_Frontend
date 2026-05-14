@@ -617,8 +617,7 @@
 
 @media (max-width: 768px) {
   .dashboard-chart-container {
-    width: 100%; /* Le graphique prend toute la largeur sur mobile */
-  }
+    width: 100%;
 }
 */
 
@@ -947,8 +946,8 @@ ng-container {
 
 
 
-
- .content-area {
+/*jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj*/
+ /*.content-area {
    padding: 28px;
    background:
      linear-gradient(
@@ -959,11 +958,9 @@ ng-container {
    min-height: 100vh;
  }
 
- /* ==========================================================================
-    STATS + CHART 2 LAYOUT
-    ========================================================================== */
 
- /* Le premier bloc = stats à gauche + chart2 à droite */
+
+
  .stats-grid {
    display: grid;
 
@@ -978,25 +975,23 @@ ng-container {
    margin-bottom: 28px;
  }
 
- /* Stats verticales */
+
  .stats-grid .stat-card:nth-child(1),
  .stats-grid .stat-card:nth-child(2) {
    width: 100%;
  }
 
- /* wrapper automatique des deux stats */
+
  .stats-grid {
    position: relative;
  }
 
- /* force les 2 stats en colonne */
+
  .stats-grid .stat-card {
    margin-bottom: 35px;
  }
 
- /* ==========================================================================
-    COLONNE GAUCHE (2 STATS)
-    ========================================================================== */
+
 
  .stats-grid::before {
    content: "";
@@ -1005,7 +1000,7 @@ ng-container {
    top: 0;
  }
 
- /* container virtuel des stats */
+
  .stats-grid > .stat-card:nth-child(1) {
    grid-column: 1;
    grid-row: 1;
@@ -1016,15 +1011,13 @@ ng-container {
    grid-row: 2;
  }
 
- /* ==========================================================================
-    CHART 2 (GRAND À DROITE)
-    ========================================================================== */
+
 
 .stats-grid + .dashboard-chart1-container {
   margin-top: -420px;
   margin-left: 40%;
 
-  height: 320px; /* plus petit */
+  height: 320px;
 }
 
 .stats-grid + .dashboard-chart1-container .chart-card {
@@ -1036,9 +1029,7 @@ ng-container {
   max-height: 220px !important;
 }
 
- /* ==========================================================================
-    CHART CARDS
-    ========================================================================== */
+
 
  .dashboard-chart1-container {
    width: 60%;
@@ -1088,17 +1079,13 @@ ng-container {
    margin-bottom: 22px;
  }
 
- /* ==========================================================================
-    CHART 1 (EN BAS)
-    ========================================================================== */
+
 
  .dashboard-chart-container:first-of-type {
    margin-top: 30px;
  }
 
- /* ==========================================================================
-    STATS CARDS
-    ========================================================================== */
+
 
  .stat-card {
    position: relative;
@@ -1131,7 +1118,7 @@ ng-container {
    transition:
      transform 0.3s ease,
      box-shadow 0.3s ease;
- }
+ }*/
 
  .stat-card:hover {
    transform: translateY(-5px);
@@ -1358,3 +1345,232 @@ ng-container {
      font-size: 1.6rem;
    }
  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================
+   CONTENT AREA
+   ========================= */
+.content-area {
+  padding: 24px;
+  background-color: var(--bg-page);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* =========================
+   STATS GRID (2 stats)
+   ========================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+/* =========================
+   STAT CARD
+   ========================= */
+.stat-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  padding: 24px;
+  border-radius: 24px;
+
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  min-height: 140px;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+/* ICON */
+.stat-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(145deg, #ea5357, #d94347);
+  color: white;
+  font-size: 1.6rem;
+
+  flex-shrink: 0;
+}
+
+/* TEXT */
+.stat-info h3 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.stat-info p {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* =========================
+   CHARTS ROW (IMPORTANT)
+   ========================= */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+/* =========================
+   CHART CONTAINERS
+   ========================= */
+.dashboard-chart1-container,
+.dashboard-chart-container {
+  display: flex;
+  height: 100%;
+}
+
+/* =========================
+   CHART CARD
+   ========================= */
+.chart-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-4px);
+}
+
+/* TITLE */
+.chart-card h3 {
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* HEADER (title + select) */
+.chart-header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+/* =========================
+   CHART BODY (canvas zone)
+   ========================= */
+.chart-body {
+  flex: 1;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+}
+
+/* canvas full size */
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+.chart-footer {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* =========================
+   SELECT YEAR
+   ========================= */
+.year-select {
+  padding: 8px 14px;
+  border-radius: 10px;
+
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+
+  font-weight: 600;
+  color: var(--text-main);
+
+  outline: none;
+  cursor: pointer;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media (max-width: 1200px) {
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   DARK MODE SUPPORT
+   ========================= */
+:host-context(.dark-mode) .stat-card,
+:host-context(.dark-mode) .chart-card {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+:host-context(.dark-mode) .stat-info h3,
+:host-context(.dark-mode) .chart-card h3 {
+  color: var(--text-main);
+}

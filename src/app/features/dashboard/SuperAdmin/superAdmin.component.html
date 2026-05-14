@@ -144,7 +144,7 @@
             </div>
 
         </div>
-        <div class="dashboard-chart1-container">
+        <!--<div class="dashboard-chart1-container">
           <div class="chart-card">
             <h3>Analyse de Performance : Points Faibles</h3>
             <div style="display: block; height: 300px;">
@@ -187,6 +187,57 @@
               <p><span style="color: #e74c3c">●</span> Flop 5 : Nécessite une révision pédagogique immédiate</p>
             </div>
           </div>
+        </div>-->
+
+        <div class="charts-row">
+
+          <div class="dashboard-chart1-container">
+            <div class="chart-card">
+              <h3>Analyse de Performance : Points Faibles</h3>
+
+              <div class="chart-body">
+                <canvas baseChart
+                        [data]="barChartData"
+                        [options]="barChartOptions"
+                        [type]="'bar'">
+                </canvas>
+              </div>
+
+              <div class="chart-footer">
+                <small>⚠️ Ces modules nécessitent une révision ou une suppression.</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-chart-container">
+            <div class="chart-card">
+
+              <div class="chart-header-actions">
+                <h3>Efficacité des Certifications (Top 5 vs Flop 5)</h3>
+
+                <select [(ngModel)]="selectedYear"
+                        (change)="onYearChange()"
+                        class="year-select">
+                  <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+                </select>
+              </div>
+
+              <div class="chart-body">
+                <canvas baseChart
+                        [data]="successChartData"
+                        [options]="successChartOptions"
+                        [type]="'bar'">
+                </canvas>
+              </div>
+
+              <div class="chart-footer">
+                <p>Top 5 : Excellente préparation</p>
+                <p>Flop 5 : Révision nécessaire</p>
+              </div>
+
+            </div>
+          </div>
+
         </div>
 
 

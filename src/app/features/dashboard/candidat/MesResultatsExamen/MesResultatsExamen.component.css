@@ -18,7 +18,7 @@
 
   --text-main: #0f172a;
   --text : #0f172a;
-  --text-muted: #ffffff;
+  --text-muted: #020617;
 
   --border-color: rgba(226, 232, 240, 0.9);
 
@@ -31,13 +31,13 @@
   --glass-blur: blur(18px);
 }
 
-:host-context([data-bs-theme="dark"]) {
+:host-context(.dark-mode) {
   --bg-page: #020617;
 
   --card-bg: rgba(15, 23, 42, 0.45);
 
   --text-main: #f8fafc;
-  --text-muted: #cbd5e1;
+  --text-muted: #ffffff;
   --text:#f8fafc;
 
   --border-color: rgba(255, 255, 255, 0.08);
@@ -370,6 +370,37 @@ h5 {
   padding: 0.7rem 1rem;
   border-radius: 14px;
   font-weight: 700;
+}
+
+.row.g-4 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.row.g-4 > div {
+  display: flex;
+}
+
+/* IMPORTANT : laisse Bootstrap gérer la largeur */
+.custom-card {
+  width: 100%;
+  max-width: 100%;
+  flex: 1 1 auto;
+}
+
+
+@media (min-width: 768px) {
+  .row.g-4 > div {
+    flex: 0 0 50%; /* 2 cartes par ligne */
+  }
+}
+
+@media (min-width: 1200px) {
+  .row.g-4 > div {
+    flex: 0 0 33.333%; /* 3 cartes par ligne */
+  }
 }
 
 

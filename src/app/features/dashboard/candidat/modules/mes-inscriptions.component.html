@@ -107,26 +107,24 @@
             <br>
 
             <!-- 🎯 LOGIQUE SESSION (corrigée) -->
-            <div *ngIf="gm.eligibleGmetrix">
+            <!--<div *ngIf="gm.eligibleGmetrix">
 
-              <!-- ❌ Aucune session -->
+
               <button *ngIf="!gm.sessionDisponible"
                       class="btn-disabled" disabled>
                 Pas de session d'examen disponible
               </button>
 
-              <!-- ⏳ Session non ouverte -->
+
               <button *ngIf="gm.sessionDisponible && !gm.sessionOuverte"
                       class="btn-disabled" disabled>
                 Bientôt disponible
               </button>
 
 
-
-              <!-- ✅ Session ouverte -->
               <div *ngIf="gm.sessionOuverte && !gm.dejaReserve">
 
-                <!-- bouton afficher formulaire -->
+
                 <button
                   class="btn-start-recent"
                   (click)="ouvrirFormulaire(gm)">
@@ -135,12 +133,49 @@
 
               </div>
 
-              <!-- 📅 Déjà réservé -->
+
               <div *ngIf="gm.dejaReserve" class="reserved-info">
                 Réservé le {{ gm.dateReservation | date:'dd/MM/yyyy' }}
               </div>
 
+            </div>-->
+
+
+            <div *ngIf="gm.eligibleGmetrix">
+
+              <!-- ❌ SI DÉJÀ RÉSERVÉ -->
+              <div *ngIf="gm.dejaReserve">
+                <div class="reserved-info">
+                  Réservé le {{ gm.dateReservation | date:'dd/MM/yyyy' }}
+                </div>
+              </div>
+
+              <!-- 🔵 SINON (PAS encore réservé) -->
+              <div *ngIf="!gm.dejaReserve">
+
+                <button *ngIf="!gm.sessionDisponible"
+                        class="btn-disabled" disabled>
+                  Pas de session d'examen disponible
+                </button>
+
+                <button *ngIf="gm.sessionDisponible && !gm.sessionOuverte"
+                        class="btn-disabled" disabled>
+                  Bientôt disponible
+                </button>
+
+                <div *ngIf="gm.sessionOuverte">
+                  <button class="btn-start-recent"
+                          (click)="ouvrirFormulaire(gm)">
+                    Réserver examen
+                  </button>
+                </div>
+
+              </div>
+
             </div>
+
+
+
 
           </div>
         </div>
@@ -256,15 +291,13 @@
           <br>
 
           <!-- 🎯 LOGIQUE SESSION (corrigée) -->
-          <div *ngIf="gm.eligibleGmetrix">
+          <!--<div *ngIf="gm.eligibleGmetrix">
 
-            <!-- ❌ Aucune session -->
             <button *ngIf="!gm.sessionDisponible"
                     class="btn-disabled" disabled>
               Pas de session d'examen disponible
             </button>
 
-            <!-- ⏳ Session non ouverte -->
             <button *ngIf="gm.sessionDisponible && !gm.sessionOuverte"
                     class="btn-disabled" disabled>
               Bientôt disponible
@@ -286,10 +319,42 @@
               </div>
 
             </div>
-
-            <!-- 📅 Déjà réservé -->
             <div *ngIf="gm.dejaReserve" class="reserved-info">
               Réservé le {{ gm.dateReservation | date:'dd/MM/yyyy' }}
+            </div>
+
+          </div>-->
+
+
+          <div *ngIf="gm.eligibleGmetrix">
+
+            <!-- ❌ SI DÉJÀ RÉSERVÉ -->
+            <div *ngIf="gm.dejaReserve">
+              <div class="reserved-info">
+                Réservé le {{ gm.dateReservation | date:'dd/MM/yyyy' }}
+              </div>
+            </div>
+
+            <!-- 🔵 SINON (PAS encore réservé) -->
+            <div *ngIf="!gm.dejaReserve">
+
+              <button *ngIf="!gm.sessionDisponible"
+                      class="btn-disabled" disabled>
+                Pas de session d'examen disponible
+              </button>
+
+              <button *ngIf="gm.sessionDisponible && !gm.sessionOuverte"
+                      class="btn-disabled" disabled>
+                Bientôt disponible
+              </button>
+
+              <div *ngIf="gm.sessionOuverte">
+                <button class="btn-start-recent"
+                        (click)="ouvrirFormulaire(gm)">
+                  Réserver examen
+                </button>
+              </div>
+
             </div>
 
           </div>
