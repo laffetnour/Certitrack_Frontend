@@ -614,4 +614,10 @@ loadTopFlopStats(): void {
     }
   });
 }
+
+isSidebarVisible = false;
+
+      toggleSidebar() {
+        this.isSidebarVisible = !this.isSidebarVisible;
+      }
 }

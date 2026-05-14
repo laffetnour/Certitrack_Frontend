@@ -17,6 +17,7 @@ export class EtablissementTenantLayoutComponent implements OnInit {
   idEtab: string | null = null;
   idTenant!: string;
    isParcoursOpen: boolean = false;
+   isSubNavOpen = false;
 
   constructor(private route: ActivatedRoute,
     private contextService: ContextService,

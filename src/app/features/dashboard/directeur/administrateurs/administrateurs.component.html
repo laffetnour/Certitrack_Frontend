@@ -41,16 +41,16 @@
         <td>
           <input type="checkbox" [checked]="selectedAdmins.includes(admin.id)" (change)="onCheckboxChange(admin.id, $event)">
         </td>
-        <td>{{ admin.nom }}</td>
-        <td>{{ admin.prenom }}</td>
-        <td>{{ admin.username }}</td>
-        <td>{{ admin.nomEtablissement }}</td>
-        <td>
+        <td data-label="Nom">{{ admin.nom }}</td>
+        <td data-label="Prénom">{{ admin.prenom }}</td>
+        <td data-label="Email">{{ admin.username }}</td>
+        <td data-label="Établissement">{{ admin.nomEtablissement }}</td>
+        <td data-label="Statut">
           <span class="status-badge" [class.active]="admin.statut" [class.inactive]="!admin.statut">
             {{ admin.statut ? 'Actif' : 'Inactif' }}
           </span>
         </td>
-        <td class="actions">
+        <td data-label="Action" class="actions">
 
           <button class="btn-view" (click)="viewAdmin(admin)" title="Voir">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

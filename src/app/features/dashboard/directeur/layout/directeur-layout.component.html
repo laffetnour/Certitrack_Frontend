@@ -4,7 +4,32 @@
 <div class="dashboard-container">
 
   <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <aside class="sidebar" [class.mobile-open]="isSidebarVisible">
+    <button class="mobile-menu-btn" (click)="toggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="search-container mobile-only-search">
+
+      <i class="fas fa-search"></i>
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        (input)="onSearch()"
+        (focus)="onSearch()"
+        placeholder="Recherche ...">
+
+      <div class="search-dropdown" *ngIf="showResults && filteredResults.length > 0">
+        <div class="search-item" *ngFor="let result of filteredResults" (click)="selectResult(result.link)">
+          <i [class]="result.icon"></i>
+          <div class="result-info">
+            <span class="result-name">{{ result.name }}</span>
+            <span class="result-type">{{ result.type }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
 
     <!-- LOGO -->
     <div class="logo-section">
@@ -19,7 +44,6 @@
       </ng-template>
     </div>
 
-    <!-- MENU -->
     <nav class="nav-menu">
 
       <div class="nav-item"
@@ -89,10 +113,6 @@
         <i class="fas fa-cog"></i> <span>Résultat réservation</span>
       </div>
 
-      <!--<div class="nav-item" routerLink="/directeur/resultatsExamen" routerLinkActive="active">
-        <i class="fas fa-cog"></i> <span>Résultat examen</span>
-      </div>-->
-
       <div class="nav-item" routerLink="/directeur/parametre" routerLinkActive="active">
         <i class="fas fa-cog"></i> <span>Paramètres</span>
 
@@ -114,12 +134,17 @@
 
     <header class="notification-bar">
 
+      <button class="mobile-menu-btn" (click)="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+      </button>
+
+
+
       <div class="logo-wrapper" *ngIf="tenantLogo">
         <img [src]="tenantLogo" [alt]="currentUser?.tenantLogo" class="tenant-logo">
       </div>
-      <div class="search-container">
+      <div class="search-container desktop-only-search">
         <i class="fas fa-search"></i>
-        <!--<input type="text" placeholder="Recherche...">-->
 
         <input
           type="text"

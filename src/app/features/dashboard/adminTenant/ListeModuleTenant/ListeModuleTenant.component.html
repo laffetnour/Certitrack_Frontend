@@ -42,14 +42,7 @@
 
     <div class="bulk-actions" *ngIf="selectedMyModulesIds.size > 0">
       <span>{{ selectedMyModulesIds.size }} module(s) sélectionné(s)</span>
-      <button class="btn-submit"
-              (click)="onBulkAddSession()"
-              style="background-color: #228be6; padding: 8px 16px; display: flex; align-items: center; gap: 8px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 5v14M5 12h14"/>
-        </svg>
-        Ajouter Session
-      </button>
+
       <button class="btn-activate" (click)="activateSelected()">Activer</button>
       <button class="btn-deactivate" (click)="deactivateSelected()">Désactiver</button>
       <button class="btn-delete" (click)="onBulkRemove()" style="background-color: #e74c3c;">Supprimer</button>
@@ -78,16 +71,14 @@
                  [checked]="selectedMyModulesIds.has(mt.id)"
                  (change)="toggleMyModuleSelection(mt.id)">
         </td>
-        <td><strong>{{ mt.module.nom }}</strong></td>
-        <td>
+        <td data-label="Module"><strong>{{ mt.module.nom }}</strong></td>
+        <td data-label="Catégorie">
             <span class="status-badge active" style="background: #e9ecef; color: #495057;">
               {{ mt.module.nomCategorie }}
             </span>
         </td>
-        <td>
-            <!--<span class="status-badge" [class.active]="mt.estActif" [class.inactive]="!mt.estActif">
-              {{ mt.estActif ? 'Actif' : 'En attente' }}
-            </span>-->
+        <td data-label="Statut">
+
             <span class="status-badge"
                   [class.active]="mt.estActif"
                   [class.inactive]="!mt.estActif">
@@ -104,7 +95,7 @@
             </span>
         </td>
 
-        <td class="actions" style="text-align: center;">
+        <td data-label="Actions" class="actions" style="text-align: center;">
 
           <button class="btn-toggle"
                   (click)="toggleModule(mt)"

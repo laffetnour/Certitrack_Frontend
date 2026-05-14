@@ -381,23 +381,9 @@ searchText: string = '';
         this.showResults = false;
       }
 
-  /*filteredResults: any[] = [];
+        isSidebarVisible = false;
 
-  onSearch() {
-    const search = this.searchText.toLowerCase().trim();
-    if (search.length > 1) {
-      this.showResults = true;
-      this.filteredResults = this.searchDatabase.filter(item =>
-        item.name.toLowerCase().includes(search)
-      );
-    } else {
-      this.showResults = false;
-    }
-  }
-
-  selectResult(link: string) {
-    this.router.navigate([link]);
-    this.searchText = '';
-    this.showResults = false;
-  }*/
+        toggleSidebar() {
+          this.isSidebarVisible = !this.isSidebarVisible;
+        }
 }

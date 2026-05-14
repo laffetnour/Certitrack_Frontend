@@ -618,12 +618,127 @@
   color: var(--smart-red);
 }
 
-/* Responsive : sur petit écran, on repasse en une seule colonne */
+/* ==========================================
+   ADAPTATIONS MOBILE (MAX-WIDTH: 768PX)
+   ========================================== */
+
 @media (max-width: 768px) {
-  .form-row {
+
+  /* 1. Layout Principal : Passage en colonne */
+  .settings-layout {
     flex-direction: column;
+    padding: 10px;
+  }
+
+  /* 2. Navigation : Sidebar devient une barre horizontale collante */
+  .settings-nav-aside {
+    width: 100%;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-aside);
+  }
+
+  .nav-title {
+    display: none; /* Cache le titre pour gagner de la place */
+  }
+
+  /* Conteneur des boutons de nav en ligne */
+  .settings-nav-aside .nav-buttons-wrapper,
+  .settings-nav-aside {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto; /* Permet de scroller les boutons si besoin */
+  }
+
+  .settings-nav-aside button {
+    flex: 1;
+    justify-content: center;
+    font-size: 0.85rem;
+    padding: 5px 5px;
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  /* 3. Zone de Contenu */
+  .settings-content {
+    padding: 1rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* 4. Carte Profil & Avatar */
+  .profile-card {
+    flex-direction: column; /* Empile l'avatar au dessus du formulaire */
+    align-items: center;
+    gap: 20px;
+    padding: 16px;
+    border: none;
+    background: transparent; /* Optionnel : selon l'esthétique voulue */
+  }
+
+  .avatar-section {
+    width: 120px;
+    margin-bottom: 10px;
+  }
+
+  .avatar-wrapper {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* 5. Formulaires : Grilles sur une seule colonne */
+  .form-row,
+  .form-grid {
+    grid-template-columns: 1fr !important;
     gap: 0;
+  }
+
+  .form-group {
+    margin-bottom: 1.2rem;
+  }
+
+  .form-control {
+    width: 90%; /* S'assure que les champs prennent toute la largeur */
+    font-size: 16px; /* Évite le zoom auto sur iPhone au focus */
+  }
+
+  /* 6. Sélecteur de Thème */
+  .theme-selector {
+    grid-template-columns: 1fr 1fr; /* Garde deux colonnes ou 1fr selon préférence */
+    gap: 10px;
+  }
+
+  .theme-box {
+    padding: 15px 10px;
+  }
+
+  /* 7. Boutons d'action */
+  .form-actions {
+    justify-content: center;
+  }
+
+  .btn-save-profile,
+  .btn-save,
+  .btn-save-primary {
+    width: 100%; /* Bouton large pour un clic facile au pouce */
+    padding: 15px;
+    font-size: 1rem;
+  }
+
+  .section-header h2 {
+    font-size: 1.3rem;
+    text-align: center;
   }
 }
 
-
+/* Ajustement spécifique pour les très petits écrans (iPhone SE, etc.) */
+@media (max-width: 480px) {
+  .theme-selector {
+    grid-template-columns: 1fr;
+  }
+}

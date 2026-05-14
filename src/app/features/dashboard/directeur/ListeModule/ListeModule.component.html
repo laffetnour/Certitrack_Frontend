@@ -61,9 +61,9 @@
                  (change)="toggleModuleSelection(m.id)">
         </td>
 
-        <td><strong>{{ m.module?.nom }}</strong></td>
+        <td data-label="Module"><strong>{{ m.module?.nom }}</strong></td>
 
-        <td>
+        <td data-label="Catégorie">
             <span class="status-badge active" style="background: #e9ecef; color: #495057;">
               {{ m.module?.nomCategorie }}
             </span>
@@ -71,25 +71,12 @@
 
         <td>
 
-          <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+          <div data-label="Mots Clés" style="display: flex; gap: 5px; flex-wrap: wrap;">
             <span *ngFor="let tag of m.module?.motCles" class="tag-mini">#{{tag.description}}</span>
           </div>
         </td>
-        <!--
-        <td>
-          <div class="spec-badge-container">
 
-    <span *ngIf="!m.specialiteModules || m.specialiteModules.length === 0" class="no-spec">
-      <i class="fas fa-info-circle"></i> Aucune affectation
-    </span>
-
-            <span *ngFor="let sm of m.specialiteModules" class="spec-mini-badge">
-      <i class="fas fa-tag" style="font-size: 8px;"></i> {{ sm.specialite?.nom }}
-    </span>
-          </div>
-        </td>-->
-
-        <td>
+        <td data-label="Spécialités">
           <div class="spec-badge-container">
     <span *ngIf="!m.specialiteModules || m.specialiteModules.length === 0" class="no-spec">
       <i class="fas fa-info-circle"></i> Aucune affectation
@@ -108,9 +95,7 @@
     </span>
           </div>
         </td>
-        <td>
-
-
+        <td data-label="Statut">
 
           <span class="status-badge"
                 [class.active]="m.estActif"
@@ -130,7 +115,7 @@
 
 
 
-        <td>
+        <td data-label="Action" class="action">
           <button class="btn-download" (click)="openAssignmentModal(m)" title="Affecter aux spécialités">
             <i class="fas fa-download"></i> Affecter
           </button>

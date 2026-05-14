@@ -1,4 +1,7 @@
 <header class="notification-bar">
+  <button class="mobile-menu-btn" (click)="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+  </button>
   <div class="top-row">
 
     <div class="logo-header">
@@ -12,7 +15,7 @@
         <img src="LOGO-2026_VF.png" alt="Smartfuture" class="main-logo loading">
       </ng-template>
     </div>
-    <div class="search-container">
+    <div class="search-container desktop-only">
       <i class="fas fa-search"></i>
 
       <input
@@ -74,7 +77,7 @@
       </div>
 
       <div class="profile">
-        <span class="user-role">{{ currentUser?.prenom }} {{ currentUser?.nom }}</span>
+        <span class="user-role desktop-only">{{ currentUser?.prenom }} {{ currentUser?.nom }}</span>
 
         <div class="avatar-circle">
           <img *ngIf="currentUser?.photo"
@@ -90,7 +93,7 @@
   </div>
 
   <!-- LIGNE 2 -->
-  <div class="bottom-row">
+  <div class="bottom-row desktop-only">
     <nav class="nav-menu-horizontal">
       <div class="nav-item" routerLink="/candidat/dashboard" routerLinkActive="active">
         <i class="fas fa-th-large"></i> Dashboard
@@ -120,6 +123,60 @@
   </div>
 
 </header>
+
+
+
+
+
+<div class="mobile-sidebar" [class.open]="isSidebarVisible">
+  <div class="sidebar-header">
+    <button class="mobile-menu-btn" (click)="toggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+
+  <div class="mobile-search">
+    <div class="search-container">
+      <i class="fas fa-search"></i>
+      <input type="text" [(ngModel)]="searchText"
+             (input)="onSearch()" placeholder="Rechercher...">
+    </div>
+  </div>
+
+  <nav class="mobile-nav">
+    <div class="nav-item" routerLink="/candidat/dashboard" routerLinkActive="active">
+      <i class="fas fa-th-large"></i> Dashboard
+    </div>
+
+    <div class="nav-item" routerLink="/candidat/modules" routerLinkActive="active">
+      <i class="fas fa-book"></i> Inscription
+    </div>
+
+    <div class="nav-item" routerLink="/candidat/mes-inscriptions" routerLinkActive="active">
+      <i class="fas fa-book"></i> Mes inscriptions
+    </div>
+
+    <div class="nav-item" routerLink="/candidat/MesResultatsExamen" routerLinkActive="active">
+      <i class="fas fa-book"></i> Mes résultats des certifications
+    </div>
+
+
+    <div class="nav-item" routerLink="/candidat/parametre" routerLinkActive="active">
+      <i class="fas fa-cog"></i> Paramètres
+    </div>
+  </nav>
+
+  <div class="logout" (click)="logout()">
+    <i class="fas fa-sign-out-alt"></i> Déconnexion
+  </div>
+</div>
+
+
+
+
+
+
+
 
 <header class="banniere"
         [style.background-image]="(currentUser?.tenantBanniere || currentUser?.tenant?.banniere) ? 'url(' + (currentUser.tenantBanniere || currentUser.tenant.banniere) + ')' : 'none'">

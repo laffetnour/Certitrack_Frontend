@@ -1,7 +1,12 @@
-<nav class="navbar navbar-expand-lg shadow-none py-0">
+<button class="sub-nav-toggle d-lg-none" (click)="isSubNavOpen = !isSubNavOpen">
+  <i class="bi" [ngClass]="isSubNavOpen ? 'bi-x-lg' : 'bi-filter-left'"></i>
+  Gestion d'établissement
+</button>
+
+<nav class="navbar navbar-expand-lg shadow-none py-0 sub-navigation" [class.mobile-open]="isSubNavOpen">
   <div class="container-fluid px-0">
-    <div class="collapse navbar-collapse show" id="navbarNav">
-      <ul class="navbar-nav w-100 justify-content-start overflow-auto custom-scroll flex-nowrap">
+    <div class="nav-container w-100" id="navbarNav">
+      <ul class="navbar-nav w-100 flex-nowrap flex-lg-row">
 
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/super-admin/tenant', idTenant, 'etablissement', idEtab, 'dashboard']" routerLinkActive="active">
@@ -39,11 +44,6 @@
           </a>
         </li>
 
-        <!--<li class="nav-item">
-          <a class="nav-link" [routerLink]="['/super-admin/tenant', idTenant, 'etablissement', idEtab, 'import-gmetrix']" routerLinkActive="active">
-            <i class="bi bi-cloud-arrow-up me-2"></i> Import
-          </a>
-        </li>-->
 
         <div class="nav-item-group">
           <div class="nav-item" (click)="isParcoursOpen = !isParcoursOpen">
@@ -69,11 +69,6 @@
             <i class="bi bi-cloud-arrow-up me-2"></i> Résultat réservation
           </a>
         </li>
-        <!--<li class="nav-item">
-          <a class="nav-link" [routerLink]="['/super-admin/tenant', idTenant, 'etablissement', idEtab, 'resultatsExamen']" routerLinkActive="active">
-            <i class="bi bi-cloud-arrow-up me-2"></i> Résultat examen
-          </a>
-        </li>-->
 
       </ul>
     </div>

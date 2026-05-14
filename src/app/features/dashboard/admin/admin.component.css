@@ -1410,3 +1410,147 @@ body {
   border-color: var(--smart-red);
   box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.2);
 }
+
+
+/* Style du bouton Hamburger (caché sur desktop) */
+.mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .mobile-toggle {
+    display: block; /* Visible uniquement sur mobile */
+  }
+
+  .sidebar {
+    position: fixed;
+    left: -100%; /* Sort de l'écran à gauche */
+    top: 0;
+    height: 100vh;
+    z-index: 999;
+    width: 250px;
+    transition: 0.3s ease;
+  }
+
+  /* Quand on clique sur le bouton */
+  .sidebar.mobile-open {
+    left: 0; /* Revient dans l'écran */
+  }
+
+  /* On affiche à nouveau le texte sur mobile puisque la barre est en plein écran */
+  .nav-item span, .logout span {
+    display: inline !important;
+  }
+}
+
+/* --- Par défaut (Desktop) --- */
+.mobile-only-search {
+  display: none; /* Caché sur PC */
+}
+
+.desktop-only-search {
+  display: flex; /* Visible sur PC */
+}
+
+/* --- Responsive (Mobile / Tablette) --- */
+@media (max-width: 1024px) {
+
+  /* 1. On cache la recherche dans la barre du haut */
+  .desktop-only-search {
+    display: none !important;
+  }
+
+  /* 2. On affiche et on stylise la recherche dans la sidebar */
+  .mobile-only-search {
+    display: flex;
+    margin: 20px; /* Espace autour */
+    width: auto;  /* Prend la largeur de la sidebar */
+    background-color: var(--bg-page); /* Fond gris clair pour trancher avec le blanc */
+    border: 1px solid var(--border-color);
+  }
+
+  .mobile-only-search i {
+    color: var(--text-muted);
+  }
+
+  .mobile-only-search input {
+    color: var(--text-main);
+  }
+
+  /* Ajuster le dropdown pour mobile pour qu'il ne dépasse pas de la sidebar */
+  .mobile-only-search .search-dropdown {
+    width: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+}
+
+/* 1. On cache le bouton par défaut (Desktop/Grand écran) */
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--smart-red)  !important; /* Ajustez selon la couleur de votre notification-bar */
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 10px;
+}
+
+/* 2. On l'affiche uniquement sur mobile et tablette (moins de 1024px) */
+@media (max-width: 1024px) {
+  .mobile-menu-btn {
+    display: block; /* Il devient visible ici */
+    margin-right: 15px;
+  }
+}
+
+
+.nav-menu {
+  flex: 1; /* Prend tout l'espace entre le logo et le logout */
+  overflow-y: auto; /* Active le scroll vertical uniquement ici */
+  overflow-x: hidden;
+
+  /* Pour Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+}
+
+/* 2. Style personnalisé pour Chrome, Edge et Safari */
+.nav-menu::-webkit-scrollbar {
+  width: 4px; /* Très fin */
+}
+
+.nav-menu::-webkit-scrollbar-track {
+  background: transparent; /* Fond totalement transparent */
+}
+
+.nav-menu::-webkit-scrollbar-thumb {
+  /* Couleur très légère et presque transparente */
+  background-color: rgba(100, 116, 139, 0.1);
+  border-radius: 20px;
+  transition: background 0.3s ease;
+}
+
+/* 3. Effet au survol : on rend le scroller un peu plus visible */
+.nav-menu:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 116, 139, 0.3);
+}
+
+.nav-menu::-webkit-scrollbar-thumb:hover {
+  background-color: var(--smart-red); /* Devient rouge si on touche au scroller */
+}
+
+/* Ajustement pour le mode sombre */
+:host-context(.dark-mode) .nav-menu::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+:host-context(.dark-mode) .nav-menu:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+}

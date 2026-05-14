@@ -1,9 +1,6 @@
 <div class="admin-container">
   <div class="header-actions">
-    <!--<button class="btn-back" routerLink="/directeur/specialites"
-            routerLinkActive="active">
-      <i class="fas fa-arrow-left"></i> Retour
-    </button>-->
+
 
     <button class="btn-back" [routerLink]="getRetourRoute()" routerLinkActive="active">
       <i class="fas fa-arrow-left"></i> Retour
@@ -58,17 +55,17 @@
                  [checked]="selectedIds.has(sm.id)"
                  (change)="toggleSelection(sm.id)">
         </td>
-        <td>
+        <td data-label="Spécialités">
           <span>{{ sm.specialite?.nom }}</span>
         </td>
-        <td><strong>{{ sm.moduleTenant?.module?.nom }}</strong></td>
-        <td>{{ sm.moduleTenant?.module?.nomCategorie }}</td>
-        <td>
+        <td data-label="Module"><strong>{{ sm.moduleTenant?.module?.nom }}</strong></td>
+        <td data-label="Catégorie">{{ sm.moduleTenant?.module?.nomCategorie }}</td>
+        <td data-label="Mode d'affichage">
           <span>
             {{ sm.modeAffichage }}
           </span>
         </td>
-        <td class="actions">
+        <td data-label="Action" class="actions">
           <button class="btn-delete" (click)="retirerModule(sm.id)" title="Supprimer">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="3 6 5 6 21 6"></polyline>

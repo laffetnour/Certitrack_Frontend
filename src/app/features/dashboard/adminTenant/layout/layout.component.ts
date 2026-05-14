@@ -159,4 +159,10 @@ refreshNotifications() {
         }
       });
     }
+
+    isSidebarVisible = false;
+
+    toggleSidebar() {
+      this.isSidebarVisible = !this.isSidebarVisible;
+    }
 }

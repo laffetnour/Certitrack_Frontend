@@ -1,6 +1,7 @@
 <div class="settings-layout">
   <aside class="settings-nav-aside">
     <div class="nav-title">Paramètres</div>
+    <nav class="nav-wrapper">
 
     <button (click)="activeSection = 'profil'" [class.active]="activeSection === 'profil'">
       <i class="fas fa-user-circle"></i> Mon Profil
@@ -11,11 +12,13 @@
             [class.active]="activeSection === 'admin'">
       <i class="fas fa-tools"></i> Configuration Système
     </button>
+    </nav>
+
   </aside>
 
   <main class="settings-content">
 
-    <section *ngIf="activeSection === 'profil'" class="fade-in">
+    <section *ngIf="activeSection === 'profil'" class="fade-in section-profile">
       <div class="section-header">
         <h2>Mon Profil Personnel</h2>
       </div>

@@ -14,8 +14,9 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./TenantLayout.component.css']
 })
 export class TenantLayoutComponent implements OnInit {
-  // On utilise idTenant au lieu de idEtab
   idTenant: string | null = null;
+  isSubNavOpen = false;
+
 
   constructor(
     private route: ActivatedRoute,

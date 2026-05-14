@@ -214,4 +214,11 @@ refreshNotifications() {
     closeParcours() {
       this.isParcoursOpen = false;
     }
+
+
+     isSidebarVisible = false;
+
+      toggleSidebar() {
+        this.isSidebarVisible = !this.isSidebarVisible;
+      }
 }

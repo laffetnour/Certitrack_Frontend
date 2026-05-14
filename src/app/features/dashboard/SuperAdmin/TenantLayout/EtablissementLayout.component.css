@@ -143,3 +143,46 @@
 .nav-item.sub i {
   margin-right: 10px;
 }
+
+
+
+
+
+
+/* Bouton mobile : Caché sur PC, stylisé sur Mobile */
+.sub-nav-toggle {
+  display: none; /* Par défaut caché */
+}
+
+@media (max-width: 991px) {
+  .sub-nav-toggle {
+    display: flex; /* Apparaît sur mobile */
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 20px;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    color: var(--smart-red);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .sub-navigation {
+    display: none; /* Cache la barre horizontale */
+  }
+
+  /* Quand on clique sur le bouton, on affiche la liste en vertical */
+  .sub-navigation.mobile-open {
+    display: block;
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+    background: white;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+  }
+
+  .navbar-nav {
+    flex-direction: column !important;
+  }
+}

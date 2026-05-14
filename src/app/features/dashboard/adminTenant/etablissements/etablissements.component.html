@@ -57,13 +57,13 @@
         </td>
 
 
-        <td>{{ e.nom }}</td>
+        <td data-label="Nom">{{ e.nom }}</td>
 
 
-        <td>{{ e.adresse }}</td>
+        <td data-label="Adresse">{{ e.adresse }}</td>
 
 
-        <td>
+        <td data-label="Statut">
           <span class="status-badge"
                 [class.active]="e.statut"
                 [class.inactive]="!e.statut">
@@ -72,7 +72,7 @@
         </td>
 
 
-        <td class="actions">
+        <td data-label="Actions" class="actions">
 
           <button class="btn-edit" (click)="openEditModal(e)" title="Modifier">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"

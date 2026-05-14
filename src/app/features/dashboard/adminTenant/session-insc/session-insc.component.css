@@ -729,3 +729,96 @@ form::-webkit-scrollbar-thumb:hover {
   background-color: #e7f5ff !important;
   border-left: 4px solid #1971c2;
 }
+
+
+
+
+
+@media (max-width: 1024px) {
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  /* Le tableau devient une liste de cartes */
+  .modern-table thead { display: none; }
+
+  .modern-table tr {
+    display: block;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 10px;
+    background: var(--bg-card);
+  }
+
+  .modern-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: right;
+    border-bottom: 1px dashed var(--border-color);
+    padding: 10px 5px;
+  }
+
+  .modern-table td:last-child { border-bottom: none; }
+
+  /* Injection du libellé via data-label */
+  .modern-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+
+  .actions { justify-content: flex-end; width: 100%; }
+}
+
+@media (max-width: 600px) {
+  .modal-content { width: 95%; height: 95vh; }
+  .filter-select-container .status-filter-select { width: 100%; }
+  .admin-container { padding: 10px; }
+}
+
+
+
+/* --- FILTRES & RECHERCHE MOBILE --- */
+@media (max-width: 768px) {
+  .filter-select-container {
+    display: flex;
+    flex-direction: column; /* On empile les éléments verticalement */
+    gap: 12px;             /* Espace entre les champs */
+    padding: 10px;
+    background: var(--bg-card);
+    border-radius: 12px;
+  }
+
+  .status-filter-select {
+    width: 100% !important; /* Prend toute la largeur */
+    height: 48px;           /* Hauteur optimale pour le clic tactile */
+    font-size: 16px !important; /* Évite le zoom automatique sur iOS */
+    padding: 10px 15px 10px 45px !important; /* Espace pour l'icône loupe */
+    margin: 0 !important;
+    box-sizing: border-box;
+  }
+
+  /* Ajustement de l'icône de recherche pour le champ texte */
+  input.status-filter-select {
+    background-position: 15px center !important; /* Repositionne la loupe */
+  }
+
+  /* Spécificité pour le champ Date sur mobile */
+  input[type="date"].status-filter-select {
+    position: relative;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  /* Amélioration visuelle du focus sur mobile */
+  .status-filter-select:focus {
+    border-color: var(--smart-red);
+    box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.1);
+  }
+}

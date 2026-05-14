@@ -53,8 +53,8 @@
 
       <tbody>
       <tr *ngFor="let s of filteredSessions">
-        <td><strong>{{ s.titre }}</strong></td>
-        <td>
+        <td data-label="Titre"><strong>{{ s.titre }}</strong></td>
+        <td data-label="Module(s)">
           <div style="display: flex; flex-wrap: wrap; gap: 4px;">
     <span class="status-badge" style="background:#e9ecef;color:#495057;">
       {{ s.modulesTenants && s.modulesTenants.length > 0 ? s.modulesTenants[0].module?.nom : s.moduleNom }}
@@ -65,9 +65,9 @@
     </span>
           </div>
         </td>
-        <td>{{ s.dateDebut | date:'dd/MM/yyyy' }}</td>
-        <td>{{ s.dateFin | date:'dd/MM/yyyy' }}</td>
-        <td>
+        <td data-label="Date Début">{{ s.dateDebut | date:'dd/MM/yyyy' }}</td>
+        <td data-label="Date Fin">{{ s.dateFin | date:'dd/MM/yyyy' }}</td>
+        <td data-label="Test Technique">
           <ng-container *ngIf="s.dureeMax; else noTest">
             <span class="status-badge" style="background: #e7f5ff; color: #1971c2;">
               {{ s.dureeMax }} min
@@ -79,7 +79,7 @@
             </span>
           </ng-template>
         </td>
-        <td>
+        <td data-label="État">
           <span class="status-badge"
                 [class.active]="s.etat?.toLowerCase() === 'encours'"
                 [class.inactive]="s.etat==='cloturee'"

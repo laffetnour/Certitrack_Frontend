@@ -4,7 +4,32 @@
 </header>
 
 <div class="dashboard-container">
-  <aside class="sidebar">
+  <aside class="sidebar" [class.mobile-open]="isSidebarVisible">
+    <button class="mobile-menu-btn" (click)="toggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="search-container mobile-only-search">
+
+      <i class="fas fa-search"></i>
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        (input)="onSearch()"
+        (focus)="onSearch()"
+        placeholder="Recherche ...">
+
+      <div class="search-dropdown" *ngIf="showResults && filteredResults.length > 0">
+        <div class="search-item" *ngFor="let result of filteredResults" (click)="selectResult(result.link)">
+          <i [class]="result.icon"></i>
+          <div class="result-info">
+            <span class="result-name">{{ result.name }}</span>
+            <span class="result-type">{{ result.type }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
     <div class="logo-section">
       <!--<img src="LOGO-2026_VF.png" alt="Smartfuture" class="main-logo">-->
       <ng-container *ngIf="configService.config$ | async as config; else loader">
@@ -73,6 +98,10 @@
 
   <div class="main-layout">
     <header class="notification-bar">
+      <button class="mobile-menu-btn" (click)="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+      </button>
+
       <div class="logo-wrapper" *ngIf="tenantLogo">
         <img [src]="tenantLogo" [alt]="currentUser?.tenantLogo" class="tenant-logo">
       </div>
@@ -100,10 +129,7 @@
 
 
       <div class="user-actions">
-        <div class="notification-icon">
-          <i class="fas fa-bell"></i>
-          <span class="dot-notification"></span>
-        </div>
+
         <div class="profile">
           <span class="user-role">{{ currentUser?.prenom }} {{ currentUser?.nom }}</span>
           <div class="avatar-circle">

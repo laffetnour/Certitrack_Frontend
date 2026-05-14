@@ -52,21 +52,21 @@
                  (change)="toggleSelection(m.idModule)">
         </td>
 
-        <td><strong>{{ m.nom }}</strong></td>
+        <td data-label="Nom"><strong>{{ m.nom }}</strong></td>
 
-        <td>
+        <td  data-label="Catégorie">
             <span class="status-badge active" style="background: #e9ecef; color: #495057;">
               {{ m.nomCategorie }}
             </span>
         </td>
 
-        <td>
+        <td data-label="Mots Clés">
           <div style="display: flex; gap: 5px; flex-wrap: wrap;">
             <span *ngFor="let tag of m.motCles" class="tag-mini">#{{tag.description}}</span>
           </div>
         </td>
 
-        <td class="actions" style="text-align: center;">
+        <td data-label="Action" class="actions" style="text-align: center;">
           <button class="btn-add-single"
                   (click)="addSingleModule(m.idModule)"
                   title="Ajouter ce module"

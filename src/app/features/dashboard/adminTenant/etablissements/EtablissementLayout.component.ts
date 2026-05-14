@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 export class EtablissementLayoutComponent implements OnInit {
   idEtab: string | null = null;
   isParcoursOpen: boolean = false;
+  isSubNavOpen = false;
 
   constructor(private route: ActivatedRoute,
     private contextService: ContextService,
