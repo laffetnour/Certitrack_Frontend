@@ -105,35 +105,39 @@
 
           </button>
 
-          <!--<button class="btn-manage" [routerLink]="['/adminTenant/etablissement', e.idEtab, 'dashboard']">
-  <span class="icon-wrapper">
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-         viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-      <polyline points="15 3 21 3 21 9"></polyline>
-      <line x1="10" y1="14" x2="21" y2="3"></line>
-    </svg>
-  </span>
-            <span>Accéder</span>
-          </button>-->
+
+
+          <button class="btn-delete"
+                  (click)="openDeleteModal(e.idEtab)"
+                  title="Supprimer">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="16" height="16"
+                 viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+            </svg>
+
+          </button>
+
 
           <button class="btn-manage" [routerLink]="getEtablissementLink(e.idEtab)">
-  <span class="icon-wrapper">
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-         viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-      <polyline points="15 3 21 3 21 9"></polyline>
-      <line x1="10" y1="14" x2="21" y2="3"></line>
-    </svg>
-  </span>
+            <span class="icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                   viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </span>
             <span>Accéder</span>
           </button>
 
 
 
-        </td>
+          </td>
 
       </tr>
       </tbody>
@@ -189,6 +193,67 @@
       </div>
 
     </div>
+  </div>
+
+
+
+  <!-- MODAL SUPPRESSION -->
+  <div class="modal-overlay" *ngIf="showDeleteModal">
+
+    <div class="delete-modal">
+
+      <div class="delete-header">
+        <h2>Suppression établissement</h2>
+      </div>
+
+      <div class="delete-body">
+        <p>
+          Voulez-vous vraiment supprimer cet établissement ?
+        </p>
+      </div>
+
+      <div class="delete-footer">
+
+        <button class="btn-cancel-delete"
+                (click)="closeDeleteModal()">
+          Annuler
+        </button>
+
+        <button class="btn-confirm-delete"
+                (click)="confirmDelete()">
+          Supprimer
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- MODAL MESSAGE -->
+  <div class="modal-overlay" *ngIf="showAlertModal">
+
+    <div class="alert-modal">
+
+      <div class="alert-header">
+        <h2>{{ alertTitle }}</h2>
+      </div>
+
+      <div class="alert-body">
+        {{ alertMessage }}
+      </div>
+
+      <div class="alert-footer">
+        <button class="btn-alert"
+                (click)="closeAlertModal()">
+          OK
+        </button>
+      </div>
+
+    </div>
+
   </div>
 
 

@@ -35,6 +35,10 @@ export class EtablissementsComponent implements OnInit {
   allEtablissements: any[] = [];
   statusFilter: string = "";
 
+  showAlertModal = false;
+  alertMessage = '';
+  alertTitle = '';
+
   constructor(private service: AdminTenantService,private cdr: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
     public configService: ConfigService,
@@ -193,13 +197,13 @@ private gererErreur(err: any) {
     this.showDeleteModal = true;
   }
 
-  confirmDelete() {
+  /*confirmDelete() {
     this.service.deleteEtablissement(this.selectedId!, this.idTenant).subscribe(() => {
       this.loadData();
       this.cdr.detectChanges();
       this.closeDeleteModal();
     });
-  }
+  }*/
 
 
   toggle(e: any) {
@@ -321,4 +325,54 @@ getEtablissementLink(idEtab: number): any[] {
   }
   return ['/adminTenant', 'etablissement', idEtab, 'dashboard'];
 }
+
+
+
+  confirmDelete() {
+
+    if (!this.selectedId) return;
+
+    this.service.deleteEtablissement(this.selectedId, this.idTenant)
+      .subscribe({
+
+
+        next: () => {
+          this.closeDeleteModal();
+
+
+          this.alertTitle = 'Succès';
+          this.alertMessage = 'Établissement supprimé avec succès.';
+          this.showAlertModal = true;
+
+          this.loadData();
+          this.cdr.detectChanges();
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+          this.closeDeleteModal();
+
+          this.alertTitle = 'Suppression impossible';
+
+          this.alertMessage =
+            err.error?.message
+            || err.error?.error
+            || 'Cet établissement contient des données liées.';
+
+
+          this.showAlertModal = true;
+          this.cdr.detectChanges();
+        }
+
+      });
+
+  }
+
+  closeAlertModal() {
+    this.showAlertModal = false;
+  }
+
+
 }
