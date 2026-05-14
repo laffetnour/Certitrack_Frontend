@@ -1,6 +1,8 @@
 
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
+import { ResetPasswordComponent } from './features/auth/login/resetPassword.component';
+
 import { SignupComponent } from './features/auth/signup/signup.component';
 import { DirecteurLayoutComponent } from './features/dashboard/directeur/layout/directeur-layout.component';
 import { AdminComponent } from './features/dashboard/admin/admin.component';
@@ -53,6 +55,7 @@ import { ResultatExamenComponent } from './features/dashboard/admin/resultatExam
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
 
   {
     path: 'super-admin',

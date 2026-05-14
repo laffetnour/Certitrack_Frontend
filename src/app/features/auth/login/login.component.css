@@ -1,162 +1,7 @@
-/*
-.auth-wrapper {
-  position: relative;
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f3f4f6;
-  overflow: hidden;
-}
 
-
-.auth-bg {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-
-  background: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1000&auto=format&fit=crop') no-repeat center center/cover;
-  filter: blur(6px);
-  transform: scale(1.1);
-  z-index: 1;
-}
-
-
-.auth-card {
-  position: relative;
-  z-index: 2;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  width: 100%;
-  max-width: 400px;
-  backdrop-filter: blur(10px);
-}
-
-
-.brand {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.brand h2 {
-  color: #1e40af;
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 5px;
-}
-
-.brand p {
-  color: #6b7280;
-  font-size: 14px;
-}
-
-
-.input-group {
-  margin-bottom: 20px;
-  text-align: left;
-}
-
-.input-group label {
-  display: block;
-  margin-bottom: 8px;
-  color: #374151;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.input-group input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: all 0.3s;
-  box-sizing: border-box;
-}
-
-.input-group input:focus {
-  border-color: #2563eb;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-}
-
-
-.btn-primary {
-  width: 100%;
-  padding: 12px;
-  background-color: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-  background-color: #1d4ed8;
-}
-
-
-.error-message {
-  color: #dc2626;
-  background-color: #fee2e2;
-  padding: 10px;
-  border-radius: 6px;
-  font-size: 14px;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-
-.auth-footer {
-  margin-top: 25px;
-  text-align: center;
-}
-
-.auth-footer p {
-  font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 10px;
-}
-
-.btn-secondary {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background-color: white;
-  color: #2563eb;
-  border: 2px solid #2563eb;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-
-.btn-secondary:hover {
-  background-color: #eff6ff;
-}
-.error-msg {
-  color: #dc2626;
-  background-color: #fee2e2;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  text-align: center;
-  border: 1px solid #fca5a5;
-}
-*/
-
-/* =========================================
-   VARIABLES & RESET
-   ========================================= */
 :host {
-  --primary-color: #ea5357;       /* Rouge/Rose */
-  --secondary-color: #303D49;     /* Gris foncé/Bleu nuit */
+  --primary-color: #ea5357;
+  --secondary-color: #303D49;
   --bg-color: #f4f7f6;
   --text-main: #2d3436;
   --text-muted: #636e72;
@@ -180,9 +25,6 @@
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* =========================================
-   CONTENEUR PRINCIPAL
-   ========================================= */
 .auth-wrapper {
   min-height: 100vh;
   display: flex;
@@ -194,7 +36,6 @@
   padding: 20px;
 }
 
-/* Arrière-plan stylisé (cercles subtils) */
 .auth-bg-overlay {
   position: absolute;
   top: 0;
@@ -682,4 +523,38 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+
+.forgot-password-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.forgot-link {
+  font-size: 0.85rem;
+  color: #6c757d;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.forgot-link:hover {
+  color: #3498db;
+  text-decoration: underline;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid #ced4da;
+  color: #495057;
+  padding: 0.8rem;
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-ghost:hover {
+  background: #f8f9fa;
 }

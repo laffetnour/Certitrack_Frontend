@@ -17,7 +17,8 @@
   --card-bg: rgba(255, 255, 255, 0.9);
 
   --text-main: #0f172a;
-  --text-muted: #64748b;
+  --text : #0f172a;
+  --text-muted: #ffffff;
 
   --border-color: rgba(226, 232, 240, 0.9);
 
@@ -37,6 +38,7 @@
 
   --text-main: #f8fafc;
   --text-muted: #cbd5e1;
+  --text:#f8fafc;
 
   --border-color: rgba(255, 255, 255, 0.08);
 
@@ -56,20 +58,22 @@ body {
   animation: fadeIn 0.5s ease;
 }
 
-.text-body,
+
 h1,
 h2,
 h3,
 h4,
 h5,
 h6,
-.fw-bold,
+
 .fw-semibold,
 .fw-medium {
   color: var(--text-main) !important;
 }
-
+.text-body,
+.fw-bold,
 .text-secondary,
+.text-primary,
 .text-muted,
 .small {
   color: var(--text-muted) !important;

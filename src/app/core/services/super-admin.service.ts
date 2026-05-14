@@ -281,4 +281,11 @@ getByModule(id: number): Observable<any[]> {
     );
   }
 
+  getTopFlopSuccessRate(annee: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/stats/top-flop`, {
+      headers: this.getAuthHeaders().headers,
+      params: { annee: annee.toString() }
+    });
+  }
+
 }

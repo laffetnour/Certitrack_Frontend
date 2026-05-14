@@ -22,6 +22,14 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
   message: string = '';
   isError: boolean = false;
+  showForgotForm = false;
+  forgotEmail = '';
+
+  token: string = '';
+  emailCheck: string = '';
+  newPassword: string = '';
+  step: number = 1;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -107,4 +115,46 @@ export class LoginComponent implements OnInit {
    const targetRoute = routes[role] || '/';
    this.router.navigate([targetRoute]);
  }
+
+
+
+
+requestReset() {
+  this.isError = false;
+  this.message = "Envoi du lien en cours... ✉️";
+  this.cdr.detectChanges();
+
+  this.auth.requestPasswordReset(this.forgotEmail).subscribe({
+    next: () => {
+      this.isError = false;
+      this.message = "✅ Le lien de réinitialisation a été envoyé à votre adresse e-mail.";
+
+      this.forgotEmail = '';
+
+      this.cdr.detectChanges();
+
+
+      setTimeout(() => {
+        this.showForgotForm = false;
+        this.message = '';
+        this.cdr.detectChanges();
+      }, 5000);
+
+    },
+    error: (err) => {
+      // 4. Erreur : On informe l'utilisateur
+      this.isError = true;
+      if (err.status === 404) {
+        this.message = "❌ Aucun compte n'est associé à cet e-mail.";
+      } else {
+        this.message = "❌ Une erreur est survenue. Veuillez réessayer plus tard.";
+      }
+      this.cdr.detectChanges();
+    }
+  });
+}
+
+
+
+
 }

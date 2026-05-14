@@ -15,11 +15,6 @@ export class AuthService {
 
 
 
-  /*register(data: any): Observable<any> {
-    return this.http.post(`${this.api}/signup`, data, {responseType: 'text'});
-  }*/
-
-
 verifyAccount(token: string): Observable<any> {
 
     return this.http.get(`${this.api}/verify`, {
@@ -34,32 +29,25 @@ verifyAccount(token: string): Observable<any> {
     return this.http.post<any>(`${this.api}/login`, { username, password });
   }
 
-  /*saveUser(data: any) {
-    localStorage.setItem('user', JSON.stringify(data));
-  }*/
+
 
 saveUser(data: any) {
   try {
-    // 1. On tente de supprimer l'ancienne version pour libérer de l'espace avant d'écrire
     localStorage.removeItem('user');
 
-    // 2. Tentative d'écriture
     localStorage.setItem('user', JSON.stringify(data));
   } catch (e: any) {
-    // 3. Si ça s'arrête ici, c'est que c'est trop lourd
     console.warn("Quota Storage dépassé, nettoyage en cours...");
 
     try {
-      // 4. Sauvegarde de secours SANS la photo
       const liteUser = { ...data };
-      delete liteUser.photo; // On supprime carrément la clé photo
+      delete liteUser.photo;
 
       localStorage.setItem('user', JSON.stringify(liteUser));
       alert("⚠️ Vos informations ont été enregistrées, mais la photo est trop lourde pour être gardée en mémoire locale.");
     } catch (innerError) {
-      // 5. Cas extrême : même sans photo le storage est saturé (autres données)
       console.error("Échec critique du LocalStorage", innerError);
-      localStorage.clear(); // On vide tout en dernier recours
+      localStorage.clear();
     }
   }
 }
@@ -76,7 +64,6 @@ saveUser(data: any) {
 
 getTenantId(): number | null {
   const user = this.getUser();
-  // On descend dans la hiérarchie : user -> tenant -> id
   return user?.tenant?.idTenant || null;
 }
 
@@ -96,14 +83,21 @@ updateUserOnServer(user: any): Observable<any> {
   return this.http.put(`${this.api}/update-user`, user, { headers });
 }
 
-// Dans ton auth.service.ts
-/*sendCode(email: string): Observable<any> {
-  return this.http.post(`${this.api}/send-otp`, { email: email });
-}*/
+
 
 sendVerificationLink(userData: any) {
-  // userData contient nom, prenom, username, password, etc.
   return this.http.post(`${this.api}/send-verification-link`, userData);
 }
 
+requestPasswordReset(email: string): Observable<any> {
+    return this.http.post(`${this.api}/forgot-password`, { email });
+  }
+
+  verifyResetIdentity(token: string, email: string): Observable<any> {
+    return this.http.post(`${this.api}/verify-reset-identity`, { token, email });
+  }
+
+  resetPasswordFinal(token: string, password: string): Observable<any> {
+    return this.http.post(`${this.api}/reset-password-final`, { token, password });
+  }
 }

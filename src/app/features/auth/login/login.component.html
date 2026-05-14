@@ -96,7 +96,9 @@
           </div>
 
 
-
+          <div class="forgot-password-container">
+            <a (click)="showForgotForm = true" class="forgot-link">Mot de passe oublié ?</a>
+          </div>
           <div *ngIf="message" [ngClass]="isError ? 'alert-danger' : 'alert-info'" class="custom-alert">
             {{ message }}
           </div>
@@ -109,6 +111,30 @@
             Se connecter
           </button>
         </form>
+
+        <ng-container *ngIf="showForgotForm">
+          <div class="form-header">
+            <h2>Récupération</h2>
+            <p>Saisissez votre email pour recevoir un lien de réinitialisation.</p>
+          </div>
+
+          <div class="input-group">
+            <label for="forgotEmail">Email professionnel</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input id="forgotEmail" [(ngModel)]="forgotEmail" name="forgotEmail" type="email" placeholder="nom@entreprise.com">
+            </div>
+          </div>
+
+          <div *ngIf="message" [ngClass]="isError ? 'alert-danger' : 'alert-info'" class="custom-alert">
+            {{ message }}
+          </div>
+
+          <div class="action-buttons mt-3">
+            <button (click)="requestReset()" class="btn-primary mb-2">Envoyer le lien</button>
+            <button (click)="showForgotForm = false; message=''" class="btn-ghost">Retour à la connexion</button>
+          </div>
+        </ng-container>
 
         <div class="auth-footer">
           <p>Pas encore de compte ?</p>

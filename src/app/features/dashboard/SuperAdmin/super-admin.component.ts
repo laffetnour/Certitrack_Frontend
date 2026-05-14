@@ -146,7 +146,21 @@ export class SuperAdminComponent implements OnInit {
     this.currentUser = this.authService.getUser();
     this.loadDashboardData();
     this.loadLowPerfStats();
+    this.loadDashboardData();
+    this.years = [];
+        const currentYear = new Date().getFullYear();
+        console.log(currentYear);
+        for (let year = currentYear + 2; year >= 2026; year--) {
+            this.years.push(year);
+        }
+    this.loadLowPerfStats();
+    this.loadTopFlopStats();
+
   }
+
+onYearChange(): void {
+  this.loadTopFlopStats();
+}
 
 loadLowPerfStats(): void {
   this.superAdminService.getBottomModules().subscribe({
@@ -321,5 +335,234 @@ toggleCatalogue(): void {
     this.showResults = false;
   }
 
+selectedYear: number = new Date().getFullYear();
+years: number[] = [];
+successChartData: ChartData<'bar'> = {
+  labels: [],
+  datasets: []
+};
 
+/*public successChartOptions: ChartConfiguration['options'] = {
+  responsive: true,
+  indexAxis: 'y',
+  plugins: {
+    legend: { display: false },
+    tooltip: { callbacks: { label: (ctx) => ` ${ctx.parsed.x}% de réussite` } }
+  },
+  scales: {
+    x: { min: 0, max: 100, ticks: { callback: (v) => v + '%' } }
+  }
+};
+
+loadTopFlopStats(): void {
+  this.superAdminService.getTopFlopSuccessRate(this.selectedYear).subscribe({
+    next: (data) => {
+      // 1. Fusionner les deux listes
+      const combined = [...data.top, ...data.flop];
+
+      // 2. Supprimer les doublons par nom de module (au cas où le top et le flop se chevauchent)
+      const uniqueModules = Array.from(new Map(combined.map(m => [m.nomModule, m])).values());
+
+      // 3. Trier par taux (du plus haut au plus bas) pour un joli graphique
+      uniqueModules.sort((a, b) => b.taux - a.taux);
+
+      this.successChartData = {
+        labels: uniqueModules.map(m => m.nomModule),
+        datasets: [{
+          label: 'Taux de Réussite (%)',
+          data: uniqueModules.map(m => m.taux),
+          // Coloration dynamique : vert si > 50%, rouge sinon (ou selon tes préférences)
+          backgroundColor: uniqueModules.map(m => m.taux >= 50 ? '#2ecc71' : '#e74c3c'),
+          borderRadius: 8,
+          barThickness: 25
+        }]
+      };
+      this.cdr.detectChanges();
+    },
+    error: (err) => console.error("Erreur stats Top/Flop", err)
+  });
+}*/
+
+public successChartOptions: ChartConfiguration<'bar'>['options'] = {
+  responsive: true,
+  maintainAspectRatio: false,
+  indexAxis: 'y',
+
+  layout: {
+    padding: {
+      top: 10,
+      right: 20,
+      bottom: 10,
+      left: 10
+    }
+  },
+
+  animation: {
+    duration: 1400,
+    easing: 'easeOutQuart'
+  },
+
+  plugins: {
+    legend: {
+      display: false
+    },
+
+    tooltip: {
+      backgroundColor: 'rgba(15, 23, 42, 0.96)',
+      titleColor: '#ffffff',
+      bodyColor: '#e2e8f0',
+      borderColor: 'rgba(255,255,255,0.08)',
+      borderWidth: 1,
+      padding: 14,
+      cornerRadius: 16,
+      displayColors: true,
+
+      callbacks: {
+        label: (ctx) => ` ${ctx.parsed.x}% de réussite`
+      }
+    }
+  },
+
+  scales: {
+    x: {
+      min: 0,
+      max: 100,
+
+      grid: {
+        color: 'rgba(148, 163, 184, 0.12)',
+      },
+
+      border: {
+        display: false
+      },
+
+      ticks: {
+        color: '#94a3b8',
+
+        font: {
+          size: 12,
+          weight: 600
+        },
+
+        callback: (value) => value + '%'
+      }
+    },
+
+    y: {
+      grid: {
+        display: false,
+      },
+
+      border: {
+        display: false
+      },
+
+      ticks: {
+        color: '#334155',
+
+        font: {
+          size: 13,
+          weight: 700
+        }
+      }
+    }
+  }
+};
+
+loadTopFlopStats(): void {
+  this.superAdminService.getTopFlopSuccessRate(this.selectedYear).subscribe({
+    next: (data) => {
+
+      const combined = [...data.top, ...data.flop];
+
+      const uniqueModules = Array.from(
+        new Map(combined.map(m => [m.nomModule, m])).values()
+      );
+
+      uniqueModules.sort((a, b) => b.taux - a.taux);
+
+      this.successChartData = {
+        labels: uniqueModules.map(m => m.nomModule),
+
+        datasets: [
+          {
+            label: 'Taux de Réussite (%)',
+
+            data: uniqueModules.map(m => m.taux),
+
+            backgroundColor: uniqueModules.map(m => {
+
+              if (m.taux >= 80) {
+                return 'rgba(34, 197, 94, 0.9)';
+              }
+
+              if (m.taux >= 60) {
+                return 'rgba(59, 130, 246, 0.9)';
+              }
+
+              if (m.taux >= 40) {
+                return 'rgba(245, 158, 11, 0.9)';
+              }
+
+              return 'rgba(239, 68, 68, 0.92)';
+            }),
+
+            hoverBackgroundColor: uniqueModules.map(m => {
+
+              if (m.taux >= 80) {
+                return '#16a34a';
+              }
+
+              if (m.taux >= 60) {
+                return '#2563eb';
+              }
+
+              if (m.taux >= 40) {
+                return '#d97706';
+              }
+
+              return '#dc2626';
+            }),
+
+            borderRadius: 14,
+            borderSkipped: false,
+
+            borderWidth: 1.5,
+
+            borderColor: uniqueModules.map(m => {
+
+              if (m.taux >= 80) {
+                return 'rgba(34, 197, 94, 1)';
+              }
+
+              if (m.taux >= 60) {
+                return 'rgba(59, 130, 246, 1)';
+              }
+
+              if (m.taux >= 40) {
+                return 'rgba(245, 158, 11, 1)';
+              }
+
+              return 'rgba(239, 68, 68, 1)';
+            }),
+
+            hoverBorderWidth: 2,
+
+            barThickness: 28,
+            maxBarThickness: 32,
+
+            categoryPercentage: 0.72,
+            barPercentage: 0.82
+          }
+        ]
+      };
+
+      this.cdr.detectChanges();
+    },
+
+    error: (err) => {
+      console.error('Erreur stats Top/Flop', err);
+    }
+  });
+}
 }

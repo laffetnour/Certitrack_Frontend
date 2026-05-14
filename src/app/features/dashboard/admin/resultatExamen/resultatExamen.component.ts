@@ -87,6 +87,7 @@ export class ResultatExamenComponent implements OnInit {
     this.resultatService.getResultatsBySession(sessionId).subscribe({
       next: (data) => {
         this.resultats = data;
+        console.log(data);
         this.cdr.detectChanges();
       },
       error: (err) => {
