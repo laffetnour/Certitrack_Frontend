@@ -185,13 +185,20 @@ loadLowPerfStats(): void {
 
             const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
 
-            gradient.addColorStop(0, '#1E293B');
+            /*gradient.addColorStop(0, '#1E293B');
             gradient.addColorStop(0.5, '#22D3EE');
-            gradient.addColorStop(1, '#22D3EE');
+            gradient.addColorStop(1, '#22D3EE');*/
+
+            gradient.addColorStop(0, '#303D49');
+            gradient.addColorStop(0.5, '#ea5357');
+            gradient.addColorStop(1, '#ff7675');
+
+
 
             return gradient;
           },
-          hoverBackgroundColor: '#22D3EE'
+          //hoverBackgroundColor: '#22D3EE'
+          hoverBackgroundColor: '#ea5357'
         }]
       };
 
@@ -492,7 +499,7 @@ loadTopFlopStats(): void {
 
             backgroundColor: uniqueModules.map(m => {
 
-              if (m.taux >= 80) {
+              /*if (m.taux >= 80) {
                 return 'rgba(34, 197, 94, 0.9)';
               }
 
@@ -504,12 +511,26 @@ loadTopFlopStats(): void {
                 return 'rgba(245, 158, 11, 0.9)';
               }
 
-              return 'rgba(239, 68, 68, 0.92)';
+              return 'rgba(239, 68, 68, 0.92)';*/
+
+              if (m.taux >= 80) {
+                return 'rgba(234, 83, 87, 0.92)';
+              }
+
+              if (m.taux >= 60) {
+                return 'rgba(255, 118, 117, 0.90)';
+              }
+
+              if (m.taux >= 40) {
+                return 'rgba(48, 61, 73, 0.88)';
+              }
+
+              return 'rgba(120, 53, 15, 0.88)';
             }),
 
             hoverBackgroundColor: uniqueModules.map(m => {
 
-              if (m.taux >= 80) {
+              /*if (m.taux >= 80) {
                 return '#16a34a';
               }
 
@@ -521,7 +542,21 @@ loadTopFlopStats(): void {
                 return '#d97706';
               }
 
-              return '#dc2626';
+              return '#dc2626';*/
+
+              if (m.taux >= 80) {
+                return '#d94347';
+              }
+
+              if (m.taux >= 60) {
+                return '#ea5357';
+              }
+
+              if (m.taux >= 40) {
+                return '#303D49';
+              }
+
+              return '#78350f';
             }),
 
             borderRadius: 14,
@@ -531,7 +566,7 @@ loadTopFlopStats(): void {
 
             borderColor: uniqueModules.map(m => {
 
-              if (m.taux >= 80) {
+              /*if (m.taux >= 80) {
                 return 'rgba(34, 197, 94, 1)';
               }
 
@@ -543,7 +578,21 @@ loadTopFlopStats(): void {
                 return 'rgba(245, 158, 11, 1)';
               }
 
-              return 'rgba(239, 68, 68, 1)';
+              return 'rgba(239, 68, 68, 1)';*/
+
+              if (m.taux >= 80) {
+                return '#ea5357';
+              }
+
+              if (m.taux >= 60) {
+                return '#ff7675';
+              }
+
+              if (m.taux >= 40) {
+                return '#303D49';
+              }
+
+              return '#78350f';
             }),
 
             hoverBorderWidth: 2,

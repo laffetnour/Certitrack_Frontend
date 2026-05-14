@@ -160,7 +160,17 @@ onUpload() {
     },
     error: (err) => {
       this.uploading = false;
+      //Swal.fire('Erreur', 'Échec critique de l\'importation', 'error');
+      //this.cdr.detectChanges();
+
+      this.selectedFile = null;
+
+      if (this.fileInput) {
+        this.fileInput.nativeElement.value = '';
+      }
+
       Swal.fire('Erreur', 'Échec critique de l\'importation', 'error');
+
       this.cdr.detectChanges();
     }
   });
