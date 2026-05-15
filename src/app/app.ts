@@ -13,7 +13,8 @@ export class App {
 
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-//import { LoginComponent } from './features/auth/login/login.component';
+import { Title } from '@angular/platform-browser';
+import { ConfigService } from './core/services/config.service';
 
 @Component({
   selector: 'app-root',
@@ -23,4 +24,23 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.css'
 })
 export class AppComponent {
+
+  constructor(
+      private titleService: Title,
+      private configService: ConfigService
+    ) {}
+
+   ngOnInit() {
+       this.configService.config$.subscribe(config => {
+         if (config && config.nomPlateforme) {
+           this.titleService.setTitle(config.nomPlateforme);
+
+         } else {
+           this.titleService.setTitle('CertiTrack');
+         }
+       });
+       this.configService.getConfig().subscribe();
+     }
+
+
   }
