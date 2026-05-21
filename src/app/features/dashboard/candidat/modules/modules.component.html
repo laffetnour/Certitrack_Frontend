@@ -21,13 +21,9 @@
     </div>
   </div>
   <div *ngIf="currentView === 'affectes' && displayedModules.length > 0" class="others-section">
-  <!--<h2 *ngIf="displayedModules.length > 0">Mes Modules</h2>-->
-  <!--<h2 *ngIf="currentView === 'affectes' && displayedModules.length > 0">
-    Modules recommandés pour vous
-  </h2>-->
+
     <h2 class="section-title"> Modules recommandés pour vous</h2>
 
-  <!-- <div class="stats-grid">-->
     <div *ngIf="currentView === 'affectes'" class="stats-grid">
       <div class="stat-card" *ngFor="let m of displayedModules">
         <div class="stat-icon-wrapper">
@@ -40,9 +36,7 @@
             <span *ngIf="m.avecTest" class="badge-test">✅ Avec test ({{ m.seuilScore }}%)</span>
             <span *ngIf="!m.avecTest" class="badge-no-test">ℹ️ Sans test ({{ m.seuilScore }}%)</span>
           </div>
-          <!--<button class="btn-inscrire" [disabled]="!m.hasActiveSession || isSubmitting" (click)="sinscrire(m)">
-            <span>{{ m.hasActiveSession ? (isSubmitting ? "Traitement..." : "S'inscrire") : "Bientôt disponible" }}</span>
-          </button>-->
+
           <button class="btn-inscrire"
                   [disabled]="!m.hasActiveSession || m.isAlreadySubscribed || isSubmitting"
                   (click)="sinscrire(m)">
@@ -76,11 +70,6 @@
   </div>
 
 
-
- <!-- <div *ngIf="showAll && mode.includes('OUVERT')" class="others-section">
-
-    <div class="stats-grid">
-      <div class="stat-card" *ngFor="let m of filteredOuverts">-->
   <div *ngIf="currentView === 'autres' && mode === 'OUVERTE'" class="others-section">
 
     <h2 class="section-title">Autres modules disponibles</h2>
@@ -116,9 +105,7 @@
 
 
     <div class="actions-footer">
-      <!--<button (click)="goBack()" class="btn-autres">
-        ⬅️ Retour
-      </button>-->
+
       <button (click)="goBack()" class="btn-autres">⬅️ Retour</button>
     </div>
   </div>

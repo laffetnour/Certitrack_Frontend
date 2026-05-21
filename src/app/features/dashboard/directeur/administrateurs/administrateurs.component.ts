@@ -54,7 +54,6 @@ export class AdministrateursComponent implements OnInit {
   loadAdmins(): void {
     this.loading = true;
     const idEtab = this.contextService.getEtablissementId();
-    //this.directeurService.getAdmins().subscribe({
     this.directeurService.getAdmins(idEtab).subscribe({
       next: (data) => {
         this.admins = data;
@@ -225,7 +224,7 @@ export class AdministrateursComponent implements OnInit {
 
 
   openEditModal(admin: any): void {
-    this.selectedAdmin = { ...admin }; // ← Copie
+    this.selectedAdmin = { ...admin };
     this.showModal = true;
     this.isEditMode = true;
     const formattedDate = admin.dateNais
@@ -291,7 +290,6 @@ export class AdministrateursComponent implements OnInit {
     } else {
 
       const idEtab = this.contextService.getEtablissementId();
-      //this.directeurService.createAdmin(data).subscribe({
       this.directeurService.createAdmin(data, idEtab).subscribe({
         next: () => {
           this.successMessage = 'Admin ajouté avec succès';

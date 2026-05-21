@@ -156,8 +156,6 @@
             Le nom est obligatoire (min. 3 caractères).
           </small>
 
-
-          <!-- LOGO -->
           <div class="form-group">
             <label>Logo (URL ou upload)</label>
 
@@ -169,7 +167,6 @@
             <input type="file" (change)="onFileSelected($event, 'logo')" />
           </div>
 
-          <!-- BANNIERE -->
           <div class="form-group">
             <label>Bannière (URL ou upload)</label>
 
@@ -180,10 +177,6 @@
 
             <input type="file" (change)="onFileSelected($event, 'banniere')" />
           </div>
-
-
-
-
 
           <div class="form-group">
             <label>Méthode d'identification des candidats</label>
@@ -217,20 +210,7 @@
             </div>
           </div>
 
-
-
-
-
-
         </div>
-
-        <!--<div class="modal-footer">
-          <button type="button" class="btn-cancel" (click)="closeModal()">Annuler</button>
-          <button type="submit" class="btn-submit" [disabled]="tenantForm.invalid || loading">
-            <span *ngIf="!loading">{{ isEditMode ? 'Mettre à jour' : 'Créer' }}</span>
-            <span *ngIf="loading">Action en cours...</span>
-          </button>
-        </div>-->
 
         <div class="modal-footer">
           <button type="button" class="btn-cancel" (click)="closeModal()">Annuler</button>

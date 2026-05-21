@@ -1,4 +1,3 @@
-/* Container de la nav */
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css");
 
 .navbar-nav {
@@ -9,7 +8,6 @@
 
 }
 
-/* Style de base des liens */
 .nav-link {
   position: relative;
   color: #d32f2f !important;
@@ -20,39 +18,33 @@
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  /* Suppression de la bordure basse par défaut */
 
   border-bottom: none !important;
-  text-decoration: none !important; /* Force la suppression du soulignement texte */
+  text-decoration: none !important;
 }
 
-/* Hover effect */
 .nav-link:hover {
   color: #111827 !important;
-  background-color: #f3f4f6; /* Gris très léger au survol */
+  background-color: #f3f4f6;
 }
 
-/* État Actif (Désactive le soulignement ici aussi) */
 .nav-link.active {
  color: #d32f2f !important;
    background-color: #e0e0e0 !important;
-  font-weight: 600; /* Texte un peu plus épais pour marquer la sélection */
-  border-bottom: none !important; /* PLUS DE SOULIGNEMENT */
+  font-weight: 600;
+  border-bottom: none !important;
 
 }
 
-/* SUPPRESSION de l'animation de la barre bleue (le trait) */
 .nav-link.active::after {
   display: none !important;
   content: none !important;
 }
 
-/* Icônes */
 .nav-link i {
   font-size: 1.1rem;
 }
 
-/* Scroll horizontal */
 .custom-scroll {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -69,14 +61,13 @@
   flex-direction: column;
 }
 
-/* ITEM PRINCIPAL (identique aux autres nav-item) */
 .nav-item-group > .nav-item {
   padding: 12px 25px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  color: var(--smart-red) !important; /* 🔴 ACTIF COMME LES AUTRES */
+  color: var(--smart-red) !important;
   cursor: pointer;
 
   transition: 0.2s;
@@ -88,33 +79,29 @@
   background: transparent;
 }
 
-/* HOVER = GRIS comme les autres nav */
 .nav-item-group > .nav-item:hover {
   background-color: #f3f4f6 !important;
   color: #111827 !important;
 }
 
-/* FLÈCHE */
 .arrow {
   font-size: 0.8rem;
   color: inherit;
   transition: transform 0.3s ease;
 }
 
-/* SUB MENU */
 .sub-menu {
   display: flex;
   flex-direction: column;
 }
 
-/* SUB ITEM = même style que nav-item normal (INACTIF) */
 .nav-item.sub {
   padding: 12px 25px 12px 45px;
 
   display: flex;
   align-items: center;
 
-  color: var(--text-muted); /* ⚫ comme inactif */
+  color: var(--text-muted);
   cursor: pointer;
 
   font-weight: 500;
@@ -126,37 +113,29 @@
   background: transparent;
 }
 
-/* HOVER SUB = GRIS (comme les autres nav) */
 .nav-item.sub:hover {
   background-color: #f3f4f6;
   color: #111827;
 }
 
-/* ACTIVE SUB = ROUGE */
 .nav-item.sub.active {
   color: var(--smart-red);
   border-right: 4px solid var(--smart-red);
   background-color: rgba(234, 83, 87, 0.08);
 }
 
-/* ICON spacing */
 .nav-item.sub i {
   margin-right: 10px;
 }
 
 
-
-
-
-
-/* Bouton mobile : Caché sur PC, stylisé sur Mobile */
 .sub-nav-toggle {
-  display: none; /* Par défaut caché */
+  display: none;
 }
 
 @media (max-width: 991px) {
   .sub-nav-toggle {
-    display: flex; /* Apparaît sur mobile */
+    display: flex;
     align-items: center;
     gap: 10px;
     width: 100%;
@@ -169,10 +148,9 @@
   }
 
   .sub-navigation {
-    display: none; /* Cache la barre horizontale */
+    display: none;
   }
 
-  /* Quand on clique sur le bouton, on affiche la liste en vertical */
   .sub-navigation.mobile-open {
     display: block;
     position: absolute;

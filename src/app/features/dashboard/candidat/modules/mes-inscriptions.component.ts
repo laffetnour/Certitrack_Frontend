@@ -3,7 +3,6 @@ import { ModuleCandidatService } from '../../../../core/services/module-candidat
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-/*import { ConfigService } from '../../../../core/services/config.service';*/
 import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
@@ -27,7 +26,7 @@ export class MesInscriptionsComponent implements OnInit {
   constructor(private service: ModuleCandidatService,
     private cdr: ChangeDetectorRef,private router: Router,
     private authService: AuthService
-   /* public configService: ConfigService*/) {}
+   ) {}
 
   ngOnInit(): void {
 
@@ -36,7 +35,7 @@ export class MesInscriptionsComponent implements OnInit {
       if (user && user?.idUtilisateur) {
         this.loadInscriptions();
         this.loadEpreuves();
-        this.loadGmetrixDecision(user.idUtilisateur); // 🔥 AJOUT
+        this.loadGmetrixDecision(user.idUtilisateur);
       } else {
         this.loading = false;
         console.warn("Utilisateur non connecté ou ID manquant");
@@ -64,16 +63,11 @@ export class MesInscriptionsComponent implements OnInit {
    });
  }
 
-  /*allerAuTest(idSession: number) {
-    console.log("Lancement du test pour la session ID :", idSession);
-    // Logique de navigation vers le composant de test ici
-     this.router.navigate(['/candidat/test', idSession]);
-  }*/
 
 allerAuTest(item: any) {
-  console.log("Données reçues de l'item :", item); // 🔥 Regarde ceci dans la console F12
+  console.log("Données reçues de l'item :", item);
 
-    const sessionId = item.sessionIdValide || item.sessionId; // Ajout d'un fallback
+    const sessionId = item.sessionIdValide || item.sessionId;
     const moduleTenantId = item.idModuleTenant || item.moduleTenantId;
 
   if (sessionId && moduleTenantId) {
@@ -85,7 +79,7 @@ allerAuTest(item: any) {
 }
 
   loadEpreuves() {
-   const user = this.authService.getUser(); // 🔥 Utilisation propre
+   const user = this.authService.getUser();
        if (!user?.idUtilisateur) return;
 
     this.service.getEpreuves(user?.idUtilisateur).subscribe({
@@ -101,21 +95,6 @@ allerAuTest(item: any) {
   }
 
 
-  /*getEpreuve(sessionId: any) {
-    if (!this.epreuves || this.epreuves.length === 0 || !sessionId) {
-      return null;
-    }
-
-    // On compare l'ID reçu avec le sessionId de l'épreuve
-    const epreuveTrouvee = this.epreuves.find(e => e.sessionId == sessionId);
-
-    if (epreuveTrouvee) {
-      console.log(`✅ Match trouvé pour session ${sessionId}`);
-    }
-
-    return epreuveTrouvee;
-  }*/
-
   getEpreuve(sessionId: any, moduleTenantId: any) {
     if (!this.epreuves || this.epreuves.length === 0) {
       return null;
@@ -127,15 +106,10 @@ allerAuTest(item: any) {
     );
   }
 
-  // ... dans ta classe MesInscriptionsComponent ...
-
-// Getter pour récupérer les 3 dernières inscriptions
   get recentesInscriptions(): any[] {
-    // On crée une copie pour ne pas modifier l'original, puis on inverse l'ordre
     return [...this.mesModulesInscrits].reverse().slice(0, 3);
   }
 
-// Getter pour le reste des inscriptions (toutes sauf les 3 récentes)
   get autresInscriptions(): any[] {
     return [...this.mesModulesInscrits].reverse().slice(3);
   }
@@ -153,8 +127,6 @@ allerAuTest(item: any) {
 
   getDecision(item: any) {
     if (!this.inscriptionsGmetrix || this.inscriptionsGmetrix.length === 0) return null;
-
-    // On cherche par l'ID du module tenant qui est présent dans les deux objets
     return this.inscriptionsGmetrix.find(x => x.moduleTenantId === item.idModuleTenant);
   }
 
@@ -169,7 +141,7 @@ allerAuTest(item: any) {
 
     this.service.reserverExamen({
       inscriptionId: gm.inscriptionId,
-      sessionExamenId: gm.sessionExamenId, // ⚠️ tu dois l’ajouter backend si pas encore
+      sessionExamenId: gm.sessionExamenId,
       usernameCertiport: user.username
     }).subscribe({
       next: () => {
@@ -182,16 +154,9 @@ allerAuTest(item: any) {
     });
   }
 
-
-
-
-
-  // 1. Ajoutez cette variable en haut de votre classe
   showSuccessModal: boolean = false;
 
-// 2. Modifiez la fonction confirmerReservation
   confirmerReservation(gm: any) {
-    // On ne met pas d'alert() ici, le message s'affiche déjà dans le HTML via isEmailValid()
     if (!this.isEmailValid()) {
       return;
     }
@@ -217,10 +182,9 @@ allerAuTest(item: any) {
     });
   }
 
-// 3. Créez cette fonction pour gérer la réussite
   private handleSuccess() {
-    this.annulerFormulaire(); // Ferme le modal de saisie
-    this.showSuccessModal = true; // Ouvre le modal de succès
+    this.annulerFormulaire();
+    this.showSuccessModal = true;
 
     const user = this.authService.getUser();
     if (user) {
@@ -229,12 +193,10 @@ allerAuTest(item: any) {
     this.cdr.detectChanges();
   }
 
-// 4. Fonction pour fermer le modal de succès
   fermerSuccessModal() {
     this.showSuccessModal = false;
   }
 
-// Fonction utilitaire pour éviter de répéter le code de fermeture
   private finaliserReservation() {
     this.annulerFormulaire();
     this.cdr.detectChanges();
@@ -245,18 +207,9 @@ allerAuTest(item: any) {
     }
   }
 
-
-
-  /*ouvrirFormulaire(gm: any) {
-    console.log("Ouverture du formulaire pour l'inscription :", gm.inscriptionId);
-    this.selectedInscriptionId = gm.inscriptionId; // C'est cette ligne qui déclenche le *ngIf dans le HTML
-    this.usernameCertiport = ''; // Reset du champ
-    this.cdr.detectChanges();
-  }*/
-
   ouvrirFormulaire(gm: any) {
     this.selectedInscriptionId = gm.inscriptionId;
-    this.selectedGm = gm; // 🔥 IMPORTANT
+    this.selectedGm = gm;
     this.usernameCertiport = '';
   }
 
@@ -264,7 +217,6 @@ allerAuTest(item: any) {
     this.selectedInscriptionId = null;
   }
 
-  // À ajouter dans votre classe
   isEmailValid(): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(this.usernameCertiport);

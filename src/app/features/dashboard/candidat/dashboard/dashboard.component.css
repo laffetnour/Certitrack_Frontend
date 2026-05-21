@@ -1,6 +1,3 @@
-/* ===============================
-   WELCOME SECTION (CLEAN + MODERN)
-================================ */
 .welcome-section {
   margin-bottom: 14px;
   animation: fadeDown 0.4s ease;
@@ -26,9 +23,6 @@
 }
 
 
-/* ===============================
-   MAIN GRID
-================================ */
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1.15fr;
@@ -36,10 +30,6 @@
   align-items: start;
 }
 
-
-/* ===============================
-   STAT CARDS (LIGHTING + MODERN)
-================================ */
 .stat-card {
   position: relative;
   overflow: hidden;
@@ -62,7 +52,6 @@
   -webkit-backdrop-filter: blur(6px);
 }
 
-/* LIGHTING EFFECT */
 .stat-card::before {
   content: "";
   position: absolute;
@@ -79,7 +68,6 @@
   opacity: 0.9;
 }
 
-/* CONTENT ABOVE EFFECT */
 .stat-card > * {
   position: relative;
   z-index: 1;
@@ -92,9 +80,6 @@
 }
 
 
-/* ===============================
-   ICON
-================================ */
 .stat-icon-wrapper {
   width: 40px;
   height: 40px;
@@ -115,9 +100,6 @@
 }
 
 
-/* ===============================
-   TEXT
-================================ */
 .stat-card p {
   margin: 0;
   font-size: 12px;
@@ -133,9 +115,6 @@
 }
 
 
-/* ===============================
-   CHART BLOCK
-================================ */
 .chart-column {
   background: #ffffff;
   border-radius: 14px;
@@ -147,9 +126,6 @@
 }
 
 
-/* ===============================
-   CHART TITLE
-================================ */
 .chart-header h2 {
   font-size: 13.5px;
   font-weight: 700;
@@ -157,10 +133,6 @@
   margin-bottom: 6px;
 }
 
-
-/* ===============================
-   CHART CONTAINER (CENTER FIX)
-================================ */
 .chart-container {
   position: relative;
   height: 200px;
@@ -170,7 +142,6 @@
   justify-content: center;
 }
 
-/* DONUT SIZE FIX */
 .chart-container canvas {
   display: block !important;
   margin: 0 auto !important;
@@ -188,10 +159,6 @@
 }
 
 
-
-/* ===============================
-   LIGHTING (DONUT)
-================================ */
 .chart-container::after {
   content: "";
   position: absolute;
@@ -210,9 +177,6 @@
 }
 
 
-/* ===============================
-   RESPONSIVE
-================================ */
 @media (max-width: 992px) {
   .stats-grid {
     grid-template-columns: 1fr;
@@ -224,9 +188,6 @@
 }
 
 
-/* ===============================
-   DARK MODE
-================================ */
 :host-context(.dark-mode) .welcome-section h1 {
   color: #f1f5f9;
 }
@@ -276,12 +237,6 @@
 }
 
 
-
-
-
-/* ===============================
-   CHARTS WRAPPER
-================================ */
 .charts-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -289,10 +244,6 @@
   margin-top: 18px;
 }
 
-
-/* ===============================
-   MODERN CHART CARD
-================================ */
 .chart-column {
   position: relative;
   overflow: hidden;
@@ -323,9 +274,6 @@
 }
 
 
-/* ===============================
-   LIGHT EFFECT
-================================ */
 .chart-column::before {
   content: "";
 
@@ -349,9 +297,6 @@
 }
 
 
-/* ===============================
-   CHART HEADER
-================================ */
 .chart-top {
   display: flex;
   justify-content: space-between;
@@ -374,9 +319,6 @@
 }
 
 
-/* ===============================
-   ICON BADGE
-================================ */
 .chart-badge {
   width: 46px;
   height: 46px;
@@ -401,9 +343,6 @@
 }
 
 
-/* ===============================
-   MINI STATS
-================================ */
 .mini-stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -448,7 +387,6 @@
 }
 
 
-/* COLORS */
 .mini-stat.total {
   background:
     linear-gradient(
@@ -476,18 +414,11 @@
     );
 }
 
-
-/* ===============================
-   BAR CHART
-================================ */
 .bar-chart {
   height: 260px;
 }
 
 
-/* ===============================
-   RESPONSIVE
-================================ */
 @media (max-width: 1100px) {
 
   .charts-wrapper {
@@ -506,18 +437,9 @@
 }
 
 
-
-/*hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh*/
-
-
-/* ===============================
-   MAIN GRID
-================================ */
 .stats-grid {
   display: grid;
 
-  /* gauche = stats + chart1
-     droite = chart2 */
   grid-template-columns: 1.1fr 1fr ;
 
   gap: 16px;
@@ -525,9 +447,6 @@
 }
 
 
-/* ===============================
-   STATS SIDE BY SIDE
-================================ */
 .stats-grid > .stat-card:nth-child(1) {
   grid-column: 1;
   grid-row: 1;
@@ -546,9 +465,6 @@
 }
 
 
-/* ===============================
-   CHART 1 UNDER STATS
-================================ */
 .stats-grid > .chart-column:nth-child(3) {
   grid-column: 1;
   grid-row: 2;
@@ -560,9 +476,6 @@
 }
 
 
-/* ===============================
-   CHART 2 RIGHT SIDE
-================================ */
 .stats-grid > .chart-column:nth-child(4) {
   grid-column: 2;
   grid-row: 1 / span 2;
@@ -571,27 +484,18 @@
 }
 
 
-/* ===============================
-   STAT CARDS
-================================ */
 .stat-card {
   min-height: 84px;
   padding: 12px 14px;
 }
 
 
-/* ===============================
-   CHART BLOCKS
-================================ */
 .chart-column {
   padding: 16px;
   border-radius: 18px;
 }
 
 
-/* ===============================
-   CHART SIZES
-================================ */
 .chart-container {
   height: 190px;
 }
@@ -601,9 +505,6 @@
 }
 
 
-/* ===============================
-   RESPONSIVE
-================================ */
 @media (max-width: 1100px) {
 
   .stats-grid {

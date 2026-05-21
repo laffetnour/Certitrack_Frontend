@@ -198,9 +198,6 @@ export class ListeAdminsTenantComponent implements OnInit {
   onTenantStatusChange(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
 
-    /*if (value === 'true') this.selectedTenantStatus = true;
-    else if (value === 'false') this.selectedTenantStatus = false;
-    else this.selectedTenantStatus = null;*/
 
     this.selectedTenantStatus = value === '' ? null : value === 'true';
 
@@ -244,13 +241,6 @@ export class ListeAdminsTenantComponent implements OnInit {
       }
     });
   }
-  /*isTenantActive(admin: any): boolean {
-    const tenant = this.tenants.find(t => t.nom === admin.nomTenant);
-    console.log(admin);
-    return tenant ? tenant.statut : false;
-  }*/
-
-
 
   isBulkActionAllowed(): boolean {
 

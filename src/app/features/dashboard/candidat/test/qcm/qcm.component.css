@@ -1,31 +1,21 @@
 :host {
-  /* =========================
-     LIGHT MODE (DEFAULT)
-     ========================= */
   --bg-page: #f5f7fb;
   --bg-card: #ffffff;
-
   --text-main: #1e293b;
   --text-secondary: #64748b;
   --text-header: #334155;
-
   --border-color: #e2e8f0;
-
   --answer-hover: #f1f5f9;
   --answer-selected: rgba(234, 83, 87, 0.15);
   --answer-selected-border: #ea5357;
-
   --btn-bg: #3b82f6;
   --btn-hover: #2563eb;
   --btn-disabled: #cbd5f5;
-
   --shadow-main: rgba(0,0,0,0.1);
   --shadow-card: rgba(0,0,0,0.08);
 }
 
-/* =========================
-   DARK MODE
-   ========================= */
+
 :host-context(.dark-mode) {
 
   --bg-page: #0f172a;
@@ -49,7 +39,6 @@
   --shadow-card: rgba(0,0,0,0.4);
 }
 
-/* PAGE CENTER */
 .page-container {
   min-height: 100vh;
   display: flex;
@@ -63,7 +52,6 @@
   transition: background 0.3s ease;
 }
 
-/* RESULT */
 .result-wrapper {
   display: flex;
   justify-content: center;
@@ -107,13 +95,11 @@
   color: #22c55e;
 }
 
-/* QCM CONTAINER */
 .qcm-container {
   width: 100%;
   max-width: 700px;
 }
 
-/* HEADER */
 .qcm-header {
   display: flex;
   justify-content: space-between;
@@ -125,7 +111,6 @@
   color: var(--text-header);
 }
 
-/* CARD */
 .question-card {
   background: var(--bg-card);
 
@@ -152,7 +137,6 @@
   color: var(--text-main);
 }
 
-/* ANSWERS */
 .answers {
   margin-top: 15px;
 }
@@ -183,7 +167,6 @@
   border-color: var(--answer-selected-border);
 }
 
-/* BUTTON */
 .actions {
   margin-top: 20px;
   text-align: right;
@@ -214,7 +197,6 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* ANIMATION */
 @keyframes fadeIn {
   from {
     opacity: 0;

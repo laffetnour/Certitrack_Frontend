@@ -1,261 +1,3 @@
-/*
-body {
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  background: #f1f5f9;
-  color: #1e293b;
-}
-
-.content-area {
-  padding: 30px;
-
-  margin: auto;
-  width: 100%;
-}
-
-
-.search-input {
-  width: 100%;
-  padding: 14px 18px;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  margin-bottom: 20px;
-  font-size: 14px;
-  background: #ffffff;
-  transition: all 0.25s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-}
-
-.search-input:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-  outline: none;
-}
-
-
-.filter-container {
-  display: flex;
-  gap: 25px;
-  margin-bottom: 25px;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  flex-wrap: wrap;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-}
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.filter-group label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #64748b;
-}
-
-.filter-select {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
-  background: #fff;
-  color: #1e293b;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.filter-select:hover {
-  border-color: #4f46e5;
-}
-
-.filter-select:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
-  outline: none;
-}
-
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-
-.stat-card {
-  background: #ffffff;
-  padding: 22px;
-  border-radius: 18px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-  display: flex;
-  gap: 16px;
-  transition: all 0.3s ease;
-  border: 1px solid #f1f5f9;
-}
-
-.stat-card:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
-}
-
-
-.stat-icon-wrapper {
-  width: 60px;
-  height: 60px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3);
-}
-
-
-.stat-card h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.stat-card p {
-  margin: 4px 0;
-  font-size: 13px;
-  color: #64748b;
-}
-
-
-.badge-test {
-  background: #dcfce7;
-  color: #166534;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.badge-no-test {
-  background: #fef3c7;
-  color: #92400e;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-
-.btn-inscrire {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  background: linear-gradient(135deg, #4f46e5, #6366f1);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  margin-top: 10px;
-}
-
-.btn-inscrire:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
-}
-
-.btn-inscrire:disabled {
-  background: #e2e8f0;
-  color: #94a3b8;
-  cursor: not-allowed;
-}
-
-
-.actions-footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 40px 0;
-  padding: 20px 0;
-  border-top: 1px dashed #e2e8f0;
-}
-
-.actions-footer.column {
-  flex-direction: column;
-  gap: 15px;
-  text-align: center;
-  width: 100%;
-}
-
-
-.btn-autres {
-  background: white;
-  color: #4f46e5;
-  border: 2px solid #4f46e5;
-  padding: 12px 26px;
-  border-radius: 50px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-autres:hover {
-  background: #4f46e5;
-  color: white;
-  transform: translateY(-2px);
-}
-
-
-.others-section {
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 18px;
-  margin-top: 25px;
-  animation: fadeIn 0.4s ease-in-out;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.05);
-}
-
-
-.section-title {
-  text-align: center;
-  font-size: 1.6rem;
-  font-weight: 700;
-  margin-bottom: 25px;
-  color: #1e293b;
-}
-
-.info-text {
-  font-size: 14px;
-  color: #64748b;
-}
-
-
-.no-data {
-  text-align: center;
-  margin-top: 30px;
-  color: #94a3b8;
-  font-size: 14px;
-}
-
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-*/
-
-
-/* ================= VARIABLES (LIGHT + DARK MODE) ================= */
 :root {
   --bg-admin: #f1f5f9;
   --bg-card: #ffffff;
@@ -275,7 +17,6 @@ body.dark {
   color-scheme: dark !important;
 }
 
-/* ================= GLOBAL ================= */
 body {
   font-family: 'Inter', 'Segoe UI', sans-serif;
   background: var(--bg-admin);
@@ -288,7 +29,6 @@ body {
   width: 100%;
 }
 
-/* ================= SEARCH ================= */
 .search-input {
   width: 100%;
   padding: 14px 18px;
@@ -311,7 +51,6 @@ body {
   outline: none;
 }
 
-/* ================= FILTER ================= */
 .filter-container {
   display: flex;
   gap: 25px;
@@ -356,13 +95,11 @@ body {
   background: var(--bg-card);
   color: var(--text-main);
 
-  font-size: 14px;        /* 🔥 un peu plus lisible */
-  font-weight: 500;       /* 🔥 meilleure lisibilité */
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
 
   transition: all 0.2s ease;
-
-  /* 🔥 améliore rendu texte */
   letter-spacing: 0.2px;
 
 }
@@ -377,14 +114,12 @@ body {
   outline: none;
 }
 
-/* ================= GRID ================= */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
 }
 
-/* ================= CARD ================= */
 .stat-card {
   background: var(--bg-card);
   padding: 22px;
@@ -403,7 +138,6 @@ body {
   box-shadow: 0 12px 30px rgba(0,0,0,0.12);
 }
 
-/* ================= ICON ================= */
 .stat-icon-wrapper {
   width: 60px;
   height: 60px;
@@ -422,7 +156,6 @@ body {
   font-size: 22px;
 }
 
-/* ================= TEXT ================= */
 .stat-card h3 {
   margin: 0;
   font-size: 18px;
@@ -436,7 +169,6 @@ body {
   color: var(--text-muted);
 }
 
-/* ================= BADGES ================= */
 .badge-test {
   background: rgba(34, 197, 94, 0.15);
   color: #22c55e;
@@ -455,7 +187,6 @@ body {
   font-weight: 600;
 }
 
-/* ================= BUTTON ================= */
 .btn-inscrire {
   width: 100%;
   padding: 12px;
@@ -483,7 +214,6 @@ body {
   cursor: not-allowed;
 }
 
-/* ================= FOOTER ACTIONS ================= */
 .actions-footer {
   display: flex;
   justify-content: center;
@@ -501,7 +231,6 @@ body {
   text-align: center;
 }
 
-/* ================= BUTTON SECONDARY ================= */
 .btn-autres {
   background: var(--bg-card);
   color: var(--smart-red);
@@ -520,7 +249,6 @@ body {
   color: white;
 }
 
-/* ================= SECTIONS ================= */
 .others-section {
   background: var(--bg-card);
   padding: 30px;
@@ -530,7 +258,6 @@ body {
   box-shadow: 0 8px 25px rgba(0,0,0,0.05);
 }
 
-/* ================= TITLE ================= */
 .section-title {
   text-align: center;
   font-size: 1.6rem;
@@ -540,7 +267,6 @@ body {
   color: var(--text-main);
 }
 
-/* ================= INFO TEXT ================= */
 .info-text {
   font-size: 14px;
   color: var(--text-muted);
@@ -548,47 +274,30 @@ body {
   font-style: italic;
 }
 
-/* ================= EMPTY ================= */
 .no-data {
   text-align: center;
   margin-top: 30px;
   color: var(--text-muted);
   font-size: 14px;
 }
-/* Style par défaut pour les options (Light Mode) */
-/*.filter-select option {
-  background-color: #ffffff !important;
-  color: #1e293b !important;
-}*/
 
 .filter-select option {
   background-color: var(--bg-card);
   color: var(--text-main);
 }
 
-/* Style pour le Dark Mode - On utilise des couleurs fixes pour éviter les bugs navigateurs */
-/*body.dark .filter-select option {
-  background-color: #1e293b !important;
-  color: #e2e8f2 !important;
-}*/
-
 body.dark .filter-select {
-  background-color: #1e293b !important; /* Couleur fixe pour éviter les conflits */
+  background-color: #1e293b !important;
   color: #f1f5f9 !important;
-  appearance: auto !important; /* Redonne le contrôle au navigateur pour le menu */
+  appearance: auto !important;
 }
-
-/* 3. Style des Options - On utilise l'hexadécimal pur ici */
 body.dark .filter-select option {
   background-color: #1e293b !important;
   color: #f1f5f9 !important;
 }
 
-
-
-/* Pour Chrome sur Windows, on ajoute un sélecteur spécifique */
 body.dark select.filter-select {
-  color-scheme: dark; /* Indique au système d'afficher le menu natif en mode sombre */
+  color-scheme: dark;
 }
 
 .info-text {
@@ -599,7 +308,6 @@ body.dark select.filter-select {
   margin-top: 5px;
 }
 
-/* highlight léger */
 .actions-footer.column .info-text {
   padding: 10px 14px;
   border-radius: 10px;
@@ -608,7 +316,7 @@ body.dark select.filter-select {
 }
 
 .status-filter-select {
-  appearance: none; /* Supprime le style "Windows 95/Standard" */
+  appearance: none;
   background-color: var(--bg-card);
 }
 

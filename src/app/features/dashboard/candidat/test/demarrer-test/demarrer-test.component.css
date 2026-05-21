@@ -1,7 +1,4 @@
 :host {
-  /* =========================
-     LIGHT MODE (DEFAULT)
-     ========================= */
   --bg-page: #f4f7f6;
   --bg-card: #ffffff;
   --bg-image: #f8f9fa;
@@ -14,9 +11,6 @@
   --btn-gradient: linear-gradient(135deg, #dc3545, #bd2130);
 }
 
-/* =========================
-   DARK MODE
-   ========================= */
 :host-context(.dark-mode) {
   --bg-page: #0f172a;
   --bg-card: #1e293b;
@@ -30,9 +24,6 @@
   --btn-gradient: linear-gradient(135deg, #ea5357, #c92d39);
 }
 
-/* =========================
-   CONTAINER
-   ========================= */
 .test-container {
   display: flex;
   justify-content: center;
@@ -63,9 +54,6 @@
     box-shadow 0.3s ease;
 }
 
-/* =========================
-   LEFT
-   ========================= */
 .test-info {
   flex: 1;
   padding: 40px;
@@ -102,9 +90,6 @@
   color: var(--text-secondary);
 }
 
-/* =========================
-   BUTTON
-   ========================= */
 .btn-start {
   margin-top: 25px;
 
@@ -130,9 +115,7 @@
   transform: scale(1.03);
 }
 
-/* =========================
-   RIGHT IMAGE
-   ========================= */
+
 .test-image {
   flex: 1;
 

@@ -182,7 +182,6 @@ export class DashboardComponent implements OnInit {
     this.loading = true;
     const idEtab = this.contextService.getEtablissementId();
 
-    //this.service.getStats().subscribe({
       this.service.getStats(idEtab).subscribe({
       next: (res) => {
         console.log("📊 Data reçue du serveur :", res);

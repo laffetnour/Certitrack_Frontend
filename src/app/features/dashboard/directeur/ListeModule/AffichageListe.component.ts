@@ -21,7 +21,6 @@ export class AffichageListeComponent implements OnInit {
   selectedSpecId: number | null = null;
   modulesAffectes: any[] = [];
   currentMode: string = 'FIXE';
-  //loading: boolean = false;
   loading = true;
   allSpecialities: any[] = [];
   allModulesData: any[] = [];
@@ -41,82 +40,57 @@ export class AffichageListeComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  /*ngOnInit(): void {
-    this.loadSpecialites();
 
+  ngOnInit(): void {
     this.loading = true;
-      const user = this.authService.getUser();
-      const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId();
+    const user = this.authService.getUser();
+    const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId() ||  user?.etablissement?.idEtab;
 
-      if (etabId) {
-        this.etablissementService.getSpecialites(etabId).subscribe({
-          next: (specs) => {
-            this.allSpecialities = specs;
-            this.loadAllSpecialiteModules(true);
-            this.loading = false;
-                    this.cdr.detectChanges();
-          },
-          error: (err) => {
-            console.error("Erreur specs", err);
-            this.loading = false;
-          }
-        });
-      }
-  }*/
+    if (etabId) {
+      forkJoin({
+        specs: this.etablissementService.getSpecialites(etabId),
+        modules: this.specModuleService.getAllSpecialiteModules(etabId)
+      }).subscribe({
+        next: (result) => {
+          this.allSpecialities = result.specs;
+          const sortedData = result.modules.sort((a, b) =>
+            a.specialite?.nom.localeCompare(b.specialite?.nom)
+          );
+          this.allModulesData = sortedData;
+          this.onSpecChange();
 
-ngOnInit(): void {
-  this.loading = true;
-  const user = this.authService.getUser();
-  const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId() ||  user?.etablissement?.idEtab;
-
-  if (etabId) {
-    // On combine les deux appels pour n'arrêter le loading qu'à la fin des deux
-    forkJoin({
-      specs: this.etablissementService.getSpecialites(etabId),
-      modules: this.specModuleService.getAllSpecialiteModules(etabId)
-    }).subscribe({
-      next: (result) => {
-        this.allSpecialities = result.specs;
-
-        // Traitement des modules
-        const sortedData = result.modules.sort((a, b) =>
-          a.specialite?.nom.localeCompare(b.specialite?.nom)
-        );
-        this.allModulesData = sortedData;
-        this.onSpecChange(); // Initialise modulesAffectes
-
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error("Erreur chargement initial", err);
-        this.loading = false;
-        this.cdr.detectChanges();
-      }
-    });
-  } else {
-    this.loading = false;
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error("Erreur chargement initial", err);
+          this.loading = false;
+          this.cdr.detectChanges();
+        }
+      });
+    } else {
+      this.loading = false;
+    }
   }
-}
 
-getRetourRoute(): string {
-  const idEtab = this.contextService.getEtablissementId();
-  const user = this.authService.getUser();
-   const role = user?.role
+  getRetourRoute(): string {
+    const idEtab = this.contextService.getEtablissementId();
+    const user = this.authService.getUser();
+     const role = user?.role
 
-   if (role === 'superAdmin' || role === 'SUPER_ADMIN') {
-       const idTenant = this.contextService.getTenantId(); // Récupération du tenant actuel
-       if (idTenant && idEtab) {
-         return `/super-admin/tenant/${idTenant}/etablissement/${idEtab}/specialites`;
+     if (role === 'superAdmin' || role === 'SUPER_ADMIN') {
+         const idTenant = this.contextService.getTenantId();
+         if (idTenant && idEtab) {
+           return `/super-admin/tenant/${idTenant}/etablissement/${idEtab}/specialites`;
+         }
        }
-     }
 
-  if (role === 'adminTenant' && idEtab) {
-    return `/adminTenant/etablissement/${idEtab}/specialites`;
+    if (role === 'adminTenant' && idEtab) {
+      return `/adminTenant/etablissement/${idEtab}/specialites`;
+    }
+
+    return '/directeur/specialites';
   }
-
-  return '/directeur/specialites';
-}
 
 
   loadAllSpecialiteModules(shouldFilter: boolean = false): void {
@@ -124,36 +98,39 @@ getRetourRoute(): string {
       const user = this.authService.getUser();
       const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId() ||  user?.etablissement?.idEtab;
 
-       if (etabId) {
-      this.specModuleService.getAllSpecialiteModules(etabId).subscribe({
-        next: (data) => {
-          const sortedData = data.sort((a, b) =>
-            a.specialite?.nom.localeCompare(b.specialite?.nom)
-          );
+       if (etabId)
+       {
+          this.specModuleService.getAllSpecialiteModules(etabId).subscribe({
+              next: (data) => {
+                const sortedData = data.sort((a, b) =>
+                  a.specialite?.nom.localeCompare(b.specialite?.nom)
+                );
 
-          this.allModulesData = sortedData;
-          this.modulesAffectes = [...sortedData];
+              this.allModulesData = sortedData;
+              this.modulesAffectes = [...sortedData];
 
-          if (shouldFilter) {
-                  this.onSpecChange();
-                } else {
-                  this.onSpecChange();
-                }
+              if (shouldFilter)
+              {
+                      this.onSpecChange();
+                    } else {
+                      this.onSpecChange();
+              }
+              this.loading = false;
+              this.cdr.detectChanges();
+            },
+            error: (err) => {
+              console.error("Erreur lors du chargement global :", err);
+              this.loading = false;
+              this.cdr.detectChanges();
+            }
+          });
+       }
+       else
+       {
+          console.error("Impossible de charger les modules : Aucun établissement trouvé pour cet utilisateur.");
           this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error("Erreur lors du chargement global :", err);
-          this.loading = false;
-          this.cdr.detectChanges();
-        }
-      });
+       }
   }
-else {
-    console.error("Impossible de charger les modules : Aucun établissement trouvé pour cet utilisateur.");
-    this.loading = false;
-  }
-}
 
   onSpecChange(): void {
     if (!this.selectedSpecId || this.selectedSpecId.toString() === 'null') {
@@ -165,29 +142,31 @@ else {
     }
     this.cdr.detectChanges();
   }
-    loadSpecialites(): void {
-      this.loading = true;
-      const user = this.authService.getUser();
-      const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId()||  user?.etablissement?.idEtab ;
-     if (etabId) {
-             this.etablissementService.getSpecialites(etabId).subscribe({
-               next: (specs) => {
-                 this.allSpecialities = specs;
-                 this.loading = false;
-                 this.cdr.detectChanges();
-               },
-               error: (err) => {
-                 console.error("Erreur lors du chargement des spécialités", err);
-                 this.loading = false;
-                 this.cdr.detectChanges();
-                 }
-
-             });
-           } else {
-             console.warn("Aucun ID d'établissement trouvé pour cet utilisateur.");
-
+  loadSpecialites(): void {
+    this.loading = true;
+    const user = this.authService.getUser();
+    const etabId = user?.etablissements?.[0]?.idEtab || this.contextService.getEtablissementId()||  user?.etablissement?.idEtab ;
+    if (etabId)
+    {
+       this.etablissementService.getSpecialites(etabId).subscribe({
+         next: (specs) => {
+           this.allSpecialities = specs;
+           this.loading = false;
+           this.cdr.detectChanges();
+         },
+         error: (err) => {
+           console.error("Erreur lors du chargement des spécialités", err);
+           this.loading = false;
+           this.cdr.detectChanges();
            }
+
+       });
+    } else
+    {
+      console.warn("Aucun ID d'établissement trouvé pour cet utilisateur.");
+
     }
+  }
 
   updateGlobalMode(newMode: string): void {
     if (!this.selectedSpecId) return;
@@ -248,15 +227,6 @@ else {
         next: (allModules) => {
           this.allModulesEtab = allModules;
           console.log(allModules);
-          /*const idsDejaPresents = new Set(
-            this.allModulesData
-              .filter(am => am.specialite?.idSpecialite == this.selectedSpecId)
-              .map(am => am.moduleTenant?.id)
-          );
-          this.availableModules = this.allModulesEtab.filter(
-            m => !idsDejaPresents.has(m.id)
-          );*/
-
 
         const idsDejaPresents = new Set(
                   this.allModulesData
@@ -264,9 +234,6 @@ else {
                     .map(am => am.moduleTenant?.id)
                 );
 
-                // 2. FILTRAGE : On ne garde que les modules qui :
-                // - Sont ACTIFS (m.estActif === true)
-                // - ET ne sont pas déjà présents dans la spécialité
                 this.availableModules = this.allModulesEtab.filter(m =>
                   m.estActif === true && !idsDejaPresents.has(m.id)
                 );
@@ -362,7 +329,7 @@ else {
         this.cdr.detectChanges();
       }
     });
-  }
+    }
 
     supprimerSelection(): void {
       if (this.selectedIds.size === 0) return;

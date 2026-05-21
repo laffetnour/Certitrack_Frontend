@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SuperAdminService } from '../../../../core/services/super-admin.service';
 
-export interface CategorieModule {
+export interface CategorieModule
+{
   id?: number;
   nom: string;
   description: string;
@@ -18,12 +19,12 @@ export interface CategorieModule {
   styleUrls: ['../Module/module.component.css']
 })
 
-export class CategorieModuleComponent implements OnInit {
+export class CategorieModuleComponent implements OnInit
+{
   categories: any[] = [];
   showModal = false;
   isEditMode = false;
   selectedCategorie: any = null;
-
   categorieForm: FormGroup;
   loading = false;
   successMessage = '';
@@ -33,32 +34,35 @@ export class CategorieModuleComponent implements OnInit {
     private superAdminService: SuperAdminService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef
-  ) {
+  )
+  {
     this.categorieForm = this.fb.group({
       nom: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required]]
     });
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void
+  {
     this.loadCategories();
   }
 
-loadCategories(): void {
-  this.loading = true;
+  loadCategories(): void
+  {
+    this.loading = true;
 
-  this.superAdminService.getCategories().subscribe({
-    next: (data: CategorieModule[]) => {
-      this.categories = data;
-      this.loading = false;
-      this.cdr.detectChanges();
-    },
-    error: (err: Error) => {
-      console.error(err);
-      this.loading = false;
-    }
-  });
-}
+    this.superAdminService.getCategories().subscribe({
+      next: (data: CategorieModule[]) => {
+        this.categories = data;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err: Error) => {
+        console.error(err);
+        this.loading = false;
+      }
+    });
+  }
 
   openAddModal(): void {
     this.isEditMode = false;
@@ -91,7 +95,7 @@ loadCategories(): void {
         this.superAdminService.updateCategorie(this.selectedCategorie.id, formData).subscribe({
           next: () => this.handleSuccess('Catégorie modifiée avec succès'),
           error: (err: any) => {
-            const serverMsg = err.error;  // <-- message renvoyé par Spring
+            const serverMsg = err.error;
             this.handleError(serverMsg);
           }
         });
@@ -99,7 +103,7 @@ loadCategories(): void {
         this.superAdminService.addCategorie(formData).subscribe({
           next: () => this.handleSuccess('Catégorie ajoutée avec succès'),
           error: (err: any) => {
-            const serverMsg = err.error; // <-- récupère le message envoyé par Spring
+            const serverMsg = err.error;
             this.handleError(serverMsg);
           }
         });
@@ -107,24 +111,26 @@ loadCategories(): void {
     }
   }
 
-deleteCategorie(cat: any) {
-    if (cat.modules && cat.modules.length > 0) {
-      alert("Action impossible : Cette catégorie contient des modules.");
-      return;
-    }
+  deleteCategorie(cat: any) {
+      if (cat.modules && cat.modules.length > 0) {
+        alert("Action impossible : Cette catégorie contient des modules.");
+        return;
+      }
 
-    if (confirm(`Voulez-vous vraiment supprimer "${cat.nom}" ?`)) {
-      // On utilise 'this.service' (vérifie que le nom correspond au constructeur)
+    if (confirm(`Voulez-vous vraiment supprimer "${cat.nom}" ?`))
+    {
       this.superAdminService.deleteCategorie(cat.id).subscribe({
         next: () => {
           this.successMessage = "Supprimé avec succès !";
           this.loadCategories();
         },
-        // CORRECTION 2 : On ajoute ': any' pour satisfaire TypeScript
         error: (err: any) => {
-          if (err.status === 409 || err.status === 400) {
+          if (err.status === 409 || err.status === 400)
+          {
             alert(err.error);
-          } else {
+          }
+          else
+          {
             alert("Une erreur est survenue.");
           }
         }
@@ -142,17 +148,10 @@ deleteCategorie(cat: any) {
     }, 3000);
   }
 
-  /*private handleError(msg: string): void {
-    this.errorMessage = msg;
-    this.loading = false;
-    this.cdr.detectChanges();
-    setTimeout(() => this.errorMessage = '', 3000);
-  }*/
-
-  private handleError(msg: string): void {
+  private handleError(msg: string): void
+  {
     this.loading = false;
 
-    // Si le message contient "existe déjà", on l'associe au champ 'nom'
     if (msg.includes("existe déjà")) {
       this.categorieForm.get('nom')?.setErrors({ alreadyExists: msg });
     } else {
@@ -161,7 +160,6 @@ deleteCategorie(cat: any) {
 
     this.cdr.detectChanges();
 
-    // Efface le message global après 3s
     setTimeout(() => {
       this.errorMessage = '';
       this.cdr.detectChanges();

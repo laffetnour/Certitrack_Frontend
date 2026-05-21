@@ -39,8 +39,8 @@ export class TenantComponent implements OnInit {
       statut: [true],
       logo: [''],
       banniere: [''],
-      typeIdentifiant: ['EMAIL'], // <--- CHANGÉ : 'UNIQUE' devient 'EMAIL'
-      labelIdentifiant: ['Email'], // <--- CHANGÉ : Valeur par défaut pour l'email
+      typeIdentifiant: ['EMAIL'],
+      labelIdentifiant: ['Email'],
       longueurIdentifiant: [null],
       formatIdentifiant: ['ALPHANUMERIC']
         });
@@ -58,11 +58,9 @@ export class TenantComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("TenantComponent chargé");
-    // Initialisation par précaution
     this.filteredTenants = [];
     this.loadTenants();
   }
-
 
 
   loadTenants(): void {
@@ -70,7 +68,7 @@ export class TenantComponent implements OnInit {
     this.superAdminService.getTenants().subscribe({
       next: (data: any) => {
         this.tenants = Array.isArray(data) ? [...data] : [];
-        this.applyFilter(); // On applique le filtre après le chargement
+        this.applyFilter();
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -175,79 +173,56 @@ export class TenantComponent implements OnInit {
   }
 
 
-/*deleteTenant(id: number): void {
-  // 1. Trouver l'objet tenant correspondant à l'ID
-  const tenantToDelete = this.tenants.find(t => t.idTenant === id);
+  deleteTenant(id: number): void {
+    const tenantToDelete = this.tenants.find(t => t.idTenant === id);
+    if (!tenantToDelete) return;
 
-  // 2. Vérifier s'il contient des établissements
-  if (tenantToDelete && tenantToDelete.etablissements && tenantToDelete.etablissements.length > 0) {
-    const nbEtab = tenantToDelete.etablissements.length;
-    alert(`Impossible de supprimer : Ce tenant possède ${nbEtab} établissement(s). Veuillez supprimer les établissements d'abord.`);
-    return; // On arrête l'exécution ici
-  }
+    if (tenantToDelete.etablissements && tenantToDelete.etablissements.length > 0) {
+      alert(`Interdit : Il y a ${tenantToDelete.etablissements.length} établissement(s).`);
+         this.loadTenants();
+         this.cdr.detectChanges();
+      return;
+    }
 
-  // 3. Si pas d'établissements, on procède à la confirmation habituelle
-  if (confirm('Êtes-vous sûr de vouloir supprimer ce tenant ? Cette action est irréversible.')) {
-    this.superAdminService.deleteTenant(id).subscribe({
-      next: () => {
-        this.handleSuccess('Tenant supprimé avec succès');
-      },
-      error: (err) => {
-        this.errorMessage = 'Erreur lors de la suppression. Vérifiez les dépendances.';
-        console.error(err);
-      }
-    });
-  }
-}*/
-deleteTenant(id: number): void {
-  const tenantToDelete = this.tenants.find(t => t.idTenant === id);
-  if (!tenantToDelete) return;
-
-  // 1. Vérification préventive côté Front (pour les établissements qui sont déjà chargés)
-  if (tenantToDelete.etablissements && tenantToDelete.etablissements.length > 0) {
-    alert(`Interdit : Il y a ${tenantToDelete.etablissements.length} établissement(s).`);
-       this.loadTenants();
-       this.cdr.detectChanges();
-    return;
-  }
-
-  // 2. Si le front pense que c'est vide, on demande confirmation
-  if (confirm(`Êtes-vous sûr de vouloir supprimer le tenant "${tenantToDelete.nom}" ?`)) {
-    this.loading = true;
-    this.superAdminService.deleteTenant(id).subscribe({
-      next: () => {
-        this.handleSuccess('Tenant supprimé avec succès');
-        this.loading = false;
-        this.loadTenants();
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.loading = false;
-
-        // 3. On gère les messages d'erreur envoyés par le Backend
-        if (err.status === 403) { // Forbidden
-          alert(err.error || `Interdit : Il y a des établissements rattachés.`);
+    if (confirm(`Êtes-vous sûr de vouloir supprimer le tenant "${tenantToDelete.nom}" ?`)) {
+      this.loading = true;
+      this.superAdminService.deleteTenant(id).subscribe({
+        next: () => {
+          this.handleSuccess('Tenant supprimé avec succès');
+          this.loading = false;
           this.loadTenants();
           this.cdr.detectChanges();
-        }
-        else if (err.status === 409) { // Conflict
-          alert("Veuillez supprimer les modules tenant de ce tenant d'abord.");
-          this.loadTenants();
-          this.cdr.detectChanges();
-        }
-        else {
-          this.errorMessage = 'Une erreur technique est survenue.';
-          alert("Erreur : Impossible de supprimer ce tenant. Vérifiez les dépendances SQL.");
-          this.loadTenants();
-          this.cdr.detectChanges();
-        }
-        console.error(err);
-      }
-    });
-  }
-}
+        },
+        error: (err) => {
+          this.loading = false;
 
-  private handleSuccess(msg: string): void {
+          if (err.status === 403)
+          {
+            alert(err.error || `Interdit : Il y a des établissements rattachés.`);
+            this.loadTenants();
+            this.cdr.detectChanges();
+          }
+          else if (err.status === 409)
+          {
+            alert("Veuillez supprimer les modules tenant de ce tenant d'abord.");
+            this.loadTenants();
+            this.cdr.detectChanges();
+          }
+          else
+          {
+            this.errorMessage = 'Une erreur technique est survenue.';
+            alert("Erreur : Impossible de supprimer ce tenant. Vérifiez les dépendances SQL.");
+            this.loadTenants();
+            this.cdr.detectChanges();
+          }
+          console.error(err);
+        }
+      });
+    }
+  }
+
+  private handleSuccess(msg: string): void
+  {
     this.successMessage = msg;
     this.loading = false;
     this.closeModal();
@@ -297,12 +272,10 @@ deleteTenant(id: number): void {
   }
 
 
-
   activateSelected() {
     this.superAdminService.activateTenantsBulk(this.selectedTenants).subscribe({
       next: () => {
         this.handleSuccess('Tenants activés avec succès');
-        //this.selectedTenants = [];
         this.selectedTenants = [...this.selectedTenants];
         this.cdr.detectChanges();
       },
@@ -314,7 +287,6 @@ deleteTenant(id: number): void {
     this.superAdminService.deactivateTenantsBulk(this.selectedTenants).subscribe({
       next: () => {
         this.handleSuccess('Tenants désactivés avec succès');
-        //this.selectedTenants = [];
         this.selectedTenants = [...this.selectedTenants];
         this.cdr.detectChanges();
       },
@@ -323,72 +295,65 @@ deleteTenant(id: number): void {
   }
 
 
+  deleteSelected() {
+    if (this.selectedTenants.length === 0) return;
+    const aSupprimer = this.tenants.filter(t =>
+      this.selectedTenants.includes(t.idTenant) && (!t.etablissements || t.etablissements.length === 0)
+    );
+
+    const interditsEtab = this.tenants.filter(t =>
+      this.selectedTenants.includes(t.idTenant) && t.etablissements && t.etablissements.length > 0
+    );
+
+    console.log("interditsEtab : ", interditsEtab);
+
+    let messageInterdit = "";
+    if (interditsEtab.length > 0) {
+      messageInterdit = "\n\n🚫 Suppression impossible (Etablissements présents) :\n" +
+        interditsEtab.map(t => `- ${t.nom}`).join("\n");
+    }
+
+    if (aSupprimer.length === 0) {
+      alert("Opération annulée : Aucun des tenants sélectionnés ne peut être supprimé." + messageInterdit);
+      return;
+    }
+
+    const noms = aSupprimer.map(t => t.nom).join(", ");
+    if (confirm(`Voulez-vous supprimer ces tenants : ${noms} ?` + messageInterdit)) {
+      this.loading = true;
+      const ids = aSupprimer.map(t => t.idTenant);
+
+      this.superAdminService.deleteTenantsBulk(ids).subscribe({
+        next: () => {
+
+          this.handleSuccess('Tenant supprimé avec succès');
+          this.selectedTenants = [];
 
 
-deleteSelected() {
-  if (this.selectedTenants.length === 0) return;
+        },
+        error: (err) => {
+          this.loading = false;
+          console.log("Statut de l'erreur reçu :", err.status);
+          console.log("Corps de l'erreur :", err.error);
 
-  // 1. Filtre sur ce que le Front connaît (les établissements)
-  const aSupprimer = this.tenants.filter(t =>
-    this.selectedTenants.includes(t.idTenant) && (!t.etablissements || t.etablissements.length === 0)
-  );
+          if (err.status === 403) {
+            alert("🚫 Action refusée : Certains établissements sont encore rattachés à ces tenants.");
 
-  const interditsEtab = this.tenants.filter(t =>
-    this.selectedTenants.includes(t.idTenant) && t.etablissements && t.etablissements.length > 0
-  );
+          }
+          else if (err.status === 409) {
+                  alert("❌ Suppression impossible : Certains tenants sélectionnés possèdent encore des modules dans leur catalogue.\n\nVeuillez vider les modules de ces tenants d'abord.");
 
-  console.log("interditsEtab : ", interditsEtab);
+                }
+          else {
+            alert("⚠️ Une erreur technique est survenue lors de la suppression groupée.");
 
-  let messageInterdit = "";
-  if (interditsEtab.length > 0) {
-    messageInterdit = "\n\n🚫 Suppression impossible (Etablissements présents) :\n" +
-      interditsEtab.map(t => `- ${t.nom}`).join("\n");
-  }
-
-  if (aSupprimer.length === 0) {
-    alert("Opération annulée : Aucun des tenants sélectionnés ne peut être supprimé." + messageInterdit);
-    return;
-  }
-
-  // 2. Confirmation pour les tenants qui semblent "vides"
-  const noms = aSupprimer.map(t => t.nom).join(", ");
-  if (confirm(`Voulez-vous supprimer ces tenants : ${noms} ?` + messageInterdit)) {
-    this.loading = true;
-    const ids = aSupprimer.map(t => t.idTenant);
-
-    this.superAdminService.deleteTenantsBulk(ids).subscribe({
-      next: () => {
-
-        this.handleSuccess('Tenant supprimé avec succès');
-        this.selectedTenants = [];
-
-
-      },
-      error: (err) => {
-        this.loading = false;
-        console.log("Statut de l'erreur reçu :", err.status);
-        console.log("Corps de l'erreur :", err.error);
-
-        if (err.status === 403) {
-          alert("🚫 Action refusée : Certains établissements sont encore rattachés à ces tenants.");
-
+          }
+          this.loadTenants();
+          this.cdr.detectChanges();
         }
-        else if (err.status === 409) {
-                alert("❌ Suppression impossible : Certains tenants sélectionnés possèdent encore des modules dans leur catalogue.\n\nVeuillez vider les modules de ces tenants d'abord.");
-
-              }
-        else {
-          alert("⚠️ Une erreur technique est survenue lors de la suppression groupée.");
-
-        }
-
-        // On recharge la liste pour voir quels tenants ont pu être supprimés (si le bulk est partiel)
-        this.loadTenants();
-        this.cdr.detectChanges();
-      }
-    });
+      });
+    }
   }
-}
 
   onFileSelected(event: any, field: string) {
     const file = event.target.files[0];
@@ -398,7 +363,7 @@ deleteSelected() {
 
     reader.onload = () => {
       this.tenantForm.patchValue({
-        [field]: reader.result // base64
+        [field]: reader.result
       });
     };
 
@@ -407,9 +372,9 @@ deleteSelected() {
 
 
 
-accederAuTenant(tenantId: number) {
-  console.log("Accès au dashboard Admin pour le tenant :", tenantId);
+  accederAuTenant(tenantId: number) {
+    console.log("Accès au dashboard Admin pour le tenant :", tenantId);
 
-  this.router.navigate(['/super-admin/tenant', tenantId, 'dashboard']);
-}
+    this.router.navigate(['/super-admin/tenant', tenantId, 'dashboard']);
+  }
 }

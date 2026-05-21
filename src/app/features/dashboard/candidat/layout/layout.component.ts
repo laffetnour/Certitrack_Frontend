@@ -77,21 +77,6 @@ export class CandidatLayoutComponent implements OnInit {
 
   filteredResults: any[] = [];
 
-  /*onSearch() {
-    const search = this.searchText.toLowerCase().trim();
-
-    if (search.length > 1) {
-      this.showResults = true;
-
-      this.filteredResults = this.searchDatabase.filter(item =>
-        item.name.toLowerCase().includes(search) ||
-        item.keywords.some(keyword => keyword.includes(search))
-      );
-
-    } else {
-      this.showResults = false;
-    }
-  }*/
 
   onSearch() {
     const search = this.searchText.toLowerCase().trim();
@@ -125,7 +110,7 @@ export class CandidatLayoutComponent implements OnInit {
   }
 
   selectResult(link: string) {
-    window.location.href = link; // ou this.router.navigate([link])
+    window.location.href = link;
     this.searchText = '';
     this.showResults = false;
   }
@@ -154,19 +139,13 @@ refreshNotifications() {
 
   onDelete(id: number | undefined) {
         if (!id) return;
-
-        // 1. Suppression optimiste (UI instantanée)
         this.notifications = this.notifications.filter(n => n.id !== id);
-
-        // 2. Appel Backend
         this.notifService.deleteNotification(id).subscribe({
           next: () => {
             console.log('Notification supprimée avec succès');
-            // Optionnel : on ne rappelle refresh que si on veut être sûr de la synchro
           },
           error: (err) => {
             console.error('Erreur lors de la suppression', err);
-            // On utilise refreshNotifications() car loadNotifications n'existe pas chez toi
             this.refreshNotifications();
           }
         });

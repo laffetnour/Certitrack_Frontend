@@ -555,18 +555,10 @@ form::-webkit-scrollbar-thumb:hover {
   outline: none;
 }
 
-/*.spec-list {
-  max-height: 200px;
-  overflow-y: auto;
-  background: white;
-  border: 1px solid #eee;
-  border-radius: 4px;
-}*/
 
 .spec-list {
   width: 100%;
-  max-height: 220px;   /* ajuste si tu veux plus grand */
-  /*overflow-y: auto;*/
+  max-height: 220px;
   overflow-y: scroll;
   overflow-x: hidden;
   margin-top: 10px;
@@ -1060,13 +1052,13 @@ input[type="checkbox"] {
   gap: 8px;
   padding: 8px 15px;
   background-color: transparent;
-  color: #64748b; /* Gris-bleu discret */
+  color: #64748b;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-right: 15px; /* Espace avec les autres boutons */
+  margin-right: 15px;
 }
 
 .btn-back:hover {
@@ -1079,7 +1071,6 @@ input[type="checkbox"] {
   font-size: 14px;
 }
 
-/* On garde les header-actions flexibles */
 .header-actions {
   display: flex;
   gap: 10px;
@@ -1131,20 +1122,14 @@ input[type="checkbox"] {
 
 .modal-body {
   flex: 1;
-  overflow-y: scroll;   /* scroll toujours visible */
+  overflow-y: scroll;
   overflow-x: hidden;
   padding: 15px;
 }
 
 
-
-/* ==========================================================================
-   OPTIMISATION MOBILE (MAX-WIDTH: 768px)
-   ========================================================================== */
-
 @media (max-width: 768px) {
 
-  /* 1. Header & Conteneurs */
   .admin-header {
     flex-direction: column;
     align-items: flex-start;
@@ -1156,18 +1141,16 @@ input[type="checkbox"] {
     padding: 10px;
   }
 
-  /* 2. Filtres & Recherche */
   .filter-select-container {
     flex-direction: column;
     width: 100%;
   }
 
   .status-filter-select {
-    width: 100% !important; /* Force la largeur totale sur mobile */
+    width: 100% !important;
     min-width: unset;
   }
 
-  /* 3. Transformation du Tableau en CARTES */
   .modern-table,
   .modern-table thead,
   .modern-table tbody,
@@ -1179,7 +1162,7 @@ input[type="checkbox"] {
   }
 
   .modern-table thead {
-    display: none; /* Cache les entêtes de colonnes */
+    display: none;
   }
 
   .modern-table tr {
@@ -1201,7 +1184,6 @@ input[type="checkbox"] {
     align-items: center;
   }
 
-  /* Utilisation des attributs data-label pour recréer les titres */
   .modern-table td::before {
     content: attr(data-label);
     font-weight: 700;
@@ -1213,11 +1195,10 @@ input[type="checkbox"] {
 
   .modern-table td:last-child {
     border-bottom: none;
-    background: var(--table-th-bg); /* Met en avant la zone d'actions */
+    background: var(--table-th-bg);
     justify-content: center;
   }
 
-  /* 4. Barre d'actions groupées (Bulk) */
   .bulk-actions {
     flex-direction: column;
     align-items: stretch;
@@ -1233,9 +1214,8 @@ input[type="checkbox"] {
     display: block;
   }
 
-  /* 5. Formulaires & Modales */
   .form-row {
-    grid-template-columns: 1fr; /* Une seule colonne */
+    grid-template-columns: 1fr;
     gap: 15px;
   }
 
@@ -1256,20 +1236,18 @@ input[type="checkbox"] {
     justify-content: center;
   }
 
-  /* 6. Mots-clés */
   .motcle-list {
     grid-template-columns: 1fr;
   }
 
-/* Le bouton lui-même */
   .btn-download {
     display: flex !important;
-    width: 40%;              /* Largeur totale pour un clic facile au pouce */
-    height: 48px;             /* Hauteur standard mobile */
+    width: 40%;
+    height: 48px;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    background: #2ecc71;      /* Votre couleur verte */
+    background: #2ecc71;
     color: white;
     border: none;
     margin-left:40px;
@@ -1281,7 +1259,6 @@ input[type="checkbox"] {
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Effet tactile "Pressé" */
   .btn-download:active {
     transform: scale(0.97);
     background: #27ae60;
@@ -1292,10 +1269,9 @@ input[type="checkbox"] {
     font-size: 1.2rem;
   }
 
-  /* Si vous avez plusieurs boutons dans la même cellule (ex: Editer/Supprimer) */
   .actions-container {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Côte à côte */
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
     width: 100%;
   }
@@ -1309,7 +1285,6 @@ input[type="checkbox"] {
     gap: 15px;
   }
 
-  /* Le tableau devient une liste de cartes */
   .modern-table thead { display: none; }
 
   .modern-table tr {
@@ -1332,7 +1307,6 @@ input[type="checkbox"] {
 
   .modern-table td:last-child { border-bottom: none; }
 
-  /* Injection du libellé via data-label */
   .modern-table td::before {
     content: attr(data-label);
     font-weight: 700;
@@ -1350,42 +1324,35 @@ input[type="checkbox"] {
   .admin-container { padding: 10px; }
 }
 
-
-
-
-/* --- FILTRES & RECHERCHE MOBILE --- */
 @media (max-width: 768px) {
   .filter-select-container {
     display: flex;
-    flex-direction: column; /* On empile les éléments verticalement */
-    gap: 12px;             /* Espace entre les champs */
+    flex-direction: column;
+    gap: 12px;
     padding: 10px;
     background: var(--bg-card);
     border-radius: 12px;
   }
 
   .status-filter-select {
-    width: 100% !important; /* Prend toute la largeur */
-    height: 48px;           /* Hauteur optimale pour le clic tactile */
-    font-size: 16px !important; /* Évite le zoom automatique sur iOS */
-    padding: 10px 15px 10px 45px !important; /* Espace pour l'icône loupe */
+    width: 100% !important;
+    height: 48px;
+    font-size: 16px !important;
+    padding: 10px 15px 10px 45px !important;
     margin: 0 !important;
     box-sizing: border-box;
   }
 
-  /* Ajustement de l'icône de recherche pour le champ texte */
   input.status-filter-select {
-    background-position: 15px center !important; /* Repositionne la loupe */
+    background-position: 15px center !important;
   }
 
-  /* Spécificité pour le champ Date sur mobile */
   input[type="date"].status-filter-select {
     position: relative;
     appearance: none;
     -webkit-appearance: none;
   }
 
-  /* Amélioration visuelle du focus sur mobile */
   .status-filter-select:focus {
     border-color: var(--smart-red);
     box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.1);

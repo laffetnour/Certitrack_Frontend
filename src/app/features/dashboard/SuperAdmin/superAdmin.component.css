@@ -1,4 +1,3 @@
-
 :host {
   --smart-red: #ea5357;
   --smart-red-dark: #d44347;
@@ -52,15 +51,13 @@
 }
 
 .main-layout {
-  flex: 1; /* Prend tout l'espace restant */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0; /* Important pour que le contenu ne déborde pas en flex */
+  min-width: 0;
 }
 
-/* ==========================================================================
-   3. NAVIGATION & SIDEBAR
-   ========================================================================== */
+
 .logo-section {
   padding: 20px;
   text-align: center;
@@ -87,7 +84,7 @@
   font-weight: 500;
   text-decoration: none;
   border-right: 4px solid transparent;
-  white-space: nowrap; /* Empêche le texte de passer à la ligne */
+  white-space: nowrap;
 }
 
 .nav-item.active {
@@ -108,16 +105,13 @@
   gap: 10px;
 }
 
-/* ==========================================================================
-   4. TOPBAR (DYNAMIC SEARCH)
-   ========================================================================== */
 .notification-bar {
   height: 70px;
   background-color: var(--smart-dark);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2% ; /* Utilisation de % pour l'espacement latéral */
+  padding: 0 2% ;
   color: white;
   flex-shrink: 0;
 }
@@ -126,7 +120,7 @@
   background-color: rgba(255, 255, 255, 0.15);
   padding: 8px 15px;
   border-radius: 25px;
-  width: 40%; /* Largeur dynamique */
+  width: 40%;
   max-width: 400px;
   min-width: 150px;
   display: flex;
@@ -141,36 +135,6 @@
   width: 100%;
   outline: none;
 }
-
-/* ==========================================================================
-   5. CONTENT AREA & GRIDS
-   ========================================================================== */
-/*.content-area {
-  padding: 2vw;
-  overflow-y: auto;
-  flex: 1;
-  background-color: var(--bg-page);
-}
-
-.stats-grid {
-  display: grid;
-
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
-.stat-card {
-  background: var(--white);
-  padding: 20px;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  color: var(--text-main);
-}
-*/
 
 
 .modern-table th {
@@ -187,9 +151,7 @@
   color: var(--text-main);
 }
 
-/* ==========================================================================
-   7. MODALS & FORMS
-   ========================================================================== */
+
 .modal {
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
@@ -209,16 +171,12 @@
   color: var(--text-main);
 }
 
-/* ==========================================================================
-   8. MEDIA QUERIES (ADAPTATION FINALE)
-   ========================================================================== */
 
-/* Écrans moyens (Tablettes) */
 @media (max-width: 1024px) {
   --sidebar-width: 80px;
 
   .nav-item span, .nav-title, .logout span, .arrow {
-    display: none; /* Cache le texte pour ne garder que les icônes */
+    display: none;
   }
 
   .nav-item { justify-content: center; padding: 15px 0; }
@@ -242,29 +200,13 @@
   object-fit: contain;
   transition: opacity 0.3s ease-in-out;
 }
-/* Petits écrans (Mobiles) */
 @media (max-width: 600px) {
   .notification-bar { padding: 0 15px; }
-  .search-container { display: none; } /* Cache la recherche sur mobile pour gagner de la place */
+  .search-container { display: none; }
   .admin-header { flex-direction: column; gap: 15px; text-align: center;  }
 }
 
-
-
-
-
-
-
-
-/**/
-
-
-
-/* ==========================================================================
-   1. DÉFINITION DES VARIABLES DE COULEURS
-   ========================================================================== */
 :host {
-  /* Mode Clair (Par défaut) */
   --bg-admin: #f8fafc;
   --bg-card: #ffffff;
   --text-main: #1e293b;
@@ -275,14 +217,11 @@
   --row-hover: #f9fafb;
   --input-border: #303D49;
   --modal-bg: rgba(48, 61, 73, 0.7);
-
-  /* Couleurs Accent (Stables) */
   --smart-red: #ea5357;
   --smart-red-dark: #d44347;
 }
 
 :host-context(.dark-mode) {
-  /* Mode Sombre */
   --bg-admin: #0f172a;
   --bg-card: #1e293b;
   --text-main: #f1f5f9;
@@ -295,9 +234,6 @@
   --modal-bg: rgba(0, 0, 0, 0.8);
 }
 
-/* ==========================================================================
-   2. APPLICATION (STRUCTURE IDENTIQUE)
-   ========================================================================== */
 
 .admin-container {
   background-color: var(--bg-admin);
@@ -331,7 +267,6 @@
   background-color: var(--smart-red-dark);
 }
 
-/* TABLE */
 .table-container {
   background: var(--bg-card);
   border-radius: 12px;
@@ -580,49 +515,6 @@
   color: #ecf0f1;
 }
 
-/*
-
-.dashboard-chart-container {
-  margin-top: 30px;
-  display: grid;
-  width: 60%;
-  grid-template-columns: 1fr;
-}
-
-.chart-card {
-  background: var(--chart-bg);
-  padding: 24px;
-  border-radius: 16px;
-  box-shadow: var(--chart-shadow);
-  border: 1px solid var(--chart-border);
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.chart-card h3 {
-  margin-bottom: 20px;
-  color: var(--chart-text-main);
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-left: 4px solid var(--smart-red);
-  padding-left: 12px;
-}
-
-.chart-footer {
-  margin-top: 20px;
-  padding-top: 12px;
-  border-top: 1px dashed var(--chart-border);
-  color: var(--chart-text-muted);
-  font-size: 0.85rem;
-}
-
-@media (max-width: 768px) {
-  .dashboard-chart-container {
-    width: 100%;
-}
-*/
-
-
-/* ================= SEARCH CONTAINER ================= */
 .search-container {
   position: relative;
   width: 380px;
@@ -638,21 +530,18 @@
   transition: all 0.25s ease;
 }
 
-/* focus (important UX) */
 .search-container:focus-within {
   background: rgba(255, 255, 255, 0.18);
   border-color: var(--smart-red);
   box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.2);
 }
 
-/* ICON */
 .search-container i {
   color: rgba(255, 255, 255, 0.8);
   margin-right: 8px;
   font-size: 0.9rem;
 }
 
-/* INPUT */
 .search-container input {
   flex: 1;
   border: none;
@@ -667,7 +556,6 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* ================= DROPDOWN ================= */
 .search-dropdown {
   position: absolute;
   top: calc(100% + 10px);
@@ -686,7 +574,6 @@
   animation: fadeIn 0.15s ease-in-out;
 }
 
-/* ITEM */
 .search-item {
   display: flex;
   align-items: center;
@@ -703,13 +590,11 @@
   border-bottom: none;
 }
 
-/* hover */
 .search-item:hover {
   background: rgba(234, 83, 87, 0.08);
   transform: translateX(2px);
 }
 
-/* ICON ITEM */
 .search-item i {
   width: 38px;
   height: 38px;
@@ -725,7 +610,6 @@
   font-size: 0.9rem;
 }
 
-/* TEXT */
 .result-info {
   display: flex;
   flex-direction: column;
@@ -742,7 +626,6 @@
   color: var(--text-muted);
 }
 
-/* SCROLL */
 .search-dropdown::-webkit-scrollbar {
   width: 6px;
 }
@@ -752,7 +635,6 @@
   border-radius: 10px;
 }
 
-/* ANIMATION */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -764,7 +646,6 @@
   }
 }
 
-/* ================= DARK MODE FIX ================= */
 :host-context(.dark-mode) .search-container {
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid #334155;
@@ -787,7 +668,6 @@
   background: rgba(255, 255, 255, 0.06);
 }
 
-/* Conteneur principal */
 .notification-container {
   position: relative;
   display: inline-block;
@@ -811,11 +691,7 @@
   box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.2);
 }
 
-/*.chart-footer p {
-  font-size: 0.85rem;
-  margin: 5px 0;
-  color: #6b7280;
-}*/
+
 
 @media (min-width: 1200px) {
   .dashboard-charts-wrapper {
@@ -833,7 +709,6 @@
      0 18px 38px rgba(15,23,42,0.12);
  }
 
- /* Glow */
  .stat-card::before {
    content: "";
 
@@ -854,9 +729,7 @@
    border-radius: 50%;
  }
 
- /* ==========================================================================
-    ICONS
-    ========================================================================== */
+
 
  .stat-icon {
    width: 72px;
@@ -886,9 +759,6 @@
    font-size: 1.7rem;
  }
 
- /* ==========================================================================
-    TEXT STATS
-    ========================================================================== */
 
  .stat-info h3 {
    margin: 0;
@@ -910,9 +780,7 @@
    color: #64748b;
  }
 
- /* ==========================================================================
-    CHART FOOTER
-    ========================================================================== */
+
 
  .chart-footer {
    margin-top: 20px;
@@ -931,9 +799,7 @@
    margin-bottom: 6px;
  }
 
- /* ==========================================================================
-    SELECT YEAR
-    ========================================================================== */
+
 
  .year-select {
    border: 1px solid rgba(226,232,240,0.9);
@@ -961,18 +827,12 @@
      0 0 0 4px rgba(234,83,87,0.15);
  }
 
- /* ==========================================================================
-    CANVAS
-    ========================================================================== */
 
  canvas {
    width: 100% !important;
    height: 100% !important;
  }
 
- /* ==========================================================================
-    DARK MODE
-    ========================================================================== */
 
  :host-context(.dark-mode) .content-area {
    background:
@@ -1017,9 +877,6 @@
    color: #f1f5f9;
  }
 
- /* ==========================================================================
-    RESPONSIVE
-    ========================================================================== */
 
  @media (max-width: 1200px) {
 
@@ -1052,35 +909,6 @@
    }
  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* =========================
-   CONTENT AREA
-   ========================= */
-/* =========================
-   CONTENT AREA
-   ========================= */
 .content-area {
   padding: 18px;
   background-color: var(--bg-page);
@@ -1089,9 +917,7 @@
   gap: 18px;
 }
 
-/* =========================
-   STATS GRID
-   ========================= */
+
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1099,9 +925,7 @@
   align-items: stretch;
 }
 
-/* =========================
-   STAT CARD
-   ========================= */
+
 .stat-card {
   position: relative;
   display: flex;
@@ -1137,7 +961,6 @@
     0 12px 22px rgba(15,23,42,0.08);
 }
 
-/* glow */
 .stat-card::before {
   content: "";
   position: absolute;
@@ -1158,9 +981,7 @@
   border-radius: 50%;
 }
 
-/* =========================
-   ICON
-   ========================= */
+
 .stat-icon {
   width: 50px;
   height: 50px;
@@ -1187,9 +1008,7 @@
     0 8px 18px rgba(234,83,87,0.22);
 }
 
-/* =========================
-   TEXT
-   ========================= */
+
 .stat-info h3 {
   margin: 0;
 
@@ -1209,9 +1028,7 @@
   font-size: 0.82rem;
 }
 
-/* =========================
-   CHARTS ROW
-   ========================= */
+
 .charts-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1219,18 +1036,14 @@
   align-items: stretch;
 }
 
-/* =========================
-   CHART CONTAINER
-   ========================= */
+
 .dashboard-chart1-container,
 .dashboard-chart-container {
   display: flex;
   height: 100%;
 }
 
-/* =========================
-   CHART CARD
-   ========================= */
+
 .chart-card {
   position: relative;
   overflow: hidden;
@@ -1267,7 +1080,6 @@
     0 12px 22px rgba(15,23,42,0.08);
 }
 
-/* glow */
 .chart-card::before {
   content: "";
   position: absolute;
@@ -1289,7 +1101,6 @@
   z-index: 2;
 }
 
-/* TITLE */
 .chart-card h3 {
   margin-bottom: 12px;
 
@@ -1302,7 +1113,6 @@
   padding-left: 10px;
 }
 
-/* HEADER */
 .chart-header-actions {
   display: flex;
   justify-content: space-between;
@@ -1312,9 +1122,7 @@
   gap: 10px;
 }
 
-/* =========================
-   CHART BODY
-   ========================= */
+
 .chart-body {
   flex: 1;
   min-height: 340px;
@@ -1323,9 +1131,7 @@
   align-items: center;
 }
 
-/* =========================
-   CANVAS
-   ========================= */
+
 canvas {
   width: 100% !important;
   height: 100% !important;
@@ -1336,9 +1142,7 @@ canvas {
     );
 }
 
-/* =========================
-   FOOTER
-   ========================= */
+
 .chart-footer {
   margin-top: 10px;
   padding-top: 10px;
@@ -1349,9 +1153,7 @@ canvas {
   font-size: 0.78rem;
 }
 
-/* =========================
-   SELECT
-   ========================= */
+
 .year-select {
   padding: 6px 11px;
 
@@ -1379,9 +1181,7 @@ canvas {
     0 0 0 3px rgba(234,83,87,0.12);
 }
 
-/* =========================
-   DARK MODE
-   ========================= */
+
 :host-context(.dark-mode) .stat-card,
 :host-context(.dark-mode) .chart-card {
   background:
@@ -1407,9 +1207,7 @@ canvas {
   color: #cbd5e1;
 }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
+
 @media (max-width: 1200px) {
 
   .stats-grid,
@@ -1418,7 +1216,6 @@ canvas {
   }
 }
 
-/* Style du bouton Hamburger (caché sur desktop) */
 .mobile-toggle {
   display: none;
   background: none;
@@ -1430,12 +1227,12 @@ canvas {
 
 @media (max-width: 768px) {
   .mobile-toggle {
-    display: block; /* Visible uniquement sur mobile */
+    display: block;
   }
 
   .sidebar {
     position: fixed;
-    left: -100%; /* Sort de l'écran à gauche */
+    left: -100%;
     top: 0;
     height: 100vh;
     z-index: 999;
@@ -1443,40 +1240,34 @@ canvas {
     transition: 0.3s ease;
   }
 
-  /* Quand on clique sur le bouton */
   .sidebar.mobile-open {
-    left: 0; /* Revient dans l'écran */
+    left: 0;
   }
 
-  /* On affiche à nouveau le texte sur mobile puisque la barre est en plein écran */
   .nav-item span, .logout span {
     display: inline !important;
   }
 }
 
-/* --- Par défaut (Desktop) --- */
 .mobile-only-search {
-  display: none; /* Caché sur PC */
+  display: none;
 }
 
 .desktop-only-search {
-  display: flex; /* Visible sur PC */
+  display: flex;
 }
 
-/* --- Responsive (Mobile / Tablette) --- */
 @media (max-width: 1024px) {
 
-  /* 1. On cache la recherche dans la barre du haut */
   .desktop-only-search {
     display: none !important;
   }
 
-  /* 2. On affiche et on stylise la recherche dans la sidebar */
   .mobile-only-search {
     display: flex;
-    margin: 20px; /* Espace autour */
-    width: auto;  /* Prend la largeur de la sidebar */
-    background-color: var(--bg-page); /* Fond gris clair pour trancher avec le blanc */
+    margin: 20px;
+    width: auto;
+    background-color: var(--bg-page);
     border: 1px solid var(--border-color);
   }
 
@@ -1488,7 +1279,6 @@ canvas {
     color: var(--text-main);
   }
 
-  /* Ajuster le dropdown pour mobile pour qu'il ne dépasse pas de la sidebar */
   .mobile-only-search .search-dropdown {
     width: 100%;
     position: absolute;
@@ -1497,62 +1287,54 @@ canvas {
   }
 }
 
-/* 1. On cache le bouton par défaut (Desktop/Grand écran) */
 .mobile-menu-btn {
   display: none;
   background: transparent;
   border: none;
-  color : var(--smart-red) !important; /* Ajustez selon la couleur de votre notification-bar */
+  color : var(--smart-red) !important;
   font-size: 1.5rem;
   cursor: pointer;
   padding: 10px;
 }
 
-/* 2. On l'affiche uniquement sur mobile et tablette (moins de 1024px) */
 @media (max-width: 1024px) {
   .mobile-menu-btn {
-    display: block; /* Il devient visible ici */
+    display: block;
     margin-right: 15px;
   }
 }
 
 
 .nav-menu {
-  flex: 1; /* Prend tout l'espace entre le logo et le logout */
-  overflow-y: auto; /* Active le scroll vertical uniquement ici */
+  flex: 1;
+  overflow-y: auto;
   overflow-x: hidden;
-
-  /* Pour Firefox */
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
 }
 
-/* 2. Style personnalisé pour Chrome, Edge et Safari */
 .nav-menu::-webkit-scrollbar {
-  width: 4px; /* Très fin */
+  width: 4px;
 }
 
 .nav-menu::-webkit-scrollbar-track {
-  background: transparent; /* Fond totalement transparent */
+  background: transparent;
 }
 
 .nav-menu::-webkit-scrollbar-thumb {
-  /* Couleur très légère et presque transparente */
   background-color: rgba(100, 116, 139, 0.1);
   border-radius: 20px;
   transition: background 0.3s ease;
 }
 
-/* 3. Effet au survol : on rend le scroller un peu plus visible */
 .nav-menu:hover::-webkit-scrollbar-thumb {
   background-color: rgba(100, 116, 139, 0.3);
 }
 
 .nav-menu::-webkit-scrollbar-thumb:hover {
-  background-color: var(--smart-red); /* Devient rouge si on touche au scroller */
+  background-color: var(--smart-red);
 }
 
-/* Ajustement pour le mode sombre */
 :host-context(.dark-mode) .nav-menu::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.05);
 }

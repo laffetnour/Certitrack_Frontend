@@ -40,16 +40,6 @@ export class SuperAdminComponent implements OnInit {
   showResults: boolean = false;
   filteredResults: any[] = [];
 
-    /*public barChartOptions: ChartConfiguration['options'] = {
-      responsive: true,
-      scales: {
-        y: { beginAtZero: true, ticks: { stepSize: 1 } }
-      },
-      plugins: {
-        legend: { display: false },
-        title: { display: true, text: 'Modules à faible taux d\'inscription' }
-      }
-    };*/
 
   public barChartOptions: ChartConfiguration['options'] = {
        responsive: true,
@@ -185,9 +175,6 @@ loadLowPerfStats(): void {
 
             const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
 
-            /*gradient.addColorStop(0, '#1E293B');
-            gradient.addColorStop(0.5, '#22D3EE');
-            gradient.addColorStop(1, '#22D3EE');*/
 
             gradient.addColorStop(0, '#303D49');
             gradient.addColorStop(0.5, '#ea5357');
@@ -197,7 +184,6 @@ loadLowPerfStats(): void {
 
             return gradient;
           },
-          //hoverBackgroundColor: '#22D3EE'
           hoverBackgroundColor: '#ea5357'
         }]
       };
@@ -349,46 +335,6 @@ successChartData: ChartData<'bar'> = {
   datasets: []
 };
 
-/*public successChartOptions: ChartConfiguration['options'] = {
-  responsive: true,
-  indexAxis: 'y',
-  plugins: {
-    legend: { display: false },
-    tooltip: { callbacks: { label: (ctx) => ` ${ctx.parsed.x}% de réussite` } }
-  },
-  scales: {
-    x: { min: 0, max: 100, ticks: { callback: (v) => v + '%' } }
-  }
-};
-
-loadTopFlopStats(): void {
-  this.superAdminService.getTopFlopSuccessRate(this.selectedYear).subscribe({
-    next: (data) => {
-      // 1. Fusionner les deux listes
-      const combined = [...data.top, ...data.flop];
-
-      // 2. Supprimer les doublons par nom de module (au cas où le top et le flop se chevauchent)
-      const uniqueModules = Array.from(new Map(combined.map(m => [m.nomModule, m])).values());
-
-      // 3. Trier par taux (du plus haut au plus bas) pour un joli graphique
-      uniqueModules.sort((a, b) => b.taux - a.taux);
-
-      this.successChartData = {
-        labels: uniqueModules.map(m => m.nomModule),
-        datasets: [{
-          label: 'Taux de Réussite (%)',
-          data: uniqueModules.map(m => m.taux),
-          // Coloration dynamique : vert si > 50%, rouge sinon (ou selon tes préférences)
-          backgroundColor: uniqueModules.map(m => m.taux >= 50 ? '#2ecc71' : '#e74c3c'),
-          borderRadius: 8,
-          barThickness: 25
-        }]
-      };
-      this.cdr.detectChanges();
-    },
-    error: (err) => console.error("Erreur stats Top/Flop", err)
-  });
-}*/
 
 public successChartOptions: ChartConfiguration<'bar'>['options'] = {
   responsive: true,
@@ -499,19 +445,6 @@ loadTopFlopStats(): void {
 
             backgroundColor: uniqueModules.map(m => {
 
-              /*if (m.taux >= 80) {
-                return 'rgba(34, 197, 94, 0.9)';
-              }
-
-              if (m.taux >= 60) {
-                return 'rgba(59, 130, 246, 0.9)';
-              }
-
-              if (m.taux >= 40) {
-                return 'rgba(245, 158, 11, 0.9)';
-              }
-
-              return 'rgba(239, 68, 68, 0.92)';*/
 
               if (m.taux >= 80) {
                 return 'rgba(234, 83, 87, 0.92)';
@@ -530,19 +463,6 @@ loadTopFlopStats(): void {
 
             hoverBackgroundColor: uniqueModules.map(m => {
 
-              /*if (m.taux >= 80) {
-                return '#16a34a';
-              }
-
-              if (m.taux >= 60) {
-                return '#2563eb';
-              }
-
-              if (m.taux >= 40) {
-                return '#d97706';
-              }
-
-              return '#dc2626';*/
 
               if (m.taux >= 80) {
                 return '#d94347';
@@ -566,19 +486,6 @@ loadTopFlopStats(): void {
 
             borderColor: uniqueModules.map(m => {
 
-              /*if (m.taux >= 80) {
-                return 'rgba(34, 197, 94, 1)';
-              }
-
-              if (m.taux >= 60) {
-                return 'rgba(59, 130, 246, 1)';
-              }
-
-              if (m.taux >= 40) {
-                return 'rgba(245, 158, 11, 1)';
-              }
-
-              return 'rgba(239, 68, 68, 1)';*/
 
               if (m.taux >= 80) {
                 return '#ea5357';

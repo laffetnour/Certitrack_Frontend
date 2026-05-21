@@ -29,7 +29,6 @@ export class EtablissementTenantLayoutComponent implements OnInit {
       if (id) {
         const numericId = Number(id);
         this.idEtab = id;
-        // On met à jour le service de contexte
         this.contextService.updateEtablissementId(numericId);
       }
       setTimeout(() => {

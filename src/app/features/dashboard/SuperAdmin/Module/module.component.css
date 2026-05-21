@@ -1,4 +1,3 @@
-
 :host {
   --bg-admin: #f8fafc;
   --bg-card: #ffffff;
@@ -37,36 +36,6 @@
   background-color: var(--bg-admin);
   padding: 20px;
 }
-
-
-/*.admin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-  background: var(--bg-card);
-  padding: 20px 30px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  color: var(--text-main);
-}/*
-.btn-add {
-  background-color: var(--smart-red);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-
-
-  cursor: pointer;
-  transition: background 0.3s;
-
-  transform: translateY(-60px);
-}
-
-.btn-add:hover {
-  background-color: var(--smart-red-dark);
-}*/
 
 
 .table-container {
@@ -608,24 +577,6 @@ form::-webkit-scrollbar-thumb:hover {
   letter-spacing: -0.5px;
 }
 
-/*.filter-section .form-control {
-  border-radius: 10px;
-  border: 1px solid #dfe6e9;
-  padding: 0.6rem 1rem;
-  font-size: 0.9rem;
-  color: #636e72;
-  background-color: #f8f9fa;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.filter-section .form-control:focus {
-  border-color: #74b9ff;
-  box-shadow: 0 0 0 4px rgba(116, 185, 255, 0.1);
-  outline: none;
-}*/
-
-/* LIGHT (par défaut) */
 .filter-section .form-control {
   border-radius: 10px;
   border: 1px solid #dfe6e9;
@@ -637,14 +588,12 @@ form::-webkit-scrollbar-thumb:hover {
   cursor: pointer;
 }
 
-/* DARK MODE (CORRECT) */
 :host-context(.dark-mode) .filter-section .form-control {
-  background-color: transparent !important;  /* transparent */
-  color: black !important;                  /* texte noir comme tu veux */
+  background-color: transparent !important;
+  color: black !important;
   border: 1px solid rgba(255,255,255,0.3) !important;
 }
 
-/* FOCUS DARK */
 :host-context(.dark-mode) .filter-section .form-control:focus {
   box-shadow: 0 0 0 4px rgba(255,255,255,0.1);
   border-color: #94a3b8;
@@ -656,8 +605,8 @@ form::-webkit-scrollbar-thumb:hover {
 }
 
 :host-context(.dark-mode) select option {
-  background-color: #1e293b; /* fond dark */
-  color: white;              /* texte lisible */
+  background-color: #1e293b;
+  color: white;
 }
 
 
@@ -666,7 +615,6 @@ form::-webkit-scrollbar-thumb:hover {
   gap: 0.75rem;
 }
 
-/* Boutons communs */
 .btn-import, .btn-success, .btn-add {
   display: flex;
   align-items: center;
@@ -680,7 +628,6 @@ form::-webkit-scrollbar-thumb:hover {
   cursor: pointer;
 }
 
-/* Style spécifique Importer (Bleu doux) */
 .btn-import {
   background-color: #edf2ff;
   color: #448aff;
@@ -692,7 +639,6 @@ form::-webkit-scrollbar-thumb:hover {
   transform: translateY(-2px);
 }
 
-/* Style spécifique Exporter (Vert moderne) */
 .btn-success {
   background-color: #e6fcf5;
   color: #0ca678 !important;
@@ -704,7 +650,6 @@ form::-webkit-scrollbar-thumb:hover {
   transform: translateY(-2px);
 }
 
-/* Bouton Ajouter (Couleur d'accentuation - Indigo) */
 .btn-add {
   background: linear-gradient(135deg, #ff5f6d, #ea5357);
   color: white;
@@ -722,7 +667,6 @@ form::-webkit-scrollbar-thumb:hover {
   filter: brightness(1.1);
 }
 
-/* Responsive : passage en colonne sur mobile */
 @media (max-width: 992px) {
   .admin-header {
     flex-direction: column;
@@ -780,7 +724,6 @@ form::-webkit-scrollbar-thumb:hover {
 }
 
 .btn-marine {
-  /* Dégradé : Bleu Marine Profond vers Gris Ardoise */
   background: linear-gradient(135deg, #2c3e50, #4b6584);
 
   color: #ffffff;

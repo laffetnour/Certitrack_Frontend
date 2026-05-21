@@ -27,14 +27,11 @@ export class DemarrerTestComponent implements OnInit {
     private cdr: ChangeDetectorRef,private router: Router
   ) {}
 
-  // demarrer-test.component.ts
-  ngOnInit(): void {
+  ngOnInit(): void
+  {
       this.sessionId = +this.route.snapshot.params['sessionId'];
       this.moduleTenantId = +this.route.snapshot.params['moduleTenantId'];
-
       console.log("IDs récupérés :", this.sessionId, this.moduleTenantId);
-
-      // 2. Appel au service avec les DEUX IDs
       this.service.getTestInfos(this.sessionId, this.moduleTenantId).subscribe({
           next: (res) => {
             this.moduleNom = res.moduleNom;
@@ -46,35 +43,15 @@ export class DemarrerTestComponent implements OnInit {
       });
   }
 
-  /*demarrer() {
-    console.log("Démarrage réel du test...");
-    // 🔜 prochaine étape : générer épreuve + naviguer vers QCM
-  }*/
-  /*demarrer() {
-    this.service.startTest(this.sessionId).subscribe({
+
+  demarrer() {
+    this.service.startTest(this.sessionId, this.moduleTenantId).subscribe({
       next: (epreuve) => {
-        console.log("EPREUVE =", epreuve);
-
-        // navigation vers composant QCM
-        this.router.navigate(['/candidat/qcm'], {
-          state: { epreuve: epreuve }
-        });
+        this.router.navigate(['/candidat/qcm'], { state: { epreuve } });
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        alert(err.error?.message || "Erreur lors de la génération du test.");
+      }
     });
-  }*/
-
-demarrer() {
-  // On envoie les deux IDs au service pour générer l'épreuve
-  this.service.startTest(this.sessionId, this.moduleTenantId).subscribe({
-    next: (epreuve) => {
-      // On passe l'objet epreuve complet au composant QCM
-      this.router.navigate(['/candidat/qcm'], { state: { epreuve } });
-    },
-    error: (err) => {
-      // C'est ici que l'erreur "Pas assez de questions" sera interceptée
-      alert(err.error?.message || "Erreur lors de la génération du test.");
     }
-  });
-  }
 }

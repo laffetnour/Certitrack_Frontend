@@ -2,10 +2,8 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModuleTenantService } from '../../../../core/services/ModuleTenant.service';
-
 import { AuthService } from '../../../../core/services/auth.service';
 import { ModuleCandidatService } from '../../../../core/services/module-candidat.service';
-/*import { ConfigService } from '../../../../core/services/config.service';*/
 
 
 
@@ -37,46 +35,40 @@ export class ModulesCandidatComponent implements OnInit {
     private moduleTenantService: ModuleTenantService,
     private authService: AuthService,
     private cdr: ChangeDetectorRef
-    /*public configService: ConfigService*/
   ) {}
 
   ngOnInit(): void {
     this.loadModules();
   }
 
-showOthers: boolean = false;
- applyFilter(): void {
-    const searchLow = this.search.toLowerCase().trim();
+    showOthers: boolean = false;
+   applyFilter(): void {
+      const searchLow = this.search.toLowerCase().trim();
 
-    this.displayedModules = this.modulesAffectes.filter(m => this.checkAllFilters(m, searchLow));
-    this.filteredOuverts = this.modulesOuverts.filter(m => this.checkAllFilters(m, searchLow));
+      this.displayedModules = this.modulesAffectes.filter(m => this.checkAllFilters(m, searchLow));
+      this.filteredOuverts = this.modulesOuverts.filter(m => this.checkAllFilters(m, searchLow));
 
-    this.cdr.detectChanges();
-  }
+      this.cdr.detectChanges();
+    }
 
-  // On garde cette variable pour mémoriser le dernier module cliqué
-  lastInscribedModuleId: number | null = null;
+    lastInscribedModuleId: number | null = null;
 
-  private checkAllFilters(m: any, searchLow: string): boolean {
-      // 1. CACHER le module sur lequel on vient de cliquer
-      if (this.lastInscribedModuleId && m.module?.idModule === this.lastInscribedModuleId) {
-          return false;
-      }
+    private checkAllFilters(m: any, searchLow: string): boolean {
+        if (this.lastInscribedModuleId && m.module?.idModule === this.lastInscribedModuleId) {
+            return false;
+        }
 
+        const matchesSearch = this.matchSearch(m, searchLow);
 
+        let matchesType = true;
+        if (this.filterType === 'withTest') matchesType = m.avecTest === true;
+        if (this.filterType === 'noTest') matchesType = m.avecTest === false;
 
-      // 2. Filtres de recherche et de type
-      const matchesSearch = this.matchSearch(m, searchLow);
+        let matchesStatus = true;
+        if (this.filterStatus === 'open') matchesStatus = m.hasActiveSession === true;
 
-      let matchesType = true;
-      if (this.filterType === 'withTest') matchesType = m.avecTest === true;
-      if (this.filterType === 'noTest') matchesType = m.avecTest === false;
-
-      let matchesStatus = true;
-      if (this.filterStatus === 'open') matchesStatus = m.hasActiveSession === true;
-
-      return matchesSearch && matchesType && matchesStatus;
-  }
+        return matchesSearch && matchesType && matchesStatus;
+    }
 
 
 
@@ -94,113 +86,59 @@ showOthers: boolean = false;
              matchMotCle;
     }
 
-    /*toggleAutres(): void {
-      this.showAll = !this.showAll;
+
+    goToAutres() {
+      this.currentView = 'autres';
       this.cdr.detectChanges();
-    }*/
-  goToAutres() {
-    this.currentView = 'autres';
-    this.cdr.detectChanges();
-  }
-
-  goBack() {
-    this.currentView = 'affectes';
-    this.cdr.detectChanges();
-  }
-/*
-
-loadModules() {
-  this.service.getModules().subscribe({
-    next: (res: any) => {
-      this.mode = res.mode ? res.mode.trim().toUpperCase() : 'FIXE';
-
-      this.modulesAffectes = res.modulesAffectes || [];
-      this.modulesOuverts = res.modulesOuverts || [];
-
-      this.applyFilter();
-    },
-    error: (err) => console.error('Erreur de chargement', err)
-  });
-}
-
-
-sinscrire(item: any): void {
-  // On utilise la clé exacte validée dans Postman
-  const sessionId = item.sessionIdValide;
-
-  if (!sessionId) {
-    alert("Désolé, aucune session n'est ouverte pour ce module actuellement.");
-    return;
-  }
-
-  if (confirm(`Confirmer l'inscription au module : ${item.module?.nom} ?`)) {
-    this.isSubmitting = true;
-    this.service.inscrire(sessionId).subscribe({
-      next: (res) => {
-        alert("Inscription réussie !");
-        this.isSubmitting = false;
-        this.loadModules(); // Recharge la liste pour masquer le module inscrit
-      },
-      error: (err) => {
-        this.isSubmitting = false;
-        alert(err.error?.message || "Erreur lors de l'inscription.");
-      }
-    });
-  }
-}*/
-
-loadModules() {
-  this.service.getModules().subscribe({
-    next: (res: any) => {
-      // 1. On récupère le mode
-      this.mode = res.mode ? res.mode.trim().toUpperCase() : 'FIXE';
-
-      // 2. IMPORTANT : On met à jour les listes avec les nouvelles données du serveur
-      // Le serveur exclut déjà les modules présents dans 'inscriptionsIds'
-      this.modulesAffectes = res.modulesAffectes || [];
-      this.modulesOuverts = res.modulesOuverts || [];
-
-      // 3. On relance le filtrage pour mettre à jour 'displayedModules' et 'filteredOuverts'
-      this.applyFilter();
-
-      // Force Angular à voir le changement si nécessaire
-      this.cdr.detectChanges();
-    },
-    error: (err) => {
-      console.error('Erreur de chargement des modules', err);
     }
-  });
-}
 
+    goBack() {
+      this.currentView = 'affectes';
+      this.cdr.detectChanges();
+    }
 
-
-// modules.component.ts
-
-sinscrire(item: any): void {
-  // 1. On récupère les deux IDs nécessaires
-  const sessionId = item.sessionIdValide;
-  const moduleTenantId = item.idModuleTenant; // Clé présente dans ton map Java
-
-  if (!sessionId || !moduleTenantId) {
-    alert("Impossible de procéder à l'inscription : données manquantes.");
-    return;
+    loadModules() {
+      this.service.getModules().subscribe({
+        next: (res: any) => {
+          this.mode = res.mode ? res.mode.trim().toUpperCase() : 'FIXE';
+          this.modulesAffectes = res.modulesAffectes || [];
+          this.modulesOuverts = res.modulesOuverts || [];
+          this.applyFilter();
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Erreur de chargement des modules', err);
+        }
+      });
   }
 
-  if (confirm(`Confirmer l'inscription au module : ${item.module?.nom} ?`)) {
-    this.isSubmitting = true;
 
-    this.service.inscrire(sessionId, moduleTenantId).subscribe({
-      next: (res) => {
-        alert("Inscription réussie !");
-        this.isSubmitting = false;
 
-        this.loadModules();
-      },
-      error: (err) => {
-        this.isSubmitting = false;
-        alert(err.error?.message || "Erreur lors de l'inscription.");
-      }
-    });
+
+  sinscrire(item: any): void {
+    const sessionId = item.sessionIdValide;
+    const moduleTenantId = item.idModuleTenant;
+
+    if (!sessionId || !moduleTenantId) {
+      alert("Impossible de procéder à l'inscription : données manquantes.");
+      return;
+    }
+
+    if (confirm(`Confirmer l'inscription au module : ${item.module?.nom} ?`)) {
+      this.isSubmitting = true;
+
+      this.service.inscrire(sessionId, moduleTenantId).subscribe({
+        next: (res) => {
+          alert("Inscription réussie !");
+          this.isSubmitting = false;
+
+          this.loadModules();
+        },
+        error: (err) => {
+          this.isSubmitting = false;
+          alert(err.error?.message || "Erreur lors de l'inscription.");
+        }
+      });
+    }
   }
-}
 }

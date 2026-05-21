@@ -95,21 +95,6 @@ getListModulesRoute(): string {
 }
 
 
- /* loadSpecialites() {
-    this.loading = true;
-
-    this.directeurService.getSpecialites().subscribe({
-      next: (data) => {
-        this.specialites = data || [];
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.loading = false;
-      }
-    });
-  }*/
-
 loadSpecialites() {
     this.loading = true;
     const user = this.authService.getUser();

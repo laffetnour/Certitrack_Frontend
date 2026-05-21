@@ -1,5 +1,4 @@
 :host {
-  /* Mode Clair (Par défaut) */
   --bg-admin: #f8fafc;
   --bg-card: #ffffff;
   --text-main: #1e293b;
@@ -11,14 +10,11 @@
   --input-border: #303D49;
   --modal-bg: rgba(48, 61, 73, 0.7);
   --white: #ffffff;
-
-  /* Couleurs Accent (Stables) */
   --smart-red: #ea5357;
   --smart-red-dark: #d44347;
 }
 
 :host-context(.dark-mode) {
-  /* Mode Sombre */
   --white: #1e293b;
   --bg-admin: #0f172a;
   --bg-card: #1e293b;
@@ -32,9 +28,6 @@
   --modal-bg: rgba(0, 0, 0, 0.8);
 }
 
-/* ==========================================================================
-   2. APPLICATION (STRUCTURE IDENTIQUE)
-   ========================================================================== */
 
 .admin-container {
   background-color: var(--bg-admin);
@@ -69,7 +62,6 @@
   background-color: var(--smart-red-dark);
 }
 
-/* TABLE */
 .table-container {
   background: var(--bg-card);
   border-radius: 12px;
@@ -80,7 +72,7 @@
 
 .modern-table {
 
-width: auto;             /* Le tableau prend sa largeur naturelle */
+  width: auto;
   min-width: 100%;
   border-collapse: collapse;
 }
@@ -103,7 +95,6 @@ width: auto;             /* Le tableau prend sa largeur naturelle */
   background: var(--row-hover);
 }
 
-/* STATUS */
 .status-badge {
   padding: 4px 12px;
   border-radius: 20px;
@@ -123,7 +114,6 @@ width: auto;             /* Le tableau prend sa largeur naturelle */
   color: #e53e3e;
 }
 
-/* ACTIONS */
 .actions { display: flex; gap: 8px; }
 
 .actions button {
@@ -156,7 +146,7 @@ width: auto;             /* Le tableau prend sa largeur naturelle */
 }
 
 form {
-  padding: 30px; /* Unifié pour un meilleur équilibre */
+  padding: 30px;
   background-color: var(--white);
   border-radius: var(--radius-lg);
   transition: background-color 0.3s ease;
@@ -164,33 +154,32 @@ form {
 
 .form-row {
   display: grid;
-  /* On utilise auto-fit pour que ça passe sur 1 colonne sur mobile automatiquement */
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px; /* 50px était un peu large, 30px est plus compact et moderne */
+  gap: 30px;
 }
 
 .form-group {
-  margin-bottom: 25px; /* Plus d'espace entre les blocs verticaux */
+  margin-bottom: 25px;
   display: flex;
   flex-direction: column;
 }
 
 .form-group label {
-  font-size: 13px; /* Légèrement plus petit pour un look plus "UI" */
+  font-size: 13px;
   font-weight: 700;
-  color: var(--text-muted); /* Utilise la variable muted pour un look moins agressif */
+  color: var(--text-muted);
   margin-bottom: 8px;
-  text-transform: uppercase; /* Donne un aspect professionnel/admin */
+  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .form-control {
   width: 100%;
-  padding: 12px 16px; /* Plus confortable pour la saisie */
-  border: 1.5px solid var(--border-color); /* Utilise ta variable de bordure */
-  border-radius: 10px; /* Coins un peu plus doux */
+  padding: 12px 16px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 10px;
   font-size: 14px;
-  background-color: var(--input-bg); /* Variable dédiée aux champs */
+  background-color: var(--input-bg);
   color: var(--text-main);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -200,34 +189,30 @@ form {
   opacity: 0.6;
 }
 
-/* ÉTAT : FOCUS (C'est ici qu'on améliore le rendu) */
 .form-control:focus {
   outline: none;
-  border-color: var(--smart-red); /* La bordure devient rouge */
-  background-color: var(--white); /* Le champ s'illumine légèrement */
-  box-shadow: 0 0 0 4px rgba(234, 83, 87, 0.1); /* Aura rouge très douce */
-  transform: translateY(-1px); /* Petit effet de levée très premium */
+  border-color: var(--smart-red);
+  background-color: var(--white);
+  box-shadow: 0 0 0 4px rgba(234, 83, 87, 0.1);
+  transform: translateY(-1px);
 }
 
-/* ÉTAT : ERREUR */
 .form-control.error {
   border-color: #ef4444;
-  background-color: rgba(239, 68, 68, 0.02); /* Teinte rouge très légère */
+  background-color: rgba(239, 68, 68, 0.02);
 }
 
 .form-control.error:focus {
   box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
 }
 
-/* --- OPTIMISATION DARK MODE --- */
 .dark-mode .form-control {
-  border-color: var(--border-light); /* Bordure un peu plus visible en mode sombre */
+  border-color: var(--border-light);
 }
 
 .dark-mode .form-control:focus {
   background-color: var(--smart-dark);
 }
-
 
 
 .btn-cancel {
@@ -258,7 +243,6 @@ form {
 }
 
 
-/* FILTRE SELECT */
 .status-filter-select {
   min-width: 100px;
   padding: 10px 35px 10px 40px;
@@ -276,7 +260,6 @@ form {
   background-size: 16px;
 }
 
-/* PROFILE VIEW INFOS */
 .info-row {
   border-bottom: 1px solid var(--border-color);
 }
@@ -308,26 +291,20 @@ form {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
-
-
-
-/* 1. On limite la hauteur de la modale pour qu'elle ne dépasse jamais l'écran */
 .modal-content {
-  max-height: 90vh; /* 90% de la hauteur de l'écran maximum */
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
 
 }
 
-/* 2. On rend le formulaire SCROLLABLE */
 form {
-  flex: 1; /* Prend tout l'espace disponible entre le header et le footer */
-  overflow-y: auto; /* Active le scroll vertical uniquement ici */
+  flex: 1;
+  overflow-y: auto;
   padding: 25px 30px;
   background-color: var(--white);
 }
 
-/* 3. On fixe le Footer (boutons) en bas */
 .modal-footer {
   padding: 15px 30px;
   background-color: var(--white);
@@ -336,11 +313,9 @@ form {
   justify-content: flex-end;
   gap: 12px;
   z-index: 10;
-  /* Optionnel : petite ombre pour montrer que le contenu passe dessous */
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.03);
 }
 
-/* 4. On fixe le Header en haut */
 .modal-header {
   padding: 20px 30px;
   display: flex;
@@ -351,7 +326,6 @@ form {
   z-index: 10;
 }
 
-/* --- OPTIMISATION DU SCROLLBAR (Look moderne) --- */
 form::-webkit-scrollbar {
   width: 6px;
 }
@@ -369,24 +343,20 @@ form::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
 
-/* ==========================================================================
-   BARRE D'ACTIONS GROUPÉES (BULK ACTIONS)
-   ========================================================================== */
 
 .bulk-actions {
   display: flex;
   align-items: center;
   gap: 15px;
   padding: 12px 25px;
-  background-color: var(--white); /* Utilise ta variable Midnight/White */
-  border: 1px solid var(--smart-red); /* Bordure rouge pour montrer l'importance */
+  background-color: var(--white);
+  border: 1px solid var(--smart-red);
   border-radius: var(--radius-lg);
   margin-bottom: 20px;
-  box-shadow: 0 4px 15px rgba(234, 83, 87, 0.1); /* Lueur rouge subtile */
-  animation: slideDown 0.3s ease-out; /* Animation à l'apparition */
+  box-shadow: 0 4px 15px rgba(234, 83, 87, 0.1);
+  animation: slideDown 0.3s ease-out;
 }
 
-/* Texte "X sélectionné(s)" */
 .bulk-actions span {
   font-size: 14px;
   font-weight: 600;
@@ -396,7 +366,6 @@ form::-webkit-scrollbar-thumb:hover {
   border-right: 2px solid var(--border-color);
 }
 
-/* Style commun des boutons de la barre bulk */
 .bulk-actions button {
   padding: 8px 16px;
   border-radius: 8px;
@@ -410,7 +379,6 @@ form::-webkit-scrollbar-thumb:hover {
   gap: 8px;
 }
 
-/* Bouton Activer (Vert) */
 .btn-activate {
   background-color: rgba(49, 151, 149, 0.1);
   color: #319795;
@@ -421,7 +389,6 @@ form::-webkit-scrollbar-thumb:hover {
   transform: translateY(-2px);
 }
 
-/* Bouton Désactiver (Orange/Gris) */
 .btn-deactivate {
   background-color: rgba(217, 119, 6, 0.1);
   color: #d97706;
@@ -432,7 +399,6 @@ form::-webkit-scrollbar-thumb:hover {
   transform: translateY(-2px);
 }
 
-/* Bouton Supprimer (Rouge - déjà défini dans tes actions, on l'ajuste) */
 .bulk-actions .btn-delete {
   background-color: rgba(224, 36, 36, 0.1);
   color: #dc2626;
@@ -444,7 +410,6 @@ form::-webkit-scrollbar-thumb:hover {
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
 
-/* Animation d'entrée */
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -456,18 +421,13 @@ form::-webkit-scrollbar-thumb:hover {
   }
 }
 
-/* --- AJUSTEMENT DARK MODE --- */
 .dark-mode .bulk-actions {
-  background-color: var(--white); /* Ton bleu nuit profond */
+  background-color: var(--white);
   border-color: rgba(234, 83, 87, 0.4);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 
-
-/* ==========================================================================
-   SECTION MOTS-CLÉS (DYNAMIQUE)
-   ========================================================================== */
 
 .keyword-section {
   background: var(--white);
@@ -482,12 +442,11 @@ form::-webkit-scrollbar-thumb:hover {
   font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
-  color: var(--smart-red); /* On utilise le rouge pour l'intitulé principal */
+  color: var(--smart-red);
   margin-bottom: 10px;
   letter-spacing: 0.5px;
 }
 
-/* Le sélecteur de nombre */
 .keyword-section input[type="number"] {
   width: 120px;
   margin-bottom: 20px;
@@ -496,7 +455,6 @@ form::-webkit-scrollbar-thumb:hover {
   text-align: center;
 }
 
-/* LISTE DES MOTS-CLÉS */
 .motcle-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -509,7 +467,7 @@ form::-webkit-scrollbar-thumb:hover {
   display: flex;
   align-items: center;
   gap: 8px;
-  animation: fadeInMotCle 0.3s ease-out; /* Animation à l'ajout */
+  animation: fadeInMotCle 0.3s ease-out;
 }
 
 .motcle-item .form-control {
@@ -525,7 +483,6 @@ form::-webkit-scrollbar-thumb:hover {
   box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.1);
 }
 
-/* BOUTON SUPPRIMER (X) */
 .btn-remove-item {
   width: 32px;
   height: 32px;
@@ -548,7 +505,6 @@ form::-webkit-scrollbar-thumb:hover {
   transform: scale(1.1);
 }
 
-/* ANIMATION D'APPARITION */
 @keyframes fadeInMotCle {
   from {
     opacity: 0;
@@ -560,7 +516,6 @@ form::-webkit-scrollbar-thumb:hover {
   }
 }
 
-/* --- AJUSTEMENT DARK MODE --- */
 .dark-mode .keyword-section {
   background-color: rgba(255, 255, 255, 0.02);
   border-color: var(--border-light);
@@ -583,7 +538,7 @@ form::-webkit-scrollbar-thumb:hover {
     color: #94a3b8;
   }
   .label svg {
-    color: #ea5357; /* Icônes en rouge en mode sombre pour le contraste */
+    color: #ea5357;
   }
 }
 
@@ -603,7 +558,6 @@ form::-webkit-scrollbar-thumb:hover {
   text-transform: uppercase;
 }
 
-/* --- Lignes d'informations --- */
 .profile-info {
   padding: 0 2rem 2rem 2rem;
 }
@@ -666,16 +620,8 @@ form::-webkit-scrollbar-thumb:hover {
 
 
 
-
-
-
-/* ==========================================================================
-   OPTIMISATION MOBILE (MAX-WIDTH: 768px)
-   ========================================================================== */
-
 @media (max-width: 768px) {
 
-  /* 1. Header & Conteneurs */
   .admin-header {
     flex-direction: column;
     align-items: flex-start;
@@ -687,18 +633,16 @@ form::-webkit-scrollbar-thumb:hover {
     padding: 10px;
   }
 
-  /* 2. Filtres & Recherche */
   .filter-select-container {
     flex-direction: column;
     width: 100%;
   }
 
   .status-filter-select {
-    width: 100% !important; /* Force la largeur totale sur mobile */
+    width: 100% !important;
     min-width: unset;
   }
 
-  /* 3. Transformation du Tableau en CARTES */
   .modern-table,
   .modern-table thead,
   .modern-table tbody,
@@ -710,7 +654,7 @@ form::-webkit-scrollbar-thumb:hover {
   }
 
   .modern-table thead {
-    display: none; /* Cache les entêtes de colonnes */
+    display: none;
   }
 
   .modern-table tr {
@@ -732,7 +676,6 @@ form::-webkit-scrollbar-thumb:hover {
     align-items: center;
   }
 
-  /* Utilisation des attributs data-label pour recréer les titres */
   .modern-table td::before {
     content: attr(data-label);
     font-weight: 700;
@@ -744,11 +687,10 @@ form::-webkit-scrollbar-thumb:hover {
 
   .modern-table td:last-child {
     border-bottom: none;
-    background: var(--table-th-bg); /* Met en avant la zone d'actions */
+    background: var(--table-th-bg);
     justify-content: center;
   }
 
-  /* 4. Barre d'actions groupées (Bulk) */
   .bulk-actions {
     flex-direction: column;
     align-items: stretch;
@@ -764,9 +706,8 @@ form::-webkit-scrollbar-thumb:hover {
     display: block;
   }
 
-  /* 5. Formulaires & Modales */
   .form-row {
-    grid-template-columns: 1fr; /* Une seule colonne */
+    grid-template-columns: 1fr;
     gap: 15px;
   }
 
@@ -787,12 +728,10 @@ form::-webkit-scrollbar-thumb:hover {
     justify-content: center;
   }
 
-  /* 6. Mots-clés */
   .motcle-list {
     grid-template-columns: 1fr;
   }
 
-  /* 7. Boutons d'actions */
   .actions {
     width: 100%;
     justify-content: space-around;
@@ -807,7 +746,6 @@ form::-webkit-scrollbar-thumb:hover {
     gap: 15px;
   }
 
-  /* Le tableau devient une liste de cartes */
   .modern-table thead { display: none; }
 
   .modern-table tr {
@@ -830,7 +768,6 @@ form::-webkit-scrollbar-thumb:hover {
 
   .modern-table td:last-child { border-bottom: none; }
 
-  /* Injection du libellé via data-label */
   .modern-table td::before {
     content: attr(data-label);
     font-weight: 700;
@@ -848,42 +785,35 @@ form::-webkit-scrollbar-thumb:hover {
   .admin-container { padding: 10px; }
 }
 
-
-
-
-/* --- FILTRES & RECHERCHE MOBILE --- */
 @media (max-width: 768px) {
   .filter-select-container {
     display: flex;
-    flex-direction: column; /* On empile les éléments verticalement */
-    gap: 12px;             /* Espace entre les champs */
+    flex-direction: column;
+    gap: 12px;
     padding: 10px;
     background: var(--bg-card);
     border-radius: 12px;
   }
 
   .status-filter-select {
-    width: 100% !important; /* Prend toute la largeur */
-    height: 48px;           /* Hauteur optimale pour le clic tactile */
-    font-size: 16px !important; /* Évite le zoom automatique sur iOS */
-    padding: 10px 15px 10px 45px !important; /* Espace pour l'icône loupe */
+    width: 100% !important;
+    height: 48px;
+    font-size: 16px !important;
+    padding: 10px 15px 10px 45px !important;
     margin: 0 !important;
     box-sizing: border-box;
   }
 
-  /* Ajustement de l'icône de recherche pour le champ texte */
   input.status-filter-select {
-    background-position: 15px center !important; /* Repositionne la loupe */
+    background-position: 15px center !important;
   }
 
-  /* Spécificité pour le champ Date sur mobile */
   input[type="date"].status-filter-select {
     position: relative;
     appearance: none;
     -webkit-appearance: none;
   }
 
-  /* Amélioration visuelle du focus sur mobile */
   .status-filter-select:focus {
     border-color: var(--smart-red);
     box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.1);

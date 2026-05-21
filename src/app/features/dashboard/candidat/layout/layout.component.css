@@ -324,8 +324,8 @@
 
 .banniere {
   position: relative;
-  background-size: cover;      /* L'image couvre tout l'espace */
-  background-position: center; /* L'image est centrée */
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
   min-height: 300px;
   transition: background-image 0.3s ease;
@@ -337,21 +337,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4); /* Calque noir à 40% d'opacité */
+  background: rgba(0, 0, 0, 0.4);
   z-index: 1;
 }
 
 
-
-/*search*/
-
-/* CONTENEUR */
-/*.search-container {
-  position: relative;
-  width: 350px;
-}*/
-
-/* DROPDOWN */
 .search-dropdown {
   position: absolute;
   top: calc(100% + 8px);
@@ -377,7 +367,6 @@
   box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.2);
 }
 
-/* ITEM */
 .search-item {
   display: flex;
   align-items: center;
@@ -394,13 +383,11 @@
   border-bottom: none;
 }
 
-/* HOVER */
 .search-item:hover {
   background: rgba(234, 83, 87, 0.08);
   transform: translateX(2px);
 }
 
-/* ICON */
 .search-item i {
   width: 36px;
   height: 36px;
@@ -416,7 +403,6 @@
   font-size: 0.9rem;
 }
 
-/* TEXTE */
 .result-info {
   display: flex;
   flex-direction: column;
@@ -434,7 +420,6 @@
   text-transform: uppercase;
 }
 
-/* SCROLL */
 .search-dropdown::-webkit-scrollbar {
   width: 6px;
 }
@@ -444,7 +429,6 @@
   border-radius: 10px;
 }
 
-/* ANIMATION */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -544,9 +528,7 @@
   color: #ffffff;
 }
 
-/* =========================
-   BADGE COUNT AMÉLIORÉ
-========================= */
+
 .dot-notification {
   position: absolute;
 
@@ -582,7 +564,6 @@
   transform: translate(25%, -25%);
 }
 
-/* DARK MODE BADGE */
 :host-context(.dark-mode) .dot-notification,
 .dark-mode .dot-notification {
   border: 2px solid #0f172a;
@@ -592,7 +573,6 @@
     0 0 0 2px rgba(239, 68, 68, 0.12);
 }
 
-/* DROPDOWN */
 .dropdown-notif-panel {
   position: absolute;
 
@@ -641,7 +621,6 @@
     0 25px 50px rgba(0, 0, 0, 0.45);
 }
 
-/* HEADER */
 .notif-header {
   padding: 18px 20px;
 
@@ -666,7 +645,6 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* CONTENT */
 .notif-content {
   max-height: 420px;
   overflow-y: auto;
@@ -683,7 +661,6 @@
   border-radius: 999px;
 }
 
-/* ITEM */
 .notif-item {
   position: relative;
 
@@ -711,7 +688,6 @@
   background: rgba(234, 83, 87, 0.06);
 }
 
-/* UNREAD */
 .notif-item.unread {
   background: rgba(234, 83, 87, 0.06);
   border-color: rgba(234, 83, 87, 0.08);
@@ -722,7 +698,6 @@
   background: rgba(234, 83, 87, 0.12);
 }
 
-/* TEXTES */
 .notif-title {
   font-size: 0.92rem;
   font-weight: 700;
@@ -750,7 +725,6 @@
   color: #94a3b8;
 }
 
-/* DELETE */
 .btn-delete-notif {
   position: absolute;
 
@@ -781,7 +755,6 @@
   background: rgba(239, 68, 68, 0.18);
 }
 
-/* EMPTY */
 .no-notif {
   padding: 35px 20px;
   text-align: center;
@@ -793,7 +766,6 @@
   color: #cbd5e1;
 }
 
-/* ANIMATIONS */
 @keyframes notifDropdown {
   from {
     opacity: 0;
@@ -824,19 +796,11 @@
   }
 }
 
-
-
-/* --- CONFIGURATION DESKTOP PAR DÉFAUT --- */
 .mobile-menu-btn {
-  display: none; /* Caché sur PC */
+  display: none;
 }
 
-/* --- CONFIGURATION MOBILE --- */
 @media (max-width: 1024px) {
-
-
-
-  /* On cache tout ce qui est secondaire */
   .desktop-only {
     display: none !important;
   }
@@ -852,7 +816,7 @@
     border: none;
     color: var(--smart-red) !important;
     font-size: 1.4rem;
-    order: 1; /* Place le bouton à gauche */
+    order: 1;
   }
 
   .logo-header {
@@ -861,7 +825,7 @@
   }
 
   .logo-header img {
-    max-height: 35px; /* Logo plus petit */
+    max-height: 35px;
   }
 
   .user-actions {
@@ -869,44 +833,35 @@
     gap: 10px;
   }
 
-  /* Supprimer la ligne 2 sur mobile */
   .bottom-row {
     display: none;
   }
 
-  /* La bannière doit aussi être réduite sur mobile */
   .banniere {
     height: 120px !important;
   }
 }
 
-
-
-
-/* --- Style du Menu Mobile (Sidebar) --- */
 .mobile-sidebar {
   position: fixed;
   top: 0;
-  left: -100%; /* Caché à gauche par défaut */
+  left: -100%;
   width: 280px;
   height: 100vh;
-  background: var(--white); /* Ou ta couleur de fond */
-  z-index: 9999; /* Très haut pour passer devant la bannière et le header */
+  background: var(--white);
+  z-index: 9999;
   transition: 0.3s ease-in-out;
   box-shadow: 5px 0 15px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
 }
 
-/* Classe activée quand isSidebarVisible est vrai */
 .mobile-sidebar.open {
   left: 0;
 }
 
 .sidebar-header {
   padding: 20px;
-  /*background: var(--smart-dark);
-  color: white;*/
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -935,7 +890,6 @@
   font-weight: bold;
 }
 
-/* Cacher sur Desktop */
 @media (min-width: 1025px) {
   .mobile-sidebar {
     display: none;

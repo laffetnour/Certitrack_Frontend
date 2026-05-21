@@ -1,13 +1,6 @@
 <div class="specialite-container">
 
   <div class="header-actions">
-    <!--<button class="btn-nav" routerLink="/directeur/modules" routerLinkActive="active">
-      <i class="fas fa-cubes"></i> Modules
-    </button>
-
-    <button class="btn-nav" routerLink="/directeur/Listemodules" routerLinkActive="active">
-      <i class="fas fa-certificate"></i> Parcours de certification par spécialité
-    </button>-->
 
     <button class="btn-nav" [routerLink]="getModulesRoute()" routerLinkActive="active">
       <i class="fas fa-cubes"></i> Modules
@@ -37,7 +30,6 @@
     <span>{{ selectedIds.length }} sélectionné(s)</span>
     <button class="btn-activate" (click)="activateSelected()">Activer</button>
     <button class="btn-deactivate" (click)="deactivateSelected()">Désactiver</button>
-    <!--<button class="btn-delete" (click)="deleteSelected()">Supprimer</button>-->
   </div>
 
 

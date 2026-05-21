@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SessionInscService } from '../../../../core/services/session-insc.service'; // Adapte le chemin
-import { ModuleCandidatService } from '../../../../core/services/module-candidat.service'; // Adapte le chemin
+import { SessionInscService } from '../../../../core/services/session-insc.service';
+import { ModuleCandidatService } from '../../../../core/services/module-candidat.service';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { Chart, registerables, ChartData, ChartConfiguration } from 'chart.js';
 Chart.register(...registerables);
@@ -20,9 +20,6 @@ export class DashboardCandidatComponent implements OnInit {
   stats = {
     sessionsDisponibles: 0,
     inscriptions: 0,
-
-
-
     totalCertifications: 0,
     passedCertifications: 0,
     failedCertifications: 0
@@ -49,18 +46,9 @@ export class DashboardCandidatComponent implements OnInit {
   }
 
   loadStats() {
-    // 1. Récupérer le nombre de sessions disponibles (souvent filtrées par le Tenant du candidat)
    const userId = this.currentUser?.idUtilisateur;
 
     if (userId) {
-      /*this.sessionService.getMySessions(userId).subscribe({
-        next: (sessions: any[]) => {
-
-          this.stats.sessionsDisponibles = sessions.length;
-          this.cdr.detectChanges();
-        },
-        error: (err) => console.error('Erreur sessions:', err)
-      });*/
 
       this.inscriptionService.getSessionsEnCours().subscribe({
         next: (count) => {
@@ -83,19 +71,10 @@ export class DashboardCandidatComponent implements OnInit {
   }
 
 
-
-
   loadCircle() {
     const id = this.currentUser?.idUtilisateur;
     console.log("USER:", this.currentUser);
     console.log("ID:", this.currentUser?.idUtilisateur);
-
-    /*this.inscriptionService.getStatsGmetrix(id).subscribe(res => {
-      this.statsCircle = res;
-
-      this.cdr.detectChanges(); // 🔥 IMPORTANT
-    });*/
-
 
     this.inscriptionService.getStatsGmetrix(id).subscribe(res => {
       this.statsCircle = res;
@@ -109,9 +88,9 @@ export class DashboardCandidatComponent implements OnInit {
             res.nonEligible
           ],
           backgroundColor: [
-            '#ea5357', // rouge principal (réservé)
-            '#f97316', // orange soft (non réservé)
-            '#ef4444' // rouge danger (non éligible)
+            '#ea5357',
+            '#f97316',
+            '#ef4444'
 
           ],
           borderWidth: 0
@@ -122,25 +101,14 @@ export class DashboardCandidatComponent implements OnInit {
     });
   }
 
-  /*public circleChartData: ChartData<'doughnut'> = {
-    labels: ['Réservé', 'Non réservé', 'Non éligible', 'En cours'],
-    datasets: [{
-      data: [0, 0, 0, 0],
-      backgroundColor: ['#22c55e', '#facc15', '#ef4444', '#3b82f6'],
-      borderWidth: 0,
-      hoverOffset: 10
-    }]
-  };*/
-
-
   public circleChartData: ChartData<'doughnut'> = {
     labels: ['Eligible réservé', 'Eligible non réservé', 'Non éligible'],
     datasets: [{
       data: [0, 0, 0, 0],
       backgroundColor: [
-        '#ea5357', // rouge principal (réservé)
-        '#f97316', // orange soft (non réservé)
-        '#ef4444' // rouge danger (non éligible)
+        '#ea5357',
+        '#f97316',
+        '#ef4444'
       ],
       borderWidth: 2,
       borderColor: '#ffffff',
@@ -148,23 +116,11 @@ export class DashboardCandidatComponent implements OnInit {
     }]
   };
 
-  /*public circleChartOptions: ChartConfiguration<'doughnut'>['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '75%', // 🔥 effet cercle moderne
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        enabled: true
-      }
-    }
-  };*/
-
   public circleChartOptions: ChartConfiguration<'doughnut'>['options'] = {
     responsive: true,
     maintainAspectRatio: false,
 
-    cutout: '70%', // même effet cercle moderne
+    cutout: '70%',
 
     animation: {
       duration: 1200,
@@ -222,9 +178,9 @@ export class DashboardCandidatComponent implements OnInit {
               ],
 
               backgroundColor: [
-                '#7e9cdd', // bleu plus foncé
-                '#91e4b2', // vert plus foncé
-                '#d88e8e'  // rouge plus foncé
+                '#7e9cdd',
+                '#91e4b2',
+                '#d88e8e'
               ],
 
               borderRadius: 8,

@@ -193,19 +193,13 @@ refreshNotifications() {
 
   onDelete(id: number | undefined) {
         if (!id) return;
-
-        // 1. Suppression optimiste (UI instantanée)
         this.notifications = this.notifications.filter(n => n.id !== id);
-
-        // 2. Appel Backend
         this.notifService.deleteNotification(id).subscribe({
           next: () => {
             console.log('Notification supprimée avec succès');
-            // Optionnel : on ne rappelle refresh que si on veut être sûr de la synchro
           },
           error: (err) => {
             console.error('Erreur lors de la suppression', err);
-            // On utilise refreshNotifications() car loadNotifications n'existe pas chez toi
             this.refreshNotifications();
           }
         });
@@ -214,7 +208,6 @@ refreshNotifications() {
     closeParcours() {
       this.isParcoursOpen = false;
     }
-
 
      isSidebarVisible = false;
 

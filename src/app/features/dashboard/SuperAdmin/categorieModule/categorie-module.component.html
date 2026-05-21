@@ -75,7 +75,6 @@
             [class.error]="categorieForm.get('nom')?.invalid && categorieForm.get('nom')?.touched"
           >
 
-          <!-- Affichage de l'erreur -->
           <div class="error-message" *ngIf="categorieForm.get('nom')?.errors?.['alreadyExists']">
             {{ categorieForm.get('nom')?.errors?.['alreadyExists'] }}
           </div>

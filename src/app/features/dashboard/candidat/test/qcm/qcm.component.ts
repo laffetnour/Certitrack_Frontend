@@ -30,75 +30,40 @@ export class QcmComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private router: Router) {}
 
-  /*ngOnInit(): void {
+  ngOnInit(): void {
+      this.epreuve = history.state.epreuve || JSON.parse(localStorage.getItem('epreuve') || 'null');
 
-    this.epreuve = history.state.epreuve || JSON.parse(localStorage.getItem('epreuve') || 'null');
+      if (!this.epreuve) {
+            alert("Session expirée");
+            this.router.navigate(['/candidat/mes-modules']);
+            return;
+          }
 
-    if (!this.epreuve) {
-      alert("Session expirée");
-      return;
-    }
+        try {
+          const stored = localStorage.getItem('epreuve');
+          if (!stored || JSON.parse(stored).idEpreuve !== this.epreuve.idEpreuve) {
+             localStorage.setItem('epreuve', JSON.stringify(this.epreuve));
+          }
+        } catch (e) {
+          console.warn("Quota Storage dépassé, nettoyage en cours...");
+          localStorage.removeItem('epreuve');
+          try {
+            localStorage.setItem('epreuve', JSON.stringify(this.epreuve));
+          } catch (e2) {
+            console.error("L'épreuve est trop lourde pour le navigateur.");
+          }
+        }
 
-
-
-    localStorage.setItem('epreuve', JSON.stringify(this.epreuve));
-
-    //this.questions = this.epreuve.questions;
-
-    this.questions = [...this.epreuve.questions].sort((a, b) => {
+      this.questions = [...this.epreuve.questions].sort((a, b) => {
         const natureA = a.question.nature;
         const natureB = b.question.nature;
-
         if (natureA === 'technique' && natureB !== 'technique') return -1;
         if (natureA !== 'technique' && natureB === 'technique') return 1;
         return 0;
       });
 
-    this.timeLeft = this.epreuve.duree * 60;
-
-    this.startTimer();
-  }*/
-
-ngOnInit(): void {
-    // Récupération de l'épreuve (soit via le state, soit via le storage)
-    this.epreuve = history.state.epreuve || JSON.parse(localStorage.getItem('epreuve') || 'null');
-
-    if (!this.epreuve) {
-          alert("Session expirée");
-          this.router.navigate(['/candidat/mes-modules']); // 3. Maintenant cela fonctionnera
-          return;
-        }
-
-    // Sauvegarde pour éviter de perdre le test au rafraîchissement
-    //localStorage.setItem('epreuve', JSON.stringify(this.epreuve));
-    // SAUVEGARDE OPTIMISÉE : On ne ré-enregistre que si nécessaire
-      try {
-        const stored = localStorage.getItem('epreuve');
-        if (!stored || JSON.parse(stored).idEpreuve !== this.epreuve.idEpreuve) {
-           localStorage.setItem('epreuve', JSON.stringify(this.epreuve));
-        }
-      } catch (e) {
-        console.warn("Quota Storage dépassé, nettoyage en cours...");
-        localStorage.removeItem('epreuve'); // On nettoie les vieux tests
-        try {
-          localStorage.setItem('epreuve', JSON.stringify(this.epreuve));
-        } catch (e2) {
-          console.error("L'épreuve est trop lourde pour le navigateur.");
-        }
-      }
-
-    // Tri des questions : Techniques d'abord, puis Comportementales
-    this.questions = [...this.epreuve.questions].sort((a, b) => {
-      const natureA = a.question.nature;
-      const natureB = b.question.nature;
-      if (natureA === 'technique' && natureB !== 'technique') return -1;
-      if (natureA !== 'technique' && natureB === 'technique') return 1;
-      return 0;
-    });
-
-    // Initialisation du timer (duree est en minutes dans le backend)
-    this.timeLeft = this.epreuve.duree * 60;
-    this.startTimer();
+      this.timeLeft = this.epreuve.duree * 60;
+      this.startTimer();
   }
 
   startTimer() {
@@ -157,21 +122,6 @@ ngOnInit(): void {
     }
   }
 
-  /*canGoNext(): boolean {
-    const selected = this.selectedAnswers.filter(id =>
-      this.isAnswerFromCurrentQuestion(id)
-    );
-
-    if (this.currentQuestion.type === 'choixUnique') {
-      return selected.length === 1;
-    }
-
-    if (this.currentQuestion.type === 'choixMultiple') {
-      return selected.length >= 2;
-    }
-
-    return false;
-  }*/
 
   canGoNext(): boolean {
     if (!this.currentQuestion) return false;
@@ -204,7 +154,6 @@ ngOnInit(): void {
     this.service.submitTest(this.epreuve.idEpreuve, this.selectedAnswers, dureeConsommee)
       .subscribe({
         next: (res) => {
-          //this.scoreFinal = res.scoreFinal;
           this.testTermine = true;
           this.cdr.detectChanges();
         },

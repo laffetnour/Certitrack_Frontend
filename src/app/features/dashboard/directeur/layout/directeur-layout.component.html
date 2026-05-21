@@ -1,9 +1,7 @@
-<!-- FontAwesome (à mettre une seule fois dans index.html normalement) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <div class="dashboard-container">
 
-  <!-- SIDEBAR -->
   <aside class="sidebar" [class.mobile-open]="isSidebarVisible">
     <button class="mobile-menu-btn" (click)="toggleSidebar()">
       <i class="fas fa-bars"></i>
@@ -31,7 +29,6 @@
 
     </div>
 
-    <!-- LOGO -->
     <div class="logo-section">
       <ng-container *ngIf="configService.config$ | async as config; else loader">
         <img [src]="config.logoSociete || 'LOGO-2026_VF.png'"
@@ -120,7 +117,6 @@
 
     </nav>
 
-    <!-- LOGOUT -->
     <div class="logout" (click)="onLogout()">
       <i class="fas fa-sign-out-alt"></i>
       <span>Déconnexion</span>
@@ -128,10 +124,7 @@
 
   </aside>
 
-  <!-- MAIN -->
   <div class="main-layout">
-
-
     <header class="notification-bar">
 
       <button class="mobile-menu-btn" (click)="toggleSidebar()">
@@ -188,7 +181,6 @@
           </ng-container>
         </div>
 
-        <!-- Liste déroulante qui s'affiche au clic -->
         <div class="dropdown-notif-panel shadow" *ngIf="showNotifs">
           <div class="notif-header">Notifications</div>
 
@@ -228,7 +220,6 @@
     </div>
     </header>
 
-    <!-- CONTENU DYNAMIQUE -->
     <main class="content-area">
       <router-outlet></router-outlet>
     </main>

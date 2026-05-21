@@ -1,92 +1,4 @@
-/* Container de la nav */
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css");
-/*.navbar {
-  background-color: #ffffff !important;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 0 !important;
-  z-index: 1000;
-}
-
-
-.navbar-nav {
-  display: flex;
-  gap: 8px;
-  padding: 8px 16px 0 16px;
-}
-
-
-.nav-link {
-  position: relative;
-  color: #6b7280 !important;
-  font-size: 0.925rem;
-  font-weight: 500;
-  padding: 12px 16px !important;
-  border-radius: 8px 8px 0 0;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  border-bottom: 2px solid transparent;
-}
-
-
-.nav-link i {
-  font-size: 1.1rem;
-  transition: transform 0.2s ease;
-}
-
-
-.nav-link:hover {
-  color: #111827 !important;
-  background-color: #f9fafb;
-}
-
-.nav-link:hover i {
-  transform: translateY(-1px);
-}
-
-
-.nav-link.active {
-  color: #2563eb !important;
-  background-color: rgba(37, 99, 235, 0.04);
-  border-bottom: 2px solid #2563eb;
-}
-
-.nav-link.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: #2563eb;
-  box-shadow: 0px -4px 10px rgba(37, 99, 235, 0.3);
-}
-
-.custom-scroll {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  display: flex;
-  flex-wrap: nowrap;
-}
-
-.custom-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.container-fluid.mt-3 {
-  background-color: #f3f4f6;
-  min-height: calc(100vh - 60px);
-  padding-top: 24px;
-}
-*/
-
-/* Container de la nav */
-/*.navbar {
-  background-color: #ffffff !important;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 0 !important;
-  z-index: 1000;
-}*/
 
 .navbar-nav {
   list-style: none !important;
@@ -96,7 +8,6 @@
 
 }
 
-/* Style de base des liens */
 .nav-link {
   position: relative;
   color: #d32f2f !important;
@@ -107,39 +18,33 @@
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  /* Suppression de la bordure basse par défaut */
 
   border-bottom: none !important;
-  text-decoration: none !important; /* Force la suppression du soulignement texte */
+  text-decoration: none !important;
 }
 
-/* Hover effect */
 .nav-link:hover {
   color: #111827 !important;
-  background-color: #f3f4f6; /* Gris très léger au survol */
+  background-color: #f3f4f6;
 }
 
-/* État Actif (Désactive le soulignement ici aussi) */
 .nav-link.active {
  color: #d32f2f !important;
    background-color: #e0e0e0 !important;
-  font-weight: 600; /* Texte un peu plus épais pour marquer la sélection */
-  border-bottom: none !important; /* PLUS DE SOULIGNEMENT */
+  font-weight: 600;
+  border-bottom: none !important;
 
 }
 
-/* SUPPRESSION de l'animation de la barre bleue (le trait) */
 .nav-link.active::after {
   display: none !important;
   content: none !important;
 }
 
-/* Icônes */
 .nav-link i {
   font-size: 1.1rem;
 }
 
-/* Scroll horizontal */
 .custom-scroll {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -151,14 +56,13 @@
 }
 
 
-/* Bouton mobile : Caché sur PC, stylisé sur Mobile */
 .sub-nav-toggle {
-  display: none; /* Par défaut caché */
+  display: none;
 }
 
 @media (max-width: 991px) {
   .sub-nav-toggle {
-    display: flex; /* Apparaît sur mobile */
+    display: flex;
     align-items: center;
     gap: 10px;
     width: 100%;
@@ -171,10 +75,9 @@
   }
 
   .sub-navigation {
-    display: none; /* Cache la barre horizontale */
+    display: none;
   }
 
-  /* Quand on clique sur le bouton, on affiche la liste en vertical */
   .sub-navigation.mobile-open {
     display: block;
     position: absolute;

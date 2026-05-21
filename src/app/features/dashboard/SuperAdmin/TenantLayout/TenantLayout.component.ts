@@ -25,21 +25,16 @@ export class TenantLayoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // On écoute les changements de paramètres dans l'URL
     this.route.paramMap.subscribe(params => {
-      const id = params.get('idTenant'); // Récupère 'idTenant' défini dans ton routing
+      const id = params.get('idTenant');
 
       if (id) {
         this.idTenant = id;
         const numericId = Number(id);
 
-        // On met à jour le service de contexte pour que le reste de
-        // l'app sache sur quel Tenant on travaille
         this.contextService.updateTenantId(numericId);
       }
 
-      // Force la détection de changement pour garantir que les liens
-      // [routerLink] dans le HTML sont mis à jour avec la nouvelle valeur
       setTimeout(() => {
         this.cdr.detectChanges();
       }, 0);

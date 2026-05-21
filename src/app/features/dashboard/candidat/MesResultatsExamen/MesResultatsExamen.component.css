@@ -1,10 +1,5 @@
-
-
-
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
-
-
 
 :host {
   --smart-red: #ea5357;
@@ -383,7 +378,6 @@ h5 {
   display: flex;
 }
 
-/* IMPORTANT : laisse Bootstrap gérer la largeur */
 .custom-card {
   width: 100%;
   max-width: 100%;
@@ -393,13 +387,13 @@ h5 {
 
 @media (min-width: 768px) {
   .row.g-4 > div {
-    flex: 0 0 50%; /* 2 cartes par ligne */
+    flex: 0 0 50%;
   }
 }
 
 @media (min-width: 1200px) {
   .row.g-4 > div {
-    flex: 0 0 33.333%; /* 3 cartes par ligne */
+    flex: 0 0 33.333%;
   }
 }
 
