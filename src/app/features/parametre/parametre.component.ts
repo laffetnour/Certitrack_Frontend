@@ -32,8 +32,6 @@ export class ParametreComponent implements OnInit {
   ngOnInit(): void {
     const user = this.authService.getUser();
     this.currentUser = JSON.parse(JSON.stringify(user));
-   /* const savedTheme = localStorage.getItem('app-theme') || this.currentUser?.theme || 'light';
-    this.applyTheme(savedTheme);*/
       this.currentUser.newPassword = '';
     const savedTheme = localStorage.getItem('app-theme') || this.currentUser?.theme || 'light';
     this.themeService.applyTheme(savedTheme);
@@ -59,17 +57,13 @@ export class ParametreComponent implements OnInit {
       nom: this.currentUser.nom,
       prenom: this.currentUser.prenom,
       photo: this.currentUser.photo,
-
-      // ON AJOUTE LE STATUT ICI POUR ÉVITER L'ERREUR 400
       statut: this.currentUser.statut ?? false
     };
 
-    // On ajoute le mot de passe s'il a été saisi
     if (this.currentUser.newPassword && this.currentUser.newPassword.trim() !== '') {
       payload.motDePasse = this.currentUser.newPassword;
     }
 
-    // On garde les contacts (très important pour ton @PutMapping)
     if (this.currentUser.contacts && this.currentUser.contacts[0]) {
       payload.contacts = [{
         idContact: this.currentUser.contacts[0].idContact,
@@ -92,12 +86,12 @@ export class ParametreComponent implements OnInit {
     });
   }
 
-get contactInfo() {
-  if (this.currentUser && this.currentUser.contacts && this.currentUser.contacts[0]) {
-    return this.currentUser.contacts[0].type;
+  get contactInfo() {
+    if (this.currentUser && this.currentUser.contacts && this.currentUser.contacts[0]) {
+      return this.currentUser.contacts[0].type;
+    }
+    return { emailPersonnel: '', numTel: '' };
   }
-  return { emailPersonnel: '', numTel: '' };
-}
 
 
   onPhotoProfilChange(event: any): void {
@@ -140,21 +134,19 @@ get contactInfo() {
                  document.title = conf.nomPlateforme;
               }
 
-             //this.currentUser.theme = conf.theme;
              this.themeService.applyTheme(conf.theme);
-             //this.applyTheme(conf.theme);
 
 
           this.cdr.detectChanges();
         },
         error: (err) => {
           console.error("Erreur de chargement de la config", err);
-          // Fallback avec la nouvelle structure user_id
+
           this.globalConfig = {
             nomPlateforme: 'CertiTrack',
             theme: 'light',
             logoSociete: '',
-            user_id: userId // Corrigé ici
+            user_id: userId
           };
         }
       });
@@ -172,107 +164,61 @@ get contactInfo() {
     }
   }
 
-/*changePersonalTheme(theme: string): void {
-  if (!this.globalConfig) return;
 
-  // 1. On met à jour l'objet local immédiatement
-  this.globalConfig.theme = theme;
-  this.currentUser.theme = theme;
+  saveGlobalSettings(): void {
+    if (!this.globalConfig || !this.currentUser) return;
 
-  // 2. On applique visuellement (CSS)
-  this.applyTheme(theme);
-  localStorage.setItem('app-theme', theme);
-    this.authService.saveUser(this.currentUser);
-  this.cdr.detectChanges();
-
-
-  // 4. Sauvegarde automatique du thème
-  const userId = this.currentUser.idUtilisateur || this.currentUser.id;
-  const payload: Configuration = {
-    id: this.globalConfig.id,
-    nomPlateforme: this.globalConfig.nomPlateforme,
-    theme: theme, // On force la nouvelle valeur ici
-    logoSociete: this.globalConfig.logoSociete,
-    user_id: userId
-  };
-
-  this.configService.updateConfig(payload).subscribe({
-    next: (savedConf) => {
-      this.globalConfig = savedConf;
-      console.log("✅ Thème mis à jour en BDD dans Configuration");
-      this.cdr.detectChanges();
-    },
-    error: (err) => console.error("❌ Erreur sauvegarde thème", err)
-  });
-}*/
-
-saveGlobalSettings(): void {
-  if (!this.globalConfig || !this.currentUser) return;
-
-  this.isSavingConfig = true;
-  this.cdr.detectChanges();
-  const userId = this.currentUser.idUtilisateur || this.currentUser.id;
-
-  // On construit le payload final
-  const payload: Configuration = {
-    id: this.globalConfig.id,
-    nomPlateforme: this.globalConfig.nomPlateforme,
-    theme: this.globalConfig.theme, // Le thème actuel de l'objet
-    logoSociete: this.globalConfig.logoSociete,
-    user_id: userId
-  };
-
-  this.configService.updateConfig(payload).subscribe({
-    next: (res) => {
-      this.isSavingConfig = false;
-      this.globalConfig = res;
-
-      alert("✅ Configuration (Logo & Thème) sauvegardée !");
-      this.cdr.detectChanges();
-    },
-    error: (err) => {
-      this.isSavingConfig = false;
-      this.cdr.detectChanges();
-      console.error("Erreur serveur:", err);
-    }
-  });
-}
-/*
-applyTheme(theme: string) {
-  const htmlElement = document.documentElement;
-  if (theme === 'dark') {
-    htmlElement.classList.add('dark-mode');
-  } else {
-    htmlElement.classList.remove('dark-mode');
-  }
-}*/
-
-changePersonalTheme(theme: string): void {
-    if (!this.globalConfig) return;
-
-    // 1. Mise à jour visuelle immédiate (DOM + LocalStorage)
-    this.themeService.applyTheme(theme);
-
-    // 2. Mise à jour de l'objet local
-    this.globalConfig.theme = theme;
-    this.currentUser.theme = theme;
-    this.authService.saveUser(this.currentUser);
-
-    // 3. Sauvegarde en Base de Données
+    this.isSavingConfig = true;
+    this.cdr.detectChanges();
     const userId = this.currentUser.idUtilisateur || this.currentUser.id;
+
     const payload: Configuration = {
-      ...this.globalConfig,
-      theme: theme,
+      id: this.globalConfig.id,
+      nomPlateforme: this.globalConfig.nomPlateforme,
+      theme: this.globalConfig.theme,
+      logoSociete: this.globalConfig.logoSociete,
       user_id: userId
     };
 
     this.configService.updateConfig(payload).subscribe({
-      next: (savedConf) => {
-        this.globalConfig = savedConf;
-        console.log("✅ Thème sauvegardé en BDD");
+      next: (res) => {
+        this.isSavingConfig = false;
+        this.globalConfig = res;
+
+        alert("✅ Configuration (Logo & Thème) sauvegardée !");
         this.cdr.detectChanges();
       },
-      error: (err) => console.error("❌ Erreur BDD", err)
+      error: (err) => {
+        this.isSavingConfig = false;
+        this.cdr.detectChanges();
+        console.error("Erreur serveur:", err);
+      }
     });
   }
-}
+
+
+  changePersonalTheme(theme: string): void {
+      if (!this.globalConfig) return;
+
+      this.themeService.applyTheme(theme);
+      this.globalConfig.theme = theme;
+      this.currentUser.theme = theme;
+      this.authService.saveUser(this.currentUser);
+
+      const userId = this.currentUser.idUtilisateur || this.currentUser.id;
+      const payload: Configuration = {
+        ...this.globalConfig,
+        theme: theme,
+        user_id: userId
+      };
+
+      this.configService.updateConfig(payload).subscribe({
+        next: (savedConf) => {
+          this.globalConfig = savedConf;
+          console.log("✅ Thème sauvegardé en BDD");
+          this.cdr.detectChanges();
+        },
+        error: (err) => console.error("❌ Erreur BDD", err)
+      });
+    }
+  }

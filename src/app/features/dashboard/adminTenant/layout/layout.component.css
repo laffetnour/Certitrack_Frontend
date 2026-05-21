@@ -1,10 +1,8 @@
 
 :host {
-  /* Identité */
+
   --smart-red: #ea5357;
   --smart-red-dark: #d44347;
-
-  /* Couleurs Mode Clair (Par défaut) */
   --smart-dark: #303D49;
   --bg-page: #f8fafc;
   --white: #ffffff;
@@ -12,15 +10,12 @@
   --text-muted: #64748b;
   --border-color: #e2e8f0;
   --input-bg: #ffffff;
-
-  /* Dimensions & Effets */
   --sidebar-width: 260px;
   --radius-lg: 12px;
   --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 :host-context(.dark-mode) {
-  /* Couleurs Mode Sombre */
   --smart-dark: #0f172a;
   --bg-page: #0f172a;
   --white: #1e293b;
@@ -30,10 +25,6 @@
   --input-bg: #0f172a;
   --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
-
-/* ==========================================================================
-   2. LAYOUT GLOBAL (RESPONSIVE)
-   ========================================================================== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 .dashboard-container {
@@ -46,7 +37,7 @@
 
 .sidebar {
   width: var(--sidebar-width);
-  flex-shrink: 0; /* Empêche la sidebar de s'écraser */
+  flex-shrink: 0;
   background: var(--white);
   border-right: 1px solid var(--border-color);
   display: flex;
@@ -55,15 +46,12 @@
 }
 
 .main-layout {
-  flex: 1; /* Prend tout l'espace restant */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0; /* Important pour que le contenu ne déborde pas en flex */
+  min-width: 0;
 }
 
-/* ==========================================================================
-   3. NAVIGATION & SIDEBAR
-   ========================================================================== */
 .logo-section {
   padding: 20px;
   text-align: center;
@@ -90,7 +78,7 @@
   font-weight: 500;
   text-decoration: none;
   border-right: 4px solid transparent;
-  white-space: nowrap; /* Empêche le texte de passer à la ligne */
+  white-space: nowrap;
 }
 
 .nav-item.active {
@@ -111,16 +99,13 @@
   gap: 10px;
 }
 
-/* ==========================================================================
-   4. TOPBAR (DYNAMIC SEARCH)
-   ========================================================================== */
 .notification-bar {
   height: 70px;
   background-color: var(--smart-dark);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2% ; /* Utilisation de % pour l'espacement latéral */
+  padding: 0 2% ;
   color: white;
   flex-shrink: 0;
 }
@@ -129,7 +114,7 @@
   background-color: rgba(255, 255, 255, 0.15);
   padding: 8px 15px;
   border-radius: 25px;
-  width: 40%; /* Largeur dynamique */
+  width: 40%;
   max-width: 400px;
   min-width: 150px;
   display: flex;
@@ -145,11 +130,8 @@
   outline: none;
 }
 
-/* ==========================================================================
-   5. CONTENT AREA & GRIDS
-   ========================================================================== */
 .content-area {
-  padding: 2vw; /* Padding adaptatif selon la largeur d'écran */
+  padding: 2vw;
   overflow-y: auto;
   flex: 1;
   background-color: var(--bg-page);
@@ -157,7 +139,6 @@
 
 .stats-grid {
   display: grid;
-  /* S'adapte automatiquement : 3 colonnes sur PC, 1 ou 2 sur tablette/mobile */
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
   margin-bottom: 30px;
@@ -177,7 +158,7 @@
   --sidebar-width: 80px;
 
   .nav-item span, .nav-title, .logout span, .arrow {
-    display: none; /* Cache le texte pour ne garder que les icônes */
+    display: none;
   }
 
   .nav-item { justify-content: center; padding: 15px 0; }
@@ -201,10 +182,10 @@
   object-fit: contain;
   transition: opacity 0.3s ease-in-out;
 }
-/* Petits écrans (Mobiles) */
+
 @media (max-width: 600px) {
   .notification-bar { padding: 0 15px; }
-  .search-container { display: none; } /* Cache la recherche sur mobile pour gagner de la place */
+  .search-container { display: none; }
   .admin-header { flex-direction: column; gap: 15px; text-align: center;  }
 }
 
@@ -288,8 +269,6 @@
   color: #333;
 }
 
-
-/* ================= SEARCH CONTAINER ================= */
 .search-container {
   position: relative;
   width: 380px;
@@ -305,21 +284,18 @@
   transition: all 0.25s ease;
 }
 
-/* focus (important UX) */
 .search-container:focus-within {
   background: rgba(255, 255, 255, 0.18);
   border-color: var(--smart-red);
   box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.2);
 }
 
-/* ICON */
 .search-container i {
   color: rgba(255, 255, 255, 0.8);
   margin-right: 8px;
   font-size: 0.9rem;
 }
 
-/* INPUT */
 .search-container input {
   flex: 1;
   border: none;
@@ -334,7 +310,6 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* ================= DROPDOWN ================= */
 .search-dropdown {
   position: absolute;
   top: calc(100% + 10px);
@@ -353,7 +328,6 @@
   animation: fadeIn 0.15s ease-in-out;
 }
 
-/* ITEM */
 .search-item {
   display: flex;
   align-items: center;
@@ -370,13 +344,11 @@
   border-bottom: none;
 }
 
-/* hover */
 .search-item:hover {
   background: rgba(234, 83, 87, 0.08);
   transform: translateX(2px);
 }
 
-/* ICON ITEM */
 .search-item i {
   width: 38px;
   height: 38px;
@@ -392,7 +364,6 @@
   font-size: 0.9rem;
 }
 
-/* TEXT */
 .result-info {
   display: flex;
   flex-direction: column;
@@ -409,7 +380,6 @@
   color: var(--text-muted);
 }
 
-/* SCROLL */
 .search-dropdown::-webkit-scrollbar {
   width: 6px;
 }
@@ -419,7 +389,6 @@
   border-radius: 10px;
 }
 
-/* ANIMATION */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -431,7 +400,6 @@
   }
 }
 
-/* ================= DARK MODE FIX ================= */
 :host-context(.dark-mode) .search-container {
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid #334155;
@@ -454,14 +422,13 @@
   background: rgba(255, 255, 255, 0.06);
 }
 
-/* Conteneur principal */
+
 .notification-container {
   position: relative;
   display: inline-block;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* Icône de cloche */
 .notification-icon {
   position: relative;
   font-size: 1.4rem;
@@ -474,13 +441,6 @@
   justify-content: center;
 }
 
-/*.notification-icon:hover {
-  background-color: #f1f5f9;
-  color: #3b82f6;
-  transform: scale(1.05);
-}*/
-
-/* Le point rouge (Badge) */
 .dot-notification {
   position: absolute;
   top: -2px;
@@ -517,7 +477,7 @@
   100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }
 
-/* Panneau déroulant */
+
 .dropdown-notif-panel {
   position: absolute;
   top: calc(100% + 15px);
@@ -539,7 +499,6 @@
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Header */
 .notif-header {
   padding: 16px;
   font-weight: 700;
@@ -573,7 +532,6 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* CONTENT */
 .notif-content {
   max-height: 420px;
   overflow-y: auto;
@@ -590,7 +548,6 @@
   border-radius: 999px;
 }
 
-/* ITEM */
 .notif-item {
   position: relative;
 
@@ -618,7 +575,6 @@
   background: rgba(234, 83, 87, 0.06);
 }
 
-/* UNREAD */
 .notif-item.unread {
   background: rgba(234, 83, 87, 0.06);
   border-color: rgba(234, 83, 87, 0.08);
@@ -629,7 +585,6 @@
   background: rgba(234, 83, 87, 0.12);
 }
 
-/* TEXTES */
 .notif-title {
   font-size: 0.92rem;
   font-weight: 700;
@@ -657,7 +612,6 @@
   color: #94a3b8;
 }
 
-/* DELETE */
 .btn-delete-notif {
   position: absolute;
 
@@ -688,7 +642,6 @@
   background: rgba(239, 68, 68, 0.18);
 }
 
-/* EMPTY */
 .no-notif {
   padding: 35px 20px;
   text-align: center;
@@ -700,7 +653,6 @@
   color: #cbd5e1;
 }
 
-/* ANIMATIONS */
 @keyframes notifDropdown {
   from {
     opacity: 0;
@@ -731,8 +683,6 @@
   }
 }
 
-
-/* Style du bouton Hamburger (caché sur desktop) */
 .mobile-toggle {
   display: none;
   background: none;
@@ -744,12 +694,12 @@
 
 @media (max-width: 768px) {
   .mobile-toggle {
-    display: block; /* Visible uniquement sur mobile */
+    display: block;
   }
 
   .sidebar {
     position: fixed;
-    left: -100%; /* Sort de l'écran à gauche */
+    left: -100%;
     top: 0;
     height: 100vh;
     z-index: 999;
@@ -757,40 +707,39 @@
     transition: 0.3s ease;
   }
 
-  /* Quand on clique sur le bouton */
+
   .sidebar.mobile-open {
-    left: 0; /* Revient dans l'écran */
+    left: 0;
   }
 
-  /* On affiche à nouveau le texte sur mobile puisque la barre est en plein écran */
+
   .nav-item span, .logout span {
     display: inline !important;
   }
 }
 
-/* --- Par défaut (Desktop) --- */
+
 .mobile-only-search {
-  display: none; /* Caché sur PC */
+  display: none;
 }
 
 .desktop-only-search {
-  display: flex; /* Visible sur PC */
+  display: flex;
 }
 
-/* --- Responsive (Mobile / Tablette) --- */
+
 @media (max-width: 1024px) {
 
-  /* 1. On cache la recherche dans la barre du haut */
+
   .desktop-only-search {
     display: none !important;
   }
 
-  /* 2. On affiche et on stylise la recherche dans la sidebar */
   .mobile-only-search {
     display: flex;
-    margin: 20px; /* Espace autour */
-    width: auto;  /* Prend la largeur de la sidebar */
-    background-color: var(--bg-page); /* Fond gris clair pour trancher avec le blanc */
+    margin: 20px;
+    width: auto;
+    background-color: var(--bg-page);
     border: 1px solid var(--border-color);
   }
 
@@ -802,7 +751,6 @@
     color: var(--text-main);
   }
 
-  /* Ajuster le dropdown pour mobile pour qu'il ne dépasse pas de la sidebar */
   .mobile-only-search .search-dropdown {
     width: 100%;
     position: absolute;
@@ -811,62 +759,54 @@
   }
 }
 
-/* 1. On cache le bouton par défaut (Desktop/Grand écran) */
 .mobile-menu-btn {
   display: none;
   background: transparent;
   border: none;
-  color : var(--smart-red) !important; /* Ajustez selon la couleur de votre notification-bar */
+  color : var(--smart-red) !important;
   font-size: 1.5rem;
   cursor: pointer;
   padding: 10px;
 }
 
-/* 2. On l'affiche uniquement sur mobile et tablette (moins de 1024px) */
 @media (max-width: 1024px) {
   .mobile-menu-btn {
-    display: block; /* Il devient visible ici */
+    display: block;
     margin-right: 15px;
   }
 }
 
 
 .nav-menu {
-  flex: 1; /* Prend tout l'espace entre le logo et le logout */
-  overflow-y: auto; /* Active le scroll vertical uniquement ici */
+  flex: 1;
+  overflow-y: auto;
   overflow-x: hidden;
-
-  /* Pour Firefox */
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
 }
 
-/* 2. Style personnalisé pour Chrome, Edge et Safari */
 .nav-menu::-webkit-scrollbar {
-  width: 4px; /* Très fin */
+  width: 4px;
 }
 
 .nav-menu::-webkit-scrollbar-track {
-  background: transparent; /* Fond totalement transparent */
+  background: transparent;
 }
 
 .nav-menu::-webkit-scrollbar-thumb {
-  /* Couleur très légère et presque transparente */
   background-color: rgba(100, 116, 139, 0.1);
   border-radius: 20px;
   transition: background 0.3s ease;
 }
 
-/* 3. Effet au survol : on rend le scroller un peu plus visible */
 .nav-menu:hover::-webkit-scrollbar-thumb {
   background-color: rgba(100, 116, 139, 0.3);
 }
 
 .nav-menu::-webkit-scrollbar-thumb:hover {
-  background-color: var(--smart-red); /* Devient rouge si on touche au scroller */
+  background-color: var(--smart-red);
 }
 
-/* Ajustement pour le mode sombre */
 :host-context(.dark-mode) .nav-menu::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.05);
 }

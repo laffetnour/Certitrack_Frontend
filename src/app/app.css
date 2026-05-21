@@ -24,9 +24,6 @@ body {
   color: var(--text-main);
 }
 
-/* =========================================================
-   GLOBAL RESPONSIVE FIX
-========================================================= */
 
 * {
   box-sizing: border-box;
@@ -38,13 +35,12 @@ body {
   width: 100%;
 }
 
-/* Images */
+
 img {
   max-width: 100%;
   height: auto;
 }
 
-/* Tables */
 table {
   width: 100%;
 }
@@ -53,7 +49,7 @@ table {
   overflow-x: auto;
 }
 
-/* Inputs */
+
 input,
 select,
 textarea,
@@ -61,12 +57,11 @@ button {
   max-width: 100%;
 }
 
-/* Charts */
 canvas {
   max-width: 100% !important;
 }
 
-/* Containers */
+
 .container,
 .container-fluid,
 .content-area,
@@ -76,7 +71,6 @@ canvas {
   max-width: 100%;
 }
 
-/* Flex/Grid responsive */
 .stats-grid,
 .dashboard-grid,
 .cards-grid {
@@ -87,24 +81,18 @@ canvas {
   gap: 20px;
 }
 
-/* =========================================================
-   MOBILE
-========================================================= */
 
 @media (max-width: 768px) {
 
-  /* Layout */
   .dashboard-container {
     flex-direction: column;
   }
 
-  /* Sidebar */
   .sidebar {
     width: 100% !important;
     height: auto !important;
   }
 
-  /* Navbar */
   .notification-bar,
   .topbar {
     flex-wrap: wrap;
@@ -113,32 +101,27 @@ canvas {
     padding: 12px !important;
   }
 
-  /* Search */
   .search-container {
     width: 100% !important;
     max-width: 100% !important;
   }
 
-  /* Content */
   .content-area {
     padding: 12px !important;
   }
 
-  /* Cards */
   .stat-card,
   .chart-card,
   .chart1-card {
     width: 100% !important;
   }
 
-  /* Charts */
   .chart-wrapper,
   .chart1-wrapper,
   .chart2-wrapper {
     height: 250px !important;
   }
 
-  /* Dropdowns */
   .dropdown-notif-panel,
   .search-dropdown {
     width: 95vw !important;
@@ -146,7 +129,6 @@ canvas {
     left: auto !important;
   }
 
-  /* Tables */
   table {
     display: block;
     overflow-x: auto;

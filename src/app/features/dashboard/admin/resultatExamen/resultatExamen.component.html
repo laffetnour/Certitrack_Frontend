@@ -1,112 +1,5 @@
-<!--<div class="container mt-4">
-  <div class="row">
-    <div class="col-md-8 mx-auto">
-      <div class="card shadow border-0 overflow-hidden">
-        <div class="card-header bg-primary text-white p-3">
-          <h5 class="mb-0"><i class="bi bi-file-earmark-arrow-up"></i> Importation des Résultats Certiport</h5>
-        </div>
-
-        <div class="card-body p-4">
-          <p class="text-muted mb-4">
-            Suivez les étapes ci-dessous pour mettre à jour les scores des candidats après une session d'examen.
-          </p>
-
-          <select class="form-select form-select-lg"
-                  [(ngModel)]="selectedSessionId"
-                  (change)="onSessionChange()">
-            <option [ngValue]="null" disabled>-- Choisir une session --</option>
-            <option *ngFor="let s of sessionsCloturees" [value]="s.id">
-              {{ s.nomExamen }} | {{ s.module?.nom }} ({{ s.dateHeureExamen | date:'dd/MM/yyyy' }})
-            </option>
-          </select>
-
-          <div class="mb-4" *ngIf="selectedSessionId">
-            <label class="form-label fw-bold d-block">2. Obtenir le modèle de saisie</label>
-            <button class="btn btn-outline-primary" (click)="onDownloadTemplate()">
-              <i class="bi bi-file-earmark-excel"></i> Télécharger le modèle pré-rempli
-            </button>
-            <small class="text-muted d-block mt-1">Le fichier contient déjà la liste des candidats inscrits.</small>
-          </div>
-
-          <div class="mb-4" *ngIf="selectedSessionId">
-            <label class="form-label fw-bold">3. Importer les résultats remplis</label>
-            <div class="input-group">
-              <input type="file" class="form-control" (change)="onFileSelected($event)" accept=".xlsx, .xls">
-              <button class="btn btn-success"
-                      [disabled]="!selectedFile || uploading"
-                      (click)="onUpload()">
-                <span *ngIf="uploading" class="spinner-border spinner-border-sm"></span>
-                <i *ngIf="!uploading" class="bi bi-cloud-upload"></i> Importer
-              </button>
-            </div>
-          </div>
-
-          <div class="alert alert-info" *ngIf="sessionsCloturees.length === 0">
-            <i class="bi bi-info-circle"></i> Aucune session clôturée n'est disponible pour l'importation.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card shadow-sm border-0 mt-4">
-    <div class="card-header bg-white py-3">
-      <h5 class="mb-0 text-dark font-weight-bold">
-        <i class="bi bi-award text-warning"></i> Scores et Résultats de la Session
-      </h5>
-    </div>
-
-    <div class="table-responsive">
-      <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
-        <tr>
-          <th>Candidat</th>
-          <th>Username Certiport</th>
-          <th>Examen</th>
-          <th class="text-center">Score</th>
-          <th class="text-center">Résultat</th>
-          <th>Proctored By</th>
-          <th>Date de passage</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let r of resultats">
-          <td><span class="fw-bold">{{ r.nomCompletCandidat }}</span></td>
-          <td><code>{{ r.usernameCertiport }}</code></td>
-          <td><span class="badge bg-light text-dark border">{{ r.nomExamen }}</span></td>
-          <td class="text-center">
-            <div class="progress" style="height: 20px;">
-              <div class="progress-bar"
-                   [ngClass]="r.resultat === 'PASS' ? 'bg-success' : 'bg-danger'"
-                   role="progressbar"
-                   [style.width]="(r.score / 10) + '%'">
-                {{ r.score }}
-              </div>
-            </div>
-          </td>
-          <td class="text-center">
-            <span class="badge" [ngClass]="r.resultat === 'PASS' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">
-              <i class="bi" [ngClass]="r.resultat === 'PASS' ? 'bi-check-circle' : 'bi-x-circle'"></i>
-              {{ r.resultat }}
-            </span>
-          </td>
-          <td><small>{{ r.proctorName }}</small></td>
-          <td>{{ r.dateExamen | date:'dd/MM/yyyy' }}</td>
-        </tr>
-        <tr *ngIf="resultats.length === 0">
-          <td colspan="6" class="text-center py-4 text-muted">
-            Aucun résultat importé pour cette session.
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>-->
-
 <div class="admin-container">
 
-  <!-- HEADER -->
   <div class="admin-header">
 
     <div>
@@ -143,7 +36,6 @@
     </div>
   </div>
 
-  <!-- FILTER (session) -->
   <div class="filter-section d-flex gap-3 align-items-center">
 
     <select
@@ -165,44 +57,10 @@
 
   <br>
 
-  <!-- IMPORT AREA -->
-  <!--<div class="table-container" *ngIf="selectedSessionId">
-
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-
-      <div>
-        <h5 class="m-0">Importer les résultats</h5>
-        <small class="text-muted">
-          Sélectionnez un fichier Excel contenant les scores
-        </small>
-      </div>
-
-      <div class="actions-header d-flex gap-2">
-
-        <button class="btn-import" (click)="fileInput.click()">
-          Choisir fichier
-        </button>
-
-        <button
-          class="btn btn-success"
-          [disabled]="!selectedFile"
-          (click)="onUpload()"
-        >
-          Importer
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>-->
-
-  <!-- EMPTY SESSION -->
   <div class="empty-box" *ngIf="sessionsCloturees.length === 0">
     Aucune session clôturée disponible
   </div>
 
-  <!-- TABLE RESULTATS -->
   <div class="table-container" *ngIf="resultats.length">
 
     <table class="modern-table">
@@ -256,7 +114,6 @@
 
   </div>
 
-  <!-- EMPTY RESULTATS -->
   <div class="empty-box" *ngIf="resultats.length === 0">
     Aucun résultat importé pour cette session
   </div>

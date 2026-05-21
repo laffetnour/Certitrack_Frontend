@@ -70,10 +70,6 @@ export class SessionInscComponent implements OnInit {
         });
   }
 
-  /*getUserId(): number {
-    return this.auth.getUser()?.idUtilisateur;
-  }*/
-
   getTargetId(): number {
     const user = this.auth.getUser();
     if ((user?.role === 'superAdmin' || user?.role === 'SUPER_ADMIN') && this.idTenant) {
@@ -96,7 +92,7 @@ export class SessionInscComponent implements OnInit {
       this.selectionMode = val;
       if (val === 'all') {
         this.selectedModuleIds = this.modules.map(m => m.id);
-        // Vérifier la disponibilité pour tous les modules
+
         this.selectedModuleIds.forEach(id => this.checkModuleAvailability(id));
       } else {
         this.selectedModuleIds = [];
@@ -105,7 +101,7 @@ export class SessionInscComponent implements OnInit {
   }
 
   loadData() {
-    //const userId = this.getUserId();
+
     const targetId = this.getTargetId();
 
     this.service.getMySessions(targetId).subscribe(res => {
@@ -118,10 +114,7 @@ export class SessionInscComponent implements OnInit {
         new Date(a.dateDebut).getTime() - new Date(b.dateDebut).getTime()
       );
 
-      // 🔥 IMPORTANT : forcer affichage initial complet
       this.filteredSessions = [...this.sessions];
-
-      // appliquer filtre ensuite (optionnel mais safe)
       setTimeout(() => {
         this.applyFilters();
       });
@@ -222,10 +215,10 @@ openEditModal(session: any) {
     dateFin: this.formatDate(session.dateFin),
     dureeMax: session.dureeMax,
     nbreQuestionTechnique: session.nbreQuestionTechnique,
-    selectionType: 'manual' // Obligatoire pour le validateur du formulaire
+    selectionType: 'manual'
   });
 
-  // Extraction propre des IDs pour les checkboxes
+
   if (session.modulesTenants && Array.isArray(session.modulesTenants)) {
     this.selectedModuleIds = session.modulesTenants.map((m: any) => m.id);
   } else if (session.moduleTenant) {
@@ -245,14 +238,13 @@ openEditModal(session: any) {
     }
 
     const formVal = this.addSessionForm.value;
-    //const userId = this.getUserId();
+
     const targetId = this.getTargetId();
 
-    // --- VALIDATION DATE DÉBUT > AUJOURD'HUI ---
     const dateDebut = new Date(formVal.dateDebut);
     const dateFin = new Date(formVal.dateFin);
     const todayNow = new Date();
-    todayNow.setHours(0, 0, 0, 0); // Comparaison à minuit
+    todayNow.setHours(0, 0, 0, 0);
 
     if (dateDebut <= todayNow) {
       this.showAlert('error', "❌ La date de début doit être supérieure ou égale à la date d'aujourd'hui.");
@@ -280,14 +272,13 @@ openEditModal(session: any) {
     } else {
       const rawValues = this.addSessionForm.value;
 
-        // CRÉATION DU PAYLOAD PROPRE
         const payload = {
-            nomSession: formVal.titre, // mapping vers DTO
+            nomSession: formVal.titre,
             dateDebutInsc: formVal.dateDebut,
             dateFinInsc: formVal.dateFin,
             dureeMax: formVal.dureeMax,
             nbreQuestionTechnique: formVal.nbreQuestionTechnique,
-            modulesTenantsIds: this.selectedModuleIds // Ex: [27, 28]
+            modulesTenantsIds: this.selectedModuleIds
           };
 
       this.service.updateSession(this.selectedSession.id, targetId, payload).subscribe({
@@ -320,7 +311,7 @@ openEditModal(session: any) {
     });
   }
 
-  // ================= SUPPRESSION / VUE =================
+
   openDeleteModal(s: any) {
     this.selectedSession = s;
     this.showDeleteModal = true;

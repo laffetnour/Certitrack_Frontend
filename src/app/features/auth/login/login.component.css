@@ -51,19 +51,15 @@
 .auth-container {
   display: flex;
   width: 100%;
-  max-width: 1100px; /* Largeur max pour le grand écran */
+  max-width: 1100px;
   background-color: var(--white);
   border-radius: 20px;
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   z-index: 2;
-  /* Animation d'apparition */
   animation: slideUp 0.6s ease-out;
 }
 
-/* =========================================
-   PARTIE GAUCHE : INFO (55%)
-   ========================================= */
 .auth-info {
   flex: 1 1 55%;
   background-color: var(--secondary-color);
@@ -75,7 +71,6 @@
   position: relative;
 }
 
-/* Motif d'arrière-plan subtil pour la partie gauche */
 .auth-info::before {
   content: '';
   position: absolute;
@@ -84,7 +79,7 @@
   width: 100%;
   height: 100%;
   opacity: 0.05;
-  /*background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");*/
+
 }
 
 .info-content {
@@ -99,7 +94,6 @@
   width: 80px;
   height: 80px;
   margin: 0 auto 30px;
-  /* Animation douce */
   animation: pulse 3s infinite;
 }
 
@@ -154,9 +148,6 @@
   font-weight: 500;
 }
 
-/* =========================================
-   PARTIE DROITE : FORMULAIRE (45%)
-   ========================================= */
 .auth-form-section {
   flex: 1 1 45%;
   padding: 60px;
@@ -188,9 +179,6 @@
   line-height: 1.5;
 }
 
-/* =========================================
-   STYLES DES INPUTS
-   ========================================= */
 .input-group {
   margin-bottom: 20px;
 }
@@ -219,7 +207,7 @@
 
 .input-group input {
   width: 100%;
-  padding: 15px 15px 15px 45px; /* Padding gauche pour l'icône */
+  padding: 15px 15px 15px 45px;
   border: 2px solid #e1e8ed;
   border-radius: var(--radius-sm);
   font-size: 1rem;
@@ -235,7 +223,6 @@
   box-shadow: 0 0 0 4px rgba(234, 83, 87, 0.1);
 }
 
-/* Gestion basique des erreurs sur l'input */
 .input-group input.ng-touched.ng-invalid {
   border-color: var(--error-text);
 }
@@ -247,7 +234,6 @@
   display: block;
 }
 
-/* Actions du formulaire (Mot de passe oublié) */
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -266,9 +252,6 @@
   color: var(--primary-color);
 }
 
-/* =========================================
-   BOUTONS & ALERTES
-   ========================================= */
 .btn-primary {
   width: 100%;
   padding: 15px;
@@ -284,7 +267,7 @@
 }
 
 .btn-primary:hover {
-  background-color: #d6454a; /* Version légèrement plus sombre du rouge */
+  background-color: #d6454a;
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(234, 83, 87, 0.3);
 }
@@ -296,7 +279,6 @@
   box-shadow: none;
 }
 
-/* Styles pour vos alertes Angular */
 .custom-alert {
   padding: 12px 15px;
   border-radius: var(--radius-sm);
@@ -318,9 +300,6 @@
   border-color: var(--info-text);
 }
 
-/* =========================================
-   FOOTER (Créer un compte)
-   ========================================= */
 .auth-footer {
   margin-top: 35px;
   padding-top: 25px;
@@ -352,10 +331,6 @@
   background-color: #f8fbfd;
 }
 
-/* =========================================
-   ANIMATIONS & RESPONSIVE
-   ========================================= */
-
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
@@ -372,10 +347,9 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* Responsive pour Tablettes et Mobiles */
 @media (max-width: 900px) {
   .auth-container {
-    flex-direction: column; /* Empiler les éléments */
+    flex-direction: column;
     max-width: 500px;
   }
 
@@ -420,40 +394,33 @@
   }
 }
 
-
-/* Conteneur du logo pour la gestion de l'espacement */
 .logo-wrapper {
-  margin-bottom: 20px; /* Espace entre le logo et le titre CertiTrack */
+  margin-bottom: 20px;
   display: flex;
   justify-content: center;
 }
 
-/* Style du logo Smartfuture */
 .main-logo {
-  max-width: 180px;    /* Ajustez la taille selon vos préférences */
+  max-width: 180px;
   height: auto;
   object-fit: contain;
-  /* Optionnel : ajout d'un filtre si le logo est sombre et que le fond est sombre */
-  /* filter: brightness(0) invert(1); */
 }
 
-/* Ajustement du titre juste en dessous */
 .brand-details h1 {
   font-size: 2.8rem;
   font-weight: 800;
-  margin-top: 0;      /* On réduit la marge haute car le logo est juste au dessus */
+  margin-top: 0;
   margin-bottom: 15px;
   color: var(--white);
   letter-spacing: -1px;
 }
 
-/* On peut garder l'icône de thème (chêne) ou la supprimer si le logo suffit */
 .theme-icon {
-  display: none; /* Cache l'ancienne icône SVG pour mettre le logo en avant */
+  display: none;
 }
 
 .logo-wrapper {
-  min-height: 80px; /* Taille approximative de ton logo */
+  min-height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -465,18 +432,16 @@
   filter: grayscale(1);
 }
 
-/* Bloc regroupant Logo + Nom */
 .brand-block {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 30px;
-  gap: 15px; /* Espace entre le logo et le texte */
+  gap: 15px;
 }
 
-/* Style du Logo dynamique */
 .app-logo-login {
-  max-width: 140px; /* Un peu plus grand pour la page de login */
+  max-width: 140px;
   height: auto;
   max-height: 80px;
   object-fit: contain;
@@ -484,28 +449,24 @@
   animation: slideInDown 0.8s ease-out;
 }
 
-/* Style du Nom dynamique */
 .app-name-login {
   font-size: 2.5rem;
   font-weight: 800;
   color: var(--white);
   margin: 0;
   letter-spacing: -1px;
-  text-transform: none; /* Garde la casse saisie par l'admin */
+  text-transform: none;
 }
 
-/* Si tu veux quand même un accent de couleur sur le texte dynamique */
 .app-name-login::first-letter {
   color: var(--primary-color);
 }
 
-/* Animation pour le logo en chargement */
 .loading-pulse {
   animation: pulse 2s infinite ease-in-out;
   opacity: 0.6;
 }
 
-/* Ajustement de la description pour qu'elle respire */
 .brand-details .description {
   max-width: 380px;
   margin: 0 auto 40px;
@@ -513,7 +474,6 @@
   opacity: 0.9;
 }
 
-/* Nouvelle animation pour l'entrée du logo */
 @keyframes slideInDown {
   from {
     opacity: 0;

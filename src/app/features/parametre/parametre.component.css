@@ -1,4 +1,4 @@
-/* --- Layout Principal --- */
+
 .settings-layout {
   display: flex;
   min-height: calc(100vh - 80px);
@@ -6,7 +6,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* --- Sidebar de Navigation --- */
+
 .settings-nav-aside {
   width: 280px;
   background: white;
@@ -53,7 +53,6 @@
   border-left: 4px solid #3b82f6;
 }
 
-/* --- Zone de Contenu --- */
 .settings-content {
   flex: 1;
   padding: 2rem 3rem;
@@ -66,7 +65,6 @@
   font-weight: 600;
 }
 
-/* --- Cartes et Formulaires --- */
 .card {
   background: white;
   border-radius: 12px;
@@ -79,7 +77,6 @@
   gap: 3rem;
 }
 
-/* --- Avatar Section --- */
 .avatar-section {
   position: relative;
   width: 150px;
@@ -116,7 +113,6 @@
   border: 2px solid white;
 }
 
-/* --- Formulaires --- */
 .profile-form {
   flex: 1;
 }
@@ -171,7 +167,6 @@
   color: #94a3b8;
 }
 
-/* --- Boutons d'action --- */
 .form-actions {
   margin-top: 1.5rem;
   display: flex;
@@ -200,7 +195,6 @@
   background: #94a3b8;
 }
 
-/* --- Admin : Logo Preview --- */
 .logo-preview-box {
   width: 200px;
   height: 100px;
@@ -219,7 +213,6 @@
   object-fit: contain;
 }
 
-/* --- Thème Selector --- */
 .theme-selector {
   display: flex;
   gap: 1rem;
@@ -251,7 +244,6 @@
 .theme-box.light { background: #fff; color: #333; }
 .theme-box.dark { background: #1e293b; color: #fff; }
 
-/* --- Animations --- */
 .fade-in {
   animation: fadeIn 0.4s ease-in;
 
@@ -273,8 +265,6 @@
   color: #3b82f6;
 }
 
-
-/* --- État par défaut (Clair) --- */
 :root {
   --bg-app: #f4f7f6;
   --bg-card: #ffffff;
@@ -295,19 +285,17 @@
   --nav-hover: #f1f3f5;
 }
 
-/* --- VARIABLES MODE SOMBRE --- */
 :host-context(.dark-mode) {
-  --bg-page: #121212;      /* Fond de page noir */
-  --bg-card: #1e1e1e;      /* Cartes gris foncé */
-  --bg-aside: #1e293b;     /* Barre latérale légèrement différente */
-  --text-main: #f5f6fa;    /* Texte presque blanc */
-  --text-muted: #a4b0be;   /* Texte gris clair */
-  --border-color: #333333; /* Bordures discrètes */
-  --input-bg: #2d2d2d;     /* Champs de saisie foncés */
+  --bg-page: #121212;
+  --bg-card: #1e1e1e;
+  --bg-aside: #1e293b;
+  --text-main: #f5f6fa;
+  --text-muted: #a4b0be;
+  --border-color: #333333;
+  --input-bg: #2d2d2d;
   --nav-hover: #2c2c2c;
 }
 
-/* --- LAYOUT PRINCIPAL --- */
 .settings-layout {
   display: flex;
   min-height: 100vh;
@@ -316,7 +304,6 @@
   transition: all 0.3s ease;
 }
 
-/* --- BARRE LATÉRALE (ASIDE) --- */
 .settings-nav-aside {
   width: 280px;
   background-color: var(--bg-aside);
@@ -358,7 +345,6 @@
   color: white;
 }
 
-/* --- CONTENU PRINCIPAL --- */
 .settings-content {
   flex: 1;
   padding: 2rem 3rem;
@@ -369,11 +355,6 @@
   color: var(--text-main);
   margin-bottom: 1.5rem;
 }
-
-/* --- CARTES (CARDS) --- */
-/* ==========================================================================
-   CARTE DE PARAMÈTRES (LOGO & THÈME)
-   ========================================================================== */
 
 .card {
   background-color: var(--white);
@@ -392,7 +373,7 @@
   margin-bottom: 15px;
 }
 
-/* --- 1. APERÇU DU LOGO --- */
+
 .logo-preview-box {
   width: 100%;
   max-width: 300px;
@@ -432,7 +413,6 @@
   background-color: var(--border-color);
 }
 
-/* --- 2. SÉLECTEUR DE THÈME (MODERNE) --- */
 .theme-selector {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -447,7 +427,7 @@
 
 .theme-option input {
   position: absolute;
-  opacity: 0; /* On cache le bouton radio original */
+  opacity: 0;
 }
 
 .theme-box {
@@ -461,11 +441,9 @@
   color: var(--text-muted);
 }
 
-/* Styles spécifiques aux boîtes */
 .theme-box.light { background-color: #ffffff; color: #334155; }
 .theme-box.dark { background-color: #1e293b; color: #f1f5f9; border-color: #334155; }
 
-/* État quand l'option est sélectionnée */
 .theme-option.selected .theme-box {
   border-color: var(--smart-red);
   box-shadow: 0 0 0 4px rgba(234, 83, 87, 0.1);
@@ -473,7 +451,6 @@
   transform: translateY(-2px);
 }
 
-/* --- 3. ACTIONS DU FORMULAIRE --- */
 .form-actions {
   margin-top: 30px;
   border-top: 1px solid var(--border-color);
@@ -507,10 +484,6 @@
   cursor: not-allowed;
 }
 
-/* ==========================================================================
-   ADAPTATIONS DARK MODE
-   ========================================================================== */
-
 :host-context(.dark-mode) .logo-preview-box {
   background-color: var(--smart-dark);
   border-color: #334155;
@@ -524,13 +497,9 @@
 
 @media (max-width: 600px) {
   .theme-selector {
-    grid-template-columns: 1fr; /* Une seule colonne sur mobile */
+    grid-template-columns: 1fr;
   }
 }
-
-/* ==========================================================================
-   STYLE POUR LE NOM DE LA PLATEFORME
-   ========================================================================== */
 
 .platform-name-group {
   margin-bottom: 30px;
@@ -562,7 +531,7 @@
 }
 
 .input-with-icon .form-control {
-  padding-left: 45px; /* Laisse de la place pour l'icône */
+  padding-left: 45px;
   height: 50px;
   font-size: 16px;
   font-weight: 600;
@@ -583,7 +552,6 @@
   font-style: italic;
 }
 
-/* --- ADAPTATION DARK MODE --- */
 .dark-mode .input-with-icon .form-control {
   background-color: rgba(255, 255, 255, 0.05);
   border-color: var(--border-light);
@@ -593,8 +561,6 @@
   background-color: var(--smart-dark);
 }
 
-
-/* Conteneur pour mettre une icône dans l'input */
 .input-with-icon {
   position: relative;
   display: flex;
@@ -606,31 +572,24 @@
   left: 12px;
   color: var(--text-muted);
   font-size: 14px;
-  pointer-events: none; /* L'icône ne bloque pas le clic sur l'input */
+  pointer-events: none;
 }
 
 .input-with-icon .form-control {
-  padding-left: 38px; /* On pousse le texte pour laisser la place à l'icône */
+  padding-left: 38px;
 }
 
-/* Effet au focus sur l'icône */
 .input-with-icon .form-control:focus + i {
   color: var(--smart-red);
 }
 
-/* ==========================================
-   ADAPTATIONS MOBILE (MAX-WIDTH: 768PX)
-   ========================================== */
-
 @media (max-width: 768px) {
 
-  /* 1. Layout Principal : Passage en colonne */
   .settings-layout {
     flex-direction: column;
     padding: 10px;
   }
 
-  /* 2. Navigation : Sidebar devient une barre horizontale collante */
   .settings-nav-aside {
     width: 100%;
     padding: 10px;
@@ -643,16 +602,15 @@
   }
 
   .nav-title {
-    display: none; /* Cache le titre pour gagner de la place */
+    display: none;
   }
 
-  /* Conteneur des boutons de nav en ligne */
   .settings-nav-aside .nav-buttons-wrapper,
   .settings-nav-aside {
     display: flex;
     flex-direction: row;
     gap: 8px;
-    overflow-x: auto; /* Permet de scroller les boutons si besoin */
+    overflow-x: auto;
   }
 
   .settings-nav-aside button {
@@ -664,21 +622,20 @@
     white-space: nowrap;
   }
 
-  /* 3. Zone de Contenu */
+
   .settings-content {
     padding: 1rem;
     width: 100%;
     max-width: 100%;
   }
 
-  /* 4. Carte Profil & Avatar */
   .profile-card {
-    flex-direction: column; /* Empile l'avatar au dessus du formulaire */
+    flex-direction: column;
     align-items: center;
     gap: 20px;
     padding: 16px;
     border: none;
-    background: transparent; /* Optionnel : selon l'esthétique voulue */
+    background: transparent;
   }
 
   .avatar-section {
@@ -691,7 +648,6 @@
     height: 120px;
   }
 
-  /* 5. Formulaires : Grilles sur une seule colonne */
   .form-row,
   .form-grid {
     grid-template-columns: 1fr !important;
@@ -703,13 +659,13 @@
   }
 
   .form-control {
-    width: 90%; /* S'assure que les champs prennent toute la largeur */
-    font-size: 16px; /* Évite le zoom auto sur iPhone au focus */
+    width: 90%;
+    font-size: 16px;
   }
 
-  /* 6. Sélecteur de Thème */
+
   .theme-selector {
-    grid-template-columns: 1fr 1fr; /* Garde deux colonnes ou 1fr selon préférence */
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
 
@@ -717,7 +673,6 @@
     padding: 15px 10px;
   }
 
-  /* 7. Boutons d'action */
   .form-actions {
     justify-content: center;
   }
@@ -725,7 +680,7 @@
   .btn-save-profile,
   .btn-save,
   .btn-save-primary {
-    width: 100%; /* Bouton large pour un clic facile au pouce */
+    width: 100%;
     padding: 15px;
     font-size: 1rem;
   }
@@ -736,7 +691,6 @@
   }
 }
 
-/* Ajustement spécifique pour les très petits écrans (iPhone SE, etc.) */
 @media (max-width: 480px) {
   .theme-selector {
     grid-template-columns: 1fr;

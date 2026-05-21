@@ -23,67 +23,42 @@ export class SessionExamenService {
     };
   }
 
-  /*getAll(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl, this.getHeaders());
-  }*/
-
-  /*getModulesLastImport(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/modules-last-import`, this.getHeaders());
-  }*/
-
-  /*save(session: any): Observable<any> {
-    if (session.id) {
-      return this.http.put(`${this.apiUrl}/${session.id}`, session, this.getHeaders());
-    }
-    return this.http.post(this.apiUrl, session, this.getHeaders());
-  }*/
 
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`, this.getHeaders());
   }
 
 
-getAll(etabId?: number): Observable<any[]> {
-  let params = new HttpParams();
-  if (etabId) {
-    params = params.set('etabId', etabId.toString());
-  }
-  return this.http.get<any[]>(this.apiUrl, { ...this.getHeaders(), params });
-}
-
-/*save(session: any, etabId?: number): Observable<any> {
-  if (session.id) {
-    return this.http.put(`${this.apiUrl}/${session.id}`, session, this.getHeaders());
+  getAll(etabId?: number): Observable<any[]> {
+    let params = new HttpParams();
+    if (etabId) {
+      params = params.set('etabId', etabId.toString());
+    }
+    return this.http.get<any[]>(this.apiUrl, { ...this.getHeaders(), params });
   }
 
-  let params = new HttpParams();
-  if (etabId) {
-    params = params.set('etabId', etabId.toString());
+
+  save(session: any, etabId?: number): Observable<any> {
+    const url = session.id ? `${this.apiUrl}/${session.id}` : this.apiUrl;
+    let params = new HttpParams();
+    if (etabId) params = params.set('etabId', etabId.toString());
+
+    if (session.id) {
+      return this.http.put(url, session, this.getHeaders());
+    }
+    return this.http.post(url, session, { ...this.getHeaders(), params });
   }
-  return this.http.post(this.apiUrl, session, { ...this.getHeaders(), params });
-}*/
 
-save(session: any, etabId?: number): Observable<any> {
-  const url = session.id ? `${this.apiUrl}/${session.id}` : this.apiUrl;
-  let params = new HttpParams();
-  if (etabId) params = params.set('etabId', etabId.toString());
-
-  if (session.id) {
-    return this.http.put(url, session, this.getHeaders());
+  getModulesLastImport(etabId?: number): Observable<any[]> {
+    let params = new HttpParams();
+    if (etabId) {
+      params = params.set('etabId', etabId.toString());
+    }
+    return this.http.get<any[]>(`${this.apiUrl}/modules-last-import`, { ...this.getHeaders(), params });
   }
-  return this.http.post(url, session, { ...this.getHeaders(), params });
-}
 
-getModulesLastImport(etabId?: number): Observable<any[]> {
-  let params = new HttpParams();
-  if (etabId) {
-    params = params.set('etabId', etabId.toString());
+  getModulesDisponibles(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/modules-disponibles`, this.getHeaders());
   }
-  return this.http.get<any[]>(`${this.apiUrl}/modules-last-import`, { ...this.getHeaders(), params });
-}
-
-getModulesDisponibles(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/modules-disponibles`, this.getHeaders());
-}
 
 }

@@ -99,7 +99,7 @@ getStatsModules(idEtab: number): Observable<StatData[]> {
 
 
 
-  // Dans ton AdminService.ts
+
   getCandidatCountByEtab(idEtab: number): Observable<number> {
     return this.http.get<number>(`${this.baseUrl}/candidats/count/${idEtab}`, this.getAuthHeaders());
   }

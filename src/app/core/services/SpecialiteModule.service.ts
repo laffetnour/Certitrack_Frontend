@@ -29,35 +29,24 @@ export class SpecialiteModuleService {
     return this.http.get<any[]>(`${this.BASE_URL}/specialite/${specialiteId}`,{ headers: this.getAuthHeaders() });
   }
 
- updateModeBySpec(specId: number, mode: string): Observable<void> {
-   const params = new HttpParams().set('mode', mode);
-   //const headers = this.getAuthHeaders().headers;
+   updateModeBySpec(specId: number, mode: string): Observable<void> {
+     const params = new HttpParams().set('mode', mode);
 
-   return this.http.put<void>(
-     `${this.BASE_URL}/specialite/${specId}/mode`,
-     {},
-     {
-       headers: this.getAuthHeaders(),
-       params: params
-     }
-   );
- }
+     return this.http.put<void>(
+       `${this.BASE_URL}/specialite/${specId}/mode`,
+       {},
+       {
+         headers: this.getAuthHeaders(),
+         params: params
+       }
+     );
+   }
 
   deleteLiaison(idLiaison: number): Observable<void> {
     return this.http.delete<void>(`${this.BASE_URL}/${idLiaison}`, { headers: this.getAuthHeaders() });
   }
 
-// Récupère absolument toutes les liaisons Module-Spécialité existantes
-   /* getAllSpecialiteModules(): Observable<any[]> {
-      return this.http.get<any[]>(`${this.BASE_URL}/all`, {
-        headers: this.getAuthHeaders() // Syntaxe correcte : headers attend un objet HttpHeaders
-      });
-    }*/
-
-  // Dans SpecialiteModule.service.ts
-
   getAllSpecialiteModules(idEtab: number): Observable<any[]> {
-    // On ajoute l'ID à la fin de l'URL comme défini dans votre Controller @GetMapping
     return this.http.get<any[]>(`${this.BASE_URL}/etablissement/${idEtab}`, { headers: this.getAuthHeaders() });
   }
 

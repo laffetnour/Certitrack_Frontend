@@ -24,26 +24,6 @@
     </div>
   </div>
 
-  <!--<div class="filter-section d-flex gap-3 align-items-center">
-
-    <select [(ngModel)]="sessionId"
-            (change)="loadScores()"
-            class="form-control"
-            style="width: 300px;">
-
-      <option [ngValue]="null">-- Toutes les sessions --</option>
-
-      <option *ngFor="let s of sessions" [ngValue]="s.id">
-        {{ s.titre }}
-      </option>
-
-    </select>
-
-
-  </div>
-
-  <br>-->
-
   <div *ngIf="loading" class="loading-box">
     Chargement...
   </div>

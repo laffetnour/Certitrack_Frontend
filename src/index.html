@@ -12,7 +12,6 @@
 <body>
 <script>
   (function() {
-    // On vérifie le localStorage AVANT que les fichiers HTML d'Angular ne chargent
     const theme = localStorage.getItem('app-theme');
     if (theme === 'dark') {
       document.documentElement.classList.add('dark-mode');

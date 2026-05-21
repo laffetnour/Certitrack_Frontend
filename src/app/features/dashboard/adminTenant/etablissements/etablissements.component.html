@@ -169,18 +169,6 @@
                class="custom-input">
       </div>
 
-      <!--<div  class="form-group">
-        <label style="display: block; margin-bottom: 5px; font-size: 12px; color: #666;">Logo Établissement</label>
-        <input type="file" (change)="onFileSelected($event)" accept="image/*" class="custom-input">
-
-        <div *ngIf="selectedImage" class="img-modal-preview-container">
-          <img [src]="selectedImage" alt="Aperçu" class="img-modal-rect">
-
-          <button type="button" class="btn-remove-img" (click)="selectedImage = ''; imageRaw = ''">
-            ✕ Supprimer l'image
-          </button>
-        </div>
-      </div>-->
 
       <div class="modal-footer">
         <button type="button" class="btn-submit" (click)="save()">
@@ -197,7 +185,7 @@
 
 
 
-  <!-- MODAL SUPPRESSION -->
+
   <div class="modal-overlay" *ngIf="showDeleteModal">
 
     <div class="delete-modal">
@@ -232,7 +220,7 @@
 
 
 
-  <!-- MODAL MESSAGE -->
+
   <div class="modal-overlay" *ngIf="showAlertModal">
 
     <div class="alert-modal">

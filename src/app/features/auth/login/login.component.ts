@@ -63,98 +63,94 @@ export class LoginComponent implements OnInit {
     });
   }
 
- login() {
-   this.errorMessage = '';
-   this.message = '';
+   login() {
+     this.errorMessage = '';
+     this.message = '';
 
-   this.auth.login(this.username, this.password).subscribe({
-     next: (res: any) => {
-       this.auth.saveUser(res);
-       localStorage.setItem('token', res.token);
+     this.auth.login(this.username, this.password).subscribe({
+       next: (res: any) => {
+         this.auth.saveUser(res);
+         localStorage.setItem('token', res.token);
 
-       const userId = res.idUtilisateur || res.id;
+         const userId = res.idUtilisateur || res.id;
 
-       this.configService.getConfigByUserId(userId).subscribe({
-         next: (config) => {
-           if (config && config.theme) {
-             this.themeService.applyTheme(config.theme);
+         this.configService.getConfigByUserId(userId).subscribe({
+           next: (config) => {
+             if (config && config.theme) {
+               this.themeService.applyTheme(config.theme);
+             }
+             this.handleNavigation(res.role);
+           },
+           error: (err) => {
+             console.error("Erreur récup config, redirection par défaut", err);
+             this.handleNavigation(res.role);
            }
-           this.handleNavigation(res.role);
-         },
-         error: (err) => {
-           console.error("Erreur récup config, redirection par défaut", err);
-           this.handleNavigation(res.role);
+         });
+       },
+       error: (error: HttpErrorResponse) => {
+         const serverMessage = error.error?.message;
+         if (serverMessage === "ETABLISSEMENT_DISABLED") {
+           this.errorMessage = "⚠️ L'établissement de votre compte est désactivé.";
+         } else if (serverMessage === "TENANT_DISABLED") {
+           this.errorMessage = "🚫 Votre organisation est désactivée.";
+         } else if (serverMessage === "USER_DISABLED") {
+           this.errorMessage = "🚫 Votre compte personnel est désactivé.";
+         } else {
+           this.errorMessage = "Identifiants incorrects ou erreur de connexion.";
          }
-       });
-     },
-     error: (error: HttpErrorResponse) => {
-       const serverMessage = error.error?.message;
-       if (serverMessage === "ETABLISSEMENT_DISABLED") {
-         this.errorMessage = "⚠️ L'établissement de votre compte est désactivé.";
-       } else if (serverMessage === "TENANT_DISABLED") {
-         this.errorMessage = "🚫 Votre organisation est désactivée.";
-       } else if (serverMessage === "USER_DISABLED") {
-         this.errorMessage = "🚫 Votre compte personnel est désactivé.";
-       } else {
-         this.errorMessage = "Identifiants incorrects ou erreur de connexion.";
+         this.cdr.detectChanges();
        }
-       this.cdr.detectChanges();
-     }
-   });
- }
+     });
+   }
 
- private handleNavigation(role: string) {
-   const routes: { [key: string]: string } = {
-     'directeurEtab': '/directeur/dashboard',
-     'Candidat': '/candidat',
-     'adminEtab': '/admin',
-     'superAdmin': '/super-admin',
-     'adminTenant': '/adminTenant'
-   };
+   private handleNavigation(role: string) {
+     const routes: { [key: string]: string } = {
+       'directeurEtab': '/directeur/dashboard',
+       'Candidat': '/candidat',
+       'adminEtab': '/admin',
+       'superAdmin': '/super-admin',
+       'adminTenant': '/adminTenant'
+     };
 
-   const targetRoute = routes[role] || '/';
-   this.router.navigate([targetRoute]);
- }
+     const targetRoute = routes[role] || '/';
+     this.router.navigate([targetRoute]);
+   }
 
 
 
 
-requestReset() {
-  this.isError = false;
-  this.message = "Envoi du lien en cours... ✉️";
-  this.cdr.detectChanges();
+  requestReset() {
+    this.isError = false;
+    this.message = "Envoi du lien en cours... ✉️";
+    this.cdr.detectChanges();
 
-  this.auth.requestPasswordReset(this.forgotEmail).subscribe({
-    next: () => {
-      this.isError = false;
-      this.message = "✅ Le lien de réinitialisation a été envoyé à votre adresse e-mail.";
+    this.auth.requestPasswordReset(this.forgotEmail).subscribe({
+      next: () => {
+        this.isError = false;
+        this.message = "✅ Le lien de réinitialisation a été envoyé à votre adresse e-mail.";
 
-      this.forgotEmail = '';
+        this.forgotEmail = '';
 
-      this.cdr.detectChanges();
-
-
-      setTimeout(() => {
-        this.showForgotForm = false;
-        this.message = '';
         this.cdr.detectChanges();
-      }, 5000);
 
-    },
-    error: (err) => {
-      // 4. Erreur : On informe l'utilisateur
-      this.isError = true;
-      if (err.status === 404) {
-        this.message = "❌ Aucun compte n'est associé à cet e-mail.";
-      } else {
-        this.message = "❌ Une erreur est survenue. Veuillez réessayer plus tard.";
+
+        setTimeout(() => {
+          this.showForgotForm = false;
+          this.message = '';
+          this.cdr.detectChanges();
+        }, 5000);
+
+      },
+      error: (err) => {
+        this.isError = true;
+        if (err.status === 404) {
+          this.message = "❌ Aucun compte n'est associé à cet e-mail.";
+        } else {
+          this.message = "❌ Une erreur est survenue. Veuillez réessayer plus tard.";
+        }
+        this.cdr.detectChanges();
       }
-      this.cdr.detectChanges();
-    }
-  });
-}
-
-
-
+    });
+  }
 
 }

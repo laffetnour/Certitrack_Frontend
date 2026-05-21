@@ -98,82 +98,58 @@ export class ResultatExamenComponent implements OnInit {
     });
   }
 
-  /*onUpload() {
+
+
+
+  onUpload() {
     if (!this.selectedFile || !this.selectedSessionId) return;
 
     this.uploading = true;
+    this.cdr.detectChanges();
+
     this.resultatService.importExcel(this.selectedFile, this.selectedSessionId).subscribe({
-      next: (response) => {
+      next: (errors: any) => {
         this.uploading = false;
-        Swal.fire('Succès', 'Les résultats ont été importés !', 'success');
+
+        this.selectedFile = null;
+        if (this.fileInput) {
+          this.fileInput.nativeElement.value = '';
+        }
+
+        const errorList = typeof errors === 'string' ? JSON.parse(errors) : errors;
+
+        if (errorList.length === 0) {
+          Swal.fire('Succès', 'Tous les résultats ont été importés sans erreur !', 'success');
+        } else {
+          Swal.fire({
+            title: 'Importation partielle',
+            html: `<div style="text-align: left; max-height: 200px; overflow-y: auto;">
+                    <p>Certaines lignes ont été ignorées :</p>
+                    <ul class="text-danger">
+                      ${errorList.map((err: string) => `<li>${err}</li>`).join('')}
+                    </ul>
+                   </div>`,
+            icon: 'warning'
+          });
+        }
 
         this.loadResultats(this.selectedSessionId!);
-
         this.selectedFile = null;
         this.cdr.detectChanges();
       },
       error: (err) => {
         this.uploading = false;
-        Swal.fire('Erreur', 'Échec de l\'importation', 'error');
+        this.selectedFile = null;
+
+        if (this.fileInput) {
+          this.fileInput.nativeElement.value = '';
+        }
+
+        Swal.fire('Erreur', 'Échec critique de l\'importation', 'error');
+
         this.cdr.detectChanges();
       }
     });
-  }*/
+  }
 
-
-
-onUpload() {
-  if (!this.selectedFile || !this.selectedSessionId) return;
-
-  this.uploading = true;
-  this.cdr.detectChanges();
-
-  this.resultatService.importExcel(this.selectedFile, this.selectedSessionId).subscribe({
-    next: (errors: any) => {
-      this.uploading = false;
-
-      this.selectedFile = null;
-      if (this.fileInput) {
-        this.fileInput.nativeElement.value = '';
-      }
-
-      const errorList = typeof errors === 'string' ? JSON.parse(errors) : errors;
-
-      if (errorList.length === 0) {
-        Swal.fire('Succès', 'Tous les résultats ont été importés sans erreur !', 'success');
-      } else {
-        Swal.fire({
-          title: 'Importation partielle',
-          html: `<div style="text-align: left; max-height: 200px; overflow-y: auto;">
-                  <p>Certaines lignes ont été ignorées :</p>
-                  <ul class="text-danger">
-                    ${errorList.map((err: string) => `<li>${err}</li>`).join('')}
-                  </ul>
-                 </div>`,
-          icon: 'warning'
-        });
-      }
-
-      this.loadResultats(this.selectedSessionId!);
-      this.selectedFile = null;
-      this.cdr.detectChanges();
-    },
-    error: (err) => {
-      this.uploading = false;
-      //Swal.fire('Erreur', 'Échec critique de l\'importation', 'error');
-      //this.cdr.detectChanges();
-
-      this.selectedFile = null;
-
-      if (this.fileInput) {
-        this.fileInput.nativeElement.value = '';
-      }
-
-      Swal.fire('Erreur', 'Échec critique de l\'importation', 'error');
-
-      this.cdr.detectChanges();
-    }
-  });
 }
-
-   }

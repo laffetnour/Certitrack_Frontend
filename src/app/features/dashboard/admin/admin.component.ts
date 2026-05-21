@@ -143,7 +143,7 @@ export class AdminComponent implements OnInit {
             this.cdr.detectChanges();
           },
           error: (err) => {
-            //this.errorMessage = 'Erreur modification';
+
             this.handleError(err)
             this.loading = false;
             this.cdr.detectChanges();
@@ -161,7 +161,6 @@ export class AdminComponent implements OnInit {
             this.closeModal();
             this.loading = false;
             this.cdr.detectChanges();
-            //setTimeout(() => this.successMessage = '', 3000);
           },
           error: (err) => {
             this.handleError(err);
@@ -222,27 +221,14 @@ private handleError(err: any): void {
     });
   }
 
-  /*deleteCandidat(id: number): void {
-    if (confirm('Supprimer ce candidat?')) {
-      this.adminService.deleteCandidat(id).subscribe({
-        next: () => {
-          this.successMessage = 'Candidat supprimé';
-          this.loadCandidatsParSpecialite();
-
-          setTimeout(() => this.successMessage = '', 3000);
-        }
-      });
-    }
-  }*/
 
 deleteCandidat(id: number): void {
   this.candidateToDeleteId = id;
-  this.showDeleteConfirm = true; // On ouvre la modale perso
+  this.showDeleteConfirm = true;
   this.isRelationError = false;
   this.errorMessage = '';
 }
 
-// Fonction qui exécute la suppression réelle
 executeDelete(): void {
   if (!this.candidateToDeleteId) return;
 
@@ -260,10 +246,10 @@ executeDelete(): void {
     },
     error: (err) => {
       this.loading = false;
-      // On traite le 403 comme une erreur de relation
+
       if (err.status === 403 || err.status === 409) {
         this.errorMessage = "Impossible de supprimer : ce candidat a déjà des examens ou des données liées.";
-        this.isRelationError = true; // Affiche le bouton "Désactiver à la place"
+        this.isRelationError = true;
       } else {
         this.errorMessage = "Une erreur est survenue lors de la suppression.";
       }
@@ -272,7 +258,6 @@ executeDelete(): void {
   });
 }
 
-// Fonction pour désactiver si la suppression échoue
 handleDeactivateAfterFailedDelete(): void {
   if (this.candidateToDeleteId) {
     this.adminService.toggleCandidatStatus(this.candidateToDeleteId).subscribe({
@@ -303,33 +288,6 @@ handleDeactivateAfterFailedDelete(): void {
     }
   }
 
-  /*activateSelected(): void {
-    if (this.selectedCandidats.length > 0) {
-      this.adminService.activateMultiple(this.selectedCandidats).subscribe({
-        next: () => {
-          this.successMessage = 'Candidats activés';
-          this.loadCandidatsParSpecialite();
-
-          this.selectedCandidats = [];
-          setTimeout(() => this.successMessage = '', 3000);
-        }
-      });
-    }
-  }
-
-  deactivateSelected(): void {
-    if (this.selectedCandidats.length > 0) {
-      this.adminService.deactivateMultiple(this.selectedCandidats).subscribe({
-        next: () => {
-          this.successMessage = 'Candidats désactivés';
-          this.loadCandidatsParSpecialite();
-
-          this.selectedCandidats = [];
-          setTimeout(() => this.successMessage = '', 3000);
-        }
-      });
-    }
-  }*/
 
   isAllSelected(): boolean {
     return this.candidats.length > 0 && this.selectedCandidats.length === this.candidats.length;
@@ -378,16 +336,15 @@ onDigitInput(event: any, index: number) {
     const inputs = document.querySelectorAll('.otp-input');
     const value = (event.target as HTMLInputElement).value;
 
-    // Gestion du focus suivant
     if (value && index < inputs.length - 1) {
       (inputs[index + 1] as HTMLElement).focus();
     }
-    // Note: Le backspace est mieux géré dans onKeyDown pour éviter les conflits d'events
+
 
     this.syncFullValue();
   }
 
-  // Ajout du support Backspace comme dans ta version précédente pour la navigation fluide
+
   onKeyDown(event: KeyboardEvent, index: number) {
     const inputs = document.querySelectorAll('.otp-input');
     if (event.key === 'Backspace' && !(event.target as HTMLInputElement).value && index > 0) {
@@ -403,7 +360,7 @@ onDigitInput(event: any, index: number) {
     data.forEach((char, i) => {
       if (i < inputs.length) {
         (inputs[i] as HTMLInputElement).value = char;
-        this.idDigits[i] = char; // On garde le tableau idDigits à jour
+        this.idDigits[i] = char;
       }
     });
 
@@ -418,11 +375,11 @@ onDigitInput(event: any, index: number) {
     const ctrl = this.candidatForm.get('identifiantSpecifique');
     if (ctrl) {
       ctrl.setValue(fullValue);
-      ctrl.markAsTouched(); // Indispensable pour que le HTML affiche l'erreur
+      ctrl.markAsTouched();
       ctrl.markAsDirty();
-      ctrl.updateValueAndValidity(); // Force le recalcul des validateurs (pattern, minlength, etc.)
+      ctrl.updateValueAndValidity();
     }
-    this.cdr.detectChanges(); // Force le rafraîchissement de la vue
+    this.cdr.detectChanges();
   }
 
   applyAdminValidators() {
@@ -460,7 +417,6 @@ onDigitInput(event: any, index: number) {
     ctrl?.updateValueAndValidity();
   }
 
-  // MODALS
   openAddModal(): void {
     this.isEditMode = false;
     this.selectedCandidat = null;
@@ -520,10 +476,8 @@ onDigitInput(event: any, index: number) {
       'Prénom': c.prenom,
       'Email': c.username,
       'Spécialité': c.specialite?.nom || 'N/A',
-      //'Établissement': c.nomEtablissement,
       [this.tenantConfig?.labelIdentifiant || 'Identifiant']: c.identifiantSpecifique || '---',
       'Date de Naissance': c.dateNais ? new Date(c.dateNais).toLocaleDateString() : '---'
-      //'Statut': 'Inactif'
     }));
 
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
@@ -637,7 +591,7 @@ onDigitInput(event: any, index: number) {
           dateNais: formattedDate,
           identifiantSpecifique: idValue,
           specialiteId: foundSpec?.idSpecialite,
-          statut: true, // Devient actif
+          statut: true,
           nbreEpreuve: existingCandidat ? (existingCandidat.nbreEpreuve || 0) : 0
         };
 

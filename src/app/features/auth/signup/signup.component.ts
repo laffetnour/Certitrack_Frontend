@@ -37,12 +37,10 @@ export class SignupComponent implements OnInit {
                private cdr: ChangeDetectorRef,
                private router: Router,
                public configService: ConfigService,
-                private route: ActivatedRoute){}
+                private route: ActivatedRoute)
+  {}
 
-
-
-
-    ngOnInit() {
+   ngOnInit() {
         const token = this.route.snapshot.queryParamMap.get('token');
 
         if (token) {
@@ -55,129 +53,114 @@ export class SignupComponent implements OnInit {
       }
 
 
-initSignupForm() {
-    this.signupForm = this.fb.group({
-      nom: ['', Validators.required],
-      prenom: ['', Validators.required],
-      username: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      numTel: ['', Validators.required],
-      emailPersonnel: ['', [Validators.required, Validators.email]],
-      specialiteId: ['', Validators.required],
-      etablissementId: ['', Validators.required],
-      dateNais: ['', Validators.required],
-      identifiantSpecifique: ['']
-    });
+  initSignupForm() {
+      this.signupForm = this.fb.group({
+        nom: ['', Validators.required],
+        prenom: ['', Validators.required],
+        username: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        numTel: ['', Validators.required],
+        emailPersonnel: ['', [Validators.required, Validators.email]],
+        specialiteId: ['', Validators.required],
+        etablissementId: ['', Validators.required],
+        dateNais: ['', Validators.required],
+        identifiantSpecifique: ['']
+      });
 
-    this.signupForm.get('etablissementId')?.valueChanges.subscribe(id => {
-          this.specialites = [];
-          this.tenantConfig = null;
-          this.signupForm.get('specialiteId')?.setValue('');
+      this.signupForm.get('etablissementId')?.valueChanges.subscribe(id => {
+            this.specialites = [];
+            this.tenantConfig = null;
+            this.signupForm.get('specialiteId')?.setValue('');
 
-          if (id) {
-            const etab = this.etablissements.find(e => e.idEtab == id);
-            console.log("etab : ", etab);
-            if (etab && etab.tenant) {
-              this.tenantConfig = etab.tenant;
-              console.log("this.tenantConfig : ", this.tenantConfig);
-              this.updateDynamicValidators();
-              this.cdr.detectChanges();
+            if (id) {
+              const etab = this.etablissements.find(e => e.idEtab == id);
+              console.log("etab : ", etab);
+              if (etab && etab.tenant) {
+                this.tenantConfig = etab.tenant;
+                console.log("this.tenantConfig : ", this.tenantConfig);
+                this.updateDynamicValidators();
+                this.cdr.detectChanges();
+              }
+              this.loadSpecialites(id);
             }
-            this.loadSpecialites(id);
-          }
-    });
+      });
 
   }
 
-/*updateDynamicValidators() {
+  updateDynamicValidators() {
     const ctrl = this.signupForm.get('identifiantSpecifique');
     if (!this.tenantConfig || this.tenantConfig.typeIdentifiant === 'EMAIL') {
       ctrl?.clearValidators();
     } else {
       const validators = [Validators.required];
-      if (this.tenantConfig.longueurIdentifiant) {
-        validators.push(Validators.minLength(this.tenantConfig.longueurIdentifiant));
-        validators.push(Validators.maxLength(this.tenantConfig.longueurIdentifiant));
+      const len = this.tenantConfig.longueurIdentifiant;
+
+      if (len) {
+        validators.push(Validators.minLength(len), Validators.maxLength(len));
       }
+
+      let pattern = '';
+      if (this.tenantConfig.formatIdentifiant === 'NUMERIC') {
+        pattern = '^[0-9]*$';
+      } else if (this.tenantConfig.formatIdentifiant === 'ALPHA') {
+
+        pattern = '^([a-zA-Z]*|[0]*)$';
+      } else if (this.tenantConfig.formatIdentifiant === 'ALPHANUMERIC') {
+              validators.push((control) => {
+                const val = control.value;
+                if (!val) return null;
+
+                const allZeros = /^0+$/.test(val);
+                const hasLetter = /[a-zA-Z]/.test(val);
+                const hasDigit = /[0-9]/.test(val);
+                const isPureAlpha = /^[a-zA-Z]+$/.test(val);
+                const isPureDigit = /^[0-9]+$/.test(val);
+
+                if (allZeros) return null;
+
+                if (hasLetter && hasDigit) return null;
+
+                return { alphanumericMix: true };
+              });
+            }
+
+      if (pattern) {
+        validators.push(Validators.pattern(pattern));
+      }
+
       ctrl?.setValidators(validators);
     }
     ctrl?.updateValueAndValidity();
-}*/
-
-updateDynamicValidators() {
-  const ctrl = this.signupForm.get('identifiantSpecifique');
-  if (!this.tenantConfig || this.tenantConfig.typeIdentifiant === 'EMAIL') {
-    ctrl?.clearValidators();
-  } else {
-    const validators = [Validators.required];
-    const len = this.tenantConfig.longueurIdentifiant;
-
-    if (len) {
-      validators.push(Validators.minLength(len), Validators.maxLength(len));
-    }
-
-    let pattern = '';
-    if (this.tenantConfig.formatIdentifiant === 'NUMERIC') {
-      pattern = '^[0-9]*$';
-    } else if (this.tenantConfig.formatIdentifiant === 'ALPHA') {
-
-      pattern = '^([a-zA-Z]*|[0]*)$';
-    } else if (this.tenantConfig.formatIdentifiant === 'ALPHANUMERIC') {
-            validators.push((control) => {
-              const val = control.value;
-              if (!val) return null;
-
-              const allZeros = /^0+$/.test(val);
-              const hasLetter = /[a-zA-Z]/.test(val);
-              const hasDigit = /[0-9]/.test(val);
-              const isPureAlpha = /^[a-zA-Z]+$/.test(val);
-              const isPureDigit = /^[0-9]+$/.test(val);
-
-              if (allZeros) return null;
-
-              if (hasLetter && hasDigit) return null;
-
-              return { alphanumericMix: true };
-            });
-          }
-
-    if (pattern) {
-      validators.push(Validators.pattern(pattern));
-    }
-
-    ctrl?.setValidators(validators);
   }
-  ctrl?.updateValueAndValidity();
-}
 
 
-verifyUserToken(token: string) {
-    this.isLoading = true;
-    this.authService.verifyAccount(token).subscribe({
-      next: (res) => {
-        this.isLoading = false;
-        this.isSuccessStep = true;
-        this.successMsg = "Votre compte a été créé avec succès ! Vous pouvez maintenant vous connecter.";
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.errorMsg = "Le lien de confirmation est invalide ou a expiré.";
-        this.cdr.detectChanges();
+  verifyUserToken(token: string) {
+      this.isLoading = true;
+      this.authService.verifyAccount(token).subscribe({
+        next: (res) => {
+          this.isLoading = false;
+          this.isSuccessStep = true;
+          this.successMsg = "Votre compte a été créé avec succès ! Vous pouvez maintenant vous connecter.";
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMsg = "Le lien de confirmation est invalide ou a expiré.";
+          this.cdr.detectChanges();
+        }
+      });
+    }
+
+
+  onSendVerificationLink() {
+      if (this.signupForm.invalid) {
+        this.signupForm.markAllAsTouched();
+        this.errorMsg = "Veuillez remplir correctement tous les champs.";
+        return;
       }
-    });
-  }
-
-
-onSendVerificationLink() {
-    if (this.signupForm.invalid) {
-      this.signupForm.markAllAsTouched();
-      this.errorMsg = "Veuillez remplir correctement tous les champs.";
-      return;
-    }
 
     this.isLoading = true;
-    this.errorMsg = ''; // On réinitialise l'erreur
+    this.errorMsg = '';
 
     this.authService.sendVerificationLink(this.signupForm.value).subscribe({
       next: () => {
@@ -189,8 +172,6 @@ onSendVerificationLink() {
       error: (err) => {
         this.isLoading = false;
 
-        // --- LOGIQUE DE VÉRIFICATION D'EXISTENCE ---
-        // Si ton backend renvoie une erreur 409 ou un message spécifique
         if (err.status === 409 || err.error?.message === "EMAIL_EXISTS") {
           this.errorMsg = "⚠️ Cette adresse email est déjà utilisée. Veuillez vous connecter ou utiliser un autre email.";
         } else {
@@ -200,8 +181,7 @@ onSendVerificationLink() {
         this.cdr.detectChanges();
       }
     });
-}
-
+  }
 
 
   loadEtablissements(){
@@ -228,7 +208,7 @@ onSendVerificationLink() {
 
     this.etablissementService.getSpecialites(id).subscribe({
       next:data=>{
-        console.log("SPECIALITES RECUES :",data); // IMPORTANT
+        console.log("SPECIALITES RECUES :",data);
         this.specialites=data;
       },
       error:err=>{
@@ -238,10 +218,10 @@ onSendVerificationLink() {
 
   }
 
-backToForm() {
-    this.isVerificationStep = false;
-    this.errorMsg = '';
-  }
+  backToForm() {
+      this.isVerificationStep = false;
+      this.errorMsg = '';
+    }
 
 
   onDigitInput(event: any, index: number) {

@@ -184,13 +184,6 @@
           <input formControlName="dateNais" type="date" class="form-control">
         </div>
 
-        <!--<select formControlName="etablissementId" class="form-control">
-          <option [ngValue]="null" disabled>-- Choisir établissement --</option>
-
-          <option *ngFor="let e of etablissements" [ngValue]="e.idEtab">
-            {{ e.nom }}
-          </option>
-        </select>-->
         <div class="form-row">
           <label class="form-label">Établissement</label>
           <select formControlName="etablissementId" class="form-control">
@@ -220,7 +213,6 @@
     </div>
   </div>
 
-  <!-- Modal Voir Profil Directeur -->
   <div class="modal" *ngIf="showViewModal" (click)="closeViewModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
@@ -229,12 +221,10 @@
       </div>
 
       <div class="profile-info" *ngIf="selectedDirecteur">
-        <!-- Avatar -->
         <div class="profile-avatar">
           {{ selectedDirecteur.nom?.charAt(0) }}{{ selectedDirecteur.prenom?.charAt(0) }}
         </div>
 
-        <!-- Nom complet -->
         <div class="info-row">
         <span class="label">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -246,13 +236,11 @@
           <span class="value">{{ selectedDirecteur.nom }} {{ selectedDirecteur.prenom }}</span>
         </div>
 
-        <!-- Date de naissance -->
         <div class="info-row">
           <span class="label">Date de naissance</span>
           <span class="value">{{ selectedDirecteur.dateNais | date:'yyyy-MM-dd' }}</span>
         </div>
 
-        <!-- Email -->
         <div class="info-row">
         <span class="label">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -264,7 +252,6 @@
           <span class="value">{{ selectedDirecteur.username }}</span>
         </div>
 
-        <!-- Établissement -->
         <div class="info-row">
         <span class="label">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -276,7 +263,6 @@
           <span class="value">{{ selectedDirecteur.nomEtablissement }}</span>
         </div>
 
-        <!-- Statut -->
         <div class="info-row">
         <span class="label">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -295,7 +281,7 @@
     </div>
   </div>
 
-  <!-- Modal Confirmation Suppression Directeur -->
+
   <div class="modal" *ngIf="showDeleteModal">
     <div class="modal-content">
       <div class="modal-header">

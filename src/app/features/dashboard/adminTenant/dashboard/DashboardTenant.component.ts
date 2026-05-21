@@ -13,7 +13,7 @@ interface DashboardStats {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [BaseChartDirective], // 👈 AJOUT ICI
+  imports: [BaseChartDirective],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -42,10 +42,6 @@ export class DashboardTenantComponent implements OnInit {
     ]
   };
 
-  /*public barChartOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    maintainAspectRatio: false
-  };*/
 
   public barChartOptions: ChartConfiguration['options'] = {
     responsive: true,
@@ -79,7 +75,7 @@ export class DashboardTenantComponent implements OnInit {
       y: {
         beginAtZero: true,
         grid: {
-          color: 'rgba(234, 83, 87, 0.08)'  // glow rouge léger
+          color: 'rgba(234, 83, 87, 0.08)'
         },
         ticks: { color: '#64748b' }
       }
@@ -94,11 +90,7 @@ export class DashboardTenantComponent implements OnInit {
       private route: ActivatedRoute
     ) {}
 
-  /*ngOnInit() {
-    this.currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-    this.loadDashboardData();
-    this.loadModulesChart();
-  }*/
+
 
   ngOnInit() {
       this.route.parent?.paramMap.subscribe(params => {
@@ -152,15 +144,6 @@ export class DashboardTenantComponent implements OnInit {
       next: (data) => {
         console.log("Modules stats:", data);
 
-        /*this.modulesChartData = {
-          labels: data.map(m => m.nomModule),
-          datasets: [
-            {
-              data: data.map(m => m.totalInscriptions),
-              label: 'Modules les moins utilisés(nombre d’inscriptions)'
-            }
-          ]
-        };*/
 
         this.modulesChartData = {
           labels: data.map(m => m.nomModule),
@@ -179,14 +162,14 @@ export class DashboardTenantComponent implements OnInit {
 
                 const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
 
-                gradient.addColorStop(0, '#303D49');   // gris base
-                gradient.addColorStop(0.5, '#ea5357'); // rouge principal
-                gradient.addColorStop(1, '#ff8a8a');   // rouge soft
+                gradient.addColorStop(0, '#303D49');
+                gradient.addColorStop(0.5, '#ea5357');
+                gradient.addColorStop(1, '#ff8a8a');
 
                 return gradient;
               },
 
-              borderRadius: 10,   // 👈 BAR ARRONDIES
+              borderRadius: 10,
               borderSkipped: false
             }
           ]

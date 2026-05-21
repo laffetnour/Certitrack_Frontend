@@ -1,6 +1,5 @@
 
 :host {
-  /* Mode Clair (Par défaut) */
   --bg-admin: #f8fafc;
   --bg-card: #ffffff;
   --text-main: #1e293b;
@@ -11,14 +10,12 @@
   --row-hover: #f9fafb;
   --input-border: #303D49;
   --modal-bg: rgba(48, 61, 73, 0.7);
-
-  /* Couleurs Accent (Stables) */
   --smart-red: #ea5357;
   --smart-red-dark: #d44347;
 }
 
 :host-context(.dark-mode) {
-  /* Mode Sombre */
+
   --bg-admin: #0f172a;
   --bg-card: #1e293b;
   --text-main: #f1f5f9;
@@ -117,7 +114,6 @@
   color: #e53e3e;
 }
 
-/* ACTIONS */
 .actions { display: flex; gap: 8px; }
 
 .actions button {
@@ -131,7 +127,6 @@
 .btn-toggle { background: rgba(147, 51, 234, 0.15); color: #9333ea; }
 .btn-delete { background: rgba(224, 36, 36, 0.15); color: #dc2626; }
 
-/* MODALS */
 .modal {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: var(--modal-bg);
@@ -148,83 +143,15 @@
   border-color: var(--border-color);
 }
 
-
-
-/*form {
-  padding: 20px 30px;
-  background-color: #ffffff;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 50px;
-}
-
-
-.form-group {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: var(--text-label);
-}
-
-.form-control {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid #303D49;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  background-color: var(--bg-card);
-  color: var(--text-main);
-}
-
-.form-control:focus {
-  outline: none;
-  border-color:var(--bg-card);
-  box-shadow: 0 0 0 3px rgba(234, 83, 87, 0.1);
-}
-
-.form-control.error {
-  border-color: #ef4444;
-  background-color: var(--bg-card);
-}*/
-
-
-/*form {
-  padding: 30px;
-  background-color: var(--white);
-    flex: 1;
-    overflow-y: auto;
-    max-height: 60vh;
-  border-radius: var(--radius-lg);
-  transition: background-color 0.3s ease;
-  scrollbar-width: thin;
-  scrollbar-color: var(--smart-red) transparent;
-}*/
-
 form {
   padding: 30px;
   background-color: var(--white);
-
-  /* --- GESTION DU SCROLLER --- */
   flex: 1;
   max-height: 60vh;
-
-  overflow-y: auto;        /* Active le scroll vertical */
-  overflow-x: hidden;      /* INTERDIT le scroll horizontal */
-
-  /* --- SECURITÉ ANTI-DÉBORDEMENT --- */
-  width: 100%;             /* S'assure que le form prend toute la largeur */
-  box-sizing: border-box;  /* Inclut le padding dans le calcul de la largeur */
-
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
   border-radius: var(--radius-lg);
   transition: background-color 0.3s ease;
   scrollbar-width: thin;
@@ -242,33 +169,32 @@ form::-webkit-scrollbar-thumb:hover {
 
 .form-row {
   display: grid;
-  /* On utilise auto-fit pour que ça passe sur 1 colonne sur mobile automatiquement */
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px; /* 50px était un peu large, 30px est plus compact et moderne */
+  gap: 30px;
 }
 
 .form-group {
-  margin-bottom: 25px; /* Plus d'espace entre les blocs verticaux */
+  margin-bottom: 25px;
   display: flex;
   flex-direction: column;
 }
 
 .form-group label {
-  font-size: 13px; /* Légèrement plus petit pour un look plus "UI" */
+  font-size: 13px;
   font-weight: 700;
-  color: var(--text-muted); /* Utilise la variable muted pour un look moins agressif */
+  color: var(--text-muted);
   margin-bottom: 4px;
-  text-transform: uppercase; /* Donne un aspect professionnel/admin */
+  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .form-control {
   width: 100%;
-  padding: 12px 16px; /* Plus confortable pour la saisie */
-  border: 1.5px solid var(--border-color); /* Utilise ta variable de bordure */
-  border-radius: 10px; /* Coins un peu plus doux */
+  padding: 12px 16px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 10px;
   font-size: 14px;
-  background-color: var(--input-bg); /* Variable dédiée aux champs */
+  background-color: var(--input-bg);
   color: var(--text-main);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -278,28 +204,27 @@ form::-webkit-scrollbar-thumb:hover {
   opacity: 0.6;
 }
 
-/* ÉTAT : FOCUS (C'est ici qu'on améliore le rendu) */
+
 .form-control:focus {
   outline: none;
-  border-color: var(--smart-red); /* La bordure devient rouge */
-  background-color: var(--white); /* Le champ s'illumine légèrement */
-  box-shadow: 0 0 0 4px rgba(234, 83, 87, 0.1); /* Aura rouge très douce */
-  transform: translateY(-1px); /* Petit effet de levée très premium */
+  border-color: var(--smart-red);
+  background-color: var(--white);
+  box-shadow: 0 0 0 4px rgba(234, 83, 87, 0.1);
+  transform: translateY(-1px);
 }
 
-/* ÉTAT : ERREUR */
+
 .form-control.error {
   border-color: #ef4444;
-  background-color: rgba(239, 68, 68, 0.02); /* Teinte rouge très légère */
+  background-color: rgba(239, 68, 68, 0.02);
 }
 
 .form-control.error:focus {
   box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
 }
 
-/* --- OPTIMISATION DARK MODE --- */
 .dark-mode .form-control {
-  border-color: var(--border-light); /* Bordure un peu plus visible en mode sombre */
+  border-color: var(--border-light);
 }
 
 .dark-mode .form-control:focus {
@@ -335,7 +260,7 @@ form::-webkit-scrollbar-thumb:hover {
 }
 
 
-/* FILTRE SELECT */
+
 .status-filter-select {
   min-width: 100px;
   padding: 10px 35px 10px 40px;
@@ -353,10 +278,6 @@ form::-webkit-scrollbar-thumb:hover {
   background-size: 16px;
 }
 
-/* PROFILE VIEW INFOS */
-/*.info-row {
-  border-bottom: 1px solid var(--border-color);
-}*/
 
 
 .profile-info {
@@ -396,44 +317,6 @@ form::-webkit-scrollbar-thumb:hover {
 .value { color: var(--text-main); }
 
 
-/*.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(48, 61, 73, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(4px);
-  z-index: 1000;
-}
-
-
-.modal-content {
-  width: 600px;
-  max-width: 90%;
-  background-color: var(--bg-card);
-  border-radius: 16px;
-  overflow: auto;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-
-.modal-header {
-  padding: 20px 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-/*.modal-footer {
-  padding: 20px 25px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}*/
-
 .modal {
   position: fixed;
   top: 0;
@@ -459,11 +342,8 @@ form::-webkit-scrollbar-thumb:hover {
 }
 
 
-
-
-/* 1. On limite la hauteur de la modale pour qu'elle ne dépasse jamais l'écran */
 .modal-content {
-  max-height: 90vh; /* 90% de la hauteur de l'écran maximum */
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
 
@@ -477,11 +357,9 @@ form::-webkit-scrollbar-thumb:hover {
   justify-content: flex-end;
   gap: 12px;
   z-index: 10;
-  /* Optionnel : petite ombre pour montrer que le contenu passe dessous */
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.03);
 }
 
-/* 4. On fixe le Header en haut */
 .modal-header {
   padding: 20px 30px;
   display: flex;
@@ -492,24 +370,20 @@ form::-webkit-scrollbar-thumb:hover {
   z-index: 10;
 }
 
-/* ==========================================================================
-   BARRE D'ACTIONS GROUPÉES (BULK ACTIONS)
-   ========================================================================== */
-
 .bulk-actions {
   display: flex;
   align-items: center;
   gap: 15px;
   padding: 12px 25px;
-  background-color: var(--white); /* Utilise ta variable Midnight/White */
-  border: 1px solid var(--smart-red); /* Bordure rouge pour montrer l'importance */
+  background-color: var(--white);
+  border: 1px solid var(--smart-red);
   border-radius: var(--radius-lg);
   margin-bottom: 20px;
-  box-shadow: 0 4px 15px rgba(234, 83, 87, 0.1); /* Lueur rouge subtile */
-  animation: slideDown 0.3s ease-out; /* Animation à l'apparition */
+  box-shadow: 0 4px 15px rgba(234, 83, 87, 0.1);
+  animation: slideDown 0.3s ease-out;
 }
 
-/* Texte "X sélectionné(s)" */
+
 .bulk-actions span {
   font-size: 14px;
   font-weight: 600;
@@ -519,7 +393,6 @@ form::-webkit-scrollbar-thumb:hover {
   border-right: 2px solid var(--border-color);
 }
 
-/* Style commun des boutons de la barre bulk */
 .bulk-actions button {
   padding: 8px 16px;
   border-radius: 8px;
@@ -533,7 +406,6 @@ form::-webkit-scrollbar-thumb:hover {
   gap: 8px;
 }
 
-/* Bouton Activer (Vert) */
 .btn-activate {
   background-color: rgba(49, 151, 149, 0.1);
   color: #319795;
@@ -544,7 +416,6 @@ form::-webkit-scrollbar-thumb:hover {
   transform: translateY(-2px);
 }
 
-/* Bouton Désactiver (Orange/Gris) */
 .btn-deactivate {
   background-color: rgba(217, 119, 6, 0.1);
   color: #d97706;
@@ -555,7 +426,6 @@ form::-webkit-scrollbar-thumb:hover {
   transform: translateY(-2px);
 }
 
-/* Bouton Supprimer (Rouge - déjà défini dans tes actions, on l'ajuste) */
 .bulk-actions .btn-delete {
   background-color: rgba(224, 36, 36, 0.1);
   color: #dc2626;
@@ -567,7 +437,6 @@ form::-webkit-scrollbar-thumb:hover {
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
 
-/* Animation d'entrée */
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -579,9 +448,8 @@ form::-webkit-scrollbar-thumb:hover {
   }
 }
 
-/* --- AJUSTEMENT DARK MODE --- */
 .dark-mode .bulk-actions {
-  background-color: var(--white); /* Ton bleu nuit profond */
+  background-color: var(--white);
   border-color: rgba(234, 83, 87, 0.4);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
@@ -621,7 +489,7 @@ form::-webkit-scrollbar-thumb:hover {
   align-items: center;
   gap: 10px;
   font-weight: 500;
-  text-transform: none; /* Pour éviter l'uppercase sur les radios */
+  text-transform: none;
   cursor: pointer;
 }
 
@@ -660,15 +528,9 @@ form::-webkit-scrollbar-thumb:hover {
   font-style: italic;
 }
 
-
-/* Pour que la colonne ID ne soit pas trop large */
 th:nth-child(5), td:nth-child(5) {
   min-width: 150px;
 }
-
-
-
-
 
 .form-row {
   display: grid;
@@ -692,7 +554,7 @@ th:nth-child(5), td:nth-child(5) {
 
 
 .btn-access {
-  background-color: #6c5ce7; /* Une couleur violette ou bleue pour signifier l'accès */
+  background-color: #6c5ce7;
   color: white;
   border: none;
   padding: 6px;
@@ -708,7 +570,6 @@ th:nth-child(5), td:nth-child(5) {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .btn-access {
     background-color: #5849c4;

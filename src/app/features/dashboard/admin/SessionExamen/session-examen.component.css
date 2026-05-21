@@ -29,7 +29,6 @@
 }
 
 :host-context(.dark-mode) {
-  /* Mode Sombre */
   --bg-admin: #0f172a;
   --bg-card: #1e293b;
   --text-main: #f1f5f9;
@@ -80,10 +79,7 @@
 
 }
 
-
-
 .table tbody td {
-
   border-bottom: 1px solid var(--border-color);
   vertical-align: middle;
   color: var(--text-main);
@@ -106,8 +102,8 @@
 
 
 .badge.status-cloture {
-  background-color: #fee2e2 !important; /* Rouge clair */
-  color: #b91c1 !important;           /* Rouge foncé */
+  background-color: #fee2e2 !important;
+  color: #b91c1 !important;
   border: 1px solid #f87171;
 }
 
@@ -276,7 +272,6 @@
 
 
 @media (max-width: 768px) {
-  /* 1. Header de la page */
   .d-flex.justify-content-between {
     flex-direction: column;
     align-items: flex-start !important;
@@ -284,12 +279,11 @@
   }
 
   .btn-primary {
-    width: 100%; /* Le bouton "Nouvelle Session" prend toute la largeur */
+    width: 100%;
   }
 
-  /* 2. Transformation du Tableau en cartes */
   .table thead {
-    display: none; /* Cache les titres des colonnes */
+    display: none;
   }
 
   .table, .table tbody, .table tr, .table td {
@@ -299,10 +293,10 @@
 
   .table tr {
     margin-bottom: 1rem;
-    border: 1px solid var(--border-color); /* Dynamique */
+    border: 1px solid var(--border-color);
     border-radius: 10px;
     padding: 10px;
-    background: var(--bg-card); /* Dynamique */
+    background: var(--bg-card);
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   }
 
@@ -310,48 +304,45 @@
     text-align: right;
     padding: 10px 12px;
     border: none;
-    border-bottom: 1px solid var(--border-color); /* Dynamique */
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--text-main); /* Dynamique */
+    color: var(--text-main);
   }
 
-  /* Style spécial pour la dernière cellule (Actions) */
   .table td:last-child {
     border-bottom: none;
     justify-content: center;
-    background: var(--table-th-bg); /* Un fond légèrement différent pour séparer les boutons */
+    background: var(--table-th-bg);
     margin-top: 10px;
     border-radius: 0 0 10px 10px;
   }
 
-  /* 3. Injection des labels mobiles (data-label) */
+
   .table td::before {
     content: attr(data-label);
     font-weight: 600;
     font-size: 0.75rem;
-    color: var(--text-muted); /* Dynamique */
+    color: var(--text-muted);
     text-transform: uppercase;
     text-align: left;
     margin-right: 10px;
   }
 
-  /* 4. Ajustements des Modales et Boxes */
   .modal-dialog {
     margin: 10px;
   }
 
   .info-box {
-    background: var(--table-th-bg); /* Dynamique */
-    border: 1px solid var(--border-color); /* Dynamique */
+    background: var(--table-th-bg);
+    border: 1px solid var(--border-color);
     margin-bottom: 10px;
     padding: 12px !important;
     border-radius: 8px;
     color: var(--text-main);
   }
 
-  /* Ajustement des petits textes en mode sombre */
   small.text-muted {
     color: var(--text-muted) !important;
   }

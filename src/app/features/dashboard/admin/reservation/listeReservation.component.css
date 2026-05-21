@@ -21,15 +21,11 @@
   --row-hover: #262f3f;
 }
 
-/* CONTAINER */
-
 .admin-container {
   background-color: var(--bg-admin);
   padding: 20px;
   min-height: 100vh;
 }
-
-/* HEADER */
 
 .admin-header {
   display: flex;
@@ -55,10 +51,6 @@
   font-size: 14px;
 }
 
-/* FILTER */
-
-
-
 .status-filter-select {
   min-width: 100px;
   padding: 10px 35px 10px 40px;
@@ -77,7 +69,6 @@
 }
 
 .form-control {
-  /*width: 100%;*/
   width: auto;
   padding: 12px 16px;
   border: 1.5px solid var(--border-color);
@@ -93,8 +84,6 @@
   border-color: var(--smart-red);
   box-shadow: 0 0 0 4px rgba(234, 83, 87, 0.1);
 }
-
-/* TABLE */
 
 .table-container {
   background: var(--bg-card);
@@ -129,8 +118,6 @@
   background: var(--row-hover);
 }
 
-/* CANDIDATE */
-
 .candidate-info {
   display: flex;
   flex-direction: column;
@@ -144,8 +131,6 @@
 .candidate-info small {
   color: var(--text-muted);
 }
-
-/* BADGES */
 
 .module-badge {
   background: rgba(59,130,246,0.12);
@@ -170,8 +155,6 @@
   color: #319795;
 }
 
-/* DATE */
-
 .date-block {
   display: flex;
   flex-direction: column;
@@ -181,8 +164,6 @@
 .date-block small {
   color: var(--text-muted);
 }
-
-/* BUTTON */
 
 .btn-success {
   display: flex;
@@ -203,8 +184,6 @@
   color: white;
   transform: translateY(-2px);
 }
-
-/* STATES */
 
 .loading-state,
 .empty-state {

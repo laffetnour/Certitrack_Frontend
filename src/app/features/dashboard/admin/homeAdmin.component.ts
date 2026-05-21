@@ -116,16 +116,16 @@ export class homeAdminComponent implements OnInit {
      datasets: [{ data: [], label: 'Inscriptions par Module', backgroundColor: '#ea5357' }]
    };
 
-public specialiteChartData: ChartConfiguration<'doughnut'>['data'] = {
-  labels: [],
-  datasets: [{
-    data: [],
-    backgroundColor: ['#22D3EE','#6B7280','#E5E7EB','#1E293B','#EA5357','#F3F4F6'],
-    hoverOffset: 15,
-    borderWidth: 2,
-    borderColor: '#ffffff'
-  }]
-};
+  public specialiteChartData: ChartConfiguration<'doughnut'>['data'] = {
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: ['#22D3EE','#6B7280','#E5E7EB','#1E293B','#EA5357','#F3F4F6'],
+      hoverOffset: 15,
+      borderWidth: 2,
+      borderColor: '#ffffff'
+    }]
+  };
 
 
 public specialiteChartOptions: ChartConfiguration<'doughnut'>['options'] = {
@@ -286,7 +286,7 @@ this.adminService.getStatsSpecialites(idEtab).subscribe({
       ]
     };
 
-    // Indispensable pour rafraîchir la vue après l'appel API
+
     this.cdr.detectChanges();
   },
   error: (err) => console.error("Erreur lors de la récupération des stats", err)

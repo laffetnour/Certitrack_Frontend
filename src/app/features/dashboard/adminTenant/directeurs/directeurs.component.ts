@@ -41,10 +41,6 @@ export class DirecteursComponent implements OnInit {
     private route: ActivatedRoute
   ) {}
 
-  /*ngOnInit(): void {
-    this.initForm();
-    this.loadData();
-  }*/
 
   ngOnInit(): void {
       this.route.parent?.paramMap.subscribe(params => {
@@ -198,19 +194,13 @@ openEditModal(d: any) {
     if (this.directeurForm.invalid) return;
     const val = this.directeurForm.value;
     const payload = { ...val, tenantId: this.idTenant };
-    /*const obs = this.isEditMode
-      ? this.service.updateDirecteur(this.selectedDirecteur.id, val)
-      : this.service.createDirecteur(val);*/
+
 
       const obs = this.isEditMode
             ? this.service.updateDirecteur(this.selectedDirecteur.id, payload, this.idTenant)
             : this.service.createDirecteur(payload, this.idTenant);
 
-    /*obs.subscribe(() => {
-      this.loadData();
-      this.closeModal();
-      this.cdr.detectChanges();
-    });*/
+
     obs.subscribe({
           next: () => {
             this.loadData();
@@ -274,41 +264,6 @@ openEditModal(d: any) {
       }
     }
 
-  /*deleteSelected() {
-    this.service.deleteMultiple(this.selectedDirecteurs)
-      .subscribe(() => {
-        this.selectedDirecteurs = [];
-        this.loadData();
-        this.cdr.detectChanges();
-      });
-  }*/
-
-  /*activateSelected() {
-    this.service.activateMultiple(this.selectedDirecteurs)
-      .subscribe(() => {
-        this.allDirecteurs = this.allDirecteurs.map(dir =>
-          this.selectedDirecteurs.includes(dir.id) ? { ...dir, statut: true } : dir
-        );
-        this.directeurs = [...this.allDirecteurs];
-        this.selectedDirecteurs = [];
-        this.cdr.detectChanges();
-      });
-  }
-
-  deactivateSelected() {
-    this.service.deactivateMultiple(this.selectedDirecteurs)
-      .subscribe(() => {
-        this.allDirecteurs = this.allDirecteurs.map(dir =>
-          this.selectedDirecteurs.includes(dir.id) ? { ...dir, statut: false } : dir
-        );
-        this.directeurs = [...this.allDirecteurs];
-        this.selectedDirecteurs = [];
-        this.cdr.detectChanges();
-      });
-  }
-  trackById(index: number, item: any) {
-    return item.id;
-  }*/
 
   activateSelected() {
       this.service.activateMultiple(this.selectedDirecteurs, this.idTenant).subscribe(() => {
@@ -334,28 +289,11 @@ openEditModal(d: any) {
     this.showViewModal = false;
   }
 
-  /*toggleStatus(d: any) {
-    this.service.toggleDirecteurStatus(d.id).subscribe({
-      next: (updated) => {
-        this.directeurs = this.directeurs.map(dir =>
-          dir.id === d.id ? { ...dir, statut: updated.statut } : dir
-        );
-
-
-        this.allDirecteurs = this.allDirecteurs.map(dir =>
-          dir.id === d.id ? { ...dir, statut: updated.statut } : dir
-        );
-
-        this.cdr.detectChanges();
-      },
-      error: (err) => console.error(err)
-    });
-  }*/
 
   toggleStatus(d: any) {
       this.service.toggleDirecteurStatus(d.id, this.idTenant).subscribe({
         next: (updated) => {
-          this.loadData(); // Plus simple pour rafraîchir proprement
+          this.loadData();
         },
         error: (err) => console.error(err)
       });
@@ -364,7 +302,7 @@ openEditModal(d: any) {
   confirmDelete(): void {
     if (!this.directeurToDeleteId) return;
 
-    //this.service.deleteDirecteur(this.directeurToDeleteId).subscribe({
+
       this.service.deleteDirecteur(this.directeurToDeleteId, this.idTenant).subscribe({
       next: () => {
         this.showDeleteModal = false;

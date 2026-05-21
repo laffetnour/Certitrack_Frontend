@@ -1,6 +1,4 @@
-/* ===============================
-   VARIABLES THEME (LIGHT MODE)
-================================ */
+
 :host {
   --smart-red: #ea5357;
   --smart-dark: #303D49;
@@ -13,7 +11,6 @@
 
   --border-color: #e2e8f0;
 
-  /* effets */
   --soft-red: rgba(234, 83, 87, 0.15);
   --soft-gray: rgba(48, 61, 73, 0.12);
 
@@ -21,9 +18,6 @@
   --card-shadow-hover: 0 14px 30px rgba(48, 61, 73, 0.15);
 }
 
-/* ===============================
-   DARK MODE (IMPORTANT)
-================================ */
 :host-context(.dark-mode) {
   --bg-page: #0f172a;
   --white: #1e293b;
@@ -40,9 +34,7 @@
   --card-shadow-hover: 0 14px 30px rgba(0, 0, 0, 0.6);
 }
 
-/* ===============================
-   GRID LAYOUT
-================================ */
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -56,9 +48,6 @@
 .stat-card:nth-child(2) { grid-area: stat2; }
 .chart-card { grid-area: chart; }
 
-/* ===============================
-   STAT CARD
-================================ */
 .stat-card {
   background: var(--white);
   border-radius: 14px;
@@ -78,7 +67,7 @@
   transition: 0.25s ease;
 }
 
-/* lighting */
+
 .stat-card::before {
   content: "";
   position: absolute;
@@ -99,9 +88,7 @@
   box-shadow: var(--card-shadow-hover);
 }
 
-/* ===============================
-   ICON
-================================ */
+
 .stat-icon-wrapper {
   width: 46px;
   height: 46px;
@@ -112,7 +99,6 @@
 
   border-radius: 12px;
 
-  /* 🔥 rouge + gris = identité respectée */
   background: linear-gradient(135deg, #ea5357, #303D49);
 
   color: white;
@@ -120,9 +106,6 @@
   box-shadow: 0 10px 20px rgba(234,83,87,0.25);
 }
 
-/* ===============================
-   TEXT
-================================ */
 .stat-card p {
   margin: 0;
   font-size: 12px;
@@ -136,9 +119,6 @@
   color: var(--text-main);
 }
 
-/* ===============================
-   CHART CARD
-================================ */
 .chart-card {
   background: var(--white);
   border-radius: 16px;
@@ -156,7 +136,7 @@
   box-shadow: var(--card-shadow-hover);
 }
 
-/* TITLE */
+
 .chart-card-title {
   font-size: 15px;
   font-weight: 700;
@@ -164,15 +144,12 @@
   margin-bottom: 14px;
 }
 
-/* ===============================
-   CHART CONTAINER
-================================ */
 .chart-container {
   width: 100%;
-  height: 400px; /* 👈 plus large comme tu veux */
+  height: 400px;
 }
 
-/* canvas */
+
 .chart-container canvas {
   width: 100% !important;
   height: 100% !important;
@@ -180,16 +157,10 @@
   filter: drop-shadow(0 12px 20px rgba(48,61,73,0.12));
 }
 
-/* ===============================
-   DARK MODE FIX (CHART TITLE)
-================================ */
 :host-context(.dark-mode) .chart-card-title {
   color: #e2e8f0;
 }
 
-/* ===============================
-   RESPONSIVE
-================================ */
 @media (max-width: 992px) {
   .stats-grid {
     grid-template-columns: 1fr;
@@ -204,20 +175,11 @@
   }
 }
 
-
-
-
-/* ===============================
-   CHART MODERN DESIGN (BAR + LINE)
-================================ */
-
-/* carte chart */
 .chart-card {
   position: relative;
   overflow: hidden;
 }
 
-/* LIGHTING BACKGROUND */
 .chart-card::before {
   content: "";
   position: absolute;
@@ -234,20 +196,17 @@
   z-index: 0;
 }
 
-/* contenu au-dessus du glow */
 .chart-card > * {
   position: relative;
   z-index: 1;
 }
 
-/* CANVAS STYLE */
 .chart-container {
   position: relative;
   width: 100%;
   height: 380px;
 }
 
-/* effet flottant */
 .chart-container canvas {
   filter: drop-shadow(0 12px 25px rgba(48, 61, 73, 0.18));
   transition: transform 0.4s ease;
@@ -257,9 +216,6 @@
   transform: scale(1.02);
 }
 
-/* ===============================
-   BAR DESIGN (GRADIENT GLOBAL FIX)
-================================ */
 .chart-bar-gradient {
   background: linear-gradient(
     180deg,
@@ -269,9 +225,6 @@
   );
 }
 
-/* ===============================
-   AXES STYLE (Chart.js override feel)
-================================ */
 .chart-card canvas {
   border-radius: 12px;
 }

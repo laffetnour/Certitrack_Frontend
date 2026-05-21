@@ -23,9 +23,6 @@ export class SessionExamenComponent implements OnInit {
   sessions: any[] = [];
   modulesDisponibles: any[] = [];
   loading = false;
-  //minDate: string = new Date().toISOString().slice(0, 16);
-
-
   sessionForm: any = this.getEmptyForm();
   modulesParCategorie: any[] = [];
   minDate: string = this.getTomorrowDateString();
@@ -42,7 +39,7 @@ export class SessionExamenComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadSessions();
-    this.loadModulesDisponibles(); // Changé ici
+    this.loadModulesDisponibles();
   }
 
 
@@ -59,7 +56,6 @@ getTomorrowDateString(): string {
 onCategorieChange() {
     const categorieFound = this.modulesParCategorie.find(c => c.nom === this.selectedCategorie);
     this.modulesFiltres = categorieFound ? categorieFound.modules : [];
-    // Réinitialiser le module choisi si on change de catégorie
     this.sessionForm.module.idModule = null;
   }
 
@@ -74,29 +70,16 @@ onCategorieChange() {
       centreExamen: '',
       langue: 'Français',
       codeAcces: '',
-      //moduleAutoriseId: null // Modifié ici
       module: { idModule: null }
     };
   }
-
-/*loadModulesRecents() {
-  const etabId = this.getSelectedEtabId()||  this.contextService.getEtablissementId();
-  this.sessionService.getModulesLastImport(etabId).subscribe({
-    next: (data) => {
-      console.log("Modules chargés :", data);
-      this.modulesDisponibles = data || [];
-      this.cdr.detectChanges();
-    },
-    error: (err) => console.error("Erreur chargement modules", err)
-  });
-}*/
 
 
 loadModulesDisponibles() {
   const etabId = this.getSelectedEtabId()||  this.contextService.getEtablissementId();
   this.sessionService.getModulesDisponibles().subscribe({
     next: (data: any[]) => {
-      // On groupe les modules par nom de catégorie pour l'affichage
+
       const groups = data.reduce((acc: any, obj: any) => {
         const key = obj.nomCategorie || 'Autres';
         if (!acc[key]) acc[key] = [];
@@ -167,62 +150,6 @@ calculerEtatAutomatique(session: any): string {
   }
 }
 
-  /*canEdit(session: any): boolean {
-    return session.etat === 'PLANIFIEE';
-  }*/
-
-/*canDelete(session: any): boolean {
-  return session.etat === 'PLANIFIEE';
-}*/
-
-  /*validateDates(): boolean {
-    const maintenant = new Date();
-    const debut = new Date(this.sessionForm.dateDebutReservation);
-    const fin = new Date(this.sessionForm.dateFinReservation);
-    const examen = new Date(this.sessionForm.dateHeureExamen);
-
-    if (!this.sessionForm.dateDebutReservation || !this.sessionForm.dateFinReservation || !this.sessionForm.dateHeureExamen) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Erreur',
-        text:'Veuillez remplir toutes les dates.',
-        confirmButtonColor: '#3085d6'
-      });
-      return false;
-    }
-
-    if (!this.sessionForm.id && debut < maintenant) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Erreur',
-        text: 'La date de début de réservation doit être dans le futur.',
-        confirmButtonColor: '#3085d6'
-      });
-      return false;
-    }
-
-    if (fin <= debut) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Erreur',
-        text: 'La date de fin de réservation doit être strictement supérieure à la date de début.',
-        confirmButtonColor: '#3085d6'
-      });
-      return false;
-    }
-
-    if (examen <= fin) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Erreur',
-        text:'La date de l examen doit être postérieure à la clôture des réservations.',
-        confirmButtonColor: '#3085d6'
-      });
-      return false;
-    }
-
-    return true;
-  }*/
 
   selectedSession: any = null;
 
@@ -241,7 +168,6 @@ private getSelectedEtabId(): number | undefined {
 
 loadSessions() {
     this.loading = true;
-    // Récupération de l'ID via votre méthode getSelectedEtabId()
     const etabId = this.getSelectedEtabId() ||  this.contextService.getEtablissementId();
 
     this.sessionService.getAll(etabId).subscribe({
@@ -259,37 +185,12 @@ loadSessions() {
 
 onSave() {
   if (!this.validateForm()) return;
-
-  //const etatCalcule = this.calculerEtatAutomatique(this.sessionForm);
-
-  // Recherche du module sélectionné pour construire l'objet moduleAutorise
-  //const selectedMod = this.modulesDisponibles.find(m => m.id === this.sessionForm.moduleAutoriseId);
-
-  // Construction du payload
-  /*const payload = {
-    ...this.sessionForm,
-    etat: etatCalcule,
-    moduleAutorise: selectedMod ? {
-      id: selectedMod.id,
-      avecTest: selectedMod.avecTest,
-      estActif: selectedMod.estActif,
-      seuilScore: selectedMod.seuilScore,
-      capacite: selectedMod.capacite,
-      dateAjout: selectedMod.dateAjout
-    } : null
-  };*/
   const payload = { ...this.sessionForm };
 
-
-
-  //delete payload.moduleAutoriseId;
-  delete payload.etablissement;    // Ne pas renvoyer l'objet Etablissement complet
-  delete payload.reservations;     // Ne pas renvoyer la liste des réservations
-  // -----------------------------------------
-
+  delete payload.etablissement;
+  delete payload.reservations;
   const etabId = this.getSelectedEtabId() ||  this.contextService.getEtablissementId();
 
-  // Appels au service
   this.sessionService.save(payload, etabId).subscribe({
     next: () => {
       Swal.fire('Succès', 'Session enregistrée', 'success');
@@ -313,14 +214,11 @@ onSave() {
 onEdit(session: any) {
   this.sessionForm = {
     ...session,
-    // On récupère l'ID du module unique au lieu d'un tableau
-    //moduleAutoriseId: session.moduleAutorise ? session.moduleAutorise.id : null
     module: { idModule: session.module ? session.module.idModule : null }
   };
 
-  // Retrouver la catégorie du module pour l'afficher dans le select
+
       if (session.module) {
-        // On cherche dans quelle catégorie se trouve ce module
         const cat = this.modulesParCategorie.find(c =>
           c.modules.some((m: any) => m.idModule === session.module.idModule)
         );
@@ -342,51 +240,4 @@ aEteUtilise(moduleId: number): boolean {
   );
 }
 
-
-/*onDelete(session: any) {
-  // 1. Vérification de sécurité locale
-  if (!this.canDelete(session)) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Suppression impossible',
-      text: 'Seules les sessions PLANIFIEE peuvent être supprimées.',
-      confirmButtonColor: '#3085d6'
-    });
-    return;
-  }
-
-  // 2. Affichage de la confirmation via SweetAlert2 (Modal)
-  Swal.fire({
-    title: 'Êtes-vous sûr ?',
-    text: `Vous allez supprimer la session "${session.nomExamen}". Cette action est irréversible !`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Oui, supprimer !',
-    cancelButtonText: 'Annuler'
-  }).then((result) => {
-    // 3. Si l'utilisateur a cliqué sur "Oui, supprimer !"
-    if (result.isConfirmed) {
-      this.sessionService.delete(session.id).subscribe({
-        next: () => {
-          Swal.fire(
-            'Supprimé !',
-            'La session a bien été supprimée.',
-            'success'
-          );
-          this.loadSessions(); // Recharger la liste
-        },
-        error: (err) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Erreur',
-            text: err.error?.message || 'Une erreur est survenue lors de la suppression.',
-            confirmButtonColor: '#3085d6'
-          });
-        }
-      });
-    }
-  });
-}*/
 }

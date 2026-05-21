@@ -44,13 +44,10 @@ export class EtablissementsComponent implements OnInit {
     public configService: ConfigService,
     private route: ActivatedRoute) {}
 
-  /*ngOnInit(): void {
-    this.loadData();
-    this.loadEtablissements();
-  }*/
+
 
   ngOnInit(): void {
-      // Récupération de l'ID Tenant depuis le parent (le layout)
+
       this.route.parent?.paramMap.subscribe(params => {
         const id = params.get('idTenant');
         if (id) {
@@ -61,7 +58,7 @@ export class EtablissementsComponent implements OnInit {
     }
 
   loadData() {
-    //this.service.getEtablissements().subscribe({
+
       this.service.getEtablissements(this.idTenant).subscribe({
       next: (res) => {
         this.etablissements = [...res];
@@ -197,15 +194,6 @@ private gererErreur(err: any) {
     this.showDeleteModal = true;
   }
 
-  /*confirmDelete() {
-    this.service.deleteEtablissement(this.selectedId!, this.idTenant).subscribe(() => {
-      this.loadData();
-      this.cdr.detectChanges();
-      this.closeDeleteModal();
-    });
-  }*/
-
-
   toggle(e: any) {
 
     this.service.toggleEtablissementStatus(e.idEtab, this.idTenant).subscribe({
@@ -271,7 +259,7 @@ bulkToggle(newStatus: boolean) {
     next: () => {
       console.log("✅ Action groupée sur établissements réussie");
       this.selectedIds.clear();
-      this.loadData(); // Rafraîchit la liste
+      this.loadData();
     },
     error: (err: HttpErrorResponse) => {
       console.error("❌ Erreur lors de l'action groupée :", err);
@@ -279,32 +267,7 @@ bulkToggle(newStatus: boolean) {
     }
   });
 }
-/*onFileSelected(event: any) {
-  const file: File = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      const base64String = e.target.result as string;
 
-
-      this.imageRaw = base64String;
-
-
-      this.selectedImage = this.sanitizer.bypassSecurityTrustUrl(base64String);
-
-      this.cdr.detectChanges();
-    };
-    reader.readAsDataURL(file);
-  }
-}*/
-
-
-/*removeImage(fileInput: HTMLInputElement) {
-  this.selectedImage = '';
-  this.imageRaw = '';
-  fileInput.value = '';
-  this.cdr.detectChanges();
-}*/
   closeDeleteModal() {
     this.showDeleteModal = false;
     this.selectedId = null;

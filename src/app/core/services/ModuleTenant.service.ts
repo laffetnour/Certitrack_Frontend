@@ -32,7 +32,7 @@ export class ModuleTenantService {
      console.log("Envoi du Token au Backend :", `Bearer ${token.substring(0, 15)}...`);
 
      return this.http.post(`${this.apiUrl}/add`, null, { params, headers });
-   }
+ }
 
 
  getMyModules(userId: number): Observable<any[]> {

@@ -9,13 +9,13 @@ import { RouterLink, RouterLinkActive,ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-module-tenant',
-  standalone: true, // Ton composant est probablement standalone
+  standalone: true,
   imports: [CommonModule,FormsModule,RouterLink, RouterLinkActive],
   templateUrl: './ModuleTenant.component.html',
   styleUrls: ['./ModuleTenant.component.css']
 })
 export class ModuleTenantComponent implements OnInit {
-  // Liste des modules liés au tenant
+
   idTenant: string | null = null;
   myModules: any[] = [];
   loading: boolean = false;
@@ -61,14 +61,7 @@ loadMyCatalogue(): void {
             return;
           }
     this.loading = true;
-    //const user = this.authService.getUser();
-    //const userId = user?.idUtilisateur; // Ici, userId sera égal à 7
 
-    /*if (!userId) {
-      this.errorMessage = "Impossible de récupérer votre identifiant.";
-      this.loading = false;
-      return;
-    }*/
 
     this.moduleTenantService.getMyModules(targetId).subscribe({
       next: (data) => {
@@ -107,10 +100,9 @@ loadGlobalCatalogue(): void {
 }
 
 filterAvailableModules(): void {
-  // 1. Récupérer les IDs des modules déjà possédés
+
   const ownedIds = this.myModules.map(m => m.module.idModule);
 
-  // 2. Appliquer le double filtre
   this.filteredModules = this.allModules.filter(m => {
     const isNotOwned = !ownedIds.includes(m.idModule);
     const isAvailable = m.disponibilite === true;
@@ -155,7 +147,6 @@ onSearch(): void {
       return this.filteredModules.length > 0 && this.selectedIds.size === this.filteredModules.length;
     }
 
-    // --- Actions d'ajout ---
     addSingleModule(moduleId: number): void {
       this.selectedIds.clear();
       this.selectedIds.add(moduleId);
@@ -163,13 +154,7 @@ onSearch(): void {
     }
 
     confirmSelection(): void {
-      /*const user = this.authService.getUser();
-      if (!user || this.selectedIds.size === 0) return;
 
-      this.submitting = true;
-      const requests = Array.from(this.selectedIds).map(id =>
-        this.moduleTenantService.addModuleToTenant(user.idUtilisateur, id).toPromise()
-      );*/
 
     const targetId = this.getTargetId();
         if (!targetId || this.selectedIds.size === 0) return;
@@ -183,7 +168,7 @@ onSearch(): void {
         .then(() => {
           alert(`${this.selectedIds.size} module(s) ajouté(s) avec succès !`);
           this.selectedIds.clear();
-          this.loadGlobalCatalogue(); // Rafraîchir la liste possédée
+          this.loadGlobalCatalogue();
         })
         .catch((err) => {
           console.error(err);

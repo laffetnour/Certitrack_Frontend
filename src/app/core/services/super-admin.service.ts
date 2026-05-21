@@ -20,15 +20,15 @@ export class SuperAdminService {
     };
   }
 
-private getAuthHeadersForFile() {
-  const token = localStorage.getItem('token');
-  return {
-    headers: new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+  private getAuthHeadersForFile() {
+    const token = localStorage.getItem('token');
+    return {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}`
 
-    })
-  };
-}
+      })
+    };
+  }
 
 
   getDashboardStats(): Observable<any> {
@@ -39,7 +39,6 @@ private getAuthHeadersForFile() {
       return this.http.get<any[]>(`${this.baseUrl}/bottom-modules`, this.getAuthHeaders());
     }
 
-
   getAllAdmins(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/admins`, this.getAuthHeaders());
   }
@@ -49,15 +48,12 @@ private getAuthHeadersForFile() {
   }
 
   toggleAdminStatus(id: number): Observable<any> {
-
     return this.http.put(`${this.baseUrl}/admins/${id}/status`, {}, this.getAuthHeaders());
   }
-
 
   getTenants(): Observable<any> {
     return this.http.get(`${this.baseUrl}/tenants`, this.getAuthHeaders());
   }
-
 
   addTenant(tenant: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/tenant`,tenant, this.getAuthHeaders());
@@ -75,28 +71,17 @@ private getAuthHeadersForFile() {
     return this.http.delete(`${this.baseUrl}/tenant/${id}`, this.getAuthHeaders());
   }
 
-
-
-
   activateTenantsBulk(ids: number[]): Observable<any> {
-
     return this.http.put(`${this.baseUrl}/tenants/activate-bulk`, ids, this.getAuthHeaders());
   }
 
   deactivateTenantsBulk(ids: number[]): Observable<any> {
-
     return this.http.put(`${this.baseUrl}/tenants/deactivate-bulk`, ids, this.getAuthHeaders());
   }
 
-
   deleteTenantsBulk(ids: number[]): Observable<any> {
-
     return this.http.post(`${this.baseUrl}/tenants/delete-bulk`, ids, this.getAuthHeaders());
   }
-
-
-
-
 
   getTenantAdmins(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/tenants-admins`, this.getAuthHeaders());
@@ -118,8 +103,7 @@ private getAuthHeadersForFile() {
     return this.http.put(`${this.baseUrl}/user/${id}/status`, {}, this.getAuthHeaders());
   }
 
-
-    getFilteredTenantAdminsByTenantStatus(params: any): Observable<any[]> {
+  getFilteredTenantAdminsByTenantStatus(params: any): Observable<any[]> {
       return this.http.get<any[]>(`${this.baseUrl}/tenant-admins/filter-tenant-status`, {
         headers: this.getAuthHeaders().headers,
         params: params
@@ -135,50 +119,43 @@ private getAuthHeadersForFile() {
   }
 
   deleteUsersBulk(ids: number[]): Observable<any> {
-
     return this.http.post(`${this.baseUrl}/users/delete-bulk`, ids, this.getAuthHeaders());
   }
 
+  getCategories(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/categories`, this.getAuthHeaders());
+  }
+
+  addCategorie(categorie: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/categories`, categorie, this.getAuthHeaders());
+  }
+
+  updateCategorie(id: number, categorie: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/categories/${id}`, categorie, this.getAuthHeaders());
+  }
+
+  deleteCategorie(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/categories/${id}`, this.getAuthHeaders());
+  }
 
 
+  getModules(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/modules`, this.getAuthHeaders());
+  }
 
+  addModule(module: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/modules`, module, this.getAuthHeaders());
+  }
 
+  updateModule(id: number, module: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/modules/${id}`, module, this.getAuthHeaders());
+  }
 
-getCategories(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.baseUrl}/categories`, this.getAuthHeaders());
-}
-
-addCategorie(categorie: any): Observable<any> {
-  return this.http.post(`${this.baseUrl}/categories`, categorie, this.getAuthHeaders());
-}
-
-updateCategorie(id: number, categorie: any): Observable<any> {
-  return this.http.put(`${this.baseUrl}/categories/${id}`, categorie, this.getAuthHeaders());
-}
-
-deleteCategorie(id: number): Observable<any> {
-  return this.http.delete(`${this.baseUrl}/categories/${id}`, this.getAuthHeaders());
-}
-
-
-getModules(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.baseUrl}/modules`, this.getAuthHeaders());
-}
-
-addModule(module: any): Observable<any> {
-  return this.http.post(`${this.baseUrl}/modules`, module, this.getAuthHeaders());
-}
-
-updateModule(id: number, module: any): Observable<any> {
-  return this.http.put(`${this.baseUrl}/modules/${id}`, module, this.getAuthHeaders());
-}
-
-deleteModule(id: number): Observable<any> {
-  return this.http.delete(`${this.baseUrl}/modules/${id}`, this.getAuthHeaders());
-}
+  deleteModule(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/modules/${id}`, this.getAuthHeaders());
+  }
 
   toggleModuleStatus(id: number): Observable<any> {
-
     return this.http.put(`${this.baseUrl}/modules/${id}/toggle-status`, {}, this.getAuthHeaders());
   }
 
@@ -189,61 +166,43 @@ deleteModule(id: number): Observable<any> {
   deactivateModules(ids: number[]): Observable<any> {
     return this.http.put(`${this.baseUrl}/modules/deactivate`, ids, this.getAuthHeaders());
   }
-importModuleExcel(file: File): Observable<any> {
-  const formData = new FormData();
-  formData.append('file', file);
+
+  importModuleExcel(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
 
 
-  return this.http.post(`${this.baseUrl}/modules/import`, formData, {
-    headers: this.getAuthHeadersForFile().headers
-  });
-}
+    return this.http.post(`${this.baseUrl}/modules/import`, formData, {
+      headers: this.getAuthHeadersForFile().headers
+    });
+  }
 
-
-  // ✅ Ajouter cette méthode
   getMotCles(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/modules/mot-cles`, this.getAuthHeaders());
   }
 
+  importQuestionsExcel(file: File, moduleId: number): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('moduleId', moduleId.toString());
 
-
-importQuestionsExcel(file: File, moduleId: number): Observable<any> {
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('moduleId', moduleId.toString());
-
-  return this.http.post(`${this.baseUrl}/questions/import`, formData, this.getAuthHeadersForFile());
-}
-
-getQuestions(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/questions/all`, this.getAuthHeaders());
-  }
-getByModule(id: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/questions/module/${id}`, this.getAuthHeaders());
+    return this.http.post(`${this.baseUrl}/questions/import`, formData, this.getAuthHeadersForFile());
   }
 
-
-
+  getQuestions(): Observable<any[]> {
+      return this.http.get<any[]>(`${this.baseUrl}/questions/all`, this.getAuthHeaders());
+    }
+  getByModule(id: number): Observable<any[]> {
+      return this.http.get<any[]>(`${this.baseUrl}/questions/module/${id}`, this.getAuthHeaders());
+    }
 
   addQuestion(q: any) {
     return this.http.post(`${this.baseUrl}/questions`, q, this.getAuthHeaders());
   }
 
-
-
-  /*deleteQuestion(id: number) {
-    return this.http.delete(`${this.baseUrl}/questions/${id}`, this.getAuthHeaders());
-  }*/
-
   deleteQuestion(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/questions/${id}`, this.getAuthHeaders());
   }
-
-
-
- /* deleteQuestionsBulk(ids: number[]) {
-    return this.http.post(`${this.baseUrl}/questions/delete-bulk`, ids, this.getAuthHeaders());
-  }*/
 
   deleteQuestionsBulk(ids: number[]): Observable<string[]> {
     return this.http.post<string[]>(
@@ -253,10 +212,6 @@ getByModule(id: number): Observable<any[]> {
     );
   }
 
-
-// ========================
-  // QUESTION STATUS (NEW)
-  // ========================
   toggleQuestionStatus(id: number): Observable<any> {
     return this.http.put(
       `${this.baseUrl}/questions/${id}/toggle-status`,

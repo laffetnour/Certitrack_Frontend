@@ -31,7 +31,6 @@
 
     </div>
     <div class="logo-section">
-      <!--<img src="LOGO-2026_VF.png" alt="Smartfuture" class="main-logo">-->
       <ng-container *ngIf="configService.config$ | async as config; else loader">
         <img [src]="config.logoSociete || 'LOGO-2026_VF.png'"
              alt="Smartfuture"
@@ -63,12 +62,9 @@
         <i class="fas fa-chart-bar"></i> <span>Session Examen</span>
       </div>
       <div class="nav-item" routerLink="/admin/listeReservation" routerLinkActive="active">
-        <i class="fas fa-cog"></i> <span>Résultat réservation</span>
+        <i class="fas fa-calendar-check"></i> <span>Résultat réservation</span>
       </div>
 
-      <!--<div class="nav-item" routerLink="/admin/resultatsExamen" routerLinkActive="active">
-        <i class="fas fa-cog"></i> <span>Résultat examen</span>
-      </div>-->
 
       <div class="nav-item-group">
         <div class="nav-item" (click)="isParcoursOpen = !isParcoursOpen">
@@ -124,9 +120,6 @@
           </div>
         </div>
       </div>
-
-
-
 
       <div class="user-actions">
 

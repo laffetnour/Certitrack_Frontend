@@ -38,16 +38,13 @@ private getOptions(etabId?: number) {
     };
   }
 
-getStats(etabId?: number): Observable<any> {
+  getStats(etabId?: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/stats`, this.getOptions(etabId));
   }
 
   getAdmins(etabId?: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/administrateurs`, this.getOptions(etabId));
   }
-  /*getAdmins(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/administrateurs`, this.getAuthHeaders());
-  }*/
 
   createAdmin(admin: any, etabId?: number): Observable<any> {
     return this.http.post(`${this.baseUrl}/administrateurs`, admin, this.getOptions(etabId));
@@ -76,13 +73,6 @@ getStats(etabId?: number): Observable<any> {
   deleteMultiple(ids: number[]): Observable<any> {
     return this.http.post(`${this.baseUrl}/administrateurs/delete-multiple`, ids, this.getAuthHeaders());
   }
-
-  /*getStats(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/stats`, this.getAuthHeaders());
-  }*/
-
-
-
 
   getSpecialites(): Observable<any> {
     return this.http.get(`${this.baseUrl}/specialites`, this.getAuthHeaders());

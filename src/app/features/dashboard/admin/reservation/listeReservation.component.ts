@@ -112,7 +112,6 @@ export class ReservationListComponent implements OnInit {
     }
     worksheet['!cols'] = objectMaxLength;
 
-    // 5. Génération du fichier et téléchargement
     XLSX.writeFile(workbook, `Reservations_Etab_${this.etabId}_${new Date().getTime()}.xlsx`);
   }
 }

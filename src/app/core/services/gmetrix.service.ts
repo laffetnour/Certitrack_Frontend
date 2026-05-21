@@ -11,7 +11,6 @@ export class GmetrixService {
 
   constructor(private http: HttpClient) {}
 
-  // 🔐 récupérer token
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
 
@@ -21,56 +20,31 @@ export class GmetrixService {
   }
 
 
-importFile(file: File, etabId?: number): Observable<any> {
-  const formData = new FormData();
-  formData.append('file', file);
-
-  if (etabId) {
-    formData.append('etabId', etabId.toString());
-  }
-
-  return this.http.post(`${this.apiUrl}/import`, formData, {
-    headers: this.getAuthHeaders()
-  });
-}
-
-private getOptions(etabId?: number) {
-  const token = localStorage.getItem('token');
-  let params = new HttpParams();
-  if (etabId) params = params.set('etabId', etabId.toString());
-
-  return {
-    headers: new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    }),
-    params: params
-  };
-}
-
-/*private getOptions(etabId?: number) {
-    const token = localStorage.getItem('token');
-    let params = new HttpParams();
-    if (etabId) {
-      params = params.set('etabId', etabId.toString());
-    }
-
-    return {
-      headers: new HttpHeaders({
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }),
-      params: params
-    };
-  }
-
-  importFile(file: File): Observable<any> {
+  importFile(file: File, etabId?: number): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
+
+    if (etabId) {
+      formData.append('etabId', etabId.toString());
+    }
 
     return this.http.post(`${this.apiUrl}/import`, formData, {
       headers: this.getAuthHeaders()
     });
-  }*/
+  }
+
+  private getOptions(etabId?: number) {
+    const token = localStorage.getItem('token');
+    let params = new HttpParams();
+    if (etabId) params = params.set('etabId', etabId.toString());
+
+    return {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      }),
+      params: params
+    };
+  }
 
   getScores(filters: any,etabId?: number): Observable<any[]> {
 
