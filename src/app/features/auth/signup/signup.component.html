@@ -119,7 +119,7 @@
               {{ tenantConfig.formatIdentifiant === 'NUMERIC' ? 'chiffres' :
               tenantConfig.formatIdentifiant === 'ALPHA' ? 'lettres' : 'caractères alphanumériques' }}).
               <br>
-              <span class="info-zeros">* Si vous ne le connaissez pas, vous pouvez remplir de "0".</span>
+
             </small>
 
             <div *ngIf="signupForm.get('identifiantSpecifique')?.errors as err" class="error-text">
