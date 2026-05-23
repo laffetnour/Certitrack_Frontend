@@ -45,8 +45,16 @@
                 </div>
                 <br>
 
-                <button class="btn-start-recent" (click)="allerAuTest(item)">
+                <button *ngIf="item.hasActiveSession ===true"
+                        class="btn-start-recent"
+                        (click)="allerAuTest(item)">
                   Lancer <i class="fas fa-play"></i>
+                </button>
+
+                <button *ngIf="!item.hasActiveSession ===true"
+                        class="btn-disabled"
+                        disabled>
+                  Session clôturée
                 </button>
               </ng-template>
 
@@ -184,8 +192,17 @@
               </small>
             </div>
 
-            <button (click)="allerAuTest(item)" class="btn-test">
+
+            <button *ngIf="item.hasActiveSession ===true"
+                    (click)="allerAuTest(item)"
+                    class="btn-test">
               <i class="fas fa-play"></i> Démarrer le Test
+            </button>
+
+            <button *ngIf="!item.hasActiveSession ===true"
+                    class="btn-disabled"
+                    disabled>
+              <i class="fas fa-lock"></i> Session clôturée
             </button>
 
           </ng-template>
