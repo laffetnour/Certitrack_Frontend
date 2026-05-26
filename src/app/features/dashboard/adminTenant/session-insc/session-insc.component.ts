@@ -388,6 +388,7 @@ toggleModuleSelection(moduleId: number) {
     this.alertType = type;
     this.alertMessage = msg;
     this.alertVisible = true;
+    this.cdr.detectChanges();
     setTimeout(() => this.alertVisible = false, 3000);
   }
 
